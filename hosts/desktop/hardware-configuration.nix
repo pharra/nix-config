@@ -5,12 +5,12 @@
 
 {
   imports =
-    [ (modulesPath + "/profiles/qemu-guest.nix")
+    [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "uhci_hcd" "ehci_pci" "ahci" "xhci_pci" "virtio_pci" "virtio_scsi" "usbhid" "sd_mod" "sr_mod" "nvidia" ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "uas" "xhci_pci" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ ];
+  boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
@@ -19,7 +19,7 @@
     };
 
   fileSystems."/boot/efi" =
-    { device = "/dev/disk/by-lable/boot";
+    { device = "/dev/disk/by-label/boot";
       fsType = "vfat";
     };
 
