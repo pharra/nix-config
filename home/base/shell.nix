@@ -31,7 +31,6 @@ in rec {
     enableVteIntegration = true;
     history = {
       share = true;
-      path = "${config.xdg.dataHome}/zsh/history";
       size = 1048576;
     };
     autocd = true;
