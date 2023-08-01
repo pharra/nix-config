@@ -44,7 +44,7 @@
   };
 
   networking = {
-    hostName = "ai";
+    hostName = "nixos";
     wireless.enable = false; # Enables wireless support via wpa_supplicant.
 
     # Configure network proxy if necessary
@@ -75,8 +75,6 @@
   # for Nvidia GPU
   virtualisation.docker.enableNvidia = true; # for nvidia-docker
 
-  # environment.systemPackages = [ nvidia-offload ];
-
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware = {
     opengl = {
@@ -97,8 +95,8 @@
         intelBusId = "PCI:0:2:0";
         nvidiaBusId = "PCI:1:0:0";
       };
-      modesetting.enable = true;
-      powerManagement.enable = true;
+      #modesetting.enable = true;
+      #powerManagement.enable = true;
     };
   };
 
