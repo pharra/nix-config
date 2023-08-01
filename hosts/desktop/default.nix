@@ -73,20 +73,33 @@
   #virtualisation.docker.storageDriver = "btrfs";
 
   # for Nvidia GPU
-  services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default
-  hardware.nvidia = {
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-    modesetting.enable = true;
-    powerManagement.enable = true;
-  };
   virtualisation.docker.enableNvidia = true; # for nvidia-docker
 
-  hardware.opengl = {
-    enable = true;
-    # if hardware.opengl.driSupport is enabled, mesa is installed and provides Vulkan for supported hardware.
-    driSupport = true;
-    # needed by nvidia-docker
-    driSupport32Bit = true;
+  # environment.systemPackages = [ nvidia-offload ];
+
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware = {
+    opengl = {
+      enable = true;
+      # if hardware.opengl.driSupport is enabled, mesa is installed and provides Vulkan for supported hardware.
+      driSupport = true;
+      # needed by nvidia-docker
+      driSupport32Bit = true;
+    };
+
+    nvidia = {
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      prime = {
+        offload = {
+          enable = true;
+          enableOffloadCmd = true;
+        };
+        intelBusId = "PCI:0:2:0";
+        nvidiaBusId = "PCI:1:0:0";
+      };
+      modesetting.enable = true;
+      powerManagement.enable = true;
+    };
   };
 
   # This value determines the NixOS release from which the default

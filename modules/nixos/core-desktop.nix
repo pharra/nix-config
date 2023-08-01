@@ -17,6 +17,9 @@
   # to install chrome, you need to enable unfree packages
   nixpkgs.config.allowUnfree = lib.mkForce true;
 
+  # windows dual boot
+  time.hardwareClockInLocalTime = true;
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
