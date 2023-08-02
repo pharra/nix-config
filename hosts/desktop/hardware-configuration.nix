@@ -12,6 +12,7 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
+  boot.kernelParams = lib.mkForce [ "nogpumanager" "nvidia_drm.modeset=0" ];
 
   fileSystems."/" =
     { device = "/dev/disk/by-label/nixos";

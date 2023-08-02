@@ -1,4 +1,4 @@
-{config, ...} @ args:
+{config, pkgs, lib, ...} @ args:
 #############################################################
 #
 #  Ai - my main computer, with NixOS + I5-13600KF + RTX 4090 GPU, for gaming & daily use.
@@ -75,6 +75,12 @@
   # for Nvidia GPU
   virtualisation.docker.enableNvidia = true; # for nvidia-docker
 
+  environment = {
+    variables = {
+      __EGL_VENDOR_LIBRARY_FILENAMES = "${pkgs.mesa.drivers}/share/glvnd/egl_vendor.d/50_mesa.json";
+    };
+  };
+
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware = {
     opengl = {
@@ -95,8 +101,9 @@
         intelBusId = "PCI:0:2:0";
         nvidiaBusId = "PCI:1:0:0";
       };
-      #modesetting.enable = true;
-      #powerManagement.enable = true;
+      # nvidiaSettings = true;
+      # modesetting.enable = lib.mkForce false;
+      # powerManagement.enable = true;
     };
   };
 
