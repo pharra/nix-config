@@ -72,13 +72,13 @@
           "DejaVu Sans Mono"
         ];
         sansSerif = [
-          "Noto Sans CJK SC"
           "Source Han Sans SC"
+          "Noto Sans CJK SC"
           "DejaVu Sans"
         ];
         serif = [
-          "Noto Serif CJK SC"
           "Source Han Serif SC"
+          "Noto Serif CJK SC"
           "DejaVu Serif"
         ];
       };
