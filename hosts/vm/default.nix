@@ -43,7 +43,7 @@
   };
 
   networking = {
-    hostName = "ai";
+    hostName = "vm";
     wireless.enable = false; # Enables wireless support via wpa_supplicant.
 
     # Configure network proxy if necessary

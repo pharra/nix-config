@@ -1,4 +1,4 @@
-{config, pkgs, lib, ...} @ args:
+{config, ...} @ args:
 #############################################################
 #
 #  Ai - my main computer, with NixOS + I5-13600KF + RTX 4090 GPU, for gaming & daily use.
@@ -6,7 +6,6 @@
 #############################################################
 {
   imports = [
-    ./cifs-mount.nix
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
 
@@ -44,7 +43,7 @@
   };
 
   networking = {
-    hostName = "desktop";
+    hostName = "homelab";
     wireless.enable = false; # Enables wireless support via wpa_supplicant.
 
     # Configure network proxy if necessary
@@ -73,38 +72,20 @@
   #virtualisation.docker.storageDriver = "btrfs";
 
   # for Nvidia GPU
+  services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default
+  hardware.nvidia = {
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    modesetting.enable = true;
+    powerManagement.enable = true;
+  };
   virtualisation.docker.enableNvidia = true; # for nvidia-docker
 
-  environment = {
-    variables = {
-      __EGL_VENDOR_LIBRARY_FILENAMES = "${pkgs.mesa.drivers}/share/glvnd/egl_vendor.d/50_mesa.json";
-    };
-  };
-
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware = {
-    opengl = {
-      enable = true;
-      # if hardware.opengl.driSupport is enabled, mesa is installed and provides Vulkan for supported hardware.
-      driSupport = true;
-      # needed by nvidia-docker
-      driSupport32Bit = true;
-    };
-
-    nvidia = {
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
-      prime = {
-        offload = {
-          enable = true;
-          enableOffloadCmd = true;
-        };
-        intelBusId = "PCI:0:2:0";
-        nvidiaBusId = "PCI:1:0:0";
-      };
-      # nvidiaSettings = true;
-      # modesetting.enable = lib.mkForce false;
-      # powerManagement.enable = true;
-    };
+  hardware.opengl = {
+    enable = true;
+    # if hardware.opengl.driSupport is enabled, mesa is installed and provides Vulkan for supported hardware.
+    driSupport = true;
+    # needed by nvidia-docker
+    driSupport32Bit = true;
   };
 
   # This value determines the NixOS release from which the default

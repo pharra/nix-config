@@ -113,6 +113,15 @@
         home-module = import ./home/desktop-gnome.nix;
       };
 
+      # homelab
+      homelab_modules_gnome = {
+        nixos-modules = [
+          ./hosts/homelab
+          ./modules/nixos/gnome.nix
+        ];
+        home-module = import ./home/desktop-gnome.nix;
+      };
+
       system = x64_system;
       specialArgs =
         {
@@ -136,6 +145,9 @@
 
       # vm with gnome
       vm_gnome = nixosSystem (vm_modules_gnome // stable_args);
+
+      # homelab with gnome
+      homelab_gnome = nixosSystem (homelab_modules_gnome // stable_args);
     };
 
     # take system images for idols
@@ -144,6 +156,7 @@
       # genAttrs returns an attribute set with the given keys and values(host => image).
       nixpkgs.lib.genAttrs [
         "desktop_gnome"
+        "homelab_gnome"
       ] (
         host:
           self.nixosConfigurations.${host}.config.formats.iso
