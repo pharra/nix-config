@@ -51,6 +51,7 @@
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
     networkmanager.enable = true;
+    networkmanager.unmanaged = ["*,except:interface-name:eno*"];
 
     # enableIPv6 = false; # disable ipv6
     # interfaces.enp5s0 = {
@@ -76,7 +77,7 @@
   hardware.nvidia = {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
     modesetting.enable = true;
-    powerManagement.enable = true;
+    powerManagement.enable = false;
   };
   virtualisation.docker.enableNvidia = true; # for nvidia-docker
 

@@ -168,6 +168,34 @@
           self.nixosConfigurations.${host}.config.formats.proxmox
       );
 
+      devShells."${x64_system}".default = let
+      pkgs = import nixpkgs {
+        inherit x64_system;
+        overlays = [
+          (self: super: rec {
+            nodejs = super.nodejs-18_x;
+            pnpm = super.nodePackages.pnpm;
+            yarn = (super.yarn.override { inherit nodejs; });
+          })
+        ];
+      };
+    in pkgs.mkShell {
+      # create an environment with nodejs-18_x, pnpm, and yarn
+      packages = with pkgs; [
+        cmake
+        zsh
+        gcc
+        pkgsCross.mingwW64.buildPackages.gcc
+        haskellPackages.nsis
+        zlib
+      ];
+
+      shellHook = ''
+        # echo "node `${pkgs.nodejs}/bin/node --version`"
+        exec zsh
+      '';
+    };
+
     # format the nix code in this flake
     # alejandra is a nix formatter with a beautiful output
     formatter = nixpkgs.lib.genAttrs allSystems (

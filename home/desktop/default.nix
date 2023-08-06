@@ -5,6 +5,7 @@
     ./media.nix
     ./ssh.nix
     ./xdg.nix
+    ./looking-glass.nix
   ];
 
   home.packages = with pkgs; [

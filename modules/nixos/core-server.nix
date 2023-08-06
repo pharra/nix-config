@@ -13,6 +13,7 @@
   boot.loader.systemd-boot.configurationLimit = lib.mkDefault 10;
   # boot.loader.grub.configurationLimit = 10;
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  # boot.kernelPackages = pkgs.linuxPackages_6_3;
 
   hardware.enableRedistributableFirmware = true;
   # do garbage collection weekly to keep disk usage low
@@ -61,7 +62,7 @@
     settings = {
       X11Forwarding = true;
       PermitRootLogin = "no"; # disable root login
-      PasswordAuthentication = false; # disable password login
+      PasswordAuthentication = true; # disable password login
     };
     openFirewall = true;
   };
