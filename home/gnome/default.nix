@@ -47,19 +47,6 @@
     "org/gnome/desktop/calendar" = {
       show-weekdate = true;
     };
-    "org/gnome/desktop/wm/preferences" = {
-      action-right-click-titlebar = "toggle-maximize";
-      action-middle-click-titlebar = "minimize";
-      resize-with-right-button = true;
-      mouse-button-modifier = "<Super>";
-      button-layout = ":minimize,close";
-    };
-
-    "org/gnome/mutter" = {
-      workspaces-only-on-primary = false;
-      center-new-windows = true;
-      edge-tiling = false;                            # Disabled when tiling
-    };
 
     "org/gnome/shell/extensions/bluetooth-quick-connect" = {
       show-battery-icon-on = true;

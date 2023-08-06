@@ -51,7 +51,7 @@
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
     networkmanager.enable = true;
-    networkmanager.unmanaged = ["*,except:interface-name:eno*"];
+    networkmanager.unmanaged = ["*,except:interface-name:eno*,except:interface-name:wl*"];
 
     # enableIPv6 = false; # disable ipv6
     # interfaces.enp5s0 = {

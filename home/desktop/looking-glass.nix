@@ -7,7 +7,7 @@
 {
   xdg.configFile."looking-glass/client.ini".text = lib.generators.toINI {} {
     app.shmFile = "/dev/kvmfr0";
-    #input.escapeKey = 119;
+    input.escapeKey = 119; # key pause
     input.rawMouse = "yes";
     spice.enable = "yes";
     win.autoScreensaver = "yes";
