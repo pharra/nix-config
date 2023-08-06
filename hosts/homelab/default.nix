@@ -41,6 +41,47 @@
     };
     systemd-boot.enable = true;
   };
+  
+  systemd.network = {
+    enable = true;
+    netdevs = {
+       # Create the bridge interface
+       "20-br0" = {
+         netdevConfig = {
+           Kind = "bridge";
+           Name = "br0";
+         };
+       };
+    };
+    networks = {
+      # Connect the bridge ports to the bridge
+      "30-eno1" = {
+        matchConfig.Name = "eno1";
+        networkConfig.Bridge = "br0";
+        linkConfig.RequiredForOnline = "enslaved";
+      };
+      # "30-enp2s0" = {
+      #   matchConfig.Name = "enp2s0";
+      #   networkConfig.Bridge = "br0";
+      #   linkConfig.RequiredForOnline = "enslaved";
+      # };
+      # Configure the bridge for its desired function
+      "40-br0" = {
+        matchConfig.Name ="br0";
+        bridgeConfig = {};
+        networkConfig = {
+          # start a DHCP Client for IPv4 Addressing/Routing
+          DHCP = "ipv4";
+          # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
+          IPv6AcceptRA = true;
+        };
+        linkConfig = {
+          # or "routable" with IP addresses configured
+          RequiredForOnline = "routable";
+        };
+      };
+    };
+  };
 
   networking = {
     hostName = "homelab";
@@ -51,7 +92,7 @@
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
     networkmanager.enable = true;
-    networkmanager.unmanaged = ["*,except:interface-name:eno*,except:interface-name:wl*"];
+    networkmanager.unmanaged = ["*,except:interface-name:wl*"];
 
     # enableIPv6 = false; # disable ipv6
     # interfaces.enp5s0 = {
