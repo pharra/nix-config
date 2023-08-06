@@ -14,6 +14,7 @@
     win.fullScreen = "yes";
     win.jitRender = "yes";
     wayland.fractionScale="no";
+    wayland.warpSupport="no";
     # win.quickSplash = "yes";
   };
 }
