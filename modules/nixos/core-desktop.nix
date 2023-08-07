@@ -12,6 +12,7 @@
   imports = [
     ./core-server.nix
     ./fcitx5.nix
+    ./flatpak.nix
   ];
 
   # to install chrome, you need to enable unfree packages
@@ -316,9 +317,6 @@
   # [bluetooth] # trust [hex-address]
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
-
-  # https://flatpak.org/setup/NixOS
-  services.flatpak.enable = true;
 
   # security with polkit
   # services.power-profiles-daemon = {
