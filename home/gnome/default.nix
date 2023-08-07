@@ -21,7 +21,7 @@
         # "drive-menu@gnome-shell-extensions.gcampax.github.com"
         # "dash-to-panel@jderose9.github.com"
         # "just-perfection-desktop@just-perfection"
-        # "caffeine@patapon.info"
+        "caffeine@patapon.info"
         # "clipboard-indicator@tudmotu.com"
         # "horizontal-workspace-indicator@tty2.io"
         "bluetooth-quick-connect@bjarosze.gmail.com"
@@ -36,7 +36,7 @@
 
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-light";
-      enable-hot-corners = false;
+      enable-hot-corners = true;
       clock-show-weekday = true;
       #gtk-theme = "Adwaita-dark";
     };
