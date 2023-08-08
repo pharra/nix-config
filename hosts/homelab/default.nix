@@ -41,6 +41,18 @@
     };
     systemd-boot.enable = true;
   };
+
+  systemd.services = {
+    tune-usb-autosuspend = {
+      description = "Disable USB autosuspend";
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = { Type = "oneshot"; };
+      unitConfig.RequiresMountsFor = "/sys";
+      script = ''
+        echo -1 > /sys/module/usbcore/parameters/autosuspend
+      '';
+    };
+  };
   
   systemd.network = {
     enable = true;
@@ -118,7 +130,7 @@
   hardware.nvidia = {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
     modesetting.enable = true;
-    powerManagement.enable = false;
+    powerManagement.enable = true;
   };
   virtualisation.docker.enableNvidia = true; # for nvidia-docker
 

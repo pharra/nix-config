@@ -68,18 +68,18 @@
       defaultFonts = {
         emoji = [ "Noto Color Emoji" ];
         monospace = [
+          "Noto Sans Mono CJK SC"
           "Sarasa Mono SC"
           "DejaVu Sans Mono"
-          "Noto Sans Mono CJK SC"
         ];
         sansSerif = [
-          "Source Han Sans SC"
           "Noto Sans CJK SC"
+          "Source Han Sans SC"
           "DejaVu Sans"
         ];
         serif = [
-          "Source Han Serif SC"
           "Noto Serif CJK SC"
+          "Source Han Serif SC"
           "DejaVu Serif"
         ];
       };
@@ -269,14 +269,14 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     # python, some times I may need to use python with root permission.
-    (python310.withPackages (ps:
-      with ps; [
-        ipython
-        pandas
-        requests
-        pyquery
-        pyyaml
-      ]))
+    # (python310.withPackages (ps:
+    #   with ps; [
+    #     ipython
+    #     pandas
+    #     requests
+    #     pyquery
+    #     pyyaml
+    #   ]))
   ];
 
   # PipeWire is a new low-level multimedia framework.
@@ -316,7 +316,7 @@
   # Bluetooth devices automatically connect with bluetoothctl as well:
   # [bluetooth] # trust [hex-address]
   hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
+  # services.blueman.enable = true;
 
   # security with polkit
   # services.power-profiles-daemon = {
@@ -340,22 +340,22 @@
     };
   };
 
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    # Sets environment variable NIXOS_XDG_OPEN_USE_PORTAL to 1
-    # This will make xdg-open use the portal to open programs,
-    # which resolves bugs involving programs opening inside FHS envs or with unexpected env vars set from wrappers.
-    # xdg-open is used by almost all programs to open a unknown file/uri
-    # alacritty as an example, it use xdg-open as default, but you can also custom this behavior
-    # and vscode has open like `External Uri Openers`
-    xdgOpenUsePortal = false;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-wlr # for wlroots based compositors(hyprland/sway)
-      # xdg-desktop-portal-gtk # for gtk
-      # xdg-desktop-portal-kde  # for kde
-    ];
-  };
+  # xdg.portal = {
+  #   enable = true;
+  #   wlr.enable = true;
+  #   # Sets environment variable NIXOS_XDG_OPEN_USE_PORTAL to 1
+  #   # This will make xdg-open use the portal to open programs,
+  #   # which resolves bugs involving programs opening inside FHS envs or with unexpected env vars set from wrappers.
+  #   # xdg-open is used by almost all programs to open a unknown file/uri
+  #   # alacritty as an example, it use xdg-open as default, but you can also custom this behavior
+  #   # and vscode has open like `External Uri Openers`
+  #   xdgOpenUsePortal = false;
+  #   extraPortals = with pkgs; [
+  #     xdg-desktop-portal-wlr # for wlroots based compositors(hyprland/sway)
+  #     # xdg-desktop-portal-gtk # for gtk
+  #     # xdg-desktop-portal-kde  # for kde
+  #   ];
+  # };
 
   # add user's shell into /etc/shells
   environment.shells = with pkgs; [

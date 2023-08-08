@@ -101,5 +101,5 @@
   #   enable = true;
   # };
   # services.upower.enable = true;
-  powerManagement.enable = false;
+  # powerManagement.enable = true;
 }
