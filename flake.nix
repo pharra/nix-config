@@ -67,6 +67,11 @@
       url = "git+ssh://git@github.com/pharra/agenix-secrets.git?shallow=1";
       flake = false;
     };
+
+    myRepo = {
+      url = "github:pharra/nur-package";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -92,7 +97,6 @@
     allSystems = [x64_system x64_darwin];
 
     nixosSystem = import ./lib/nixosSystem.nix;
-    macosSystem = import ./lib/macosSystem.nix;
   in {
     nixosConfigurations = let
       #desktop
@@ -103,7 +107,7 @@
         ];
         home-module = import ./home/desktop-gnome.nix;
       };
-      
+
       # vm
       vm_modules_gnome = {
         nixos-modules = [
@@ -132,6 +136,8 @@
             # To use chrome, we need to allow the installation of non-free software
             config.allowUnfree = true;
           };
+
+          myRepo = inputs.myRepo;
         }
         // inputs;
       base_args = {
@@ -168,33 +174,34 @@
           self.nixosConfigurations.${host}.config.formats.proxmox
       );
 
-      devShells."${x64_system}".default = let
+    devShells."${x64_system}".default = let
       pkgs = import nixpkgs {
         inherit x64_system;
         overlays = [
           (self: super: rec {
             nodejs = super.nodejs-18_x;
             pnpm = super.nodePackages.pnpm;
-            yarn = (super.yarn.override { inherit nodejs; });
+            yarn = super.yarn.override {inherit nodejs;};
           })
         ];
       };
-    in pkgs.mkShell {
-      # create an environment with nodejs-18_x, pnpm, and yarn
-      packages = with pkgs; [
-        cmake
-        zsh
-        gcc
-        pkgsCross.mingwW64.buildPackages.gcc
-        haskellPackages.nsis
-        zlib
-      ];
+    in
+      pkgs.mkShell {
+        # create an environment with nodejs-18_x, pnpm, and yarn
+        packages = with pkgs; [
+          cmake
+          zsh
+          gcc
+          pkgsCross.mingwW64.buildPackages.gcc
+          haskellPackages.nsis
+          zlib
+        ];
 
-      shellHook = ''
-        # echo "node `${pkgs.nodejs}/bin/node --version`"
-        exec zsh
-      '';
-    };
+        shellHook = ''
+          # echo "node `${pkgs.nodejs}/bin/node --version`"
+          exec zsh
+        '';
+      };
 
     # format the nix code in this flake
     # alejandra is a nix formatter with a beautiful output

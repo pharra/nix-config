@@ -1,4 +1,8 @@
-{config, pkgs, ...}: let
+{
+  config,
+  pkgs,
+  ...
+}: let
   d = config.xdg.dataHome;
   c = config.xdg.configHome;
   cache = config.xdg.cacheHome;
@@ -21,7 +25,7 @@ in rec {
   programs.direnv = {
     enable = true;
     enableZshIntegration = true;
-    nix-direnv = { enable = true; };
+    nix-direnv = {enable = true;};
   };
 
   programs.zsh = {

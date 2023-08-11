@@ -4,8 +4,7 @@
   username,
   config,
   ...
-}: 
-{
+}: {
   ###################################################################################
   #
   #  Enable Libvirt(QEMU/KVM), install qemu-system-riscv64/qemu-system-loongarch64/...)
@@ -13,8 +12,7 @@
   ###################################################################################
 
   nixpkgs.overlays = [
-    (self: super:
-    {
+    (self: super: {
       looking-glass-client = super.looking-glass-client.overrideAttrs (oldAttrs: rec {
         src = super.fetchFromGitHub {
           owner = "gnif";
@@ -35,7 +33,7 @@
       qemu.runAsRoot = true;
       qemu.ovmf.enable = true;
       qemu.swtpm.enable = true;
-      qemu.ovmf.packages = [ pkgs.OVMFFull ];
+      qemu.ovmf.packages = [pkgs.OVMFFull];
       onShutdown = "shutdown";
       qemu.verbatimConfig = ''
         cgroup_device_acl = [
@@ -77,14 +75,14 @@
   # ];
 
   environment.etc = {
-  "ovmf/edk2-x86_64-secure-code.fd" = {
-    source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-secure-code.fd";
-  };
+    "ovmf/edk2-x86_64-secure-code.fd" = {
+      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-secure-code.fd";
+    };
 
-  "ovmf/edk2-i386-vars.fd" = {
-    source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
+    "ovmf/edk2-i386-vars.fd" = {
+      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
+    };
   };
-};
 
   boot.kernelModules = ["kvm-amd" "kvm-intel" "kvmfr"];
   boot.extraModulePackages = with config.boot.kernelPackages; [

@@ -1,6 +1,5 @@
-{ username, ... }: {
+{username, ...}: {
   imports = [
-
     ./base
     ./fcitx5
     ./desktop

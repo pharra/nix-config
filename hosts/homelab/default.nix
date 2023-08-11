@@ -15,6 +15,8 @@
     # ../../modules/nixos/remote-building.nix
     ../../modules/nixos/user-group.nix
 
+    ../../modules/nixos/spdk.nix
+
     ../../secrets/nixos.nix
   ];
 
@@ -45,25 +47,25 @@
   systemd.services = {
     tune-usb-autosuspend = {
       description = "Disable USB autosuspend";
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = { Type = "oneshot"; };
+      wantedBy = ["multi-user.target"];
+      serviceConfig = {Type = "oneshot";};
       unitConfig.RequiresMountsFor = "/sys";
       script = ''
         echo -1 > /sys/module/usbcore/parameters/autosuspend
       '';
     };
   };
-  
+
   systemd.network = {
     enable = true;
     netdevs = {
-       # Create the bridge interface
-       "20-br0" = {
-         netdevConfig = {
-           Kind = "bridge";
-           Name = "br0";
-         };
-       };
+      # Create the bridge interface
+      "20-br0" = {
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "br0";
+        };
+      };
     };
     networks = {
       # Connect the bridge ports to the bridge
@@ -79,7 +81,7 @@
       # };
       # Configure the bridge for its desired function
       "40-br0" = {
-        matchConfig.Name ="br0";
+        matchConfig.Name = "br0";
         bridgeConfig = {};
         networkConfig = {
           # start a DHCP Client for IPv4 Addressing/Routing

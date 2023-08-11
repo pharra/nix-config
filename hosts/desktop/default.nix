@@ -1,4 +1,9 @@
-{config, pkgs, lib, ...} @ args:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+} @ args:
 #############################################################
 #
 #  Ai - my main computer, with NixOS + I5-13600KF + RTX 4090 GPU, for gaming & daily use.
@@ -81,7 +86,7 @@
     };
   };
 
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = ["nvidia"];
   hardware = {
     opengl = {
       enable = true;

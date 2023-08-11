@@ -14,6 +14,14 @@ in
     modules =
       nixos-modules
       ++ [
+        {
+          nixpkgs.overlays = [
+            (final: prev: {
+              myRepo = specialArgs.myRepo.packages."${prev.system}";
+            })
+          ];
+        }
+
         nixos-generators.nixosModules.all-formats
         {
           # formatConfigs.iso = {config, ...}: {};

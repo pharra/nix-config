@@ -29,7 +29,7 @@
         "gsconnect@andyholmes.github.io"
         # "pip-on-top@rafostar.github.com"
         # "forge@jmmaranan.com"
-        "dash-to-dock@micxgx.gmail.com"             # Dash to panel alternative
+        "dash-to-dock@micxgx.gmail.com" # Dash to panel alternative
         # "fullscreen-avoider@noobsai.github.com"     # Incompatible with dash-to-panel
       ];
     };
@@ -79,7 +79,7 @@
     gnomeExtensions.clipboard-indicator
     gnomeExtensions.workspace-indicator-2
     gnomeExtensions.bluetooth-quick-connect
-    gnomeExtensions.gsconnect                         # kdeconnect enabled in default.nix
+    gnomeExtensions.gsconnect # kdeconnect enabled in default.nix
     gnomeExtensions.pip-on-top
     gnomeExtensions.pop-shell
     gnomeExtensions.forge

@@ -3,8 +3,7 @@
   config,
   lib,
   ...
-}: 
-{
+}: {
   home.file.".config/fcitx5/profile".source = ./profile;
   home.file.".config/fcitx5/profile-bak".source = ./profile; # used for backup
 
