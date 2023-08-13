@@ -68,7 +68,7 @@
       flake = false;
     };
 
-    myRepo = {
+    my-nur = {
       url = "github:pharra/nur-package";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -86,6 +86,7 @@
     nix-darwin,
     home-manager,
     nixos-generators,
+    my-nur,
     ...
   }: let
     username = "wf";
@@ -93,11 +94,13 @@
     useremail = "typechasing@gmail.com";
 
     x64_system = "x86_64-linux";
-    x64_darwin = "x86_64-darwin";
-    allSystems = [x64_system x64_darwin];
+    allSystems = [x64_system];
 
     nixosSystem = import ./lib/nixosSystem.nix;
+
+    my-overlay = my-nur.overlay;
   in {
+    nixpkgs.overlays = [ my-overlay ];
     nixosConfigurations = let
       #desktop
       desktop_modules_gnome = {
@@ -137,7 +140,11 @@
             config.allowUnfree = true;
           };
 
-          myRepo = inputs.myRepo;
+          my-nur = import my-nur {
+            system = x64_system; # refer the `system` parameter form outer scope recursively
+            config.allowUnfree = true;
+          };
+
         }
         // inputs;
       base_args = {

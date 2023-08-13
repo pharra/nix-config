@@ -12,7 +12,7 @@
   # for nix server, we do not need to keep too much generations
   boot.loader.systemd-boot.configurationLimit = lib.mkDefault 10;
   # boot.loader.grub.configurationLimit = 10;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor pkgs.my-nur.linux_mlx);
   # boot.kernelPackages = pkgs.linuxPackages_6_3;
 
   hardware.enableRedistributableFirmware = true;
@@ -31,7 +31,7 @@
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
   # Allow unfree packages
-  nixpkgs.config.allowUnfree = lib.mkDefault false;
+  nixpkgs.config.allowUnfree = lib.mkDefault true;
 
   # Set your time zone.
   time.timeZone = "Asia/Shanghai";

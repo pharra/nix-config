@@ -17,7 +17,7 @@ in
         {
           nixpkgs.overlays = [
             (final: prev: {
-              myRepo = specialArgs.myRepo.packages."${prev.system}";
+              my-nur = specialArgs.my-nur.packages."${prev.system}";
             })
           ];
         }
