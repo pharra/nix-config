@@ -100,7 +100,7 @@
 
     my-overlay = my-nur.overlay;
   in {
-    nixpkgs.overlays = [ my-overlay ];
+    nixpkgs.overlays = [my-overlay];
     nixosConfigurations = let
       #desktop
       desktop_modules_gnome = {
@@ -144,7 +144,6 @@
             system = x64_system; # refer the `system` parameter form outer scope recursively
             config.allowUnfree = true;
           };
-
         }
         // inputs;
       base_args = {
@@ -202,6 +201,12 @@
           pkgsCross.mingwW64.buildPackages.gcc
           haskellPackages.nsis
           zlib
+          binutils
+          perl
+          xz
+          mtools
+          cdrkit
+          syslinux
         ];
 
         shellHook = ''

@@ -24,6 +24,8 @@
 
     # misc
     flameshot
+
+    localsend
   ];
 
   # GitHub CLI tool

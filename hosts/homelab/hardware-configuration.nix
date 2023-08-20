@@ -32,7 +32,9 @@ in {
     "nvidia_drm"
   ];
   boot.blacklistedKernelModules = ["ast"];
-  boot.kernelParams = [("vfio-pci.ids=" + lib.concatStringsSep "," gpuIDs)]; # isolate the GPU
+  boot.kernelParams =
+    ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=32"]
+    ++ [("vfio-pci.ids=" + lib.concatStringsSep "," gpuIDs)]; # isolate the GPU
 
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = [];

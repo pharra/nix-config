@@ -17,6 +17,9 @@
 
     ../../modules/nixos/spdk.nix
 
+    ../../modules/nixos/pixiecore.nix
+    ../../modules/nixos/mlx-sriov.nix
+
     ../../secrets/nixos.nix
   ];
 
@@ -66,6 +69,13 @@
           Name = "br0";
         };
       };
+
+      "30-br1" = {
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "br1";
+        };
+      };
     };
     networks = {
       # Connect the bridge ports to the bridge
@@ -74,11 +84,17 @@
         networkConfig.Bridge = "br0";
         linkConfig.RequiredForOnline = "enslaved";
       };
-      # "30-enp2s0" = {
-      #   matchConfig.Name = "enp2s0";
-      #   networkConfig.Bridge = "br0";
+      # "30-enp129s0" = {
+      #   matchConfig.Name = "enp129s0";
+      #   networkConfig.Bridge = "br1";
       #   linkConfig.RequiredForOnline = "enslaved";
       # };
+      # "30-enp129s0d1" = {
+      #   matchConfig.Name = "enp129s0d1";
+      #   networkConfig.Bridge = "br1";
+      #   linkConfig.RequiredForOnline = "enslaved";
+      # };
+
       # Configure the bridge for its desired function
       "40-br0" = {
         matchConfig.Name = "br0";
@@ -92,6 +108,42 @@
         linkConfig = {
           # or "routable" with IP addresses configured
           RequiredForOnline = "routable";
+        };
+      };
+
+      "50-enp129s0" = {
+        matchConfig.Name = "enp129s0";
+        # bridgeConfig = {};
+        networkConfig = {
+          Address = "192.168.30.1/24";
+          DHCPServer = true;
+          IPMasquerade = "ipv4";
+        };
+        dhcpServerConfig = {
+          PoolOffset = 100;
+          PoolSize = 20;
+        };
+        linkConfig = {
+          # or "routable" with IP addresses configured
+          RequiredForOnline = "carrier";
+        };
+      };
+
+      "50-enp129s0d1" = {
+        matchConfig.Name = "enp129s0d1";
+        # bridgeConfig = {};
+        networkConfig = {
+          Address = "192.168.29.1/24";
+          DHCPServer = true;
+          IPMasquerade = "ipv4";
+        };
+        dhcpServerConfig = {
+          PoolOffset = 100;
+          PoolSize = 20;
+        };
+        linkConfig = {
+          # or "routable" with IP addresses configured
+          RequiredForOnline = "carrier";
         };
       };
     };

@@ -48,6 +48,7 @@ in rec {
         "fd"
         "systemd"
         "git-auto-fetch"
+        "history-substring-search"
       ];
       theme = "robbyrussell";
     };
@@ -78,6 +79,9 @@ in rec {
     initExtra = ''
       # config of zsh-users/zsh-syntax-highlighting
       typeset -A ZSH_HIGHLIGHT_STYLES
+
+      bindkey "''${key[Up]}" history-beginning-search-backward
+      bindkey "''${key[Down]}" history-beginning-search-forward
 
       ZSH_HIGHLIGHT_STYLES[comment]='fg=magenta,bold'
       source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
