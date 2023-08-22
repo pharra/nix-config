@@ -5,6 +5,7 @@
   libs,
   ...
 }: {
-  environment.systemPackages = [
+  environment.systemPackages = with pkgs; [
+    dpdk
   ];
 }

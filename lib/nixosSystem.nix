@@ -15,11 +15,11 @@ in
       nixos-modules
       ++ [
         {
-          nixpkgs.overlays = [
-            (final: prev: {
-              my-nur = specialArgs.my-nur.packages."${prev.system}";
-            })
-          ];
+          nixpkgs.overlays =
+            [
+              specialArgs.my-nur.overlays.default
+            ]
+            ++ (builtins.attrValues specialArgs.my-nur.legacyPackages."${system}".overlays);
         }
 
         nixos-generators.nixosModules.all-formats

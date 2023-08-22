@@ -70,7 +70,7 @@
 
     my-nur = {
       url = "github:pharra/nur-package";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
   };
 
@@ -97,10 +97,7 @@
     allSystems = [x64_system];
 
     nixosSystem = import ./lib/nixosSystem.nix;
-
-    my-overlay = my-nur.overlay;
   in {
-    nixpkgs.overlays = [my-overlay];
     nixosConfigurations = let
       #desktop
       desktop_modules_gnome = {
