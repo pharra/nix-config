@@ -1,10 +1,18 @@
-{config, ...} @ args:
+{
+  config,
+  lib,
+  pkgs,
+  libs,
+  ...
+} @ args:
 #############################################################
 #
 #  Ai - my main computer, with NixOS + I5-13600KF + RTX 4090 GPU, for gaming & daily use.
 #
 #############################################################
-{
+let
+  interface = "ibp129s0";
+in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -17,7 +25,7 @@
 
     ../../modules/nixos/spdk.nix
 
-    ../../modules/nixos/pixiecore.nix
+    (import ../../modules/nixos/ipxe.nix {inherit config lib interface pkgs libs;})
     ../../modules/nixos/mlx-sriov.nix
 
     ../../secrets/nixos.nix
@@ -111,21 +119,21 @@
         };
       };
 
-      "50-enp129s0" = {
-        matchConfig.Name = "enp129s0";
+      "50-${interface}" = {
+        matchConfig.Name = "${interface}";
         # bridgeConfig = {};
         networkConfig = {
           Address = "192.168.30.1/24";
-          DHCPServer = true;
+          # DHCPServer = true;
           IPMasquerade = "ipv4";
         };
-        dhcpServerConfig = {
-          PoolOffset = 100;
-          PoolSize = 20;
-        };
+        # dhcpServerConfig = {
+        #   PoolOffset = 100;
+        #   PoolSize = 20;
+        # };
         linkConfig = {
           # or "routable" with IP addresses configured
-          RequiredForOnline = "carrier";
+          ActivationPolicy = "always-up";
         };
       };
 
@@ -134,16 +142,16 @@
         # bridgeConfig = {};
         networkConfig = {
           Address = "192.168.29.1/24";
-          DHCPServer = true;
+          # DHCPServer = true;
           IPMasquerade = "ipv4";
         };
-        dhcpServerConfig = {
-          PoolOffset = 100;
-          PoolSize = 20;
-        };
+        # dhcpServerConfig = {
+        #   PoolOffset = 100;
+        #   PoolSize = 20;
+        # };
         linkConfig = {
           # or "routable" with IP addresses configured
-          RequiredForOnline = "carrier";
+          ActivationPolicy = "always-up";
         };
       };
     };
