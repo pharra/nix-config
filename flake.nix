@@ -67,11 +67,6 @@
       url = "git+ssh://git@github.com/pharra/agenix-secrets.git?shallow=1";
       flake = false;
     };
-
-    my-nur = {
-      url = "github:pharra/nur-package";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -86,7 +81,6 @@
     nix-darwin,
     home-manager,
     nixos-generators,
-    my-nur,
     ...
   }: let
     username = "wf";
@@ -97,6 +91,17 @@
     allSystems = [x64_system];
 
     nixosSystem = import ./lib/nixosSystem.nix;
+
+    forAllSystems = f: nixpkgs.lib.genAttrs allSystems (system: f system);
+    legacyPackages = forAllSystems (system:
+      import ./default.nix {
+        pkgs = import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
+      });
+
+    overlays = import ./overlay.nix;
   in {
     nixosConfigurations = let
       #desktop
@@ -129,16 +134,11 @@
       system = x64_system;
       specialArgs =
         {
-          inherit username userfullname useremail;
+          inherit username userfullname useremail legacyPackages overlays;
           # use unstable branch for some packages to get the latest updates
           pkgs-unstable = import nixpkgs-unstable {
             system = x64_system; # refer the `system` parameter form outer scope recursively
             # To use chrome, we need to allow the installation of non-free software
-            config.allowUnfree = true;
-          };
-
-          my-nur = import my-nur {
-            system = x64_system; # refer the `system` parameter form outer scope recursively
             config.allowUnfree = true;
           };
         }
@@ -175,7 +175,8 @@
       ] (
         host:
           self.nixosConfigurations.${host}.config.formats.proxmox
-      );
+      )
+      // nixpkgs.lib.filterAttrs (_: v: nixpkgs.lib.isDerivation v) legacyPackages.${x64_system};
 
     devShells."${x64_system}".default = let
       pkgs = import nixpkgs {

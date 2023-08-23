@@ -1,0 +1,204 @@
+diff --git a/drivers/net/ethernet/mellanox/mlx4/fw.c b/drivers/net/ethernet/mellanox/mlx4/fw.c
+index 42c96c9d7..8ff4bb91b 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/fw.c
++++ b/drivers/net/ethernet/mellanox/mlx4/fw.c
+@@ -820,6 +820,7 @@ int mlx4_QUERY_DEV_CAP(struct mlx4_dev *dev, struct mlx4_dev_cap *dev_cap)
+ #define QUERY_DEV_CAP_DIAG_RPRT_PER_PORT	0x9c
+ #define QUERY_DEV_CAP_FW_REASSIGN_MAC		0x9d
+ #define QUERY_DEV_CAP_VXLAN			0x9e
++#define QUERY_DEV_CAP_ADD_MAC            	0x9f
+ #define QUERY_DEV_CAP_MAD_DEMUX_OFFSET		0xb0
+ #define QUERY_DEV_CAP_DMFS_HIGH_RATE_QPN_BASE_OFFSET	0xa8
+ #define QUERY_DEV_CAP_DMFS_HIGH_RATE_QPN_RANGE_OFFSET	0xac
+@@ -1330,6 +1331,11 @@ int mlx4_QUERY_DEV_CAP_wrapper(struct mlx4_dev *dev, int slave,
+ 	field &= 0xd7;
+ 	MLX4_PUT(outbox->buf, field, QUERY_DEV_CAP_VXLAN);
+ 
++	/* For guests report additional-mac query not available */
++	MLX4_GET(field, outbox->buf, QUERY_DEV_CAP_ADD_MAC);
++	field &= 0xfb;
++	MLX4_PUT(outbox->buf, field, QUERY_DEV_CAP_ADD_MAC);
++
+ 	/* For guests, disable port BEACON */
+ 	MLX4_GET(field, outbox->buf, QUERY_DEV_CAP_PORT_BEACON_OFFSET);
+ 	field &= 0x7f;
+@@ -1411,7 +1417,7 @@ int mlx4_QUERY_PORT_wrapper(struct mlx4_dev *dev, int slave,
+ {
+ 	struct mlx4_priv *priv = mlx4_priv(dev);
+ 	u64 def_mac;
+-	u8 port_type;
++	u8 port_type, vlan, field;
+ 	u16 short_field;
+ 	int err;
+ 	int admin_link_state;
+@@ -1430,7 +1436,7 @@ int mlx4_QUERY_PORT_wrapper(struct mlx4_dev *dev, int slave,
+ 	 * QUERY_PORT general query.
+ 	 */
+ 	if (vhcr->op_modifier || vhcr->in_modifier & ~0xFF)
+-		return -EINVAL;
++		return -23;
+ 
+ 	vhcr->in_modifier = port;
+ 
+@@ -1479,6 +1485,17 @@ int mlx4_QUERY_PORT_wrapper(struct mlx4_dev *dev, int slave,
+ 		short_field = dev->caps.pkey_table_len[vhcr->in_modifier];
+ 		MLX4_PUT(outbox->buf, short_field,
+ 			 QUERY_PORT_CUR_MAX_PKEY_OFFSET);
++
++		/* Change the mac table size for the VF */
++		MLX4_GET(field, outbox, QUERY_PORT_MAX_MACVLAN_OFFSET);
++		/* keep the origin vlan of the VF */
++		vlan = field >> 4;
++		/* set the field with the prev vlan and the mac defined quota */
++		field = vlan << 4;
++		field |= ilog2(mlx4_get_port_free_macs(dev,
++			priv->port->port + 1));
++		MLX4_PUT(outbox->buf, field, QUERY_PORT_MAX_MACVLAN_OFFSET);
++
+ 	}
+ out:
+ 	return err;
+diff --git a/drivers/net/ethernet/mellanox/mlx4/mlx4.h b/drivers/net/ethernet/mellanox/mlx4/mlx4.h
+index 6ccf34066..25a5a7163 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/mlx4.h
++++ b/drivers/net/ethernet/mellanox/mlx4/mlx4.h
+@@ -741,6 +741,7 @@ struct mlx4_catas_err {
+ 
+ #define MLX4_MAX_MAC_NUM	128
+ #define MLX4_MAC_TABLE_SIZE	(MLX4_MAX_MAC_NUM << 3)
++#define MLX4_VF_MAC_QUOTA   2
+ 
+ struct mlx4_mac_table {
+ 	__be64			entries[MLX4_MAX_MAC_NUM];
+diff --git a/drivers/net/ethernet/mellanox/mlx4/port.c b/drivers/net/ethernet/mellanox/mlx4/port.c
+index 256a06b3c..a2944c139 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/port.c
++++ b/drivers/net/ethernet/mellanox/mlx4/port.c
+@@ -39,6 +39,7 @@
+ 
+ #include "mlx4.h"
+ #include "mlx4_stats.h"
++#include "fw.h"
+ 
+ #define MLX4_MAC_VALID		(1ull << 63)
+ 
+@@ -2227,3 +2228,61 @@ int mlx4_max_tc(struct mlx4_dev *dev)
+ 	return num_tc;
+ }
+ EXPORT_SYMBOL(mlx4_max_tc);
++
++static int mlx4_get_port_reserved_mac_num(struct mlx4_dev *mdev, int port)
++{
++	struct mlx4_priv *priv = mlx4_priv(mdev);
++	struct resource_allocator *res_alloc;
++	int reserved;
++
++	if (mlx4_is_slave(mdev))
++	    return 0;
++
++	res_alloc = &priv->mfunc.master.res_tracker.res_alloc[RES_MAC];
++
++	reserved = (port > 0) ? res_alloc->res_port_rsvd[port - 1] :
++	    res_alloc->res_reserved;
++
++	return reserved;
++}
++
++int mlx4_get_port_max_macs(struct mlx4_dev *mdev, int port)
++{
++	struct mlx4_port_info *info = &mlx4_priv(mdev)->port[port];
++
++	/* The maximum value should considers the reserved macs for the vfs */
++	return info->mac_table.max - mlx4_get_port_reserved_mac_num(mdev, port);
++}
++EXPORT_SYMBOL(mlx4_get_port_max_macs);
++
++int mlx4_get_port_total_macs(struct mlx4_dev *mdev, int port)
++{
++	struct mlx4_port_info *info = &mlx4_priv(mdev)->port[port];
++
++	return info->mac_table.total;
++}
++EXPORT_SYMBOL(mlx4_get_port_total_macs);
++
++int mlx4_get_port_free_macs(struct mlx4_dev *mdev, int port)
++{
++	/* slave will get the free macs (log2) from its master */
++	if (mlx4_is_slave(mdev)) {
++	    struct mlx4_port_cap port_cap;
++
++	    mlx4_QUERY_PORT(mdev, port, &port_cap);
++	    return (1 << port_cap.log_max_macs);
++	}
++
++	return (mlx4_get_port_max_macs(mdev, port) -
++	    mlx4_get_port_total_macs(mdev, port));
++}
++EXPORT_SYMBOL(mlx4_get_port_free_macs);
++
++bool mlx4_is_available_mac(struct mlx4_dev *mdev, int port)
++{
++	int free_macs = mlx4_get_port_free_macs(mdev, port);
++
++	return free_macs >= MLX4_VF_MAC_QUOTA;
++}
++EXPORT_SYMBOL(mlx4_is_available_mac);
++
+diff --git a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+index 771b92019..1e699b185 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
++++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+@@ -4561,18 +4561,35 @@ enum {
+ 	BUSY_MAX_RETRIES = 10
+ };
+ 
++static void mlx4_if_stat_zeroes(struct mlx4_counter *if_cnt)
++{
++	u8 temp;
++	temp = if_cnt->counter_mode;
++
++	memset(if_cnt, 0, sizeof(*if_cnt));
++	if_cnt->counter_mode = temp;
++	if_cnt->num_ifc = cpu_to_be32(1);
++}
++
+ int mlx4_QUERY_IF_STAT_wrapper(struct mlx4_dev *dev, int slave,
+ 			       struct mlx4_vhcr *vhcr,
+ 			       struct mlx4_cmd_mailbox *inbox,
+ 			       struct mlx4_cmd_mailbox *outbox,
+ 			       struct mlx4_cmd_info *cmd)
+ {
+-	int err;
++	int err = 0;
+ 	int index = vhcr->in_modifier & 0xffff;
+ 
++	if (index == MLX4_SINK_COUNTER_INDEX(dev)) {
++	    mlx4_if_stat_zeroes(outbox->buf);
++	    return 0;
++	}
++
+ 	err = get_res(dev, slave, index, RES_COUNTER, NULL);
+-	if (err)
+-		return err;
++	if (err) {
++	    mlx4_if_stat_zeroes(outbox->buf);
++	    err = 0;
++	}
+ 
+ 	err = mlx4_DMA_wrapper(dev, slave, vhcr, inbox, outbox, cmd);
+ 	put_res(dev, slave, index, RES_COUNTER);
+diff --git a/include/linux/mlx4/device.h b/include/linux/mlx4/device.h
+index 6646634a0..499a9d6fa 100644
+--- a/include/linux/mlx4/device.h
++++ b/include/linux/mlx4/device.h
+@@ -1495,6 +1495,10 @@ int mlx4_phys_to_slave_port(struct mlx4_dev *dev, int slave, int port);
+ int mlx4_get_base_gid_ix(struct mlx4_dev *dev, int slave, int port);
+ 
+ int mlx4_config_vxlan_port(struct mlx4_dev *dev, __be16 udp_port);
++int mlx4_get_port_max_macs(struct mlx4_dev *mdev, int port);
++int mlx4_get_port_total_macs(struct mlx4_dev *mdev, int port);
++int mlx4_get_port_free_macs(struct mlx4_dev *mdev, int port);
++bool mlx4_is_available_mac(struct mlx4_dev *mdev, int port);
+ int mlx4_disable_rx_port_check(struct mlx4_dev *dev, bool dis);
+ int mlx4_config_roce_v2_port(struct mlx4_dev *dev, u16 udp_port);
+ int mlx4_virt2phy_port_map(struct mlx4_dev *dev, u32 port1, u32 port2);

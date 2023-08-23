@@ -17,9 +17,9 @@ in
         {
           nixpkgs.overlays =
             [
-              specialArgs.my-nur.overlays.default
+              specialArgs.overlays
             ]
-            ++ (builtins.attrValues specialArgs.my-nur.legacyPackages."${system}".overlays);
+            ++ (builtins.attrValues specialArgs.legacyPackages."${system}".overlays);
         }
 
         nixos-generators.nixosModules.all-formats
