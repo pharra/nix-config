@@ -87,7 +87,12 @@ stdenv.mkDerivation rec {
 
   enableParallelBuilding = true;
 
-  configureFlags = ["--with-dpdk=${dpdk}"];
+  configureFlags = ["--with-dpdk=${dpdk}" "--with-rdma"];
+
+  postInstall = ''
+    cp -r scripts $out
+    cp -r python/spdk $out/scripts
+  '';
 
   env.NIX_CFLAGS_COMPILE = "-mssse3"; # Necessary to compile.
   # otherwise does not find strncpy when compiling
