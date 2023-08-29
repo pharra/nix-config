@@ -11,7 +11,11 @@
 #
 #############################################################
 let
-  interface = "ibp129s0";
+  interface = {
+    ib = "ibp129s0";
+    eth-to-bridge = "enp129s0d1";
+    eth = "br1";
+  };
 in {
   imports = [
     # Include the results of the hardware scan.
@@ -25,7 +29,11 @@ in {
 
     ../../modules/nixos/spdk.nix
 
-    (import ../../modules/nixos/ipxe.nix {inherit config lib interface pkgs libs;})
+    ../../modules/nixos/iscsi-server
+
+    (import ../../modules/nixos/samba.nix {inherit config lib interface pkgs libs;})
+
+    (import ../../modules/nixos/ipxe {inherit config lib interface pkgs libs;})
     ../../modules/nixos/mlx-sriov.nix
 
     ../../secrets/nixos.nix
@@ -97,11 +105,11 @@ in {
       #   networkConfig.Bridge = "br1";
       #   linkConfig.RequiredForOnline = "enslaved";
       # };
-      # "30-enp129s0d1" = {
-      #   matchConfig.Name = "enp129s0d1";
-      #   networkConfig.Bridge = "br1";
-      #   linkConfig.RequiredForOnline = "enslaved";
-      # };
+      "30-${interface.eth-to-bridge}" = {
+        matchConfig.Name = "${interface.eth-to-bridge}";
+        networkConfig.Bridge = "br1";
+        linkConfig.RequiredForOnline = "enslaved";
+      };
 
       # Configure the bridge for its desired function
       "40-br0" = {
@@ -119,8 +127,8 @@ in {
         };
       };
 
-      "50-${interface}" = {
-        matchConfig.Name = "${interface}";
+      "50-${interface.ib}" = {
+        matchConfig.Name = "${interface.ib}";
         # bridgeConfig = {};
         networkConfig = {
           Address = "192.168.30.1/24";
@@ -137,9 +145,9 @@ in {
         };
       };
 
-      "50-enp129s0d1" = {
-        matchConfig.Name = "enp129s0d1";
-        # bridgeConfig = {};
+      "50-${interface.eth}" = {
+        matchConfig.Name = "${interface.eth}";
+        bridgeConfig = {};
         networkConfig = {
           Address = "192.168.29.1/24";
           # DHCPServer = true;

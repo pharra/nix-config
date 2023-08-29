@@ -1,0 +1,12 @@
+diff --git a/Makefile.am b/Makefile.am
+index 0014d7e..f007212 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -12,7 +12,6 @@ EXTRA_DIST = include \
+ 	     meson_options.txt
+ 
+ pkgsysconfdir = $(sysconfdir)/ksmbd
+-dist_pkgsysconf_DATA = ksmbd.conf.example
+ 
+ man_MANS = ksmbd.conf.5 ksmbdpwd.db.5
+ systemdsystemunit_DATA = ksmbd.service

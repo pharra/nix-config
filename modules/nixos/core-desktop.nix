@@ -27,10 +27,10 @@
   # all fonts are linked to /nix/var/nix/profiles/system/sw/share/X11/fonts
   fonts = {
     # use fonts specified by user rather than default ones
-    enableDefaultFonts = false;
+    enableDefaultPackages = false;
     fontDir.enable = true;
 
-    fonts = with pkgs; [
+    packages = with pkgs; [
       # icon fonts
       material-design-icons
       font-awesome
@@ -333,7 +333,7 @@
   # https://github.com/rvaiya/keyd
   services.keyd = {
     enable = true;
-    settings = {
+    keyboards.default.settings = {
       main = {
         # overloads the capslock key to function as both escape (when tapped) and control (when held)
         # capslock = "overload(control, esc)";

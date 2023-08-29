@@ -14,6 +14,7 @@
     "10de:1aeb" # Audio
     "10de:1aec" # USB
     "10de:1aed" # UCSI
+    "1e4b:1202" # nvme
   ];
 in {
   imports = [

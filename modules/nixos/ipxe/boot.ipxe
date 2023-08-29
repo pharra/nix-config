@@ -1,0 +1,7 @@
+#!ipxe
+
+# Global variables used by all other iPXE scripts
+chain --autofree boot.ipxe.cfg ||
+
+# Boot <boot-url>/menu.ipxe script if all other options have been exhausted
+chain --replace --autofree ${menu-url} ||

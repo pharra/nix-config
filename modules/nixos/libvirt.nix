@@ -72,7 +72,9 @@
 
   boot.kernelModules = ["kvm-amd" "kvm-intel" "kvmfr"];
   boot.extraModulePackages = with config.boot.kernelPackages; [
-    kvmfr
+    (kvmfr.overrideAttrs (_: {
+      patches = [];
+    }))
   ];
   boot.extraModprobeConfig = ''
     # 这里的内存大小计算方法和虚拟机的 shmem 一项相同。

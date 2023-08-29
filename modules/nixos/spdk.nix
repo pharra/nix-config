@@ -4,11 +4,23 @@
   config,
   libs,
   ...
-}: {
+}: let
+  spdk-iscsi-scripts = pkgs.writeShellScriptBin "spdk-iscsi-scripts" ''
+    ${pkgs.spdk}/scripts/rpc.py bdev_uring_create /dev/nbd2 data
+    ${pkgs.spdk}/scripts/rpc.py iscsi_create_initiator_group 1 ANY 192.168.29.0/24
+    ${pkgs.spdk}/scripts/rpc.py iscsi_create_initiator_group 2 ANY 192.168.30.0/24
+    ${pkgs.spdk}/scripts/rpc.py iscsi_create_portal_group 1 192.168.29.1:3260
+    ${pkgs.spdk}/scripts/rpc.py iscsi_create_portal_group 2 192.168.30.1:3260
+    ${pkgs.spdk}/scripts/rpc.py iscsi_create_target_node data data_alias data:0 '1:1 2:2' 64 -d
+  '';
+in {
   environment.systemPackages = with pkgs; [
     parted
+    nvme-cli
     dpdk
     spdk
+    openiscsi
+    spdk-iscsi-scripts
   ];
 
   systemd.services.nvmf_tgt = {
@@ -22,7 +34,23 @@
     };
     serviceConfig = {
       Type = "simple";
-      ExecStart = ''${pkgs.spdk}/bin/nvmf_tgt'';
+      ExecStart = ''${pkgs.spdk}/bin/nvmf_tgt -m 0x02'';
+    };
+  };
+
+  systemd.services.iscsi_tgt = {
+    enable = true;
+    wantedBy = ["multi-user.target"];
+    after = ["rdma.service" "network.target"];
+    requires = ["rdma.service"];
+    description = "Starts the iscsi_tgt";
+    before = ["remote-fs-pre.target"];
+    unitConfig = {
+      DefaultDependencies = "no";
+    };
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = ''${pkgs.spdk}/bin/iscsi_tgt'';
     };
   };
 
