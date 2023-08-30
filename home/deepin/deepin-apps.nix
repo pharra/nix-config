@@ -1,0 +1,49 @@
+{pkgs, ...}: {
+  imports = [
+    "${fetchTarball {
+      url = "https://github.com/msteen/nixos-vscode-server/tarball/master";
+      sha256 = "0sz8njfxn5bw89n6xhlzsbxkafb6qmnszj4qxy2w0hw2mgmjp829";
+    }}/modules/vscode-server/home.nix"
+  ];
+
+  services.vscode-server.enable = true;
+
+  # TODO vscode & chrome both have wayland support, but they don't work with fcitx5, need to fix it.
+  programs = {
+    # source code: https://github.com/nix-community/home-manager/blob/master/modules/programs/chromium.nix
+    # google-chrome = {
+    #   enable = true;
+
+    #   commandLineArgs = [
+    #     # make it use GTK_IM_MODULE if it runs with Gtk4, so fcitx5 can work with it.
+    #     # (only supported by chromium/chrome at this time, not electron)
+    #     # "--gtk-version=4"
+    #     # make it use text-input-v1, which works for kwin 5.27 and weston
+    #     # "--enable-wayland-ime"
+
+    #     # enable hardware acceleration - vulkan api
+    #     # "--enable-features=Vulkan"
+    #   ];
+    # };
+
+    firefox = {
+      enable = true;
+      # enableGnomeExtensions = false;
+      # package = pkgs.firefox-wayland; # firefox with wayland support
+    };
+
+    vscode = {
+      enable = true;
+      # use the stable version
+      # package = pkgs.vscode.override {
+      #   commandLineArgs = [
+      #     # make it use text-input-v1, which works for kwin 5.27 and weston
+      #     # "--enable-wayland-ime"
+      #   ];
+      # };
+
+      # let vscode sync and update its configuration & extensions across devices, using github account.
+      # userSettings = {};
+    };
+  };
+}

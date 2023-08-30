@@ -58,6 +58,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    dde-nixos = {
+      url = "github:linuxdeepin/dde-nixos";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # secrets management, lock with git commit at 2023/7/15
     agenix.url = "github:ryantm/agenix/0d8c5325fc81daf00532e3e26c6752f7bcde1143";
 
@@ -81,6 +86,7 @@
     nix-darwin,
     home-manager,
     nixos-generators,
+    dde-nixos,
     ...
   }: let
     username = "wf";
@@ -91,6 +97,8 @@
     allSystems = [x64_system];
 
     nixosSystem = import ./lib/nixosSystem.nix;
+
+    dde-modules = dde-nixos.nixosModules.${x64_system};
 
     forAllSystems = f: nixpkgs.lib.genAttrs allSystems (system: f system);
     legacyPackages = forAllSystems (system:
@@ -122,6 +130,16 @@
         home-module = import ./home/desktop-gnome.nix;
       };
 
+      # vm
+      vm_modules_deepin = {
+        nixos-modules = [
+          ./hosts/vm
+          ./modules/nixos/deepin.nix
+          dde-modules
+        ];
+        home-module = import ./home/desktop-deepin.nix;
+      };
+
       # homelab
       homelab_modules_gnome = {
         nixos-modules = [
@@ -129,6 +147,15 @@
           ./modules/nixos/gnome.nix
         ];
         home-module = import ./home/desktop-gnome.nix;
+      };
+
+      homelab_modules_deepin = {
+        nixos-modules = [
+          ./hosts/homelab
+          ./modules/nixos/deepin.nix
+          dde-modules
+        ];
+        home-module = import ./home/desktop-deepin.nix;
       };
 
       system = x64_system;
@@ -155,8 +182,13 @@
       # vm with gnome
       vm_gnome = nixosSystem (vm_modules_gnome // stable_args);
 
+      # vm with deepin
+      vm_deepin = nixosSystem (vm_modules_deepin // stable_args);
+
       # homelab with gnome
       homelab_gnome = nixosSystem (homelab_modules_gnome // stable_args);
+
+      homelab_deepin = nixosSystem (homelab_modules_deepin // stable_args);
     };
 
     # take system images for idols
@@ -166,16 +198,18 @@
       nixpkgs.lib.genAttrs [
         "desktop_gnome"
         "homelab_gnome"
-      ] (
-        host:
-          self.nixosConfigurations.${host}.config.formats.iso
-      )
-      // nixpkgs.lib.genAttrs [
+        "vm_deepin"
         "vm_gnome"
       ] (
         host:
-          self.nixosConfigurations.${host}.config.formats.proxmox
+          self.nixosConfigurations.${host}.config.formats.vm
       )
+      # // nixpkgs.lib.genAttrs [
+      #   "vm_gnome"
+      # ] (
+      #   host:
+      #     self.nixosConfigurations.${host}.config.formats.proxmox
+      # )
       // nixpkgs.lib.filterAttrs (_: v: nixpkgs.lib.isDerivation v) legacyPackages.${x64_system};
 
     devShells."${x64_system}".default = let
