@@ -63,6 +63,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    impermanence.url = "github:nix-community/impermanence";
+
     # secrets management, lock with git commit at 2023/7/15
     agenix.url = "github:ryantm/agenix/0d8c5325fc81daf00532e3e26c6752f7bcde1143";
 
@@ -87,6 +89,7 @@
     home-manager,
     nixos-generators,
     dde-nixos,
+    impermanence,
     ...
   }: let
     username = "wf";
@@ -112,49 +115,61 @@
     overlays = import ./overlay.nix;
   in {
     nixosConfigurations = let
+      common-nixos-modules = [
+        impermanence.nixosModules.impermanence
+        dde-modules
+      ];
       #desktop
       desktop_modules_gnome = {
-        nixos-modules = [
-          ./hosts/desktop
-          ./modules/nixos/gnome.nix
-        ];
+        nixos-modules =
+          [
+            ./hosts/desktop
+            ./modules/nixos/gnome.nix
+          ]
+          ++ common-nixos-modules;
         home-module = import ./home/desktop-gnome.nix;
       };
 
       # vm
       vm_modules_gnome = {
-        nixos-modules = [
-          ./hosts/vm
-          ./modules/nixos/gnome.nix
-        ];
+        nixos-modules =
+          [
+            ./hosts/vm
+            ./modules/nixos/gnome.nix
+          ]
+          ++ common-nixos-modules;
         home-module = import ./home/desktop-gnome.nix;
       };
 
       # vm
       vm_modules_deepin = {
-        nixos-modules = [
-          ./hosts/vm
-          ./modules/nixos/deepin.nix
-          dde-modules
-        ];
+        nixos-modules =
+          [
+            ./hosts/vm
+            ./modules/nixos/deepin.nix
+          ]
+          ++ common-nixos-modules;
         home-module = import ./home/desktop-deepin.nix;
       };
 
       # homelab
       homelab_modules_gnome = {
-        nixos-modules = [
-          ./hosts/homelab
-          ./modules/nixos/gnome.nix
-        ];
+        nixos-modules =
+          [
+            ./hosts/homelab
+            ./modules/nixos/gnome.nix
+          ]
+          ++ common-nixos-modules;
         home-module = import ./home/desktop-gnome.nix;
       };
 
       homelab_modules_deepin = {
-        nixos-modules = [
-          ./hosts/homelab
-          ./modules/nixos/deepin.nix
-          dde-modules
-        ];
+        nixos-modules =
+          [
+            ./hosts/homelab
+            ./modules/nixos/deepin.nix
+          ]
+          ++ common-nixos-modules;
         home-module = import ./home/desktop-deepin.nix;
       };
 

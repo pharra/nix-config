@@ -44,9 +44,10 @@ in {
   # boot.extraModprobeConfig = "options kvm_intel nested=1"; # for intel cpu
   boot.extraModprobeConfig = "options kvm_amd nested=1"; # for amd cpu
 
-  fileSystems."/" = {
+  fileSystems."/nix" = {
     device = "/dev/disk/by-label/nixos";
     fsType = "ext4";
+    neededForBoot = true;
   };
 
   fileSystems."/boot/efi" = {

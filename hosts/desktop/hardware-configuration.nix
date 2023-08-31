@@ -18,7 +18,7 @@
   boot.extraModulePackages = [];
   boot.kernelParams = lib.mkForce ["nogpumanager" "nvidia_drm.modeset=0"];
 
-  fileSystems."/" = {
+  fileSystems."/nix" = {
     device = "/dev/disk/by-label/nixos";
     fsType = "ext4";
   };
