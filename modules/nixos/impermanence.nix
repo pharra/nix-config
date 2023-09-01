@@ -78,6 +78,7 @@
         ".wine"
         ".Xilinx"
         ".zoom"
+        ".gitconfig"
       ];
       files = [
         ".zsh_history"
