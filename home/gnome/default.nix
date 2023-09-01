@@ -85,5 +85,6 @@
     gnomeExtensions.forge
     # gnomeExtensions.fullscreen-avoider
     gnomeExtensions.dash-to-dock
+    gnomeExtensions.freon
   ];
 }

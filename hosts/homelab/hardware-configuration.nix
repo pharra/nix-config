@@ -10,11 +10,16 @@
 }: let
   # RTX 3070 Ti
   gpuIDs = [
-    "10de:21c4" # Graphics
-    "10de:1aeb" # Audio
-    "10de:1aec" # USB
-    "10de:1aed" # UCSI
-    "1e4b:1202" # nvme
+    #"10de:21c4" # Graphics
+    #"10de:1aeb" # Audio
+    #"10de:1aec" # USB
+    #"10de:1aed" # UCSI
+
+    # gtx 960
+    "10de:1401"
+    "10de:0fba"
+
+    #"1e4b:1202" # nvme
   ];
 in {
   imports = [

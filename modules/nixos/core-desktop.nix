@@ -14,6 +14,7 @@
     ./fcitx5.nix
     ./flatpak.nix
     ./impermanence.nix
+    ./zfs.nix
   ];
 
   # to install chrome, you need to enable unfree packages

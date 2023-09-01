@@ -13,6 +13,8 @@
       "/var/lib"
       "/var/log"
       "/etc/NetworkManager/system-connections"
+      "/etc/ksmbd"
+      "/smb"
     ];
     files = [
       "/etc/machine-id"
@@ -51,6 +53,9 @@
         ".gnupg"
         ".ssh"
 
+        # flatpak
+        ".var/app"
+
         # Other configs
         ".aMule"
         ".android"
@@ -74,7 +79,9 @@
         ".Xilinx"
         ".zoom"
       ];
-      files = [];
+      files = [
+        ".zsh_history"
+      ];
     };
   };
 

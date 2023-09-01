@@ -1,4 +1,8 @@
-{username, ...}: {
+{
+  username,
+  lib,
+  ...
+}: {
   nix.settings.trusted-users = [username];
 
   users.groups = {
@@ -10,6 +14,8 @@
   users.users."${username}" = {
     home = "/home/${username}";
     isNormalUser = true;
+    hashedPassword = lib.mkForce "$6$dascadwafasca$fIzpXuQBxDXeCwWKuPgNP/SmIDXtYVcrupQuqcXyeXHGftBFUFWleXPuCsT.rr4FWmZX4QINfrvzh.qtzXS7u0";
+    initialHashedPassword = lib.mkForce "$6$dascadwafasca$fIzpXuQBxDXeCwWKuPgNP/SmIDXtYVcrupQuqcXyeXHGftBFUFWleXPuCsT.rr4FWmZX4QINfrvzh.qtzXS7u0";
     description = username;
     extraGroups = [
       username
