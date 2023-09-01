@@ -70,7 +70,7 @@
     };
   };
 
-  boot.kernelModules = ["kvm-amd" "kvm-intel" "kvmfr"];
+  boot.kernelModules = ["kvmfr"];
   boot.extraModulePackages = with config.boot.kernelPackages; [
     (kvmfr.overrideAttrs (_: {
       patches = [];
