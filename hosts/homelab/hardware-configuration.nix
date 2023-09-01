@@ -39,7 +39,8 @@ in {
   ];
   boot.blacklistedKernelModules = ["ast"];
   boot.kernelParams =
-    ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=32"]
+    #"default_hugepagesz=1G" "hugepagesz=1G" "hugepages=32"
+    ["pci=nommconf"]
     ++ [("vfio-pci.ids=" + lib.concatStringsSep "," gpuIDs)]; # isolate the GPU
 
   boot.kernelModules = ["kvm-amd"];
