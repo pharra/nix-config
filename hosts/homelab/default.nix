@@ -204,6 +204,7 @@ in {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
     modesetting.enable = true;
     powerManagement.enable = true;
+    open = true;
   };
   virtualisation.docker.enableNvidia = true; # for nvidia-docker
 
