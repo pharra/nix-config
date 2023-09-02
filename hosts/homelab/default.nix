@@ -204,9 +204,9 @@ in {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
     modesetting.enable = true;
     powerManagement.enable = true;
-    open = true;
+    # open = true;
   };
-  virtualisation.docker.enableNvidia = true; # for nvidia-docker
+  # virtualisation.docker.enableNvidia = true; # for nvidia-docker
 
   hardware.opengl = {
     enable = true;
@@ -222,5 +222,5 @@ in {
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "22.11"; # Did you read the comment?
+  system.stateVersion = "23.05"; # Did you read the comment?
 }

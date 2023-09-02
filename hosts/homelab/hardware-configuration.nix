@@ -32,6 +32,8 @@ in {
     "vfio"
     "vfio_iommu_type1"
 
+    "zfs"
+
     "nvidia"
     "nvidia_modeset"
     "nvidia_uvm"
@@ -39,8 +41,8 @@ in {
   ];
   boot.blacklistedKernelModules = ["ast"];
   boot.kernelParams =
-    #"default_hugepagesz=1G" "hugepagesz=1G" "hugepages=32"
-    ["pci=nommconf"]
+    #"default_hugepagesz=1G" "hugepagesz=1G" "hugepages=32" "pci=nommconf"
+    []
     ++ [("vfio-pci.ids=" + lib.concatStringsSep "," gpuIDs)]; # isolate the GPU
 
   boot.kernelModules = ["kvm-amd"];
@@ -50,14 +52,26 @@ in {
   # boot.extraModprobeConfig = "options kvm_intel nested=1"; # for intel cpu
   boot.extraModprobeConfig = "options kvm_amd nested=1"; # for amd cpu
 
+  fileSystems."/zp" = {
+    device = "zp";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
   fileSystems."/nix" = {
-    device = "/dev/disk/by-label/nixos";
-    fsType = "ext4";
+    device = "zp/nix";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/nix/persistent" = {
+    device = "zp/persistent";
+    fsType = "zfs";
     neededForBoot = true;
   };
 
   fileSystems."/boot/efi" = {
-    device = "/dev/disk/by-label/boot";
+    device = "/dev/disk/by-label/zfs_boot";
     fsType = "vfat";
   };
 
