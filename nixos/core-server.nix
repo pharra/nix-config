@@ -12,8 +12,8 @@
   # for nix server, we do not need to keep too much generations
   boot.loader.systemd-boot.configurationLimit = lib.mkDefault 10;
   # boot.loader.grub.configurationLimit = 10;
-  #boot.kernelPackages = pkgs.linux_mlx;
-  boot.kernelPackages = pkgs.linuxPackages_6_4;
+  boot.kernelPackages = pkgs.linux_mlx;
+  # boot.kernelPackages = pkgs.linuxPackages_6_4;
 
   hardware.enableRedistributableFirmware = true;
   # do garbage collection weekly to keep disk usage low

@@ -185,8 +185,18 @@ in {
   hardware.nvidia = {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
     modesetting.enable = true;
+    powerManagement.enable = true;
   };
-  
+  # virtualisation.docker.enableNvidia = true; # for nvidia-docker
+
+  hardware.opengl = {
+    enable = true;
+    # if hardware.opengl.driSupport is enabled, mesa is installed and provides Vulkan for supported hardware.
+    driSupport = true;
+    # needed by nvidia-docker
+    driSupport32Bit = true;
+  };
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave

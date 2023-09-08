@@ -44,17 +44,6 @@ in {
     ["pcie_acs_override=downstream,multifunction" "default_hugepagesz=1G" "hugepagesz=1G" "hugepages=34"]
     ++ [("vfio-pci.ids=" + lib.concatStringsSep "," gpuIDs)]; # isolate the GPU
 
-  #  boot.kernelPatches = [
-  #    {
-  #      name = "acs.patch";
-  #      patch = pkgs.fetchurl {
-  #        name = "acs.patch";
-  #        url = "https://aur.archlinux.org/cgit/aur.git/plain/0999-acs.gitpatch?h=linux-jcore&id=ce5e811f08877f45fbe8a2db2a2505c0e7ff616e";
-  #        sha256 = "RY1+Ak0z1JZbFLm5h/AaKIT/KHYc/12nxqVBMqlenzY=";
-  #      };
-  #    }
-  #  ];
-
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = [];
 
