@@ -14,27 +14,27 @@ let
   interface = {
     ib = "ibp66s0";
     eth-to-bridge = "enp66s0d1";
-    eth = "enp66s0d1";
+    eth = "br1";
   };
 in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
 
-    ../../modules/nixos/fhs-fonts.nix
-    ../../modules/nixos/libvirt.nix
-    ../../modules/nixos/core-desktop.nix
-    # ../../modules/nixos/remote-building.nix
-    ../../modules/nixos/user-group.nix
+    ../../nixos/fhs-fonts.nix
+    ../../nixos/libvirt.nix
+    ../../nixos/core-desktop.nix
+    # ../../nixos/remote-building.nix
+    ../../nixos/user-group.nix
 
-    ../../modules/nixos/spdk.nix
+    ../../nixos/spdk.nix
 
-    ../../modules/nixos/iscsi-server
+    ../../nixos/iscsi-server
 
-    (import ../../modules/nixos/samba.nix {inherit config lib interface pkgs libs;})
+    (import ../../nixos/samba.nix {inherit config lib interface pkgs libs;})
 
-    (import ../../modules/nixos/ipxe {inherit config lib interface pkgs libs;})
-    ../../modules/nixos/mlx-sriov.nix
+    (import ../../nixos/ipxe {inherit config lib interface pkgs libs;})
+    ../../nixos/mlx-sriov.nix
 
     ../../secrets/nixos.nix
   ];
@@ -108,11 +108,11 @@ in {
       #   networkConfig.Bridge = "br1";
       #   linkConfig.RequiredForOnline = "enslaved";
       # };
-      # "30-${interface.eth-to-bridge}" = {
-      #   matchConfig.Name = "${interface.eth-to-bridge}";
-      #   networkConfig.Bridge = "br1";
-      #   linkConfig.RequiredForOnline = "enslaved";
-      # };
+      "30-${interface.eth-to-bridge}" = {
+        matchConfig.Name = "${interface.eth-to-bridge}";
+        networkConfig.Bridge = "br1";
+        linkConfig.RequiredForOnline = "enslaved";
+      };
 
       # Configure the bridge for its desired function
       "40-br0" = {

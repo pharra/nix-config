@@ -113,18 +113,21 @@
       });
 
     overlays = import ./overlay.nix;
+
+    modules = import ./modules;
   in {
     nixosConfigurations = let
       common-nixos-modules = [
         impermanence.nixosModules.impermanence
         dde-modules
+        modules
       ];
       #desktop
       desktop_modules_gnome = {
         nixos-modules =
           [
             ./hosts/desktop
-            ./modules/nixos/gnome.nix
+            ./nixos/gnome.nix
           ]
           ++ common-nixos-modules;
         home-module = import ./home/desktop-gnome.nix;
@@ -135,7 +138,7 @@
         nixos-modules =
           [
             ./hosts/vm
-            ./modules/nixos/gnome.nix
+            ./nixos/gnome.nix
           ]
           ++ common-nixos-modules;
         home-module = import ./home/desktop-gnome.nix;
@@ -146,7 +149,7 @@
         nixos-modules =
           [
             ./hosts/vm
-            ./modules/nixos/deepin.nix
+            ./nixos/deepin.nix
           ]
           ++ common-nixos-modules;
         home-module = import ./home/desktop-deepin.nix;
@@ -157,7 +160,7 @@
         nixos-modules =
           [
             ./hosts/homelab
-            ./modules/nixos/gnome.nix
+            ./nixos/gnome.nix
           ]
           ++ common-nixos-modules;
         home-module = import ./home/desktop-gnome.nix;
@@ -167,7 +170,7 @@
         nixos-modules =
           [
             ./hosts/homelab
-            ./modules/nixos/deepin.nix
+            ./nixos/deepin.nix
           ]
           ++ common-nixos-modules;
         home-module = import ./home/desktop-deepin.nix;

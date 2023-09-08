@@ -6,9 +6,9 @@
   ...
 }: {
   environment.systemPackages = [
-    pkgs.zfs
+    #pkgs.zfs
     #pkgs.sysbench
-    #pkgs.fio
+    pkgs.fio
     #pkgs.smartmontools
   ];
 }
