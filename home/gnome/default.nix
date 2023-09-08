@@ -52,20 +52,6 @@
       show-battery-icon-on = true;
       show-battery-value-on = true;
     };
-
-    # "org/gnome/shell/extensions/dash-to-dock" = {   # If dock if preferred
-    #   multi-monitor = true;
-    #   dock-fixed = true;
-    #   dash-max-icon-size = 16;
-    #   custom-theme-shrink = true;
-    #   transparency-mode = "FIXED";
-    #   background-opacity = 0.0;
-    #   show-apps-at-top = true;
-    #   show-trash = true;
-    #   hot-keys = false;
-    #   click-action = "previews";
-    #   scroll-action = "cycle-windows";
-    # };
   };
 
   home.packages = with pkgs; [
