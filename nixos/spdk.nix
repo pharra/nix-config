@@ -27,6 +27,19 @@
     ${pkgs.spdk}/scripts/rpc.py -s /var/tmp/spdk_vhost.sock vhost_create_scsi_controller vhost.0
     ${pkgs.spdk}/scripts/rpc.py -s /var/tmp/spdk_vhost.sock vhost_scsi_controller_add_target vhost.0 0 microsoft
   '';
+
+  spdk-nvme-scripts = pkgs.writeShellScriptBin "spdk-nvme-scripts" ''
+    ${pkgs.kmod}/bin/modprobe ublk_drv
+    ${pkgs.spdk}/scripts/rpc.py bdev_nvme_attach_controller -b nvme1 -t pcie -a 0000:81:00.0
+    ${pkgs.spdk}/scripts/rpc.py bdev_nvme_attach_controller -b nvme2 -t pcie -a 0000:82:00.0
+    ${pkgs.spdk}/scripts/rpc.py bdev_nvme_attach_controller -b nvme3 -t pcie -a 0000:83:00.0
+    ${pkgs.spdk}/scripts/rpc.py bdev_nvme_attach_controller -b nvme4 -t pcie -a 0000:84:00.0
+    ${pkgs.spdk}/scripts/rpc.py ublk_create_target
+    ${pkgs.spdk}/scripts/rpc.py ublk_start_disk nvme1n1 1 -q 2 -d 128
+    ${pkgs.spdk}/scripts/rpc.py ublk_start_disk nvme2n1 2 -q 2 -d 128
+    ${pkgs.spdk}/scripts/rpc.py ublk_start_disk nvme3n1 3 -q 2 -d 128
+    ${pkgs.spdk}/scripts/rpc.py ublk_start_disk nvme4n1 4 -q 2 -d 128
+  '';
 in {
   environment.systemPackages = with pkgs; [
     parted
@@ -37,6 +50,7 @@ in {
     spdk-iscsi-scripts
     spdk-nvmf-scripts
     spdk-vhost-scripts
+    spdk-nvme-scripts
   ];
 
   systemd.services.spdk_tgt = {

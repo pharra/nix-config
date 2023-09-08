@@ -93,7 +93,7 @@ in
 
     enableParallelBuilding = true;
 
-    configureFlags = ["--with-dpdk=${dpdk}" "--with-rdma" "--with-uring"];
+    configureFlags = ["--with-dpdk=${dpdk}" "--with-rdma" "--with-uring" "--with-ublk"];
 
     postInstall = ''
       cp -r scripts $out
