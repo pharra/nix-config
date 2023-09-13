@@ -54,6 +54,8 @@
 
     looking-glass-client
 
+    cloud-hypervisor
+
     # swtpm
   ];
 
