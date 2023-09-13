@@ -185,7 +185,7 @@ in {
   hardware.nvidia = {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
     modesetting.enable = true;
-    powerManagement.enable = true;
+    #powerManagement.enable = true;
   };
   # virtualisation.docker.enableNvidia = true; # for nvidia-docker
 

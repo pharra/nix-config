@@ -19,8 +19,8 @@
     "10de:1401"
     "10de:0fba"
 
-    "1e4b:1202" # nvme
-    "1e4b:1602" # nvme
+    #"1e4b:1202" # nvme
+    #"1e4b:1602" # nvme
   ];
 in {
   imports = [
@@ -53,20 +53,20 @@ in {
     options kvm_amd nested=1
   ''; # for amd cpu
 
-  fileSystems."/zp" = {
-    device = "zp";
+  fileSystems."/system" = {
+    device = "system";
     fsType = "zfs";
     neededForBoot = true;
   };
 
   fileSystems."/nix" = {
-    device = "zp/nix";
+    device = "system/nix";
     fsType = "zfs";
     neededForBoot = true;
   };
 
   fileSystems."/nix/persistent" = {
-    device = "zp/persistent";
+    device = "system/persistent";
     fsType = "zfs";
     neededForBoot = true;
   };
