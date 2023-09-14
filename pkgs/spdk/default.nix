@@ -25,7 +25,7 @@
   libtool,
   liburing,
   libvfio-user,
-    json_c,
+  json_c,
   cmocka,
   meson,
   ninja,
@@ -82,9 +82,9 @@ in
       libtool
       liburing
       libvfio-user
-        json_c
-  cmocka
-        meson
+      json_c
+      cmocka
+      meson
       ninja
     ];
 
