@@ -24,7 +24,6 @@
   automake,
   libtool,
   liburing,
-  libvfio-user,
   json_c,
   cmocka,
   meson,
@@ -81,7 +80,6 @@ in
       automake
       libtool
       liburing
-      libvfio-user
       json_c
       cmocka
       meson
