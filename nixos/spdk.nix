@@ -53,7 +53,7 @@ in {
     spdk-nvme-scripts
   ];
 
-  systemd.services.spdk_tgt = {
+  systemd.services.spdk = {
     enable = true;
     wantedBy = ["multi-user.target"];
     after = ["rdma.service" "network.target"];
@@ -66,8 +66,12 @@ in {
     path = [pkgs.kmod pkgs.gawk pkgs.util-linux];
     serviceConfig = {
       Type = "simple";
-      ExecStartPre = ''${pkgs.spdk}/scripts/setup.sh'';
-      ExecStart = ''${pkgs.spdk}/bin/spdk_tgt -m 0x30003'';
+      Environment = "PCI_ALLOWED='none'";
+      ExecStartPre = ''
+        ${pkgs.spdk}/scripts/setup.sh
+        ${pkgs.kmod}/bin/modprobe ublk_drv
+      '';
+      ExecStart = ''${pkgs.spdk}/bin/spdk_tgt -m 0x30003 -c /home/wf/spdk/rdma_config.json -f /var/run/spdk.pid -S /var/run'';
     };
   };
 

@@ -36,6 +36,7 @@
         "Videos"
         "VirtualBox VMs"
         "Data"
+        "spdk"
 
         # Preserved cache
         ".cache/com.github.tchar.calculate-anything" # Ulauncher calculator plugin
