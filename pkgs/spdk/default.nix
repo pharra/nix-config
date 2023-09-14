@@ -24,6 +24,11 @@
   automake,
   libtool,
   liburing,
+  libvfio-user,
+    json_c,
+  cmocka,
+  meson,
+  ninja,
 }: let
   python3' = python3.withPackages (ps: [
     ps.configshell
@@ -76,6 +81,11 @@ in
       automake
       libtool
       liburing
+      libvfio-user
+        json_c
+  cmocka
+        meson
+      ninja
     ];
 
     preConfigure = ''
@@ -91,9 +101,12 @@ in
       sed -i -e '1i #define HAVE_ARC4RANDOM 1' lib/iscsi/iscsi.c
     '';
 
+    dontUseMesonConfigure = true;
     enableParallelBuilding = true;
+    dontUseNinjaBuild = true;
+    dontUseNinjaInstall = true;
 
-    configureFlags = ["--with-dpdk=${dpdk}" "--with-rdma" "--with-uring" "--with-ublk"];
+    configureFlags = ["--with-dpdk=${dpdk}" "--with-rdma" "--with-uring" "--with-ublk" "--with-vfio-user"];
 
     postInstall = ''
       cp -r scripts $out
