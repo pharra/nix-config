@@ -57,6 +57,10 @@ in {
   networking.hostId = "88fcb8e5";
   boot.zfs.enableUnstable = true;
 
+  # raid
+  boot.swraid.enable = true;
+  boot.swraid.mdadmConf = "ARRAY /dev/md0 metadata=1.2 name=pve:data UUID=7eed8001:ccc09092:0af811d0:5e0a9832";
+
   # Bootloader.
   boot.loader = {
     efi = {
