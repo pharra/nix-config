@@ -40,6 +40,14 @@
     ${pkgs.spdk}/scripts/rpc.py ublk_start_disk nvme3n1 3 -q 2 -d 128
     ${pkgs.spdk}/scripts/rpc.py ublk_start_disk nvme4n1 4 -q 2 -d 128
   '';
+
+  spdk-scripts = pkgs.writeShellScriptBin "spdk-scripts" ''
+    ${pkgs.spdk}/scripts/rpc.py nvmf_create_transport -t VFIOUSER
+    ${pkgs.spdk}/scripts/rpc.py bdev_aio_create /dev/mapper/data-vm--100--disk--1 microsoft
+    ${pkgs.spdk}/scripts/rpc.py nvmf_create_subsystem nqn.2019-07.io.spdk:microsoft -a -s SPDK0
+    ${pkgs.spdk}/scripts/rpc.py nvmf_subsystem_add_ns nqn.2019-07.io.spdk:microsoft microsoft
+    ${pkgs.spdk}/scripts/rpc.py nvmf_subsystem_add_listener nqn.2019-07.io.spdk:microsoft -t VFIOUSER -a /var/run -s 0
+  '';
 in {
   environment.systemPackages = with pkgs; [
     parted
@@ -51,6 +59,7 @@ in {
     spdk-nvmf-scripts
     spdk-vhost-scripts
     spdk-nvme-scripts
+    spdk-scripts
   ];
 
   systemd.services.spdk = {
@@ -59,10 +68,6 @@ in {
     after = ["rdma.service" "network.target"];
     requires = ["rdma.service"];
     description = "Starts the spdk_tgt";
-    before = ["remote-fs-pre.target"];
-    unitConfig = {
-      DefaultDependencies = "no";
-    };
     path = [pkgs.kmod pkgs.gawk pkgs.util-linux];
     serviceConfig = {
       Type = "simple";
