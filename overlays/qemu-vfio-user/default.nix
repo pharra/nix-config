@@ -5,5 +5,7 @@ self: super: {
       ++ [
         ./qemu-vfio-user.patch
       ];
+
+    configureFlags = ["--enable-multiprocess"] ++ oldAttrs.configureFlags;
   });
 }
