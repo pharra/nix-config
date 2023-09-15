@@ -59,7 +59,6 @@ in {
     before = ["sysinit.target" "shutdown.target" "network-pre.target"];
     unitConfig = {
       ConditionCapability = ["CAP_SYS_MODULE"];
-      DefaultDependencies = "no";
     };
     serviceConfig = {
       Type = "oneshot";
