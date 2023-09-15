@@ -39,22 +39,14 @@ in
 
     src = fetchgit {
       url = "https://github.com/spdk/spdk.git";
-      rev = "396e6facb307e108eb454c9e0769a2b108ff2f0d";
+      rev = "a1f4f11b41e4fa9fe9242fa8467a3eee92c20a03";
       fetchSubmodules = true;
-      sha256 = "sha256-6LDFGI+lD0Ixj8TNW7eNqAcz2ubGRuvMnunDy4qelao=";
+      sha256 = "sha256-nfHW/oXEzSQ4FmXervDG5+E6OP40MWiXy17Ey1GAehQ=";
     };
 
-    # patches = [
-    #   # Backport of upstream patch for ncurses-6.3 support.
-    #   # Will be in next release after 21.10.
-    #   # ./ncurses-6.3.patch
-
-    #   # DPDK 23.07 compatibility.
-    #   (fetchpatch {
-    #     url = "https://github.com/spdk/spdk/commit/f72cab94dd35d7b45ec5a4f35967adf3184ca616.patch";
-    #     sha256 = "sha256-sSetvyNjlM/hSOUsUO3/dmPzAliVcteNDvy34yM5d4A=";
-    #   })
-    # ];
+    patches = [
+      ./python-setup.patch
+    ];
 
     nativeBuildInputs = [
       python3'
