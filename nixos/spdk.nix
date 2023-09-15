@@ -34,19 +34,39 @@
     ${pkgs.spdk}/scripts/rpc.py bdev_nvme_attach_controller -b nvme2 -t pcie -a 0000:82:00.0
     ${pkgs.spdk}/scripts/rpc.py bdev_nvme_attach_controller -b nvme3 -t pcie -a 0000:83:00.0
     ${pkgs.spdk}/scripts/rpc.py bdev_nvme_attach_controller -b nvme4 -t pcie -a 0000:84:00.0
-    ${pkgs.spdk}/scripts/rpc.py ublk_create_target
-    ${pkgs.spdk}/scripts/rpc.py ublk_start_disk nvme1n1 1 -q 2 -d 128
-    ${pkgs.spdk}/scripts/rpc.py ublk_start_disk nvme2n1 2 -q 2 -d 128
-    ${pkgs.spdk}/scripts/rpc.py ublk_start_disk nvme3n1 3 -q 2 -d 128
-    ${pkgs.spdk}/scripts/rpc.py ublk_start_disk nvme4n1 4 -q 2 -d 128
+    # ${pkgs.spdk}/scripts/rpc.py ublk_create_target
+    # ${pkgs.spdk}/scripts/rpc.py ublk_start_disk nvme1n1 1 -q 2 -d 128
+    # ${pkgs.spdk}/scripts/rpc.py ublk_start_disk nvme2n1 2 -q 2 -d 128
+    # ${pkgs.spdk}/scripts/rpc.py ublk_start_disk nvme3n1 3 -q 2 -d 128
+    # ${pkgs.spdk}/scripts/rpc.py ublk_start_disk nvme4n1 4 -q 2 -d 128
   '';
 
   spdk-scripts = pkgs.writeShellScriptBin "spdk-scripts" ''
     ${pkgs.spdk}/scripts/rpc.py nvmf_create_transport -t VFIOUSER
-    ${pkgs.spdk}/scripts/rpc.py bdev_aio_create /dev/mapper/data-vm--100--disk--1 microsoft
+    ${pkgs.spdk}/scripts/rpc.py bdev_aio_create /dev/zvol/data/microsoft microsoft
     ${pkgs.spdk}/scripts/rpc.py nvmf_create_subsystem nqn.2019-07.io.spdk:microsoft -a -s SPDK0
     ${pkgs.spdk}/scripts/rpc.py nvmf_subsystem_add_ns nqn.2019-07.io.spdk:microsoft microsoft
     ${pkgs.spdk}/scripts/rpc.py nvmf_subsystem_add_listener nqn.2019-07.io.spdk:microsoft -t VFIOUSER -a /var/run -s 0
+  '';
+
+  bind-vfio-scripts = pkgs.writeShellScriptBin "bind-vfio-scripts" ''
+    echo 0000:81:00.0 > /sys/bus/pci/drivers/nvme/unbind
+    echo 0000:82:00.0 > /sys/bus/pci/drivers/nvme/unbind
+    echo 0000:83:00.0 > /sys/bus/pci/drivers/nvme/unbind
+    echo 0000:84:00.0 > /sys/bus/pci/drivers/nvme/unbind
+    ${pkgs.spdk}/scripts/setup.sh
+  '';
+
+  unbind-vfio-scripts = pkgs.writeShellScriptBin "unbind-vfio-scripts" ''
+    echo 0000:81:00.0 > /sys/bus/pci/drivers/vfio-pci/unbind
+    echo 0000:82:00.0 > /sys/bus/pci/drivers/vfio-pci/unbind
+    echo 0000:83:00.0 > /sys/bus/pci/drivers/vfio-pci/unbind
+    echo 0000:84:00.0 > /sys/bus/pci/drivers/vfio-pci/unbind
+
+    echo 0000:81:00.0 > /sys/bus/pci/drivers/nvme/bind
+    echo 0000:82:00.0 > /sys/bus/pci/drivers/nvme/bind
+    echo 0000:83:00.0 > /sys/bus/pci/drivers/nvme/bind
+    echo 0000:84:00.0 > /sys/bus/pci/drivers/nvme/bind
   '';
 in {
   environment.systemPackages = with pkgs; [
@@ -60,6 +80,8 @@ in {
     spdk-vhost-scripts
     spdk-nvme-scripts
     spdk-scripts
+    bind-vfio-scripts
+    unbind-vfio-scripts
   ];
 
   systemd.services.spdk = {
