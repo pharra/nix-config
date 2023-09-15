@@ -95,7 +95,7 @@ stdenv.mkDerivation rec {
   dontUseNinjaBuild = true;
   dontUseNinjaInstall = true;
 
-  configureFlags = ["--with-rdma" "--with-uring" "--with-ublk" "--with-vfio-user"];
+  configureFlags = ["--with-rdma" "--with-uring" "--with-ublk" "--with-vfio-user" "--with-raid5f"];
 
   postInstall = ''
     cp -r scripts $out
