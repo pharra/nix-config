@@ -43,7 +43,7 @@
 
   spdk-scripts = pkgs.writeShellScriptBin "spdk-scripts" ''
     ${pkgs.spdk}/scripts/rpc.py nvmf_create_transport -t VFIOUSER
-    ${pkgs.spdk}/scripts/rpc.py bdev_aio_create /dev/zvol/data/microsoft microsoft
+    ${pkgs.spdk}/scripts/rpc.py bdev_aio_create /dev/mapper/data-microsoft microsoft
     ${pkgs.spdk}/scripts/rpc.py nvmf_create_subsystem nqn.2019-07.io.spdk:microsoft -a -s SPDK0
     ${pkgs.spdk}/scripts/rpc.py nvmf_subsystem_add_ns nqn.2019-07.io.spdk:microsoft microsoft
     ${pkgs.spdk}/scripts/rpc.py nvmf_subsystem_add_listener nqn.2019-07.io.spdk:microsoft -t VFIOUSER -a /var/run -s 0
