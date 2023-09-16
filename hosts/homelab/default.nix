@@ -59,7 +59,7 @@ in {
 
   # raid
   boot.swraid.enable = true;
-  boot.swraid.mdadmConf = "ARRAY /dev/md0 metadata=1.2 spares=1 name=homelab:0 UUID=8c4e80ca:ce8a1a5c:c87e7676:d4149636";
+  boot.swraid.mdadmConf = "ARRAY /dev/md0 metadata=1.2 spares=1 name=homelab:0 UUID=c8e5fbbe:edd3c686:a1e53f13:e3922146";
 
   # Bootloader.
   boot.loader = {
