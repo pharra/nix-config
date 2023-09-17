@@ -56,7 +56,7 @@ in {
     description = "Load RDMA modules";
     documentation = ["man:opensm"];
     conflicts = ["shutdown.target"];
-    before = ["sysinit.target" "shutdown.target" "network-pre.target"];
+    before = ["shutdown.target" "network-pre.target"];
     unitConfig = {
       ConditionCapability = ["CAP_SYS_MODULE"];
     };
