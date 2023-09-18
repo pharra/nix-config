@@ -3,8 +3,8 @@ self: super: {
     src = super.fetchFromGitHub {
       owner = "gnif";
       repo = "LookingGlass";
-      rev = "219c73edbe33cfb34b5f4d1ea64937e8441cab44";
-      sha256 = "sha256-WGhkKzEmrnvMRzcY4Y9rMWBEzXOlohfeD2EmuNQWCEk=";
+      rev = "e658c2e0a205c40701b00d97364c2a9903ed34cf";
+      sha256 = "sha256-AOb79RiHpYnrPv/jHCijAgr4uIe+TUIsY8pmVt0b0cU=";
       fetchSubmodules = true;
     };
   });
