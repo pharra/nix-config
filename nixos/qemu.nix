@@ -6,20 +6,25 @@
   ...
 }: let
   swtpm-scripts = pkgs.writeShellScriptBin "swtpm-scripts" ''
-    ${pkgs.swtpm}/bin/swtpm socket --ctrl type=unixio,path=/run/libvirt/qemu/swtpm/18-microsoft-swtpm.sock,mode=0600 --tpmstate dir=/var/lib/libvirt/swtpm/9ff0da6a-1699-4041-81d1-2e4e47e207ba/tpm2,mode=0600 --log file=/var/log/swtpm/libvirt/qemu/microsoft-swtpm.log --terminate --tpm2
+    ${pkgs.swtpm}/bin/swtpm socket --ctrl type=unixio,path=/run/microsoft-swtpm.sock,mode=0600 \
+    --tpmstate dir=/var/lib/swtpm/microsoft,mode=0600 \
+    --log file=/var/log/microsoft-swtpm.log \
+    --terminate --tpm2
   '';
 
   qemu-scripts = pkgs.writeShellScriptBin "qemu-scripts" ''
-    ${pkgs.qemu}/bin/qemu-system-x86_64 -name guest=microsoft,debug-threads=on \
-    -cpu host \
-    -enable-kvm \
-    -smp 4 \
+    ${swtpm-scripts}/bin/swtpm-scripts &
+    ${pkgs.qemu}/bin/qemu-system-x86_64 -cpu host -enable-kvm -smp 4 \
     -m 4G -object memory-backend-file,id=mem0,size=4G,mem-path=/dev/hugepages,share=on,prealloc=yes, -numa node,memdev=mem0 \
-    -bios /run/libvirt/nix-ovmf/OVMF_CODE.fd \
-    -device vfio-user-pci,socket=/var/run/cntrl \
-    -machine pc-q35-8.1 \
+    -bios /run/libvirt/nix-ovmf/OVMF_CODE.fd -machine pc-q35-8.1 \
     -nic user,model=virtio-net-pci \
-    -vnc :0
+    -chardev socket,id=chrtpm,path=/run/microsoft-swtpm.sock -tpmdev emulator,id=tpm-tpm0,chardev=chrtpm -device tpm-crb,tpmdev=tpm-tpm0,id=tpm0 \
+    -chardev socket,id=char1,path=/var/run/vhost.1 -device vhost-user-blk-pci,id=blk0,chardev=char1 \
+    -chardev pty,id=charserial0 -device isa-serial,chardev=charserial0,id=serial0,index=0 \
+    -device qxl-vga \
+    -boot menu=on,strict=on
+
+    -object {"qom-type":"secret","id":"masterKey0","format":"raw","file":"/var/lib/libvirt/qemu/domain-25-microsoft/master-key.aes"} -blockdev {"driver":"file","filename":"/run/libvirt/nix-ovmf/OVMF_CODE.fd","node-name":"libvirt-pflash0-storage","auto-read-only":true,"discard":"unmap"} -blockdev {"node-name":"libvirt-pflash0-format","read-only":true,"driver":"raw","file":"libvirt-pflash0-storage"} -blockdev {"driver":"file","filename":"/var/lib/libvirt/qemu/nvram/microsoft_VARS.fd","node-name":"libvirt-pflash1-storage","auto-read-only":true,"discard":"unmap"} -blockdev {"node-name":"libvirt-pflash1-format","read-only":false,"driver":"raw","file":"libvirt-pflash1-storage"}
   '';
 in {
   environment.systemPackages = with pkgs; [
