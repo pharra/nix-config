@@ -41,6 +41,7 @@ stdenv.mkDerivation rec {
   };
 
   patches = [
+    ./vm-memory-hotplug.patch
     ./python-setup.patch
   ];
 
