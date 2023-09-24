@@ -73,8 +73,8 @@
       	tcp port = 445
       	workgroup = WORKGROUP
 
-      [smb]
-      	path = /smb
+      [share]
+      	path = /share
         read only = no
         force user = wf
         force group = wf

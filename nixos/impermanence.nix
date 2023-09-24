@@ -14,7 +14,7 @@
       "/var/log"
       "/etc/NetworkManager/system-connections"
       "/etc/ksmbd"
-      "/smb"
+      #"/smb"
     ];
     files = [
       "/etc/machine-id"
