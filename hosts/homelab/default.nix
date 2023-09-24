@@ -37,6 +37,8 @@ in {
     ../../nixos/mlx-sriov.nix
 
     ../../secrets/nixos.nix
+
+    ../../nixos/sftp-server.nix
   ];
 
   # Enable binfmt emulation of aarch64-linux, this is required for cross compilation.
