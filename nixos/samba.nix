@@ -64,10 +64,10 @@
       	; global section parameters
       	bind interfaces only = yes
       	guest account = nobody
-      	interfaces = ${interface.ib} ${interface.eth}
+      	interfaces = ${interface.ib} ${interface.eth} br0
       	netbios name = ksmbd
       	server max protocol = SMB3_11
-      	server min protocol = SMB2_10
+      	server min protocol = SMB3_11
       	server multi channel support = yes
       	server string = ksmbd
       	tcp port = 445
@@ -76,8 +76,6 @@
       [share]
       	path = /share
         read only = no
-        force user = wf
-        force group = wf
     '';
   };
 }
