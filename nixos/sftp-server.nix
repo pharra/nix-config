@@ -4,16 +4,20 @@
   lib,
   ...
 }: {
+  environment = {
+    systemPackages = with pkgs; [
+      sftpgo
+    ];
+  };
   # Enable the OpenSSH daemon.
   services.openssh = {
     extraConfig = ''
       Match Group sftp
         ChrootDirectory /share
-        X11Forwarding no # no X11 forward
         ForceCommand internal-sftp # only sftp
-        AllowTcpForwarding no
         PasswordAuthentication yes
     '';
+    sftpServerExecutable = "${pkgs.sftpgo}/bin/sftpgo";
   };
 
   users.groups = {
