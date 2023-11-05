@@ -56,6 +56,8 @@
 
     cloud-hypervisor
 
+    docker-compose
+
     # swtpm
   ];
 
