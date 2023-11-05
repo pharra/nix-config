@@ -1,5 +1,5 @@
 diff --git a/CONFIG b/CONFIG
-index 77cbb6b6b..bc03e5890 100644
+index ddf8341a5..290db8d46 100644
 --- a/CONFIG
 +++ b/CONFIG
 @@ -10,9 +10,6 @@
@@ -13,19 +13,19 @@ index 77cbb6b6b..bc03e5890 100644
  CONFIG_ARCH=native
  
 diff --git a/Makefile b/Makefile
-index a69a02a44..8aa7327d9 100644
+index 3aeae41ad..e91d44caa 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -23,7 +23,6 @@ DIRS-$(CONFIG_ISAL_CRYPTO) += isalcryptobuild
- DIRS-$(CONFIG_VFIO_USER) += vfiouserbuild
+@@ -24,7 +24,6 @@ DIRS-$(CONFIG_VFIO_USER) += vfiouserbuild
  DIRS-$(CONFIG_SMA) += proto
  DIRS-$(CONFIG_XNVME) += xnvmebuild
+ DIRS-$(CONFIG_GOLANG) += go/rpc
 -DIRS-y += python
  
  .PHONY: all clean $(DIRS-y) include/spdk/config.h mk/config.mk \
  	cc_version cxx_version .libs_only_other .ldflags ldflags install \
 diff --git a/configure b/configure
-index 881b96e0c..4d9d07c66 100755
+index 0428e5cea..b66d3be71 100755
 --- a/configure
 +++ b/configure
 @@ -28,7 +28,6 @@ function usage() {
@@ -36,7 +36,7 @@ index 881b96e0c..4d9d07c66 100755
  	echo " --max-lcores=VAL          DPDK configuration. VAL defines maximum number of lcores supported"
  	echo "                           by EAL, or enables autodetection if set to 'detect'. When 'detect'"
  	echo "                           is specified, DPDK will detect number of cores in the system during"
-@@ -299,9 +298,6 @@ for i in "$@"; do
+@@ -301,9 +300,6 @@ for i in "$@"; do
  		--libdir=*)
  			CONFIG[LIBDIR]="${i#*=}"
  			;;
@@ -59,43 +59,6 @@ index 310c4fe61..767b93bd3 100644
  install:
  uninstall:
  
-diff --git a/python/Makefile b/python/Makefile
-deleted file mode 100644
-index ca25ca6d0..000000000
---- a/python/Makefile
-+++ /dev/null
-@@ -1,31 +0,0 @@
--#  SPDX-License-Identifier: BSD-3-Clause
--#  Copyright (C) 2023 Intel Corporation.
--#  All rights reserved.
--#
--
--SPDK_ROOT_DIR := $(abspath $(CURDIR)/..)
--include $(SPDK_ROOT_DIR)/mk/spdk.common.mk
--
--setup_cmd = python3 setup.py install
--ifneq ($(DESTDIR),)
--setup_cmd += --root $(DESTDIR)
--endif
--
--ifneq ($(CONFIG_PYDIR),)
--setup_cmd += --install-purelib $(CONFIG_PYDIR)
--purelibdir := $(CONFIG_PYDIR)
--else
--purelibdir := $(shell python -c "import sysconfig; print(sysconfig.get_paths()['purelib'])")
--endif
--
--all:
--
--clean:
--
--install:
--	$(Q)$(setup_cmd)
--
--uninstall:
--	$(Q)rm -r $(DESTDIR)/$(purelibdir)/spdk*
--
--.PHONY: all clean install uninstall
 diff --git a/rpmbuild/spdk.spec b/rpmbuild/spdk.spec
 index bf9a1fb5d..4ac8bc236 100644
 --- a/rpmbuild/spdk.spec
@@ -126,7 +89,7 @@ index bf9a1fb5d..4ac8bc236 100644
  
  %package devel
 diff --git a/test/common/autobuild_common.sh b/test/common/autobuild_common.sh
-index 9495c6799..c6e44d829 100755
+index 10d9ded14..5e0f724c9 100755
 --- a/test/common/autobuild_common.sh
 +++ b/test/common/autobuild_common.sh
 @@ -308,7 +308,7 @@ test_make_uninstall() {

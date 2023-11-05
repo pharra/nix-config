@@ -35,13 +35,12 @@ stdenv.mkDerivation rec {
 
   src = fetchgit {
     url = "https://github.com/spdk/spdk.git";
-    rev = "a1f4f11b41e4fa9fe9242fa8467a3eee92c20a03";
+    rev = "17fdb23515c002aed4fa91cf5d2506df0fc5111c";
     fetchSubmodules = true;
-    sha256 = "sha256-nfHW/oXEzSQ4FmXervDG5+E6OP40MWiXy17Ey1GAehQ=";
+    sha256 = "sha256-6ZYzXFo8W2pwvQpVzq08KH+3cCIJbg/U3i1oVKi3CwA=";
   };
 
   patches = [
-    ./vm-memory-hotplug.patch
     ./python-setup.patch
   ];
 
