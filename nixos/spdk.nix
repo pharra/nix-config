@@ -6,26 +6,26 @@
   ...
 }: let
   spdk-iscsi-scripts = pkgs.writeShellScriptBin "spdk-iscsi-scripts" ''
-    ${pkgs.spdk}/scripts/rpc.py bdev_aio_create /dev/zvol/zp/test data
+    ${pkgs.spdk}/scripts/rpc.py bdev_aio_create /dev/zvol/data/windata windata
     ${pkgs.spdk}/scripts/rpc.py iscsi_create_initiator_group 1 ANY ANY
     ${pkgs.spdk}/scripts/rpc.py iscsi_create_initiator_group 2 ANY ANY
     ${pkgs.spdk}/scripts/rpc.py iscsi_create_portal_group 1 192.168.29.1:3260
     ${pkgs.spdk}/scripts/rpc.py iscsi_create_portal_group 2 192.168.30.1:3260
-    ${pkgs.spdk}/scripts/rpc.py iscsi_create_target_node data data_alias data:0 '1:1 2:2' 64 -d
+    ${pkgs.spdk}/scripts/rpc.py iscsi_create_target_node data data_alias windata:0 '1:1 2:2' 64 -d
   '';
 
   spdk-nvmf-scripts = pkgs.writeShellScriptBin "spdk-nvmf-scripts" ''
-    ${pkgs.spdk}/scripts/rpc.py -s /var/tmp/spdk_nvmf.sock bdev_aio_create /dev/zvol/zp/test data
-    ${pkgs.spdk}/scripts/rpc.py -s /var/tmp/spdk_nvmf.sock nvmf_create_transport -t RDMA -u 8192 -i 131072 -c 8192
-    ${pkgs.spdk}/scripts/rpc.py -s /var/tmp/spdk_nvmf.sock nvmf_create_subsystem nqn.2016-06.io.spdk:data -a -s SPDK00000000000001 -d SPDK_Controller1
-    ${pkgs.spdk}/scripts/rpc.py -s /var/tmp/spdk_nvmf.sock nvmf_subsystem_add_ns nqn.2016-06.io.spdk:data data
-    ${pkgs.spdk}/scripts/rpc.py -s /var/tmp/spdk_nvmf.sock nvmf_subsystem_add_listener nqn.2016-06.io.spdk:data -t rdma -a 192.168.30.1 -s 4420
+    ${pkgs.spdk}/scripts/rpc.py bdev_aio_create /dev/zvol/data/windata windata
+    ${pkgs.spdk}/scripts/rpc.py nvmf_create_transport -t RDMA -u 8192 -i 131072 -c 8192
+    ${pkgs.spdk}/scripts/rpc.py nvmf_create_subsystem nqn.2016-06.io.spdk:windata -a -s SPDK00000000000001 -d SPDK_Controller1
+    ${pkgs.spdk}/scripts/rpc.py nvmf_subsystem_add_ns nqn.2016-06.io.spdk:windata windata
+    ${pkgs.spdk}/scripts/rpc.py nvmf_subsystem_add_listener nqn.2016-06.io.spdk:windata -t rdma -a 192.168.30.1 -s 4420
   '';
 
   spdk-vhost-scripts = pkgs.writeShellScriptBin "spdk-vhost-scripts" ''
-    ${pkgs.spdk}/scripts/rpc.py -s /var/tmp/spdk_vhost.sock bdev_aio_create /dev/zvol/zp/microsoft microsoft
-    ${pkgs.spdk}/scripts/rpc.py -s /var/tmp/spdk_vhost.sock vhost_create_scsi_controller vhost.0
-    ${pkgs.spdk}/scripts/rpc.py -s /var/tmp/spdk_vhost.sock vhost_scsi_controller_add_target vhost.0 0 microsoft
+    ${pkgs.spdk}/scripts/rpc.py bdev_aio_create /dev/zvol/zp/microsoft microsoft
+    ${pkgs.spdk}/scripts/rpc.py vhost_create_scsi_controller vhost.0
+    ${pkgs.spdk}/scripts/rpc.py vhost_scsi_controller_add_target vhost.0 0 microsoft
   '';
 
   spdk-nvme-scripts = pkgs.writeShellScriptBin "spdk-nvme-scripts" ''
