@@ -51,7 +51,7 @@
     serviceConfig = {
       Type = "forking";
       PIDFile = "/run/ksmbd.lock";
-      ExecStart = "${pkgs.ksmbd-tools}/bin/ksmbd.mountd -c /etc/ksmbd/ksmbd.conf -u /etc/ksmbd/ksmbdpwd.db";
+      ExecStart = "${pkgs.ksmbd-tools}/bin/ksmbd.mountd -C /etc/ksmbd/ksmbd.conf -P /etc/ksmbd/ksmbdpwd.db";
       ExecReload = "${pkgs.ksmbd-tools}/bin/ksmbd.control --reload";
       ExecStop = "${pkgs.ksmbd-tools}/bin/ksmbd.control --shutdown";
     };
