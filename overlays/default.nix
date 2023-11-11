@@ -5,6 +5,5 @@
   dpdk-overlay = import ./dpdk;
   looking-glass-overlay = import ./looking-glass;
   ipxe-overlay = import ./ipxe;
-  ksmbd-tools-overlay = import ./ksmbd-tools;
   qemu-overlay = import ./qemu-vfio-user;
 }
