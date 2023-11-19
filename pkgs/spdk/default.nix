@@ -35,9 +35,9 @@ stdenv.mkDerivation rec {
 
   src = fetchgit {
     url = "https://github.com/spdk/spdk.git";
-    rev = "17fdb23515c002aed4fa91cf5d2506df0fc5111c";
+    rev = "9ad5ba228743a6a011f904cdb1a0d880696c5e56";
     fetchSubmodules = true;
-    sha256 = "sha256-6ZYzXFo8W2pwvQpVzq08KH+3cCIJbg/U3i1oVKi3CwA=";
+    sha256 = "sha256-Rjfr+R01MDWW8s9zyTnIt8XoOOnE4DHN1BImoGuir3U=";
   };
 
   patches = [
