@@ -15,11 +15,12 @@
   '';
 
   spdk-nvmf-scripts = pkgs.writeShellScriptBin "spdk-nvmf-scripts" ''
-    ${pkgs.spdk}/scripts/rpc.py bdev_aio_create /dev/zvol/data/windata windata
+    ${pkgs.spdk}/scripts/rpc.py bdev_aio_create /dev/zvol/data/data1 data
     ${pkgs.spdk}/scripts/rpc.py nvmf_create_transport -t RDMA -u 8192 -i 131072 -c 8192
-    ${pkgs.spdk}/scripts/rpc.py nvmf_create_subsystem nqn.2016-06.io.spdk:windata -a -s SPDK00000000000001 -d SPDK_Controller1
-    ${pkgs.spdk}/scripts/rpc.py nvmf_subsystem_add_ns nqn.2016-06.io.spdk:windata windata
-    ${pkgs.spdk}/scripts/rpc.py nvmf_subsystem_add_listener nqn.2016-06.io.spdk:windata -t rdma -a 192.168.30.1 -s 4420
+    ${pkgs.spdk}/scripts/rpc.py nvmf_create_subsystem nqn.2016-06.io.spdk:data -a -s SPDK00000000000001 -d SPDK_Controller1
+    ${pkgs.spdk}/scripts/rpc.py nvmf_subsystem_add_ns nqn.2016-06.io.spdk:data data
+    ${pkgs.spdk}/scripts/rpc.py nvmf_subsystem_add_listener nqn.2016-06.io.spdk:data -t rdma -a 192.168.30.1 -s 4420
+    ${pkgs.spdk}/scripts/rpc.py nvmf_subsystem_add_listener nqn.2016-06.io.spdk:data -t rdma -a 192.168.29.1 -s 4420
   '';
 
   spdk-vhost-scripts = pkgs.writeShellScriptBin "spdk-vhost-scripts" ''
@@ -94,10 +95,10 @@ in {
     serviceConfig = {
       Type = "simple";
       Environment = "PCI_ALLOWED='none'";
-      ExecStartPre = ''
-        ${pkgs.spdk}/scripts/setup.sh
-        ${pkgs.kmod}/bin/modprobe ublk_drv
-      '';
+      ExecStartPre = [
+        "${pkgs.spdk}/scripts/setup.sh"
+        "${pkgs.kmod}/bin/modprobe ublk_drv"
+      ];
       ExecStart = ''${pkgs.spdk}/bin/spdk_tgt -m 0x30003 -c /home/wf/spdk/rdma_config.json -f /var/run/spdk.pid -S /var/run'';
     };
   };
