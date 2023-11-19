@@ -122,6 +122,7 @@
         dde-modules
         modules
       ];
+
       #desktop
       desktop_modules_gnome = {
         nixos-modules =
@@ -177,7 +178,7 @@
       };
 
       system = x64_system;
-      specialArgs =
+      _specialArgs =
         {
           inherit username userfullname useremail legacyPackages overlays;
           # use unstable branch for some packages to get the latest updates
@@ -189,22 +190,37 @@
         }
         // inputs;
       base_args = {
-        inherit home-manager nixos-generators system specialArgs;
+        inherit home-manager nixos-generators system;
       };
       stable_args = base_args // {inherit nixpkgs;};
       unstable_args = base_args // {nixpkgs = nixpkgs-unstable;};
-    in {
+
       # desktop with gnome
-      desktop_gnome = nixosSystem (desktop_modules_gnome // stable_args);
+      desktop_gnome = nixosSystem (desktop_modules_gnome // stable_args // {specialArgs = _specialArgs;});
 
       # vm with gnome
-      vm_gnome = nixosSystem (vm_modules_gnome // stable_args);
+      vm_gnome = nixosSystem (vm_modules_gnome // stable_args // {specialArgs = _specialArgs;});
 
-      # vm with deepin
-      vm_deepin = nixosSystem (vm_modules_deepin // stable_args);
+      # netboot installer
+      netboot_installer = nixpkgs.lib.nixosSystem {
+        system = x64_system;
+        modules = [
+          ./hosts/installer/netboot.nix
+        ];
+      };
+
+      netboot_args = {inherit desktop_gnome netboot_installer;};
+
+      homelab_args = homelab_modules_gnome // stable_args // {specialArgs = _specialArgs // {inherit netboot_args;};};
+    in {
+      # desktop with gnome
+      inherit desktop_gnome;
+
+      # vm with gnome
+      inherit vm_gnome;
 
       # homelab with gnome
-      homelab_gnome = nixosSystem (homelab_modules_gnome // stable_args);
+      homelab_gnome = nixosSystem homelab_args;
 
       homelab_deepin = nixosSystem (homelab_modules_deepin // stable_args);
     };
