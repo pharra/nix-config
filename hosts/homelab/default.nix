@@ -15,7 +15,7 @@ let
   interface = {
     ib = "ibp66s0";
     eth-to-bridge = "enp66s0d1";
-    eth = "enp66s0d1";
+    eth = "br1";
   };
 in {
   imports = [
@@ -116,11 +116,11 @@ in {
       #   networkConfig.Bridge = "br1";
       #   linkConfig.RequiredForOnline = "enslaved";
       # };
-      # "30-${interface.eth-to-bridge}" = {
-      #   matchConfig.Name = "${interface.eth-to-bridge}";
-      #   networkConfig.Bridge = "br1";
-      #   linkConfig.RequiredForOnline = "enslaved";
-      # };
+      "30-${interface.eth-to-bridge}" = {
+        matchConfig.Name = "${interface.eth-to-bridge}";
+        networkConfig.Bridge = "br1";
+        linkConfig.RequiredForOnline = "enslaved";
+      };
 
       # Configure the bridge for its desired function
       "40-br0" = {
