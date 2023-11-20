@@ -136,7 +136,7 @@ in {
       :nixos-installer
       echo Booting nixos from iSCSI for ''${initiator-iqn}
       set root-path ''${base-iscsi}:nixos
-      sanhook ''${root-path} || goto failed
+      sanhook --drive 0x80 ''${root-path} || goto failed
       kernel netboot/bzImage init=${netboot_installer.config.system.build.toplevel}/init ${toString netboot_installer.config.boot.kernelParams}
       initrd netboot/initrd
       boot
