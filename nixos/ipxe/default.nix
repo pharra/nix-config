@@ -139,9 +139,11 @@ in {
       ############ MAIN MENU ITEMS ############
       :nixos
       echo Booting nixos from iSCSI for ''${initiator-iqn}
-      kernel desktop/bzImage init=${desktop_gnome.config.system.build.toplevel}/init ${toString desktop_gnome.config.boot.kernelParams}
-      initrd desktop/initrd
-      boot
+      #kernel desktop/bzImage init=${desktop_gnome.config.system.build.toplevel}/init ${toString desktop_gnome.config.boot.kernelParams}
+      #initrd desktop/initrd
+      #boot
+      set root-path ''${base-iscsi}:nixos
+      sanboot --drive 0x80 ''${root-path} || goto failed
 
       :nixos-installer
       echo Booting nixos installer
