@@ -21,11 +21,18 @@
   fileSystems."/nix" = {
     device = "/dev/disk/by-label/nixos";
     fsType = "ext4";
+    neededForBoot = true;
   };
 
   fileSystems."/boot/efi" = {
     device = "/dev/disk/by-label/boot";
     fsType = "vfat";
+  };
+
+  fileSystems."/nix/persistent" = {
+    device = "/dev/disk/by-label/persistent";
+    fsType = "ext4";
+    neededForBoot = true;
   };
 
   swapDevices = [];

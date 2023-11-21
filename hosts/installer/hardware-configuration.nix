@@ -12,6 +12,13 @@
     (modulesPath + "/installer/netboot/netboot-minimal.nix")
   ];
 
+  services = {
+    openiscsi = {
+      enable = true;
+      name = "iqn.2020-08.org.linux-iscsi.initiatorhost:installer";
+    };
+  };
+
   boot.kernelParams = lib.mkForce ["nogpumanager" "nvidia_drm.modeset=0"];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking

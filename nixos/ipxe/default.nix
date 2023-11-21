@@ -10,6 +10,7 @@
 lib.mkIf (netboot_args != false)
 (let
   netboot_installer = netboot_args.netboot_installer;
+  desktop_gnome = netboot_args.desktop_gnome;
 in {
   environment.systemPackages = with pkgs; [
     ipxe
@@ -30,6 +31,14 @@ in {
 
     "ipxe/netboot/initrd" = {
       source = netboot_installer.config.system.build.netbootRamdisk + "/initrd";
+    };
+
+    "ipxe/desktop/bzImage" = {
+      source = desktop_gnome.config.system.build.kernel + "/bzImage";
+    };
+
+    "ipxe/desktop/initrd" = {
+      source = desktop_gnome.config.system.build.initialRamdisk + "/initrd";
     };
 
     "ipxe/boot.ipxe".text = ''
@@ -130,13 +139,12 @@ in {
       ############ MAIN MENU ITEMS ############
       :nixos
       echo Booting nixos from iSCSI for ''${initiator-iqn}
-      set root-path ''${base-iscsi}:nixos
-      sanboot ''${root-path} || goto failed
+      kernel desktop/bzImage init=${desktop_gnome.config.system.build.toplevel}/init ${toString desktop_gnome.config.boot.kernelParams}
+      initrd desktop/initrd
+      boot
 
       :nixos-installer
-      echo Booting nixos from iSCSI for ''${initiator-iqn}
-      set root-path ''${base-iscsi}:nixos
-      sanhook --drive 0x80 ''${root-path} || goto failed
+      echo Booting nixos installer
       kernel netboot/bzImage init=${netboot_installer.config.system.build.toplevel}/init ${toString netboot_installer.config.boot.kernelParams}
       initrd netboot/initrd
       boot
