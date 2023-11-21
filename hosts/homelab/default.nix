@@ -16,6 +16,7 @@ let
     ib = "ibp66s0";
     eth-to-bridge = "enp66s0d1";
     eth = "enp66s0d1";
+    intern = "br1";
   };
 in {
   imports = [
@@ -27,6 +28,8 @@ in {
     ../../nixos/core-desktop.nix
     # ../../nixos/remote-building.nix
     ../../nixos/user-group.nix
+
+    ../../nixos/impermanence.nix
 
     ../../nixos/spdk.nix
 
@@ -135,6 +138,27 @@ in {
         linkConfig = {
           # or "routable" with IP addresses configured
           RequiredForOnline = "routable";
+        };
+      };
+
+      # internal network
+      "40-${interface.intern}" = {
+        matchConfig.Name = "${interface.intern}";
+        # bridgeConfig = {};
+        networkConfig = {
+          Address = "192.168.28.1/24";
+          # DHCPServer = true;
+          IPMasquerade = "ipv4";
+          ConfigureWithoutCarrier = true;
+        };
+        # dhcpServerConfig = {
+        #   PoolOffset = 100;
+        #   PoolSize = 20;
+        # };
+        linkConfig = {
+          # or "routable" with IP addresses configured
+          ActivationPolicy = "always-up";
+          RequiredForOnline = "no";
         };
       };
 

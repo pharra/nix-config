@@ -21,6 +21,10 @@
     "ib_umad"
     "ib_srpt"
     "ib_iser"
+    "ib_uverbs"
+    "rdma_ucm"
+    "xprtrdma"
+    "svcrdma"
 
     "vfio_pci"
     "vfio"
@@ -30,7 +34,7 @@
   boot.extraModulePackages = [];
   boot.kernelParams = lib.mkForce ["nogpumanager" "nvidia_drm.modeset=0"];
 
-  fileSystems."/nix" = {
+  fileSystems."/" = {
     device = "/dev/disk/by-label/nixos";
     fsType = "ext4";
     neededForBoot = true;
@@ -39,12 +43,6 @@
   fileSystems."/boot/efi" = {
     device = "/dev/disk/by-label/boot";
     fsType = "vfat";
-  };
-
-  fileSystems."/nix/persistent" = {
-    device = "/dev/disk/by-label/persistent";
-    fsType = "ext4";
-    neededForBoot = true;
   };
 
   swapDevices = [];

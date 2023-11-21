@@ -29,6 +29,18 @@ in {
 
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "sr_mod" "uas" "xhci_pci"];
   boot.initrd.kernelModules = [
+    "mlx4_core"
+    "mlx4_en"
+    "mlx4_ib"
+    "ib_ipoib"
+    "ib_umad"
+    "ib_srpt"
+    "ib_iser"
+    "ib_uverbs"
+    "rdma_ucm"
+    "xprtrdma"
+    "svcrdma"
+
     "vfio_pci"
     "vfio"
     "vfio_iommu_type1"

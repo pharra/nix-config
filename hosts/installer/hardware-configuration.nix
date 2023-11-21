@@ -7,7 +7,12 @@
   pkgs,
   modulesPath,
   ...
-}: {
+}: let
+  iscsi-scripts = pkgs.writeShellScriptBin "iscsi-scripts" ''
+    ${pkgs.openiscsi}/bin/iscsiadm -m discovery -t sendtargets -p homelab.intern
+    ${pkgs.openiscsi}/bin/iscsiadm -m node -p homelab.intern --targetname=iqn.2016-06.io.spdk:nixos --login
+  '';
+in {
   imports = [
     (modulesPath + "/installer/netboot/netboot-minimal.nix")
   ];
@@ -18,6 +23,12 @@
       name = "iqn.2020-08.org.linux-iscsi.initiatorhost:installer";
     };
   };
+
+  environment.systemPackages = with pkgs; [
+    rsync
+    git
+    iscsi-scripts
+  ];
 
   boot.kernelParams = lib.mkForce ["nogpumanager" "nvidia_drm.modeset=0"];
 

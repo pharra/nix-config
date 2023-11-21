@@ -10,10 +10,12 @@
     ${pkgs.spdk}/scripts/rpc.py bdev_aio_create /dev/zvol/data/desktop_nixos nixos
     ${pkgs.spdk}/scripts/rpc.py iscsi_create_initiator_group 1 ANY ANY
     ${pkgs.spdk}/scripts/rpc.py iscsi_create_initiator_group 2 ANY ANY
+    ${pkgs.spdk}/scripts/rpc.py iscsi_create_initiator_group 3 ANY ANY
     ${pkgs.spdk}/scripts/rpc.py iscsi_create_portal_group 1 192.168.29.1:3260
     ${pkgs.spdk}/scripts/rpc.py iscsi_create_portal_group 2 192.168.30.1:3260
-    ${pkgs.spdk}/scripts/rpc.py iscsi_create_target_node data data_alias windata:0 '1:1 2:2' 64 -d
-    ${pkgs.spdk}/scripts/rpc.py iscsi_create_target_node nixos nixos_alias nixos:0 '1:1 2:2' 64 -d
+    ${pkgs.spdk}/scripts/rpc.py iscsi_create_portal_group 3 192.168.28.1:3260
+    ${pkgs.spdk}/scripts/rpc.py iscsi_create_target_node data data_alias windata:0 '1:1 2:2 3:3' 64 -d
+    ${pkgs.spdk}/scripts/rpc.py iscsi_create_target_node nixos nixos_alias nixos:0 '1:1 2:2 3:3' 64 -d
   '';
 
   spdk-nvmf-scripts = pkgs.writeShellScriptBin "spdk-nvmf-scripts" ''
@@ -90,8 +92,8 @@ in {
   systemd.services.spdk = {
     enable = true;
     wantedBy = ["multi-user.target"];
-    after = ["rdma.service" "network.target"];
-    requires = ["rdma.service"];
+    after = ["network.target"];
+    requires = ["network.target"];
     description = "Starts the spdk_tgt";
     path = [pkgs.kmod pkgs.gawk pkgs.util-linux];
     serviceConfig = {

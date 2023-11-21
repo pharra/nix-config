@@ -13,7 +13,6 @@
     ./core-server.nix
     ./fcitx5.nix
     ./flatpak.nix
-    ./impermanence.nix
     ./zfs.nix
     ./qemu.nix
   ];

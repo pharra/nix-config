@@ -51,7 +51,7 @@ in {
     mstflint
   ];
   systemd.services.rdma = {
-    enable = true;
+    enable = false;
     wantedBy = ["network.target"];
     description = "Load RDMA modules";
     documentation = ["man:opensm"];
@@ -73,8 +73,8 @@ in {
   systemd.services.opensm = {
     enable = true;
     wantedBy = ["network.target"];
-    after = ["rdma.service"];
-    requires = ["rdma.service"];
+    #after = ["rdma.service"];
+    #requires = ["rdma.service"];
     description = "Starts the OpenSM InfiniBand fabric Subnet Manager";
     documentation = ["man:opensm"];
     before = ["network.target" "remote-fs-pre.target"];
