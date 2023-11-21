@@ -13,7 +13,19 @@
   ];
 
   boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "uas" "xhci_pci"];
-  boot.initrd.kernelModules = [];
+  boot.initrd.kernelModules = [
+    "mlx4_core"
+    "mlx4_en"
+    "mlx4_ib"
+    "ib_ipoib"
+    "ib_umad"
+    "ib_srpt"
+    "ib_iser"
+
+    "vfio_pci"
+    "vfio"
+    "vfio_iommu_type1"
+  ];
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
   boot.kernelParams = lib.mkForce ["nogpumanager" "nvidia_drm.modeset=0"];
