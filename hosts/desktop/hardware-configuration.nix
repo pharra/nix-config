@@ -7,7 +7,15 @@
   pkgs,
   modulesPath,
   ...
-}: {
+}: let
+  # RTX 3070 Ti
+  gpuIDs = [
+    "10de:2684" # Graphics
+    "10de:22ba" # Audio
+    #"10de:1aec" # USB
+    #"10de:1aed" # UCSI
+  ];
+in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
@@ -32,7 +40,11 @@
   ];
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
-  boot.kernelParams = lib.mkForce ["nogpumanager" "nvidia_drm.modeset=0"];
+
+  boot.kernelParams =
+    #  "pci=nommconf"
+    ["pcie_acs_override=downstream,multifunction"]
+    ++ [("vfio-pci.ids=" + lib.concatStringsSep "," gpuIDs)]; # isolate the GPU
 
   fileSystems."/" = {
     device = "/dev/disk/by-label/nixos";

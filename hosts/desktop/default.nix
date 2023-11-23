@@ -41,6 +41,7 @@
     "vfat"
     "exfat"
     "cifs" # mount windows share
+    "nfs"
   ];
 
   # Bootloader.
@@ -79,18 +80,18 @@
     # ];
   };
 
-  #virtualisation.docker.storageDriver = "btrfs";
-
-  # for Nvidia GPU
-  virtualisation.docker.enableNvidia = true; # for nvidia-docker
-
-  environment = {
-    variables = {
-      __EGL_VENDOR_LIBRARY_FILENAMES = "${pkgs.mesa.drivers}/share/glvnd/egl_vendor.d/50_mesa.json";
+  systemd.network = {
+    networks = {
+      "50-enp5s0d1" = {
+        matchConfig.Name = "enp5s0d1";
+        # acquire a DHCP lease on link up
+        networkConfig.DHCP = "yes";
+        # this port is not always connected and not required to be online
+        linkConfig.RequiredForOnline = "yes";
+      };
     };
   };
 
-  services.xserver.videoDrivers = ["nvidia"];
   hardware = {
     opengl = {
       enable = true;
@@ -98,21 +99,6 @@
       driSupport = true;
       # needed by nvidia-docker
       driSupport32Bit = true;
-    };
-
-    nvidia = {
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
-      prime = {
-        offload = {
-          enable = true;
-          enableOffloadCmd = true;
-        };
-        intelBusId = "PCI:0:2:0";
-        nvidiaBusId = "PCI:1:0:0";
-      };
-      # nvidiaSettings = true;
-      # modesetting.enable = lib.mkForce false;
-      # powerManagement.enable = true;
     };
   };
 

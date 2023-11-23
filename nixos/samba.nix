@@ -64,7 +64,7 @@
       	; global section parameters
       	bind interfaces only = yes
       	guest account = nobody
-      	interfaces = ${interface.ib} ${interface.eth} br0
+      	interfaces = ${interface.ib} ${interface.eth} br0 ${interface.intern}
       	netbios name = ksmbd
       	server max protocol = SMB3_11
       	server min protocol = SMB3_11
@@ -76,6 +76,27 @@
       [share]
       	path = /share
         read only = no
+
+      [nix-persistent]
+      	path = /nix/persistent
+        read only = no
     '';
   };
+
+  fileSystems."/nfs" = {
+    device = "tmpfs";
+    options = ["bind"];
+  };
+
+  fileSystems."/nfs/persistent" = {
+    device = "/nix/persistent";
+    options = ["bind"];
+  };
+
+  services.nfs.server.enable = true;
+  services.nfs.server.exports = ''
+    /nfs         192.168.0.0/16(rw,fsid=0,no_subtree_check)
+
+    /nfs/persistent  192.168.0.0/16(rw,nohide,insecure,no_subtree_check)
+  '';
 }
