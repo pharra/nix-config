@@ -82,8 +82,8 @@
 
   systemd.network = {
     networks = {
-      "50-enp5s0d1" = {
-        matchConfig.Name = "enp5s0d1";
+      "50-ibp5s0" = {
+        matchConfig.Name = "ibp5s0";
         # acquire a DHCP lease on link up
         networkConfig.DHCP = "yes";
         # this port is not always connected and not required to be online
