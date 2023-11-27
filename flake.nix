@@ -211,7 +211,9 @@
 
       netboot_args = {inherit desktop_gnome netboot_installer;};
 
-      homelab_args = homelab_modules_gnome // stable_args // {specialArgs = _specialArgs // {inherit netboot_args;};};
+      homelab_gnome_args = homelab_modules_gnome // stable_args // {specialArgs = _specialArgs // {inherit netboot_args;};};
+
+      homelab_deepin_args = homelab_modules_deepin // stable_args // {specialArgs = _specialArgs // {inherit netboot_args;};};
     in {
       # desktop with gnome
       inherit desktop_gnome;
@@ -220,9 +222,9 @@
       inherit vm_gnome;
 
       # homelab with gnome
-      homelab_gnome = nixosSystem homelab_args;
+      homelab_gnome = nixosSystem homelab_gnome_args;
 
-      homelab_deepin = nixosSystem (homelab_modules_deepin // stable_args);
+      homelab_deepin = nixosSystem homelab_deepin_args;
     };
 
     # take system images for idols
