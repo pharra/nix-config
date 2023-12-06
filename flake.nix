@@ -58,11 +58,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    dde-nixos = {
-      url = "github:linuxdeepin/dde-nixos";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     impermanence.url = "github:nix-community/impermanence";
 
     # secrets management, lock with git commit at 2023/7/15
@@ -88,7 +83,6 @@
     nix-darwin,
     home-manager,
     nixos-generators,
-    dde-nixos,
     impermanence,
     ...
   }: let
@@ -100,8 +94,6 @@
     allSystems = [x64_system];
 
     nixosSystem = import ./lib/nixosSystem.nix;
-
-    dde-modules = dde-nixos.nixosModules.${x64_system};
 
     forAllSystems = f: nixpkgs.lib.genAttrs allSystems (system: f system);
     legacyPackages = forAllSystems (system:
@@ -119,7 +111,6 @@
     nixosConfigurations = let
       common-nixos-modules = [
         impermanence.nixosModules.impermanence
-        dde-modules
         modules
       ];
 

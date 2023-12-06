@@ -15,7 +15,7 @@
       # displayManager = {
       #   lightdm.enable = true;
       # };
-      desktopManager.deepin-unstable.enable = true; # Window Manager
+      desktopManager.deepin.enable = true; # Window Manager
 
       displayManager.autoLogin = {
         enable = true;
