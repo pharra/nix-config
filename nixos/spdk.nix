@@ -77,7 +77,6 @@ in {
   environment.systemPackages = with pkgs; [
     parted
     nvme-cli
-    dpdk
     spdk
     openiscsi
     spdk-iscsi-scripts
