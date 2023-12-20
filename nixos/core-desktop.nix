@@ -15,6 +15,7 @@
     ./flatpak.nix
     ./zfs.nix
     ./qemu.nix
+    ./azure-tools
   ];
 
   # to install chrome, you need to enable unfree packages
