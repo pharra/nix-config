@@ -20,5 +20,10 @@
     usbutils # lsusb
     dmidecode # a tool that reads information about your system's hardware from the BIOS according to the SMBIOS/DMI standard
     fio # disk performance
+
+    azure-cli
+    cacert
+    azure-storage-azcopy
+    jq
   ];
 }
