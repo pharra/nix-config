@@ -14,8 +14,8 @@
   users.users."${username}" = {
     home = "/home/${username}";
     isNormalUser = true;
-    hashedPassword = lib.mkForce "$6$dascadwafasca$fIzpXuQBxDXeCwWKuPgNP/SmIDXtYVcrupQuqcXyeXHGftBFUFWleXPuCsT.rr4FWmZX4QINfrvzh.qtzXS7u0";
-    initialHashedPassword = lib.mkForce "$6$dascadwafasca$fIzpXuQBxDXeCwWKuPgNP/SmIDXtYVcrupQuqcXyeXHGftBFUFWleXPuCsT.rr4FWmZX4QINfrvzh.qtzXS7u0";
+    hashedPassword = lib.mkForce "$6$dC9x3SfHW5h0svQp$7ctRKWlIEVhmWsOE3fdkPMTCvChTFEA4.UmShB6vNB7/T1Kg4XyrN5BUwU19e8v3Pz2dvGnbZ1wiC5lKw.jnF/";
+    initialHashedPassword = lib.mkForce "$6$dC9x3SfHW5h0svQp$7ctRKWlIEVhmWsOE3fdkPMTCvChTFEA4.UmShB6vNB7/T1Kg4XyrN5BUwU19e8v3Pz2dvGnbZ1wiC5lKw.jnF/";
     description = username;
     extraGroups = [
       username
@@ -30,7 +30,7 @@
     openssh.authorizedKeys.keys = [
       # win desktop
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCmgVNooueTbeIrn5trgQEI8Z+hfvYR/mTheAd58vSSYA6DgyQduqdCdiZ9EuQRA48BCwmKlW1n7px8QkNMq9pOldBjhe+8U9xeOc78Pjf2ixVBc9cVQF4sIxm5nWTFcZfzUjKk4jOlL/NMenp94NOyVwuc9a/OugSxYv+8Yz/UY5fT3WHBIdoaUjN7xKesi8gwtRRAOd/X/pXjTnc3a/CpqIoXtw3V+L4GD0JnFNAjjDjrehoVwFfi/WxZNPLQGiDLpO8izwsyJTSwYwLfx7A6pozNwbN4TokWQSY1/o4sqLyIRywHJvM7KZSzBvNYpVrRLh+i87xzsM9RDecnbpG5FDSpZVADSrbpU8iAvV0A6TgcnTIlrSt7payf0A9w0bNKob8LByoTAQEwMGnSQbNGpiQZ5mhcz/KI2EbD0jYxCv7K/aXbkfyZbtepEzvYLkTwBxyL/Y4OvrNxo7XBrwDmdCTk5NtkzSnTkenSf2uGxn2C1Kb753EamH1k/Jqw4+E= bytem@WF-DESKTOP"
-      
+
       # microsoft
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCspSa4xNqqAq+0fgJ5udLDRSgqTEYMVhi03auCPhGBpJC1XDrz49Gp6sO1SujJPbR66KXhUUAmPQgKwveyaTVZYf9g/zZUH0fOljFaZchxYuaRsFdDI1iBak5mqeOtJc84nVXqTGaZIjydz1F5905bJzB+PLAOZUC/79/niJE9FwdKjNN1opAOMmnVvP1PXoYpBwjcqYXBx3kuA/KYztdy8A49iHbDd0JXMp82DQPPA4tHYvvI/aneA0ixXO3EsGn537iX8Z4IrBeSWtneX848a+01A0zcj67AdXdoRlWyVXy7VhGmkfaKIWn3k5dUD9xDMVDhiD213jZrJVaTTAkAmWPp0SZtV89U2rstvmgEGNs2YJq/h/NfNg7sz6f9AQpjub9krU3Hk8keIBLMZkHFhxDHE0w4Oec5/Vf5bwSQqB036bd3Ss7cMsKTrcbr5xxbUuikLzFZ5+/g0WFph1TQANoCCpgpnAclWhqwu1Z3Oi4G2SXRogSZXLeqTEGJaV8= redmond\wangf@WF-MICROSOFT-DESKTOP"
 
