@@ -223,7 +223,7 @@
             _specialArgs
             // {
               inherit is_azure;
-              domain = "hk-nixos.azure.int4byte.com";
+              domain = "hk.azure.int4byte.com";
             };
         });
 
@@ -259,7 +259,7 @@
     deploy = {
       nodes = {
         "azure_hk" = {
-          hostname = "hk-nixos.azure.int4byte.com";
+          hostname = "hk.azure.int4byte.com";
           profiles.system = {
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."azure_hk";
           };
