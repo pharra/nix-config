@@ -69,6 +69,11 @@
       url = "git+ssh://git@github.com/pharra/agenix-secrets.git?shallow=1";
       flake = false;
     };
+
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -84,6 +89,7 @@
     home-manager,
     nixos-generators,
     impermanence,
+    deploy-rs,
     ...
   }: let
     username = "wf";
@@ -168,6 +174,16 @@
         home-module = import ./home/desktop-deepin.nix;
       };
 
+      # azure
+      azure_modules_base = {
+        nixos-modules =
+          [
+            ./hosts/azure
+          ]
+          ++ common-nixos-modules;
+        home-module = import ./home/base.nix;
+      };
+
       system = x64_system;
       _specialArgs =
         {
@@ -192,6 +208,9 @@
       # vm with gnome
       vm_gnome = nixosSystem (vm_modules_gnome // stable_args // {specialArgs = _specialArgs;});
 
+      # azure with base
+      azure_base = nixosSystem (azure_modules_base // stable_args // {specialArgs = _specialArgs;});
+
       # netboot installer
       netboot_installer = nixpkgs.lib.nixosSystem {
         system = x64_system;
@@ -212,10 +231,31 @@
       # vm with gnome
       inherit vm_gnome;
 
+      # azure with base
+      inherit azure_base;
+
       # homelab with gnome
       homelab_gnome = nixosSystem homelab_gnome_args;
 
       homelab_deepin = nixosSystem homelab_deepin_args;
+    };
+
+    deploy = {
+      sshUser = "wf";
+      user = "root";
+      # sshOpts = ["-p" "2222"];
+      autoRollback = false;
+
+      magicRollback = false;
+
+      nodes = {
+        "azure_base" = {
+          hostname = "hk-nixos.azure.int4byte.com";
+          profiles.system = {
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."azure_base";
+          };
+        };
+      };
     };
 
     # take system images for idols
