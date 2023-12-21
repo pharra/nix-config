@@ -60,8 +60,11 @@
 
     impermanence.url = "github:nix-community/impermanence";
 
-    # secrets management, lock with git commit at 2023/7/15
-    agenix.url = "github:ryantm/agenix/0d8c5325fc81daf00532e3e26c6752f7bcde1143";
+    # secrets management
+    agenix = {
+      url = "github:ryan4yin/ragenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # my private secrets, it's a private repository, you need to replace it with your own.
     # use ssh protocol to authenticate via ssh-agent/ssh-key, and shallow clone to save time
@@ -90,11 +93,15 @@
     nixos-generators,
     impermanence,
     deploy-rs,
+    mysecrets,
     ...
   }: let
     username = "wf";
     userfullname = "Feng Wang";
     useremail = "typechasing@gmail.com";
+
+    # azure vm config
+    is_azure = true;
 
     x64_system = "x86_64-linux";
     allSystems = [x64_system];
@@ -187,7 +194,7 @@
       system = x64_system;
       _specialArgs =
         {
-          inherit username userfullname useremail legacyPackages overlays;
+          inherit username userfullname useremail legacyPackages overlays mysecrets;
           # use unstable branch for some packages to get the latest updates
           pkgs-unstable = import nixpkgs-unstable {
             system = x64_system; # refer the `system` parameter form outer scope recursively
@@ -208,8 +215,17 @@
       # vm with gnome
       vm_gnome = nixosSystem (vm_modules_gnome // stable_args // {specialArgs = _specialArgs;});
 
-      # azure with base
-      azure_base = nixosSystem (azure_modules_base // stable_args // {specialArgs = _specialArgs;});
+      # azure vms
+      azure_hk = nixosSystem (azure_modules_base
+        // stable_args
+        // {
+          specialArgs =
+            _specialArgs
+            // {
+              inherit is_azure;
+              domain = "hk-nixos.azure.int4byte.com";
+            };
+        });
 
       # netboot installer
       netboot_installer = nixpkgs.lib.nixosSystem {
@@ -231,8 +247,8 @@
       # vm with gnome
       inherit vm_gnome;
 
-      # azure with base
-      inherit azure_base;
+      # azure vms
+      inherit azure_hk;
 
       # homelab with gnome
       homelab_gnome = nixosSystem homelab_gnome_args;
@@ -241,19 +257,18 @@
     };
 
     deploy = {
-      sshUser = "wf";
-      user = "root";
-      # sshOpts = ["-p" "2222"];
-      autoRollback = false;
-
-      magicRollback = false;
-
       nodes = {
-        "azure_base" = {
+        "azure_hk" = {
           hostname = "hk-nixos.azure.int4byte.com";
           profiles.system = {
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."azure_base";
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."azure_hk";
           };
+          sshUser = "wf";
+          user = "root";
+          # sshOpts = ["-p" "2222"];
+          autoRollback = false;
+
+          magicRollback = false;
         };
       };
     };

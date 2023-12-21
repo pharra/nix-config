@@ -1,22 +1,17 @@
 {
   config,
   pkgs,
+  lib,
+  is_azure ? false,
+  domain ? false,
   ...
-} @ args:
-#############################################################
-#
-#  Ai - my main computer, with NixOS + I5-13600KF + RTX 4090 GPU, for gaming & daily use.
-#
-#############################################################
-{
-  imports = [
-    # Include the results of the hardware scan.
-    ./system.nix
+} @ args: {
+  imports =
+    [
+      # Include the results of the hardware scan.
+      ./system.nix
 
-    ../../secrets/nixos.nix
-  ];
-
-  environment.systemPackages = with pkgs; [
-    xray
-  ];
+      ../../secrets/nixos.nix
+    ]
+    ++ lib.optional is_azure ./sever;
 }
