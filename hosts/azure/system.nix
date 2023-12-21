@@ -35,6 +35,12 @@ in {
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDO/MVQ2jBtTwjqFsr1HpZeAcp9LE14g7FZEH9xaI5jq+9SFoSJF3GcFi15T7HxRtQ9l/CEaTVVbEbvIEynORVIfo9qR6vJYS7OyWt//rorIVCWyYsfEVLkX1vbq/wIe5aaWXHt8ePZy3up2bAewFok8z4wRYq2vhP5yI9/WckqKFWdZQ5+7CXJEdpec3ye5+G3Q+VgkHb4ZzjjgPbeoWp9tpFh5LVw+Trw3gyI9TxsXnWZUKD/v/mirNodAFN6O0owkqbo1fvAAfLM7U02mHIxJ1jc0DrCGUm4hVR9oRGcmPlsjT9D0oILkHt0LDPhmnWw4o0iyZZPtp3AcacJvb33wRy2VOUrkGjn2e8JwLSB68tXrrmk0ashFie3kFkumpf5lMnqSB5RLG1t+C9yP5S7ge7Usndphwe+vUgeNGNKfPmFdV+jEl2gi8GuIX99UGIHZCcwaGCqnELH00rSTPbGmBoGNaAZU6FHDloMrHqwhuR85kpQow7aBMu7APou7B8= wf@homelab"
     ];
   };
+
+  programs.zsh.enable = true;
+  users.defaultUserShell = pkgs.zsh;
+
+  networking.firewall.enable = false;
+
   # nix.settings.trusted-users = [ username ];
   nix.settings.trusted-users = ["@wheel"];
 
@@ -42,6 +48,10 @@ in {
 
   system.stateVersion = "23.05";
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelModules = ["tcp_bbr"];
+  boot.kernel.sysctl = {
+    "net.ipv4.tcp_congestion_control" = "bbr";
+  };
 
   # test user doesn't have a password
   services.openssh.settings.PasswordAuthentication = false;
