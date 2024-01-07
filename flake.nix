@@ -183,6 +183,16 @@
         home-module = import ./home/desktop-deepin.nix;
       };
 
+      homelab_modules_kde = {
+        nixos-modules =
+          [
+            ./hosts/homelab
+            ./nixos/kde.nix
+          ]
+          ++ common-nixos-modules;
+        home-module = import ./home/desktop-kde.nix;
+      };
+
       # azure
       azure_modules_base = {
         nixos-modules =
@@ -248,6 +258,8 @@
       homelab_gnome_args = homelab_modules_gnome // stable_args // {specialArgs = _specialArgs // {inherit netboot_args;};};
 
       homelab_deepin_args = homelab_modules_deepin // stable_args // {specialArgs = _specialArgs // {inherit netboot_args;};};
+
+      homelab_kde_args = homelab_modules_kde // stable_args // {specialArgs = _specialArgs // {inherit netboot_args;};};
     in {
       # desktop with gnome
       inherit desktop_gnome;
@@ -262,6 +274,8 @@
       homelab_gnome = nixosSystem homelab_gnome_args;
 
       homelab_deepin = nixosSystem homelab_deepin_args;
+
+      homelab_kde = nixosSystem homelab_kde_args;
     };
 
     deploy = {
