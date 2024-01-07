@@ -13,7 +13,7 @@
 #############################################################
 let
   interface = {
-    ib = "ibp66s0";
+    ib = "enp66s0";
     eth-to-bridge = "enp66s0d1";
     eth = "enp66s0d1";
     intern = "br1";

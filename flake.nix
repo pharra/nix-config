@@ -38,6 +38,7 @@
 
     # Official NixOS package source, using nixos's stable branch by default
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-2305.url = "github:nixos/nixpkgs/nixos-23.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # home-manager, used for managing user configuration
@@ -88,6 +89,7 @@
     self,
     nixpkgs,
     nixpkgs-unstable,
+    nixpkgs-2305,
     nix-darwin,
     home-manager,
     nixos-generators,
@@ -197,6 +199,12 @@
           inherit username userfullname useremail legacyPackages overlays mysecrets;
           # use unstable branch for some packages to get the latest updates
           pkgs-unstable = import nixpkgs-unstable {
+            system = x64_system; # refer the `system` parameter form outer scope recursively
+            # To use chrome, we need to allow the installation of non-free software
+            config.allowUnfree = true;
+          };
+
+          pkgs-2305 = import nixpkgs-2305 {
             system = x64_system; # refer the `system` parameter form outer scope recursively
             # To use chrome, we need to allow the installation of non-free software
             config.allowUnfree = true;

@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  pkgs-2305,
   ...
 }: let
   opensm-launch = pkgs.writeShellScriptBin "opensm.launch" ''
@@ -48,7 +49,7 @@ in {
   environment.systemPackages = with pkgs; [
     opensm
     rdma-core
-    mstflint
+    pkgs-2305.mstflint
   ];
   systemd.services.rdma = {
     enable = false;
