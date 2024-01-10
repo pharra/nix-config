@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  username,
+  ...
+}: {
   programs = {
     zsh.enable = true;
     dconf.enable = true;
@@ -18,6 +22,11 @@
 
       displayManager.gdm.enable = true; # Display Manager
       desktopManager.gnome.enable = true; # Window Manager
+
+      displayManager.autoLogin = {
+        enable = true;
+        user = "${username}";
+      };
     };
     udev.packages = with pkgs; [
       gnome.gnome-settings-daemon
