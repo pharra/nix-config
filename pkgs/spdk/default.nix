@@ -28,20 +28,22 @@
   meson,
   ninja,
   rdma-core,
+  ensureNewerSourcesForZipFilesHook,
 }:
 stdenv.mkDerivation rec {
   pname = "spdk";
-  version = "23.05";
+  version = "23.09";
 
   src = fetchgit {
     url = "https://github.com/spdk/spdk.git";
-    rev = "9ad5ba228743a6a011f904cdb1a0d880696c5e56";
+    rev = "726c8313fd559711a456cae2c335638f31aa79a6";
     fetchSubmodules = true;
-    sha256 = "sha256-Rjfr+R01MDWW8s9zyTnIt8XoOOnE4DHN1BImoGuir3U=";
+    sha256 = "sha256-elwOfO2Bg3r8FRy1fwKAOoPdRdqhd9CjDkmlFNRGr5w=";
   };
 
   patches = [
-    ./python-setup.patch
+    ./setuptools.patch
+    ./0001-fix-setuptools-installation.patch
   ];
 
   nativeBuildInputs = [
@@ -49,6 +51,9 @@ stdenv.mkDerivation rec {
     python3.pkgs.configshell
     python3.pkgs.sphinx
     python3.pkgs.pyelftools
+    python3.pkgs.setuptools
+    pkg-config
+    ensureNewerSourcesForZipFilesHook
   ];
 
   buildInputs = [
@@ -83,11 +88,6 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     patchShebangs .
-
-    # glibc-2.36 adds arc4random, so we don't need the custom implementation
-    # here anymore. Fixed upstream in https://github.com/spdk/spdk/commit/43a3984c6c8fde7201d6c8dfe1b680cb88237269,
-    # but the patch doesn't apply here.
-    sed -i -e '1i #define HAVE_ARC4RANDOM 1' lib/iscsi/iscsi.c
   '';
 
   dontUseMesonConfigure = true;
@@ -95,11 +95,13 @@ stdenv.mkDerivation rec {
   dontUseNinjaBuild = true;
   dontUseNinjaInstall = true;
 
-  configureFlags = ["--with-rdma" "--with-uring" "--with-ublk" "--with-vfio-user" "--with-raid5f"];
+  configureFlags = ["--with-rdma" "--with-uring" "--with-ublk" "--with-vfio-user" "--with-raid5f" "--pydir=${placeholder "out"}"];
 
   postInstall = ''
     cp -r scripts $out
-    cp -r python/spdk $out/scripts
+  '';
+  postCheck = ''
+    python3 -m spdk
   '';
 
   env.NIX_CFLAGS_COMPILE = "-mssse3"; # Necessary to compile.
