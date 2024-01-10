@@ -58,27 +58,10 @@
         ".var/app"
 
         # Other configs
-        ".aMule"
         ".android"
-        ".conda"
-        ".fly"
-        ".kde4"
-        ".kube"
-        ".librewolf"
-        ".mozilla"
-        ".openfaas"
-        ".parsec"
-        ".pcem"
-        ".rustup"
-        ".stack"
         ".steam"
-        ".terraform.d"
-        ".thunderbird"
-        ".vagrant.d"
         ".vscode"
         ".wine"
-        ".Xilinx"
-        ".zoom"
       ];
       files = [
         ".zsh_history"
