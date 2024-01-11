@@ -33,6 +33,8 @@
     ];
   };
 
+  security.pam.services.gdm.enableGnomeKeyring = true;
+
   hardware.pulseaudio.enable = false;
 
   environment = {
