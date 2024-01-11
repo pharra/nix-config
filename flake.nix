@@ -78,6 +78,10 @@
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-flatpak = {
+      url = "github:gmodena/nix-flatpak/?ref=v0.2.0";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -96,6 +100,7 @@
     impermanence,
     deploy-rs,
     mysecrets,
+    nix-flatpak,
     ...
   }: let
     username = "wf";
@@ -126,6 +131,7 @@
     nixosConfigurations = let
       common-nixos-modules = [
         impermanence.nixosModules.impermanence
+        nix-flatpak.nixosModules.nix-flatpak
         modules
       ];
 
