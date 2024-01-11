@@ -38,7 +38,8 @@
       color-scheme = "prefer-light";
       enable-hot-corners = true;
       clock-show-weekday = true;
-      #gtk-theme = "Adwaita-dark";
+      cursor-theme = "Adwaita";
+      gtk-theme = "Adwaita";
     };
 
     "org/gnome/desktop/privacy" = {
