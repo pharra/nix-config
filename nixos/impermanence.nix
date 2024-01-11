@@ -34,7 +34,6 @@
         "Pictures"
         "Projects"
         "Videos"
-        "VirtualBox VMs"
         "Data"
         "spdk"
 
