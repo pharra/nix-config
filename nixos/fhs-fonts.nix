@@ -37,7 +37,8 @@ in {
   environment.systemPackages = [iconDir];
   system.fsPackages = [pkgs.bindfs];
 
+  # Deprecate the bind since there is a patch for flatpak
   # Create an FHS mount to support flatpak host icons/fonts
-  fileSystems."/usr/share/icons" = mkRoSymBind "${iconDir}/share/icons";
-  fileSystems."/usr/share/fonts" = mkRoSymBind (aggregatedFonts + "/share/fonts");
+  # fileSystems."/usr/share/icons" = mkRoSymBind "${iconDir}/share/icons";
+  # fileSystems."/usr/share/fonts" = mkRoSymBind (aggregatedFonts + "/share/fonts");
 }
