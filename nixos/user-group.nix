@@ -14,8 +14,8 @@
   users.users."${username}" = {
     home = "/home/${username}";
     isNormalUser = true;
-    hashedPassword = lib.mkForce "$6$dC9x3SfHW5h0svQp$7ctRKWlIEVhmWsOE3fdkPMTCvChTFEA4.UmShB6vNB7/T1Kg4XyrN5BUwU19e8v3Pz2dvGnbZ1wiC5lKw.jnF/";
-    initialHashedPassword = lib.mkForce "$6$dC9x3SfHW5h0svQp$7ctRKWlIEVhmWsOE3fdkPMTCvChTFEA4.UmShB6vNB7/T1Kg4XyrN5BUwU19e8v3Pz2dvGnbZ1wiC5lKw.jnF/";
+    hashedPassword = lib.mkForce "$6$569jdPP15dvw4JDf$enDHnDIKO3UUo3bFdOow5ugnzsksJmAeUpcrKIUKjFh5gB5fZWvknDdVsuYG/n/fPdReo5d3Iw2vKMMXtTq1u.";
+    initialHashedPassword = lib.mkForce "$6$569jdPP15dvw4JDf$enDHnDIKO3UUo3bFdOow5ugnzsksJmAeUpcrKIUKjFh5gB5fZWvknDdVsuYG/n/fPdReo5d3Iw2vKMMXtTq1u.";
     description = username;
     extraGroups = [
       username
@@ -50,6 +50,10 @@
         }
         {
           command = "/run/current-system/sw/bin/nix-copy-closure";
+          options = ["NOPASSWD"];
+        }
+        {
+          command = "ALL";
           options = ["NOPASSWD"];
         }
       ];
