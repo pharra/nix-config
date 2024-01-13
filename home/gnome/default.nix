@@ -22,7 +22,7 @@
         # "dash-to-panel@jderose9.github.com"
         # "just-perfection-desktop@just-perfection"
         "caffeine@patapon.info"
-        # "clipboard-indicator@tudmotu.com"
+        "clipboard-indicator@tudmotu.com"
         # "horizontal-workspace-indicator@tty2.io"
         "bluetooth-quick-connect@bjarosze.gmail.com"
         # "battery-indicator@jgotti.org"
@@ -31,6 +31,7 @@
         # "forge@jmmaranan.com"
         "dash-to-dock@micxgx.gmail.com" # Dash to panel alternative
         # "fullscreen-avoider@noobsai.github.com"     # Incompatible with dash-to-panel
+        "kimpanel@kde.org"
       ];
     };
 
@@ -73,5 +74,6 @@
     # gnomeExtensions.fullscreen-avoider
     gnomeExtensions.dash-to-dock
     gnomeExtensions.freon
+    gnomeExtensions.kimpanel
   ];
 }
