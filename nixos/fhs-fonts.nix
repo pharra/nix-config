@@ -34,8 +34,8 @@ in {
   #    3. without letting /nix into the sandbox.
   #
   ###################################################################################
-  environment.systemPackages = [iconDir];
-  system.fsPackages = [pkgs.bindfs];
+  # environment.systemPackages = [iconDir];
+  # system.fsPackages = [pkgs.bindfs];
 
   # Deprecate the bind since there is a patch for flatpak
   # Create an FHS mount to support flatpak host icons/fonts
