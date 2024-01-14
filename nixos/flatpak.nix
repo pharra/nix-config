@@ -27,5 +27,9 @@
       appId = "org.localsend.localsend_app";
       origin = "flathub";
     }
+    {
+      appId = "com.qq.QQ";
+      origin = "flathub";
+    }
   ];
 }
