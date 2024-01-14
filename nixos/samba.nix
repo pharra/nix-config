@@ -93,10 +93,16 @@
     options = ["bind"];
   };
 
+  fileSystems."/nfs/share" = {
+    device = "/share";
+    options = ["bind"];
+  };
+
   services.nfs.server.enable = true;
   services.nfs.server.exports = ''
     /nfs         192.168.0.0/16(rw,fsid=0,no_subtree_check)
 
     /nfs/persistent  192.168.0.0/16(rw,nohide,insecure,no_subtree_check)
+    /nfs/share  192.168.0.0/16(rw,nohide,insecure,no_subtree_check)
   '';
 }
