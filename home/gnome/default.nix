@@ -54,6 +54,10 @@
       show-battery-icon-on = true;
       show-battery-value-on = true;
     };
+
+    "org/gnome/desktop/remote-desktop/rdp" = {
+      enable = true;
+    };
   };
 
   home.packages = with pkgs; [
