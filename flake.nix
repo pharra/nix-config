@@ -63,7 +63,7 @@
 
     # secrets management
     agenix = {
-      url = "github:ryan4yin/ragenix";
+      url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
