@@ -146,6 +146,17 @@
         home-module = import ./home/desktop-gnome.nix;
       };
 
+      # gs65
+      gs65_modules_gnome = {
+        nixos-modules =
+          [
+            ./hosts/gs65
+            ./nixos/gnome.nix
+          ]
+          ++ common-nixos-modules;
+        home-module = import ./home/desktop-gnome.nix;
+      };
+
       # vm
       vm_modules_gnome = {
         nixos-modules =
@@ -236,6 +247,9 @@
       # desktop with gnome
       desktop_gnome = nixosSystem (desktop_modules_gnome // stable_args // {specialArgs = _specialArgs;});
 
+      # gs65 with gnome
+      gs65_gnome = nixosSystem (gs65_modules_gnome // stable_args // {specialArgs = _specialArgs;});
+
       # vm with gnome
       vm_gnome = nixosSystem (vm_modules_gnome // stable_args // {specialArgs = _specialArgs;});
 
@@ -269,6 +283,9 @@
     in {
       # desktop with gnome
       inherit desktop_gnome;
+
+      # gs65 with gnome
+      inherit gs65_gnome;
 
       # vm with gnome
       inherit vm_gnome;
