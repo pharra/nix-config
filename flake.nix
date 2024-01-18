@@ -366,6 +366,13 @@
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."azure_jp";
           };
         };
+
+        "gs65_gnome" = {
+          hostname = "192.168.31.156";
+          profiles.system = {
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."gs65_gnome";
+          };
+        };
       };
     };
 
