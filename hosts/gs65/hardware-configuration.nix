@@ -31,7 +31,7 @@ in {
 
   boot.kernelParams =
     #  "pci=nommconf"
-    ["intel_iommu=on" "iommu=pt" "pcie_acs_override=downstream,multifunction"]
+    ["intel_iommu=on" "iommu=pt" "pcie_acs_override=downstream,multifunction" "pcie_port_pm=off" "vfio-pci.disable_idle_d3=1"]
     ++ [("vfio-pci.ids=" + lib.concatStringsSep "," gpuIDs)]; # isolate the GPU
 
   fileSystems."/" = {

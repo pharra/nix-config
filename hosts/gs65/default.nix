@@ -89,6 +89,14 @@
     };
   };
 
+  # for Nvidia GPU
+  services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default
+  hardware.nvidia = {
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    modesetting.enable = true;
+    #powerManagement.enable = true;
+  };
+
   hardware = {
     opengl = {
       enable = true;
