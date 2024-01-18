@@ -265,6 +265,39 @@
             };
         });
 
+      azure_sg = nixosSystem (azure_modules_base
+        // stable_args
+        // {
+          specialArgs =
+            _specialArgs
+            // {
+              inherit is_azure;
+              domain = "sg.azure.int4byte.com";
+            };
+        });
+
+      azure_us = nixosSystem (azure_modules_base
+        // stable_args
+        // {
+          specialArgs =
+            _specialArgs
+            // {
+              inherit is_azure;
+              domain = "us.azure.int4byte.com";
+            };
+        });
+
+      azure_jp = nixosSystem (azure_modules_base
+        // stable_args
+        // {
+          specialArgs =
+            _specialArgs
+            // {
+              inherit is_azure;
+              domain = "jp.azure.int4byte.com";
+            };
+        });
+
       # netboot installer
       netboot_installer = nixpkgs.lib.nixosSystem {
         system = x64_system;
@@ -291,7 +324,7 @@
       inherit vm_gnome;
 
       # azure vms
-      inherit azure_hk;
+      inherit azure_hk azure_sg azure_us azure_jp;
 
       # homelab with gnome
       homelab_gnome = nixosSystem homelab_gnome_args;
@@ -302,18 +335,36 @@
     };
 
     deploy = {
+      sshUser = "wf";
+      user = "root";
+      # sshOpts = ["-p" "2222"];
+      autoRollback = false;
+
+      magicRollback = false;
       nodes = {
         "azure_hk" = {
           hostname = "hk.azure.int4byte.com";
           profiles.system = {
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."azure_hk";
           };
-          sshUser = "wf";
-          user = "root";
-          # sshOpts = ["-p" "2222"];
-          autoRollback = false;
-
-          magicRollback = false;
+        };
+        "azure_sg" = {
+          hostname = "sg.azure.int4byte.com";
+          profiles.system = {
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."azure_sg";
+          };
+        };
+        "azure_us" = {
+          hostname = "us.azure.int4byte.com";
+          profiles.system = {
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."azure_us";
+          };
+        };
+        "azure_jp" = {
+          hostname = "jp.azure.int4byte.com";
+          profiles.system = {
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."azure_jp";
+          };
         };
       };
     };
