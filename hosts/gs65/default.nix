@@ -51,7 +51,7 @@
   };
 
   networking = {
-    hostName = "desktop";
+    hostName = "gs65";
     wireless.enable = false; # Enables wireless support via wpa_supplicant.
 
     # Configure network proxy if necessary
