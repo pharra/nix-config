@@ -8,7 +8,7 @@
   system.activationScripts."replace_domain" = ''
     domain=${domain}
     caddyConfigFile=${config.age.secrets.caddy_server_conf.path}
-    xrayConfigFile=/etc/xray.json
+    xrayConfigFile=/etc/xray_server_conf.json
     ${pkgs.gnused}/bin/sed -i "s/_domain/$domain/g" "$caddyConfigFile"
     ${pkgs.gnused}/bin/sed -i "s/_domain/$domain/g" "$xrayConfigFile"
   '';
