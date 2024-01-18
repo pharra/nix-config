@@ -39,6 +39,9 @@
 
       # gs65
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINc9ycN0bbSJAecPk42xXmJhraP6f54eawQ98dhHvNWG wf@gs65"
+
+      # homelab
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPsMIjAmPitKTYN83DxrN/D783BTMkknEuwMeO5s0ABw wf@homelab"
     ];
   };
 
