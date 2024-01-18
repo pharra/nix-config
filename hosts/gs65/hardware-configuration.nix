@@ -10,8 +10,8 @@
 }: let
   # RTX 3070 Ti
   gpuIDs = [
-    #"10de:2684" # Graphics
-    #"10de:22ba" # Audio
+    "10de:1ba1" # Graphics
+    "10de:10f0" # Audio
     #"10de:1aec" # USB
     #"10de:1aed" # UCSI
   ];
