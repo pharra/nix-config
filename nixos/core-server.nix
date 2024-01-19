@@ -73,6 +73,7 @@
     wget
     curl
     aria2
+    lshw
     git # used by nix flakes
     git-lfs # used by huggingface models
 
