@@ -223,7 +223,7 @@
       system = x64_system;
       _specialArgs =
         {
-          inherit username userfullname useremail legacyPackages overlays mysecrets;
+          inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs;
           # use unstable branch for some packages to get the latest updates
           pkgs-unstable = import nixpkgs-unstable {
             system = x64_system; # refer the `system` parameter form outer scope recursively

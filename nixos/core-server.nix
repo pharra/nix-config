@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  deploy-rs,
   ...
 }: {
   ###################################################################################
@@ -70,6 +71,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    deploy-rs.defaultPackage.x86_64-linux
     wget
     curl
     aria2
