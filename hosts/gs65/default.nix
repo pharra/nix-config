@@ -90,12 +90,28 @@
   };
 
   # for Nvidia GPU
-  services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default
+  # services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default
+  services.xserver.videoDrivers = ["displaylink" "modesetting"];
+
   hardware.nvidia = {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
     modesetting.enable = true;
-    #powerManagement.enable = true;
+    powerManagement.enable = true;
   };
+
+  # hardware.nvidia.prime = {
+  #   offload = {
+  #     enable = true;
+  #     enableOffloadCmd = true;
+  #   };
+  #   # Make sure to use the correct Bus ID values for your system!
+  #   intelBusId = "PCI:0:2:0";
+  #   nvidiaBusId = "PCI:1:0:0";
+  # };
+
+  # environment.variables = {
+  #   __EGL_VENDOR_LIBRARY_FILENAMES = "${pkgs.mesa}/share/glvnd/egl_vendor.d/50_mesa.json";
+  # };
 
   hardware = {
     opengl = {
