@@ -15,6 +15,12 @@
     #"10de:1aec" # USB
     #"10de:1aed" # UCSI
   ];
+
+  # isolate the GPU
+  vfio_bind = [("vfio-pci.ids=" + lib.concatStringsSep "," gpuIDs)];
+
+  #  "pci=nommconf"
+  kernel_params = ["mitigations=off" "intel_iommu=on" "iommu=pt" "pcie_acs_override=downstream,multifunction" "pcie_port_pm=off" "vfio-pci.disable_idle_d3=1"];
 in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -29,10 +35,7 @@ in {
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 
-  boot.kernelParams =
-    #  "pci=nommconf"
-    ["mitigations=off" "intel_iommu=on" "iommu=pt" "pcie_acs_override=downstream,multifunction" "pcie_port_pm=off" "vfio-pci.disable_idle_d3=1"]
-    ++ [("vfio-pci.ids=" + lib.concatStringsSep "," gpuIDs)]; # isolate the GPU
+  boot.kernelParams = kernel_params ++ vfio_bind;
 
   fileSystems."/" = {
     device = "/dev/disk/by-label/nixos";
@@ -43,6 +46,14 @@ in {
   fileSystems."/boot/efi" = {
     device = "/dev/disk/by-label/boot";
     fsType = "vfat";
+  };
+
+  specialisation = {
+    no-vfio.configuration = {
+      system.nixos.tags = ["no-vfio"];
+      boot.kernelParams = lib.mkForce kernel_params;
+      services.xserver.videoDrivers = lib.mkForce ["nvidia"];
+    };
   };
 
   # services.udev.extraRules = ''
@@ -67,4 +78,5 @@ in {
   swapDevices = [];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.cpu.intel.updateMicrocode = true;
 }
