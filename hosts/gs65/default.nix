@@ -92,7 +92,7 @@
 
   # for Nvidia GPU
   # services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default
-  services.xserver.videoDrivers = ["displaylink" "modesetting"];
+  services.xserver.videoDrivers = ["nvidia" "displaylink" "modesetting"];
 
   hardware.nvidia = {
     package = config.boot.kernelPackages.nvidiaPackages.stable;

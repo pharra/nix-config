@@ -52,7 +52,6 @@ in {
     no-vfio.configuration = {
       system.nixos.tags = ["no-vfio"];
       boot.kernelParams = lib.mkForce kernel_params;
-      services.xserver.videoDrivers = lib.mkForce ["nvidia"];
     };
   };
 

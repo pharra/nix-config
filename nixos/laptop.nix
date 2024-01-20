@@ -19,4 +19,9 @@
   services.thermald.enable = true;
 
   powerManagement.powertop.enable = true;
+
+  hardware.steam-hardware.enable = true;
+  programs.steam = {
+    enable = true;
+  };
 }
