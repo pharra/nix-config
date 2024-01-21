@@ -5,13 +5,7 @@
   libs,
   netboot_args,
   ...
-} @ args:
-#############################################################
-#
-#  Ai - my main computer, with NixOS + I5-13600KF + RTX 4090 GPU, for gaming & daily use.
-#
-#############################################################
-let
+} @ args: let
   interface = {
     ib = "enp66s0";
     eth-to-bridge = "enp66s0d1";
