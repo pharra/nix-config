@@ -20,7 +20,7 @@
   vfio_bind = [("vfio-pci.ids=" + lib.concatStringsSep "," gpuIDs)];
 
   #  "pci=nommconf"
-  kernel_params = ["mitigations=off" "intel_iommu=on" "iommu=pt" "pcie_acs_override=downstream,multifunction" "pcie_port_pm=off" "vfio-pci.disable_idle_d3=1" "pcie_aspm=off"];
+  kernel_params = ["mitigations=off" "intel_iommu=on" "iommu=pt" "pcie_acs_override=downstream,multifunction" "pcie_port_pm=off" "vfio-pci.disable_idle_d3=1" "pcie_aspm=off" "acpi_osi=!" "acpi_osi=\"Windows 2009\""];
 in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -48,24 +48,24 @@ in {
     fsType = "vfat";
   };
 
-  # services.udev.extraRules = ''
-  #   # Remove NVIDIA USB xHCI Host Controller devices, if present
-  #   ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{remove}="1"
+  services.udev.extraRules = ''
+    # Remove NVIDIA USB xHCI Host Controller devices, if present
+    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{remove}="1"
 
-  #   # Remove NVIDIA USB Type-C UCSI devices, if present
-  #   ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", ATTR{remove}="1"
+    # Remove NVIDIA USB Type-C UCSI devices, if present
+    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", ATTR{remove}="1"
 
-  #   # Remove NVIDIA Audio devices, if present
-  #   ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}="1"
+    # Remove NVIDIA Audio devices, if present
+    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}="1"
 
-  #   # Enable runtime PM for NVIDIA VGA/3D controller devices on driver bind
-  #   ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="auto"
-  #   ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="auto"
+    # Enable runtime PM for NVIDIA VGA/3D controller devices on driver bind
+    ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="auto"
+    ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="auto"
 
-  #   # Disable runtime PM for NVIDIA VGA/3D controller devices on driver unbind
-  #   ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="on"
-  #   ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="on"
-  # '';
+    # Disable runtime PM for NVIDIA VGA/3D controller devices on driver unbind
+    ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="on"
+    ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="on"
+  '';
 
   swapDevices = [];
 

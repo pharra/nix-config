@@ -18,7 +18,12 @@
 
   services.thermald.enable = true;
 
+  boot.extraModulePackages = with config.boot.kernelPackages; [
+    cpupower
+  ];
+
   powerManagement.powertop.enable = true;
+  powerManagement.cpuFreqGovernor = "performance";
 
   systemd.targets.sleep.enable = false;
   systemd.targets.suspend.enable = false;
