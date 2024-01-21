@@ -72,6 +72,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     deploy-rs.defaultPackage.x86_64-linux
+    nmap
     wget
     curl
     aria2
