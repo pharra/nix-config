@@ -395,6 +395,13 @@
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."gs65_gnome";
           };
         };
+
+        "desktop_gnome" = {
+          hostname = "192.168.29.127";
+          profiles.system = {
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."desktop_gnome";
+          };
+        };
       };
     };
 
