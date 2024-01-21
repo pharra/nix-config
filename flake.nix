@@ -179,6 +179,16 @@
         home-module = import ./home/desktop-deepin.nix;
       };
 
+      # netboot installer
+      installer_modules_base = {
+        nixos-modules =
+          [
+            ./hosts/installer/netboot.nix
+          ]
+          ++ common-nixos-modules;
+        home-module = import ./home/base.nix;
+      };
+
       # homelab
       homelab_modules_gnome = {
         nixos-modules =
@@ -253,6 +263,9 @@
       # vm with gnome
       vm_gnome = nixosSystem (vm_modules_gnome // stable_args // {specialArgs = _specialArgs;});
 
+      # netboot installer with base
+      netboot_installer = nixosSystem (installer_modules_base // stable_args // {specialArgs = _specialArgs;});
+
       # azure vms
       azure_hk = nixosSystem (azure_modules_base
         // stable_args
@@ -297,14 +310,6 @@
               domain = "jp.azure.int4byte.com";
             };
         });
-
-      # netboot installer
-      netboot_installer = nixpkgs.lib.nixosSystem {
-        system = x64_system;
-        modules = [
-          ./hosts/installer/netboot.nix
-        ];
-      };
 
       netboot_args = {inherit desktop_gnome netboot_installer;};
 
@@ -385,16 +390,11 @@
         "homelab_gnome"
         "vm_deepin"
         "vm_gnome"
+        "gs65_gnome"
       ] (
         host:
-          self.nixosConfigurations.${host}.config.formats.vm
+          self.nixosConfigurations.${host}.config.formats.iso
       )
-      # // nixpkgs.lib.genAttrs [
-      #   "vm_gnome"
-      # ] (
-      #   host:
-      #     self.nixosConfigurations.${host}.config.formats.proxmox
-      # )
       // nixpkgs.lib.filterAttrs (_: v: nixpkgs.lib.isDerivation v) legacyPackages.${x64_system};
 
     devShells."${x64_system}".default = let

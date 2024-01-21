@@ -222,4 +222,13 @@ in {
       host-record = ["homelab.intern,192.168.30.1" "homelab.intern,192.168.29.1" "homelab.intern,192.168.28.1"];
     };
   };
+
+  services.pixiecore = {
+    enable = true;
+    listen = "192.168.31.200";
+    kernel = netboot_installer.config.system.build.kernel + "/bzImage";
+    initrd = netboot_installer.config.system.build.netbootRamdisk + "/initrd";
+    dhcpNoBind = true;
+    cmdLine = "init=${netboot_installer.config.system.build.toplevel}/init ${toString netboot_installer.config.boot.kernelParams}";
+  };
 })
