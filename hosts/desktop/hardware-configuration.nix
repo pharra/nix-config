@@ -21,7 +21,7 @@ in {
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  boot.extraModprobeConfig = "options mlx4_core port_type_array=1,1 num_vfs=8 probe_vf=8 msi_x=1 enable_4k_uar=1 enable_qos=1 log_num_mac=7 log_num_mgm_entry_size=-1 log_mtts_per_seg=4";
+  boot.extraModprobeConfig = "options mlx4_core port_type_array=2,2 num_vfs=8 msi_x=1 enable_4k_uar=1 enable_qos=1 log_num_mac=7 log_num_mgm_entry_size=-1 log_mtts_per_seg=4";
 
   boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "uas" "xhci_pci"];
   boot.initrd.kernelModules = [
