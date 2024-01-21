@@ -1,7 +1,7 @@
 {config, ...} @ args: {
   imports = [
     ./hardware-configuration.nix
-    ../../nixos/core-sever.nix
+    ../../nixos/core-server.nix
     ../../nixos/user-group.nix
   ];
 
