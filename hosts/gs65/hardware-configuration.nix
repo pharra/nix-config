@@ -48,13 +48,6 @@ in {
     fsType = "vfat";
   };
 
-  specialisation = {
-    no-vfio.configuration = {
-      system.nixos.tags = ["no-vfio"];
-      boot.kernelParams = lib.mkForce kernel_params;
-    };
-  };
-
   # services.udev.extraRules = ''
   #   # Remove NVIDIA USB xHCI Host Controller devices, if present
   #   ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{remove}="1"
