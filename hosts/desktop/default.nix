@@ -22,7 +22,6 @@
     ../../nixos/fhs-fonts.nix
     ../../nixos/libvirt.nix
     ../../nixos/core-desktop.nix
-    # ../../nixos/remote-building.nix
     ../../nixos/user-group.nix
 
     ../../secrets/nixos.nix
