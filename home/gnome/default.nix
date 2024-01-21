@@ -10,6 +10,7 @@
     "NIXOS_OZONE_WL" = "1"; # for any ozone-based browser & electron apps to run on wayland
     "MOZ_ENABLE_WAYLAND" = "1"; # for firefox to run on wayland
     "MOZ_WEBRENDER" = "1";
+    "QT_QPA_PLATFORM" = "wayland";
   };
 
   dconf.settings = {
@@ -32,6 +33,7 @@
         "dash-to-dock@micxgx.gmail.com" # Dash to panel alternative
         # "fullscreen-avoider@noobsai.github.com"     # Incompatible with dash-to-panel
         "kimpanel@kde.org"
+        "appindicatorsupport@rgcjonas.gmail.com"
       ];
     };
 
@@ -79,5 +81,6 @@
     gnomeExtensions.dash-to-dock
     gnomeExtensions.freon
     gnomeExtensions.kimpanel
+    gnomeExtensions.appindicator
   ];
 }

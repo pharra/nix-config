@@ -15,4 +15,5 @@ in rec {
 
   inherit linux_mlx;
   spdk = pkgs.callPackage ./pkgs/spdk {};
+  mcontrolcenter = pkgs.libsForQt5.callPackage ./pkgs/mcontrolcenter/default.nix {};
 }

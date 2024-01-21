@@ -1,2 +1,3 @@
 {
+  mcontrolcenter-module = import ./mcontrolcenter;
 }

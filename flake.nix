@@ -129,11 +129,12 @@
     modules = import ./modules;
   in {
     nixosConfigurations = let
-      common-nixos-modules = [
-        impermanence.nixosModules.impermanence
-        nix-flatpak.nixosModules.nix-flatpak
-        modules
-      ];
+      common-nixos-modules =
+        [
+          impermanence.nixosModules.impermanence
+          nix-flatpak.nixosModules.nix-flatpak
+        ]
+        ++ (builtins.attrValues modules);
 
       #desktop
       desktop_modules_gnome = {

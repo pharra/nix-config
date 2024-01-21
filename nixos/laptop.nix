@@ -18,9 +18,17 @@
 
   services.thermald.enable = true;
 
+  qt.enable = true;
+  qt.platformTheme = "gnome";
+  qt.style = "adwaita";
+
   boot.extraModulePackages = with config.boot.kernelPackages; [
     cpupower
   ];
+
+  programs.mcontrolcenter = {
+    enable = true;
+  };
 
   powerManagement.powertop.enable = true;
   powerManagement.cpuFreqGovernor = "performance";
