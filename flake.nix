@@ -189,6 +189,16 @@
         home-module = import ./home/base.nix;
       };
 
+      # minimal
+      minimal_modules_base = {
+        nixos-modules =
+          [
+            ./hosts/minimal
+          ]
+          ++ common-nixos-modules;
+        home-module = import ./home/base.nix;
+      };
+
       # homelab
       homelab_modules_gnome = {
         nixos-modules =
@@ -266,6 +276,9 @@
       # netboot installer with base
       netboot_installer = nixosSystem (installer_modules_base // stable_args // {specialArgs = _specialArgs;});
 
+      # minimal with base
+      minimal_base = nixosSystem (minimal_modules_base // stable_args // {specialArgs = _specialArgs;});
+
       # azure vms
       azure_hk = nixosSystem (azure_modules_base
         // stable_args
@@ -321,6 +334,9 @@
     in {
       # desktop with gnome
       inherit desktop_gnome;
+
+      # minimal with base
+      inherit minimal_base;
 
       # gs65 with gnome
       inherit gs65_gnome;
