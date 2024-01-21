@@ -12,6 +12,7 @@
   gpuIDs = [
     "10de:2684" # Graphics
     "10de:22ba" # Audio
+    "8086:f1a6" # nvme
     #"10de:1aec" # USB
     #"10de:1aed" # UCSI
   ];

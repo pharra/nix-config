@@ -64,6 +64,7 @@
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
     networkmanager.enable = true;
+    networkmanager.unmanaged = ["*,except:interface-name:wl*"];
 
     # enableIPv6 = false; # disable ipv6
     # interfaces.enp5s0 = {
@@ -84,12 +85,15 @@
 
   systemd.network = {
     networks = {
-      "50-ibp5s0" = {
-        matchConfig.Name = "ibp5s0";
+      "50-enp5s0" = {
+        matchConfig.Name = "enp5s0";
         # acquire a DHCP lease on link up
         networkConfig.DHCP = "yes";
         # this port is not always connected and not required to be online
-        linkConfig.RequiredForOnline = "yes";
+        linkConfig = {
+          # or "routable" with IP addresses configured
+          RequiredForOnline = "routable";
+        };
       };
     };
   };
