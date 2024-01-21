@@ -83,12 +83,34 @@
   };
 
   systemd.network = {
+    enable = true;
+    netdevs = {
+      # Create the bridge interface
+      "20-br0" = {
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "br0";
+        };
+      };
+    };
     networks = {
-      "50-enp5s0" = {
-        matchConfig.Name = "enp5s0";
-        # acquire a DHCP lease on link up
-        networkConfig.DHCP = "yes";
-        # this port is not always connected and not required to be online
+      # Connect the bridge ports to the bridge
+      "30-enp3s0" = {
+        matchConfig.Name = "enp3s0";
+        networkConfig.Bridge = "br0";
+        linkConfig.RequiredForOnline = "enslaved";
+      };
+
+      # Configure the bridge for its desired function
+      "40-br0" = {
+        matchConfig.Name = "br0";
+        bridgeConfig = {};
+        networkConfig = {
+          # start a DHCP Client for IPv4 Addressing/Routing
+          DHCP = "ipv4";
+          # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
+          IPv6AcceptRA = true;
+        };
         linkConfig = {
           # or "routable" with IP addresses configured
           RequiredForOnline = "routable";
