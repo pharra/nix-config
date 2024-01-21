@@ -19,8 +19,8 @@
   # isolate the GPU
   vfio_bind = [("vfio-pci.ids=" + lib.concatStringsSep "," gpuIDs)];
 
-  #  "pci=nommconf"
-  kernel_params = ["mitigations=off" "intel_iommu=on" "iommu=pt" "pcie_acs_override=downstream,multifunction" "pcie_port_pm=off" "vfio-pci.disable_idle_d3=1"];
+  #  "pci=nommconf" "pcie_port_pm=off" "vfio-pci.disable_idle_d3=1"
+  kernel_params = ["mitigations=off" "intel_iommu=on" "iommu=pt" "pcie_acs_override=downstream,multifunction"];
 in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
