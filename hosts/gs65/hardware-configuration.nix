@@ -20,7 +20,24 @@
   vfio_bind = [("vfio-pci.ids=" + lib.concatStringsSep "," gpuIDs)];
 
   #  "pci=nommconf"
-  kernel_params = ["mitigations=off" "intel_iommu=on" "iommu=pt" "pcie_acs_override=downstream,multifunction" "pcie_port_pm=off" "vfio-pci.disable_idle_d3=1" "pcie_aspm=off" "acpi_osi=!" "acpi_osi=\"Windows 2009\""];
+  kernel_params = [
+    "mitigations=off"
+    "intel_iommu=on"
+    "iommu=pt"
+    "pcie_acs_override=downstream,multifunction"
+    "pcie_port_pm=off"
+    "vfio-pci.disable_idle_d3=1"
+    "pcie_aspm=off"
+    "acpi_osi=!"
+    "acpi_osi=\"Windows 2009\""
+
+    "default_hugepagesz=1G"
+    "hugepagesz=1GB"
+    "hugepages=12"
+    "isolcpus=1,2,3,4,7,8,9,10"
+    "nohz_full=1,2,3,4,7,8,9,10"
+    "rcu_nocbs=1,2,3,4,7,8,9,10"
+  ];
 in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
