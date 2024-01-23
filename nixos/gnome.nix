@@ -23,6 +23,7 @@
       displayManager.gdm.enable = true; # Display Manager
       desktopManager.gnome.enable = true; # Window Manager
 
+      displayManager.defaultSession = "gnome";
       displayManager.autoLogin = {
         enable = true;
         user = "${username}";
