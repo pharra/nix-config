@@ -76,10 +76,14 @@
       [share]
       	path = /share
         read only = no
+        force user = sftp
+        force group = sftp
 
       [nix-persistent]
       	path = /nix/persistent
         read only = no
+        force user = wf
+        force group = wf
     '';
   };
 
