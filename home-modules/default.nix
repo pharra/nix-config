@@ -1,0 +1,3 @@
+{
+  autostart-module = import ./autostart;
+}

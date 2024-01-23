@@ -5,6 +5,7 @@
     ./ssh.nix
     ./xdg.nix
     ./looking-glass.nix
+    ./autostart.nix
   ];
 
   home.packages = with pkgs; [

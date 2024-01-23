@@ -14,7 +14,12 @@ in {
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [pkgs.mcontrolcenter];
+    environment.systemPackages = [
+      (pkgs.makeAutostartItem {
+        name = "MControlCenter";
+        package = pkgs.mcontrolcenter;
+      })
+    ];
 
     boot.kernelModules = ["ec_sys"];
     boot.extraModprobeConfig = "options ec_sys write_support=1";

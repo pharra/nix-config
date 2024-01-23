@@ -38,6 +38,7 @@ in
 
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users."${username}" = home-module;
+          home-manager.sharedModules = builtins.attrValues specialArgs.home-modules;
         }
       ];
   }

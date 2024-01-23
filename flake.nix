@@ -127,6 +127,7 @@
     overlays = import ./overlay.nix;
 
     modules = import ./modules;
+    home-modules = import ./home-modules;
   in {
     nixosConfigurations = let
       common-nixos-modules =
@@ -244,7 +245,7 @@
       system = x64_system;
       _specialArgs =
         {
-          inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs;
+          inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs home-modules;
           # use unstable branch for some packages to get the latest updates
           pkgs-unstable = import nixpkgs-unstable {
             system = x64_system; # refer the `system` parameter form outer scope recursively
