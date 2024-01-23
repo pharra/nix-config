@@ -47,7 +47,6 @@ in {
       after = ["spdk.service"];
       requires = ["spdk.service"];
       description = "Starts the spdk dashboard";
-      # path = [pkgs.kmod pkgs.gawk pkgs.util-linux];
       serviceConfig = {
         Type = "simple";
         ExecStart = ''${pkgs.spdk-dashboard}/bin/spdk-dashboard'';
