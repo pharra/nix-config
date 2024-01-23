@@ -77,7 +77,6 @@ in {
   environment.systemPackages = with pkgs; [
     parted
     nvme-cli
-    spdk
     openiscsi
     spdk-iscsi-scripts
     spdk-nvmf-scripts
@@ -86,98 +85,11 @@ in {
     spdk-scripts
     bind-vfio-scripts
     unbind-vfio-scripts
+    spdk-dashboard
   ];
 
-  systemd.services.spdk = {
+  services.spdk = {
     enable = true;
-    wantedBy = ["multi-user.target"];
-    after = ["network.target"];
-    requires = ["network.target"];
-    description = "Starts the spdk_tgt";
-    path = [pkgs.kmod pkgs.gawk pkgs.util-linux];
-    serviceConfig = {
-      Type = "simple";
-      Environment = "PCI_ALLOWED='none'";
-      ExecStartPre = [
-        "${pkgs.spdk}/scripts/setup.sh"
-        "${pkgs.kmod}/bin/modprobe ublk_drv"
-      ];
-      ExecStart = ''${pkgs.spdk}/bin/spdk_tgt -m 0x30003 -c /home/wf/spdk/rdma_config.json -f /var/run/spdk.pid -S /var/run'';
-    };
+    dashboard = true;
   };
-
-  # systemd.services.nvmf_tgt = {
-  #   enable = true;
-  #   wantedBy = ["multi-user.target"];
-  #   after = ["rdma.service" "network.target"];
-  #   requires = ["rdma.service"];
-  #   description = "Starts the nvmf_tgt";
-  #   before = ["remote-fs-pre.target"];
-  #   unitConfig = {
-  #     DefaultDependencies = "no";
-  #   };
-  #   serviceConfig = {
-  #     Type = "simple";
-  #     ExecStart = ''${pkgs.spdk}/bin/nvmf_tgt -m 0x02 -r /var/tmp/spdk_nvmf.sock'';
-  #   };
-  # };
-
-  # systemd.services.iscsi_tgt = {
-  #   enable = true;
-  #   wantedBy = ["multi-user.target"];
-  #   after = ["rdma.service" "network.target"];
-  #   requires = ["rdma.service"];
-  #   description = "Starts the iscsi_tgt";
-  #   before = ["remote-fs-pre.target"];
-  #   unitConfig = {
-  #     DefaultDependencies = "no";
-  #   };
-  #   serviceConfig = {
-  #     Type = "simple";
-  #     ExecStart = ''${pkgs.spdk}/bin/iscsi_tgt -m 0x01'';
-  #   };
-  # };
-
-  # systemd.services.vhost_tgt = {
-  #   enable = true;
-  #   wantedBy = ["multi-user.target"];
-  #   after = ["rdma.service" "network.target"];
-  #   requires = ["rdma.service"];
-  #   description = "Starts the vhost_tgt";
-  #   before = ["remote-fs-pre.target"];
-  #   unitConfig = {
-  #     DefaultDependencies = "no";
-  #   };
-  #   serviceConfig = {
-  #     Type = "simple";
-  #     ExecStart = ''${pkgs.spdk}/bin/vhost -m 0x04 -r /var/tmp/spdk_vhost.sock -S /var/tmp'';
-  #   };
-  # };
-
-  security.pam.loginLimits = [
-    {
-      domain = "*";
-      item = "memlock";
-      type = "soft";
-      value = "unlimited";
-    }
-    {
-      domain = "*";
-      item = "memlock";
-      type = "hard";
-      value = "unlimited";
-    }
-    {
-      domain = "root";
-      item = "memlock";
-      type = "soft";
-      value = "unlimited";
-    }
-    {
-      domain = "root";
-      item = "memlock";
-      type = "hard";
-      value = "unlimited";
-    }
-  ];
 }
