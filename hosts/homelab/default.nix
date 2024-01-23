@@ -37,6 +37,7 @@ in {
     ../../secrets/nixos.nix
 
     ../../nixos/sftp-server.nix
+    ../../nixos/media-server.nix
   ];
 
   boot.kernelPackages = lib.mkForce pkgs.linux_mlx;
