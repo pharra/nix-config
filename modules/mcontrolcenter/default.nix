@@ -15,6 +15,7 @@ in {
 
   config = mkIf cfg.enable {
     environment.systemPackages = [
+      pkgs.mcontrolcenter
       (pkgs.makeAutostartItem {
         name = "MControlCenter";
         package = pkgs.mcontrolcenter;
