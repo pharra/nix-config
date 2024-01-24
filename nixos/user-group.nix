@@ -42,6 +42,9 @@
 
       # homelab
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPsMIjAmPitKTYN83DxrN/D783BTMkknEuwMeO5s0ABw wf@homelab"
+
+      # desktop
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPhrg8hAISAafIIPiiUOmcFqH1X26dfUtSssJDEShwsU wf@desktop"
     ];
   };
 
