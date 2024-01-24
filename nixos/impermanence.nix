@@ -14,6 +14,7 @@
       "/var/log"
       "/etc/NetworkManager/system-connections"
       "/etc/ksmbd"
+      "/etc/caddy"
       #"/smb"
     ];
     files = [

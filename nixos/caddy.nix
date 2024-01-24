@@ -18,10 +18,11 @@
     vendorHash = "sha256-uyEjAktinJhV3u5xFWAHbBPAX5NZ5utLiCwUVgZVjGw=";
   };
 in {
-  # Used only by NixOS Modules
   age.secrets."caddy_homelab_conf" = {
     file = "${mysecrets}/caddy_homelab_conf.age";
     mode = "777";
+    path = "/etc/caddy/caddy_file";
+    symlink = false;
   };
 
   services.caddy = {
