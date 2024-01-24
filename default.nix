@@ -17,4 +17,5 @@ in rec {
   spdk = pkgs.callPackage ./pkgs/spdk {};
   mcontrolcenter = pkgs.libsForQt5.callPackage ./pkgs/mcontrolcenter/default.nix {};
   spdk-dashboard = pkgs.callPackage ./pkgs/spdk-dashboard {};
+  caddy = pkgs.callPackage ./pkgs/caddy {};
 }

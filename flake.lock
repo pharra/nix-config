@@ -217,10 +217,10 @@
     "mysecrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1703160164,
-        "narHash": "sha256-+FfVp0ciAP6zj2uX46T2uLLNcpVDNxHFEpU/PYWhFZA=",
+        "lastModified": 1706071736,
+        "narHash": "sha256-aPbM/CUexBqn9cOjDI8YhK7/vhDGHVaN16GgvGwKGFg=",
         "ref": "refs/heads/main",
-        "rev": "084de41d39979287be6dcbe59ca1bccc38bb5ac2",
+        "rev": "978a3666ecccb91993b981e8ce01d6cb833f79af",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/pharra/agenix-secrets.git"

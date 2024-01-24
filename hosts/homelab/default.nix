@@ -38,6 +38,7 @@ in {
 
     ../../nixos/sftp-server.nix
     ../../nixos/media-server.nix
+    ../../nixos/caddy.nix
   ];
 
   boot.kernelPackages = lib.mkForce pkgs.linux_mlx;
