@@ -8,9 +8,11 @@
   system.activationScripts."replace_domain" = ''
     domain=${domain}
     caddyConfigFile=${config.age.secrets.caddy_server_conf.path}
+    hysteriaConfigFile=${config.age.secrets.hysteria_server_conf.path}
     xrayConfigFile=/etc/xray_server_conf.json
     ${pkgs.gnused}/bin/sed -i "s/_domain/$domain/g" "$caddyConfigFile"
     ${pkgs.gnused}/bin/sed -i "s/_domain/$domain/g" "$xrayConfigFile"
+    ${pkgs.gnused}/bin/sed -i "s/_domain/$domain/g" "$hysteriaConfigFile"
   '';
 
   # Used only by NixOS Modules
@@ -25,6 +27,12 @@
     path = "/etc/xray_server_conf.json";
   };
 
+  age.secrets."hysteria_server_conf" = {
+    file = "${mysecrets}/hysteria_server_conf.age";
+    mode = "777";
+    path = "/etc/hysteria_server_conf.yaml";
+  };
+
   services = {
     caddy = {
       enable = true;
@@ -33,6 +41,12 @@
     xray = {
       enable = true;
       settingsFile = config.age.secrets.xray_server_conf.path;
+    };
+    hysteria = {
+      enable = true;
+      settingsFile = config.age.secrets.hysteria_server_conf.path;
+      user = "caddy";
+      group = "caddy";
     };
   };
 }
