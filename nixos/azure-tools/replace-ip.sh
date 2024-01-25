@@ -36,7 +36,7 @@ echo "ipv4 config: $ipv4_config, ipv6 config: $ipv6_config"
 
 # 获取之前的 IPv4 和 IPv6 的公共 IP ID
 old_ipv4_id=$(az network nic ip-config list -g $resource_group --nic-name $nic_name --query '[?primary].publicIPAddress.id' -o tsv)
-old_ipv6_id=$(az network nic ip-config list -g $resource_group --nic-name $nic_name --query '[?primary].publicIPAddress.id' -o tsv)
+old_ipv6_id=$(az network nic ip-config list -g $resource_group --nic-name $nic_name --query '[?!primary].publicIPAddress.id' -o tsv)
 echo "old ipv4 id: $old_ipv4_id, old ipv6 id: $old_ipv6_id"
 
 # 创建 IPv4 和 IPv6 的公共 IP
