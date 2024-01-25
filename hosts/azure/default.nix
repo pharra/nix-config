@@ -17,4 +17,7 @@
     ++ lib.optional is_azure ./sever;
 
   environment.systemPackages = lib.mkIf is_azure [deploy-rs.defaultPackage.x86_64-linux];
+
+  # enable flakes globally
+  nix.settings.experimental-features = ["nix-command" "flakes"];
 }
