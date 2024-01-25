@@ -59,9 +59,9 @@ old_ipv6_address=$(az network dns record-set list --resource-group $dns_resource
 echo "old_ipv4_address: $old_ipv4_address, old_ipv6_address: $old_ipv6_address"
 
 # 更新IPV4 DNS记录
-az network dns record-set a add-record --resource-group $dns_resource_group --zone-name $zone_name --record-set-name $record_name --ipv4-address $new_ipv4_address
+az network dns record-set a add-record --resource-group $dns_resource_group --zone-name $zone_name --record-set-name $record_name --ipv4-address $new_ipv4_address --ttl 60
 az network dns record-set a remove-record --resource-group $dns_resource_group --zone-name $zone_name --record-set-name $record_name --ipv4-address $old_ipv4_address
 
 # 更新IPV6 DNS记录
-az network dns record-set aaaa add-record --resource-group $dns_resource_group --zone-name $zone_name --record-set-name $record_name --ipv6-address $new_ipv6_address
+az network dns record-set aaaa add-record --resource-group $dns_resource_group --zone-name $zone_name --record-set-name $record_name --ipv6-address $new_ipv6_address --ttl 60
 az network dns record-set aaaa remove-record --resource-group $dns_resource_group --zone-name $zone_name --record-set-name $record_name --ipv6-address $old_ipv6_address
