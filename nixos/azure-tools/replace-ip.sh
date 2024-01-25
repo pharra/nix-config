@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Parse input arguments
-while getopts ":g:n:r:d:z:" opt; do
+while getopts ":g:n:r:d:z:b:" opt; do
   case $opt in
     g) resource_group="$OPTARG"
     ;;
@@ -12,6 +12,8 @@ while getopts ":g:n:r:d:z:" opt; do
     d) dns_resource_group="$OPTARG"
     ;;
     z) zone_name="$OPTARG"
+    ;;
+    b) no_zone="$OPTARG"
     ;;
     \?) echo "Invalid option -$OPTARG" >&2
     ;;
@@ -40,8 +42,14 @@ old_ipv6_id=$(az network nic ip-config list -g $resource_group --nic-name $nic_n
 echo "old ipv4 id: $old_ipv4_id, old ipv6 id: $old_ipv6_id"
 
 # 创建 IPv4 和 IPv6 的公共 IP
-new_ipv4_address=$(az network public-ip create --resource-group $resource_group --name $ipv4_name --sku Standard --allocation-method Static --version IPv4 --zone 1 2 3 --query "publicIp.ipAddress" -o tsv)
-new_ipv6_address=$(az network public-ip create --resource-group $resource_group --name $ipv6_name --sku Standard --allocation-method Static --version IPv6 --zone 1 2 3 --query "publicIp.ipAddress" -o tsv)
+if [ $no_zone == "true" ];  
+then  
+  new_ipv4_address=$(az network public-ip create --resource-group $resource_group --name $ipv4_name --sku Standard --allocation-method Static --version IPv4 --query "publicIp.ipAddress" -o tsv)
+  new_ipv6_address=$(az network public-ip create --resource-group $resource_group --name $ipv6_name --sku Standard --allocation-method Static --version IPv6 --query "publicIp.ipAddress" -o tsv)
+else
+  new_ipv4_address=$(az network public-ip create --resource-group $resource_group --name $ipv4_name --sku Standard --allocation-method Static --version IPv4 --zone 1 2 3 --query "publicIp.ipAddress" -o tsv)
+  new_ipv6_address=$(az network public-ip create --resource-group $resource_group --name $ipv6_name --sku Standard --allocation-method Static --version IPv6 --zone 1 2 3 --query "publicIp.ipAddress" -o tsv)
+fi
 echo "new_ipv4_address: $new_ipv4_address, new_ipv6_address: $new_ipv6_address"
 
 
