@@ -61,6 +61,8 @@ in {
   networking.hostId = "88fcb8e5";
   boot.zfs.enableUnstable = true;
   boot.zfs.extraPools = ["data"];
+  services.zfs.autoScrub.enable = true;
+  services.zfs.trim.enable = true;
 
   # raid
   boot.swraid.enable = true;
