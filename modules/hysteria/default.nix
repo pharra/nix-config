@@ -30,33 +30,29 @@ in {
       type = types.str;
     };
   };
-  config =
-    mkIf
-    cfg.enable
-    {
-      systemd.services.hysteria = {
-        wantedBy = ["multi-user.target"];
-        after = ["network.target"];
-        requires = ["network.target"];
-        description = "hysteria daemon";
-        serviceConfig = {
-          ExecStart = "${cfg.package}/bin/hysteria server -c ${cfg.settingsFile}";
-          AmbientCapabilities = ["CAP_NET_ADMIN" "CAP_NET_BIND_SERVICE"];
-          Restart = "on-failure";
-          User = cfg.user;
-          Group = cfg.group;
-        };
-      };
-      users.users = optionalAttrs (cfg.user == "hysteria") {
-        caddy = {
-          group = cfg.group;
-          uid = config.ids.uids.caddy;
-          home = cfg.dataDir;
-        };
-      };
-
-      users.groups = optionalAttrs (cfg.group == "hysteria") {
-        caddy.gid = config.ids.gids.caddy;
+  config = mkIf cfg.enable {
+    systemd.services.hysteria = {
+      wantedBy = ["multi-user.target"];
+      after = ["network.target"];
+      requires = ["network.target"];
+      description = "hysteria daemon";
+      serviceConfig = {
+        ExecStart = "${cfg.package}/bin/hysteria server -c ${cfg.settingsFile}";
+        AmbientCapabilities = ["CAP_NET_ADMIN" "CAP_NET_BIND_SERVICE"];
+        Restart = "on-failure";
+        User = cfg.user;
+        Group = cfg.group;
       };
     };
+    users.users = optionalAttrs (cfg.user == "hysteria") {
+      hysteria = {
+        group = cfg.group;
+        uid = config.ids.uids.hysteria;
+      };
+    };
+
+    users.groups = optionalAttrs (cfg.group == "hysteria") {
+      hysteria.gid = config.ids.gids.hysteria;
+    };
+  };
 }
