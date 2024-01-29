@@ -34,9 +34,6 @@
     "default_hugepagesz=1G"
     "hugepagesz=1GB"
     "hugepages=12"
-    "isolcpus=1,2,3,4,7,8,9,10"
-    "nohz_full=1,2,3,4,7,8,9,10"
-    "rcu_nocbs=1,2,3,4,7,8,9,10"
   ];
 in {
   imports = [
