@@ -38,6 +38,7 @@ in {
 
     ../../nixos/sftp-server.nix
     ../../nixos/media-server.nix
+    ../../nixos/wireguard-server
     ../../nixos/caddy.nix
   ];
 
