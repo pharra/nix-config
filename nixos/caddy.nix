@@ -25,6 +25,10 @@ in {
     symlink = false;
   };
 
+  environment.systemPackages = with pkgs; [
+    sub-store-cli
+  ];
+
   services.caddy = {
     enable = true;
     package = caddy-custom;
