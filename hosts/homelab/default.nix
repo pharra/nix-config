@@ -40,6 +40,7 @@ in {
     ../../nixos/media-server.nix
     ../../nixos/wireguard-server
     ../../nixos/caddy.nix
+    ../../nixos/aosp.nix
   ];
 
   boot.kernelPackages = lib.mkForce pkgs.linux_mlx;

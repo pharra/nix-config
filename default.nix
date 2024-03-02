@@ -19,4 +19,5 @@ in rec {
   spdk-dashboard = pkgs.callPackage ./pkgs/spdk-dashboard {};
   caddy = pkgs.callPackage ./pkgs/caddy {};
   sub-store-cli = pkgs.callPackage ./pkgs/sub-store-cli {};
+  aosp = pkgs.callPackage ./pkgs/aosp {};
 }
