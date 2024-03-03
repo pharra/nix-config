@@ -19,10 +19,10 @@
       #displayManager.sddm.autoLogin.relogin = true;
       displayManager.sddm.wayland.enable = true;
       desktopManager.plasma6.enable = true; # Window Manager
-      displayManager.autoLogin = {
-        enable = true;
-        user = "${username}";
-      };
+      # displayManager.autoLogin = {
+      #   enable = true;
+      #   user = "${username}";
+      # };
     };
   };
 
