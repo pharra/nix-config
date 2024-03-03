@@ -12,7 +12,7 @@
     xserver = {
       enable = true;
 
-      layout = "us"; # Keyboard layout & €-sign
+      xkb.layout = "us"; # Keyboard layout & €-sign
       libinput.enable = true;
 
       displayManager.sddm.enable = true; # Display Manager
