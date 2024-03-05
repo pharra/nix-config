@@ -82,6 +82,12 @@
     nix-flatpak = {
       url = "github:gmodena/nix-flatpak/?ref=v0.2.0";
     };
+
+    plasma-manager = {
+      url = "github:pjones/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -101,6 +107,7 @@
     deploy-rs,
     mysecrets,
     nix-flatpak,
+    plasma-manager,
     ...
   }: let
     username = "wf";
@@ -128,6 +135,7 @@
 
     modules = import ./modules;
     home-modules = import ./home-modules;
+    plasma-manager-module = plasma-manager.homeManagerModules.plasma-manager;
   in {
     nixosConfigurations = let
       common-nixos-modules =
@@ -245,7 +253,7 @@
       system = x64_system;
       _specialArgs =
         {
-          inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs home-modules;
+          inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs home-modules plasma-manager-module;
           # use unstable branch for some packages to get the latest updates
           pkgs-unstable = import nixpkgs-unstable {
             system = x64_system; # refer the `system` parameter form outer scope recursively

@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   imports = [
     ./kde-apps.nix
+    ./plasma-manager.nix
   ];
 
   # allow fontconfig to discover fonts and configurations installed through home.packages
