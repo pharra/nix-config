@@ -26,6 +26,10 @@
     };
   };
 
+  i18n.inputMethod = {
+    fcitx5.plasma6Support = true;
+  };
+
   hardware.pulseaudio.enable = false;
 
   security.polkit.extraConfig = ''
