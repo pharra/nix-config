@@ -1,7 +1,8 @@
-{pkgs, ...}: {
+{
   programs.plasma = {
     enable = true;
     shortcuts = {
+      "org_kde_powerdevil"."Turn Off Screen" = [];
     };
     configFile = {
       "kwinrc"."Wayland"."InputMethod[$e]" = "/run/current-system/sw/share/applications/org.fcitx.Fcitx5.desktop";
