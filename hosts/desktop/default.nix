@@ -119,6 +119,17 @@
     };
   };
 
+  # for Nvidia GPU
+  services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default
+  hardware.nvidia = {
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    modesetting.enable = true;
+    forceFullCompositionPipeline = true;
+    open = true;
+    #powerManagement.enable = true;
+  };
+  # virtualisation.docker.enableNvidia = true; # for nvidia-docker
+
   hardware = {
     opengl = {
       enable = true;
