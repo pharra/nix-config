@@ -16,6 +16,10 @@
 
   services.flatpak.packages = [
     {
+      appId = "io.github.hypengw.Qcm";
+      origin = "flathub";
+    }
+    {
       appId = "com.microsoft.Edge";
       origin = "flathub";
     }
