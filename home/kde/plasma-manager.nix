@@ -5,6 +5,7 @@
       "org_kde_powerdevil"."Turn Off Screen" = [];
     };
     configFile = {
+      "kdeglobals"."KDE"."SingleClick" = false;
       "kwinrc"."Wayland"."InputMethod[$e]" = "/run/current-system/sw/share/applications/org.fcitx.Fcitx5.desktop";
       "kwinrc"."Xwayland"."Scale" = 1.75;
       "kxkbrc"."Layout"."DisplayNames" = "";
