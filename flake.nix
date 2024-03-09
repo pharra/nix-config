@@ -156,6 +156,16 @@
         home-module = import ./home/desktop-gnome.nix;
       };
 
+      desktop_modules_kde = {
+        nixos-modules =
+          [
+            ./hosts/desktop
+            ./nixos/kde.nix
+          ]
+          ++ common-nixos-modules;
+        home-module = import ./home/desktop-kde.nix;
+      };
+
       # gs65
       gs65_modules_gnome = {
         nixos-modules =
@@ -277,6 +287,9 @@
       # desktop with gnome
       desktop_gnome = nixosSystem (desktop_modules_gnome // stable_args // {specialArgs = _specialArgs;});
 
+      # desktop with kde
+      desktop_kde = nixosSystem (desktop_modules_kde // stable_args // {specialArgs = _specialArgs;});
+
       # gs65 with gnome
       gs65_gnome = nixosSystem (gs65_modules_gnome // stable_args // {specialArgs = _specialArgs;});
 
@@ -345,6 +358,9 @@
       # desktop with gnome
       inherit desktop_gnome;
 
+      # desktop with kde
+      inherit desktop_kde;
+
       # minimal with base
       inherit minimal_base;
 
@@ -409,6 +425,13 @@
           hostname = "192.168.29.127";
           profiles.system = {
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."desktop_gnome";
+          };
+        };
+
+        "desktop_kde" = {
+          hostname = "192.168.29.127";
+          profiles.system = {
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."desktop_kde";
           };
         };
       };
