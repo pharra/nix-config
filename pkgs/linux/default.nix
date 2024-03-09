@@ -16,10 +16,6 @@ with lib;
       extraMeta.branch = versions.majorMinor version;
 
       kernelPatches = [
-        {
-          name = "mlx4-kernelPatches";
-          patch = ./mlx4.patch;
-        }
       ];
 
       src = fetchurl {

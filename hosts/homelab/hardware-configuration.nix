@@ -15,24 +15,14 @@ in {
 
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "sr_mod" "uas" "xhci_pci"];
   boot.initrd.kernelModules = [
-    "mlx4_core"
-    "mlx4_en"
-    "mlx4_ib"
-    "ib_ipoib"
-    "ib_umad"
-    "ib_srpt"
-    "ib_iser"
-    "ib_uverbs"
-    "rdma_ucm"
-    "xprtrdma"
-    "svcrdma"
-
     "zfs"
 
     "nvidia"
     "nvidia_modeset"
   ];
   boot.blacklistedKernelModules = ["ast"];
+
+  hardware.mlx4.enable = true;
 
   virtualisation.vfio = {
     enable = true;
