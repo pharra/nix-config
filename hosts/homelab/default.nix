@@ -91,6 +91,16 @@ in {
     };
   };
 
+  services.resolved = {
+    extraConfig = ''
+      MulticastDNS=true
+    '';
+    domains = [
+      "local"
+    ];
+    enable = true;
+  };
+
   systemd.network = {
     enable = true;
     wait-online.anyInterface = true;
@@ -172,6 +182,7 @@ in {
           Address = "192.168.30.1/24";
           # DHCPServer = true;
           IPMasquerade = "ipv4";
+          MulticastDNS = true;
         };
         # dhcpServerConfig = {
         #   PoolOffset = 100;
@@ -190,6 +201,7 @@ in {
           Address = "192.168.29.1/24";
           # DHCPServer = true;
           IPMasquerade = "ipv4";
+          MulticastDNS = true;
         };
         # dhcpServerConfig = {
         #   PoolOffset = 100;
