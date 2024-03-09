@@ -16,10 +16,6 @@
 
   services.flatpak.packages = [
     {
-      appId = "com.github.gmg137.netease-cloud-music-gtk";
-      origin = "flathub";
-    }
-    {
       appId = "com.microsoft.Edge";
       origin = "flathub";
     }
