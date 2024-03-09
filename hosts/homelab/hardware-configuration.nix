@@ -8,20 +8,6 @@
   modulesPath,
   ...
 }: let
-  # RTX 3070 Ti
-  gpuIDs = [
-    #"10de:21c4" # Graphics
-    #"10de:1aeb" # Audio
-    #"10de:1aec" # USB
-    #"10de:1aed" # UCSI
-
-    # gtx 960
-    "10de:1401"
-    "10de:0fba"
-
-    #"1e4b:1202" # nvme
-    #"1e4b:1602" # nvme
-  ];
 in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -41,20 +27,32 @@ in {
     "xprtrdma"
     "svcrdma"
 
-    "vfio_pci"
-    "vfio"
-    "vfio_iommu_type1"
-
     "zfs"
 
     "nvidia"
     "nvidia_modeset"
   ];
   boot.blacklistedKernelModules = ["ast"];
-  boot.kernelParams =
-    #  "pci=nommconf"
-    ["pcie_acs_override=downstream,multifunction" "default_hugepagesz=1G" "hugepagesz=1G" "hugepages=34"]
-    ++ [("vfio-pci.ids=" + lib.concatStringsSep "," gpuIDs)]; # isolate the GPU
+
+  virtualisation.vfio = {
+    enable = true;
+    IOMMUType = "amd";
+    devices = [
+      #"10de:21c4" # Graphics
+      #"10de:1aeb" # Audio
+      #"10de:1aec" # USB
+      #"10de:1aed" # UCSI
+
+      # gtx 960
+      "10de:1401"
+      "10de:0fba"
+
+      #"1e4b:1202" # nvme
+      #"1e4b:1602" # nvme
+    ];
+    applyACSpatch = true;
+  };
+  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=34"];
 
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = [];

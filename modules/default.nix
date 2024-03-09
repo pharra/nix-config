@@ -3,4 +3,5 @@
   spdk-module = import ./spdk;
   hysteria-module = import ./hysteria;
   sing-box-module = import ./sing-box;
+  vfio-module = import ./vfio;
 }

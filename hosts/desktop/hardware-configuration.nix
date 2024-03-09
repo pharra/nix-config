@@ -8,14 +8,6 @@
   modulesPath,
   ...
 }: let
-  # RTX 3070 Ti
-  gpuIDs = [
-    "10de:2684" # Graphics
-    "10de:22ba" # Audio
-    "8086:f1a6" # nvme
-    #"10de:1aec" # USB
-    #"10de:1aed" # UCSI
-  ];
 in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -36,18 +28,24 @@ in {
     "rdma_ucm"
     "xprtrdma"
     "svcrdma"
-
-    "vfio_pci"
-    "vfio"
-    "vfio_iommu_type1"
   ];
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 
-  boot.kernelParams =
-    #  "pci=nommconf"
-    ["intel_iommu=on" "iommu=pt" "pcie_acs_override=downstream,multifunction"]
-    ++ [("vfio-pci.ids=" + lib.concatStringsSep "," gpuIDs)]; # isolate the GPU
+  virtualisation.vfio = {
+    enable = true;
+    IOMMUType = "intel";
+    devices = [
+      "10de:2684" # Graphics
+      "10de:22ba" # Audio
+      "8086:f1a6" # nvme
+      #"10de:1aec" # USB
+      #"10de:1aed" # UCSI
+    ];
+    applyACSpatch = true;
+  };
+
+  # boot.kernelParams = [];
 
   fileSystems."/" = {
     device = "/dev/disk/by-label/nixos";

@@ -20,10 +20,6 @@ with lib;
           name = "mlx4-kernelPatches";
           patch = ./mlx4.patch;
         }
-        {
-          name = "acs-kernelPatches";
-          patch = ./acs.patch;
-        }
       ];
 
       src = fetchurl {
