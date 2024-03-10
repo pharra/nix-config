@@ -88,6 +88,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -108,6 +110,7 @@
     mysecrets,
     nix-flatpak,
     plasma-manager,
+    vscode-server,
     ...
   }: let
     username = "wf";
@@ -134,8 +137,8 @@
     overlays = import ./overlay.nix;
 
     modules = import ./modules;
-    home-modules = import ./home-modules;
-    plasma-manager-module = plasma-manager.homeManagerModules.plasma-manager;
+    _home-modules = import ./home-modules;
+    home-modules = [plasma-manager.homeManagerModules.plasma-manager vscode-server.homeModules.default] ++ (builtins.attrValues _home-modules);
   in {
     nixosConfigurations = let
       common-nixos-modules =
@@ -263,7 +266,7 @@
       system = x64_system;
       _specialArgs =
         {
-          inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs home-modules plasma-manager-module;
+          inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs home-modules;
           # use unstable branch for some packages to get the latest updates
           pkgs-unstable = import nixpkgs-unstable {
             system = x64_system; # refer the `system` parameter form outer scope recursively

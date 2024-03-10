@@ -38,7 +38,7 @@ in
 
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users."${username}" = home-module;
-          home-manager.sharedModules = [specialArgs.plasma-manager-module] ++ (builtins.attrValues specialArgs.home-modules);
+          home-manager.sharedModules = specialArgs.home-modules;
         }
       ];
   }

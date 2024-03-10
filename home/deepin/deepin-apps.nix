@@ -1,11 +1,4 @@
 {pkgs, ...}: {
-  imports = [
-    "${fetchTarball {
-      url = "https://github.com/msteen/nixos-vscode-server/tarball/master";
-      sha256 = "1mrc6a1qjixaqkv1zqphgnjjcz9jpsdfs1vq45l1pszs9lbiqfvd";
-    }}/modules/vscode-server/home.nix"
-  ];
-
   services.vscode-server.enable = true;
 
   # TODO vscode & chrome both have wayland support, but they don't work with fcitx5, need to fix it.
