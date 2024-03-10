@@ -31,5 +31,9 @@
       appId = "com.qq.QQ";
       origin = "flathub";
     }
+    {
+      appId = "org.qbittorrent.qBittorrent";
+      origin = "flathub";
+    }
   ];
 }

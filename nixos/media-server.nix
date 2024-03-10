@@ -22,10 +22,6 @@
     enable = true;
   };
 
-  environment.systemPackages = with pkgs; [
-    qbittorrent
-  ];
-
   services.jellyfin = {
     enable = true;
     user = "sftp";
