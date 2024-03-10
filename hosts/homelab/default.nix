@@ -41,9 +41,8 @@ in {
     ../../nixos/wireguard-server
     ../../nixos/caddy.nix
     ../../nixos/aosp.nix
+    ../../nixos/ccache.nix
   ];
-
-  boot.kernelPackages = lib.mkForce pkgs.linux_mlx;
 
   # Enable binfmt emulation of aarch64-linux, this is required for cross compilation.
   boot.binfmt.emulatedSystems = ["aarch64-linux" "riscv64-linux"];
