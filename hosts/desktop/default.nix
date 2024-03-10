@@ -83,6 +83,7 @@
 
   systemd.network = {
     enable = true;
+    wait-online.anyInterface = true;
     netdevs = {
       # Create the bridge interface
       "20-br0" = {
