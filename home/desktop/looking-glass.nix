@@ -15,5 +15,6 @@
     wayland.fractionScale = "no";
     wayland.warpSupport = "no";
     # win.quickSplash = "yes";
+    audio.micDefault = "allow";
   };
 }
