@@ -232,7 +232,7 @@ in {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
     modesetting.enable = true;
     forceFullCompositionPipeline = true;
-    open = true;
+    #open = true;
     #powerManagement.enable = true;
   };
   # virtualisation.docker.enableNvidia = true; # for nvidia-docker

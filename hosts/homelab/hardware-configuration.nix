@@ -16,9 +16,6 @@ in {
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "sr_mod" "uas" "xhci_pci"];
   boot.initrd.kernelModules = [
     "zfs"
-
-    "nvidia"
-    "nvidia_modeset"
   ];
   boot.blacklistedKernelModules = ["ast"];
 
@@ -28,14 +25,14 @@ in {
     enable = true;
     IOMMUType = "amd";
     devices = [
-      #"10de:21c4" # Graphics
-      #"10de:1aeb" # Audio
-      #"10de:1aec" # USB
-      #"10de:1aed" # UCSI
+      "10de:21c4" # Graphics
+      "10de:1aeb" # Audio
+      "10de:1aec" # USB
+      "10de:1aed" # UCSI
 
       # gtx 960
-      "10de:1401"
-      "10de:0fba"
+      # "10de:1401"
+      # "10de:0fba"
 
       #"1e4b:1202" # nvme
       #"1e4b:1602" # nvme
