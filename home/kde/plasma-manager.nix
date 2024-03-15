@@ -7,7 +7,7 @@
     configFile = {
       "kdeglobals"."KDE"."SingleClick" = false;
       "kwinrc"."Wayland"."InputMethod[$e]" = "/run/current-system/sw/share/applications/org.fcitx.Fcitx5.desktop";
-      "kwinrc"."Xwayland"."Scale" = 1.75;
+      "kwinrc"."Xwayland"."Scale" = 2;
       "kxkbrc"."Layout"."DisplayNames" = "";
       "kxkbrc"."Layout"."LayoutList" = "us";
       "kxkbrc"."Layout"."Use" = true;
