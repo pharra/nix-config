@@ -67,7 +67,7 @@
     gnomeExtensions.blur-my-shell
     gnomeExtensions.removable-drive-menu
     gnomeExtensions.dash-to-panel
-    gnomeExtensions.battery-indicator-upower
+    # gnomeExtensions.battery-indicator-upower
     gnomeExtensions.just-perfection
     gnomeExtensions.caffeine
     gnomeExtensions.clipboard-indicator
