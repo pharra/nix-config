@@ -8,6 +8,7 @@ self: super: {
       sha256 = "sha256-yVEwUPmbna9y3Q1w1nj6RPEdh5Npb+tZBEm2OwqfWfE=";
       fetchSubmodules = true;
     };
+    patches = [];
     postUnpack = ''
       echo ${version} > source/VERSION
       export sourceRoot="source/client"
