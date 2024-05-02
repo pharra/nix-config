@@ -73,6 +73,14 @@
     "ovmf/edk2-i386-vars.fd" = {
       source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
     };
+
+    "ovmf/OVMF_CODE.ms.fd" = {
+      source = "${pkgs.OVMFFull.fd}/FV/OVMF_CODE.ms.fd";
+    };
+
+    "ovmf/OVMF_VARS.ms.fd" = {
+      source = "${pkgs.OVMFFull.fd}/FV/OVMF_VARS.ms.fd";
+    };
   };
 
   boot.kernelModules = ["kvmfr"];
