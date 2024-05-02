@@ -20,20 +20,21 @@ in {
 
   hardware.mlx4.enable = true;
 
+  virtualisation.vfio = {
+    enable = true;
+    IOMMUType = "intel";
+    applyACSpatch = true;
+  };
+
   specialisation = {
-    vfio.configuration = {
-      virtualisation.vfio = {
-        enable = true;
-        IOMMUType = "intel";
-        devices = [
-          "10de:2684" # Graphics
-          "10de:22ba" # Audio
-          "8086:f1a6" # nvme
-          #"10de:1aec" # USB
-          #"10de:1aed" # UCSI
-        ];
-        applyACSpatch = true;
-      };
+    nvidia-vfio.configuration = {
+      virtualisation.vfio.devices = [
+        "10de:2684" # Graphics
+        "10de:22ba" # Audio
+        "8086:f1a6" # nvme
+        #"10de:1aec" # USB
+        #"10de:1aed" # UCSI
+      ];
     };
   };
 
