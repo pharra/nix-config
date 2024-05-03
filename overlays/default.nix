@@ -8,4 +8,5 @@
   flatpak-overlay = import ./flatpak;
   # qemu-overlay = import ./qemu-vfio-user;
   evdi-overlay = import ./evdi;
+  tailscale-overlay = import ./tailscale;
 }

@@ -5,4 +5,5 @@
   sing-box-module = import ./sing-box;
   vfio-module = import ./vfio;
   mlx4-module = import ./mlx4;
+  tailscale-module = import ./tailscale;
 }

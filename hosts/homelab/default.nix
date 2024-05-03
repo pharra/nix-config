@@ -42,6 +42,7 @@ in {
     ../../nixos/caddy.nix
     ../../nixos/aosp.nix
     ../../nixos/ccache.nix
+    ../../nixos/tailscale.nix
   ];
 
   # Enable binfmt emulation of aarch64-linux, this is required for cross compilation.
