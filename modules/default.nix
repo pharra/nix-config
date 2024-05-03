@@ -6,4 +6,5 @@
   vfio-module = import ./vfio;
   mlx4-module = import ./mlx4;
   tailscale-module = import ./tailscale;
+  ddns-go-module = import ./ddns-go;
 }
