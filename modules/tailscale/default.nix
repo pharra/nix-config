@@ -17,17 +17,13 @@ in {
         type = types.package;
         default = pkgs.tailscale;
       };
-      listen = mkOption {
-        type = types.str;
-        default = ":22079";
-      };
       httpPort = mkOption {
-        type = types.str;
-        default = "22079";
+        type = types.int;
+        default = 22079;
       };
       stunPort = mkOption {
-        type = types.str;
-        default = "3478";
+        type = types.int;
+        default = 3478;
       };
       openFirewall = mkOption {
         type = types.bool;
@@ -47,12 +43,12 @@ in {
       serviceConfig = {
         Type = "exec";
       };
-      script = "${cfg.package}/bin/derper -a ${cfg.listen} -hostname ${cfg.hostname} --stun-port=${cfg.stunPort} --http-port=${cfg.httpPort} --verify-clients=true";
+      script = "${cfg.package}/bin/derper -a :${toString cfg.httpPort} -hostname ${cfg.hostname} --stun-port=${toString cfg.stunPort} --http-port=${toString cfg.httpPort} --verify-clients=true";
     };
 
     networking.firewall = mkIf cfg.openFirewall {
-      allowedTCPPorts = [1443];
-      allowedUDPPorts = [3478];
+      allowedTCPPorts = [cfg.httpPort];
+      allowedUDPPorts = [cfg.stunPort];
     };
   };
 }

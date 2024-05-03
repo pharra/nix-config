@@ -34,4 +34,8 @@ in {
     package = caddy-custom;
     configFile = config.age.secrets.caddy_homelab_conf.path;
   };
+
+  networking.firewall = {
+    allowedTCPPorts = [8443];
+  };
 }

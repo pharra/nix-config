@@ -39,7 +39,7 @@ in {
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
-  networking.firewall.enable = false;
+  networking.firewall.enable = lib.mkForce false;
 
   # nix.settings.trusted-users = [ username ];
   nix.settings.trusted-users = ["@wheel"];

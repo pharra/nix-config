@@ -103,6 +103,36 @@ in {
 
   boot.kernel.sysctl."net.ipv4.ip_forward" = "1";
   boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = "1";
+  networking.firewall.interfaces = {
+    "${interface.ib}" = {
+      allowedTCPPortRanges = [
+        {
+          from = 0;
+          to = 65535;
+        }
+      ];
+      allowedUDPPortRanges = [
+        {
+          from = 0;
+          to = 65535;
+        }
+      ];
+    };
+    "${interface.eth}" = {
+      allowedTCPPortRanges = [
+        {
+          from = 0;
+          to = 65535;
+        }
+      ];
+      allowedUDPPortRanges = [
+        {
+          from = 0;
+          to = 65535;
+        }
+      ];
+    };
+  };
   systemd.network = {
     enable = true;
     wait-online.anyInterface = true;
