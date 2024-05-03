@@ -19,11 +19,11 @@ in {
       };
       listen = mkOption {
         type = types.str;
-        default = ":22078";
+        default = ":22079";
       };
       httpPort = mkOption {
         type = types.str;
-        default = "22078";
+        default = "22079";
       };
       stunPort = mkOption {
         type = types.str;
