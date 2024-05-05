@@ -19,7 +19,10 @@ in {
   ];
   boot.blacklistedKernelModules = ["ast"];
 
-  hardware.mlx4.enable = true;
+  hardware.mlx4 = {
+    enable = true;
+    opensm = true;
+  };
 
   virtualisation.vfio = {
     enable = true;
