@@ -21,8 +21,8 @@ in {
 
   hardware.mlx4 = {
     enable = true;
-    opensm = true;
-    portTypeArray = "1,2";
+    opensm = false;
+    portTypeArray = "2,2";
   };
 
   virtualisation.vfio = {
