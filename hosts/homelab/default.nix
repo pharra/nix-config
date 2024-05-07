@@ -9,7 +9,7 @@
   interface = {
     ib = "enp66s0";
     #ib = "ibp66s0";
-    eth-to-bridge = "enp66s0d1";
+    eth-to-bridge = "eno2";
     eth = "enp66s0d1";
     intern = "br1";
   };
@@ -102,6 +102,139 @@ in {
     enable = true;
   };
 
+  services.keaWithDDNS = {
+    enable = true;
+    IPMasquerade = true;
+    onlySLAAC = false;
+    networks = {
+      ib = {
+        name = "ib";
+        interface = interface.ib;
+        domain = "ib";
+        ipv4 = {
+          subnet = "192.168.30.0/24";
+          address = "192.168.30.1";
+          netmask = "24";
+          pools = [
+            "192.168.30.50 - 192.168.30.150"
+          ];
+          reservations = [
+            {
+              hw-address = "50:65:f3:8a:c7:71";
+              ip-address = "192.168.30.1";
+              hostname = "homelab";
+            }
+          ];
+        };
+        ipv6 = {
+          subnet = "fd00:0:30::/64";
+          address = "fd00:0:30::1";
+          netmask = "64";
+          prefix = "fd00:0:30::";
+          delegated-len = "64";
+          id = 443;
+          pools = [
+            "fd00:0:30::/64"
+          ];
+          reservations = [
+            {
+              hw-address = "50:65:f3:8a:c7:71";
+              ip-addresses = ["fd00:0:30::1"];
+              hostname = "homelab";
+            }
+          ];
+        };
+      };
+
+      eth = {
+        name = "eth";
+        interface = interface.eth;
+        domain = "eth";
+        ipv4 = {
+          subnet = "192.168.29.0/24";
+          address = "192.168.29.1";
+          netmask = "24";
+          pools = [
+            "192.168.29.50 - 192.168.29.150"
+          ];
+          reservations = [
+            {
+              hw-address = "50:65:f3:8a:c7:72";
+              ip-address = "192.168.29.1";
+              hostname = "homelab";
+            }
+          ];
+        };
+        ipv6 = {
+          subnet = "fd00:0:29::/64";
+          address = "fd00:0:29::1";
+          netmask = "64";
+          prefix = "fd00:0:29::";
+          delegated-len = "64";
+          id = 444;
+          pools = [
+            "fd00:0:29::/64"
+          ];
+          reservations = [
+            {
+              hw-address = "50:65:f3:8a:c7:72";
+              ip-addresses = ["fd00:0:29::1"];
+              hostname = "homelab";
+            }
+          ];
+        };
+      };
+
+      intern = {
+        name = "intern";
+        interface = interface.intern;
+        domain = "intern";
+        ipv4 = {
+          subnet = "192.168.28.0/24";
+          address = "192.168.28.1";
+          netmask = "24";
+          pools = [
+            "192.168.28.50 - 192.168.28.150"
+          ];
+          reservations = [
+            {
+              hw-address = "7a:a6:c9:f3:65:a9";
+              ip-address = "192.168.28.1";
+              hostname = "homelab";
+            }
+          ];
+        };
+        ipv6 = {
+          subnet = "fd00:0:28::/64";
+          address = "fd00:0:28::1";
+          prefix = "fd00:0:28::";
+          delegated-len = "64";
+          netmask = "64";
+          id = 445;
+          pools = [
+            "fd00:0:28::/64"
+          ];
+          reservations = [
+            {
+              hw-address = "7a:a6:c9:f3:65:a9";
+              ip-addresses = ["fd00:0:28::1"];
+              hostname = "homelab";
+            }
+          ];
+        };
+      };
+    };
+    DNSForward = [
+      {
+        zone = ".";
+        method = "udp";
+        udp = {
+          ip = "192.168.31.1";
+        };
+      }
+    ];
+  };
+
   boot.kernel.sysctl."net.ipv4.ip_forward" = "1";
   boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = "1";
   networking.firewall.interfaces = {
@@ -153,11 +286,17 @@ in {
         };
       };
     };
+
     networks = {
       # Connect the bridge ports to the bridge
       "30-eno1" = {
         matchConfig.Name = "eno1";
         networkConfig.Bridge = "br0";
+        linkConfig.RequiredForOnline = "enslaved";
+      };
+      "30-eno2" = {
+        matchConfig.Name = "eno2";
+        networkConfig.Bridge = "br1";
         linkConfig.RequiredForOnline = "enslaved";
       };
       # "30-enp129s0" = {
@@ -184,65 +323,6 @@ in {
         linkConfig = {
           # or "routable" with IP addresses configured
           RequiredForOnline = "routable";
-        };
-      };
-
-      # internal network
-      "40-${interface.intern}" = {
-        matchConfig.Name = "${interface.intern}";
-        # bridgeConfig = {};
-        networkConfig = {
-          Address = "192.168.28.1/24";
-          # DHCPServer = true;
-          IPMasquerade = "ipv4";
-          ConfigureWithoutCarrier = true;
-        };
-        # dhcpServerConfig = {
-        #   PoolOffset = 100;
-        #   PoolSize = 20;
-        # };
-        linkConfig = {
-          # or "routable" with IP addresses configured
-          ActivationPolicy = "always-up";
-          RequiredForOnline = "no";
-        };
-      };
-
-      "50-${interface.ib}" = {
-        matchConfig.Name = "${interface.ib}";
-        # bridgeConfig = {};
-        networkConfig = {
-          Address = "192.168.30.1/24";
-          # DHCPServer = true;
-          IPMasquerade = "ipv4";
-          MulticastDNS = true;
-        };
-        # dhcpServerConfig = {
-        #   PoolOffset = 100;
-        #   PoolSize = 20;
-        # };
-        linkConfig = {
-          # or "routable" with IP addresses configured
-          ActivationPolicy = "always-up";
-        };
-      };
-
-      "50-${interface.eth}" = {
-        matchConfig.Name = "${interface.eth}";
-        bridgeConfig = {};
-        networkConfig = {
-          Address = "192.168.29.1/24";
-          # DHCPServer = true;
-          IPMasquerade = "ipv4";
-          MulticastDNS = true;
-        };
-        # dhcpServerConfig = {
-        #   PoolOffset = 100;
-        #   PoolSize = 20;
-        # };
-        linkConfig = {
-          # or "routable" with IP addresses configured
-          ActivationPolicy = "always-up";
         };
       };
     };

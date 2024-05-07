@@ -7,4 +7,5 @@
   mlx4-module = import ./mlx4;
   tailscale-module = import ./tailscale;
   ddns-go-module = import ./ddns-go;
+  kea-module = import ./kea;
 }

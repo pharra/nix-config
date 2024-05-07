@@ -204,7 +204,7 @@ in {
   };
 
   services.dnsmasq = {
-    enable = true;
+    enable = false;
     settings = {
       interface = "${interface.ib},${interface.eth},${interface.intern}";
       enable-tftp = true;
