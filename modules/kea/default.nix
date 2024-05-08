@@ -248,6 +248,8 @@ in {
       enableIPv6 = true;
     };
 
+    networking.firewall.allowPing = true;
+
     services.resolved = {
       extraConfig = ''
         MulticastDNS=true
