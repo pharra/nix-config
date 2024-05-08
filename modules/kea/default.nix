@@ -248,34 +248,18 @@ in {
       enableIPv6 = true;
     };
 
-    # networking = {
-    #   # Ignore advertised DNS servers and resolve queries locally. In HA
-    #   # setups, other nameservers may be unresponsive.
-    #   nameservers = ["127.0.0.1"];
-    # };
-
-    services.coredns = {
-      enable = true;
-
-      config = ''
-        (common) {
-          bind ${toString (["lo"] ++ mapAttrsToList (_: network: network.interface) cfg.networks)}
-
-          log
-          errors
-          local
-
-          nsid
-        }
-
-        . {
-          import common
-          cache
-
-          # Upstream DNS servers
-          ${concatMapStringsSep "\n" forward cfg.DNSForward}
-        }
+    services.resolved = {
+      extraConfig = ''
+        MulticastDNS=true
+        ${concatMapStringsSep "\n" (network: ''
+          DNSStubListenerExtra=${network.ipv4.address}
+          DNSStubListenerExtra=${network.ipv6.address}
+        '') (attrValues cfg.networks)}
       '';
+      domains = [
+        "local"
+      ];
+      enable = true;
     };
 
     systemd.network.networks = listToAttrs (forEach (attrValues cfg.networks) (network: {

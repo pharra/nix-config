@@ -92,16 +92,6 @@ in {
     };
   };
 
-  services.resolved = {
-    extraConfig = ''
-      MulticastDNS=true
-    '';
-    domains = [
-      "local"
-    ];
-    enable = true;
-  };
-
   services.keaWithDDNS = {
     enable = true;
     IPMasquerade = true;
