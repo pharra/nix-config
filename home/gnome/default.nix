@@ -33,6 +33,12 @@
       button-layout = "icon:minimize,maximize,close";
     };
 
+    "org/gnome/desktop/remote-desktop/rdp" = {
+      enable = true;
+      screen-share-mode = "extend";
+      view-only = false;
+    };
+
     "org/gnome/shell" = {
       disable-user-extensions = false;
       enabled-extensions = [
