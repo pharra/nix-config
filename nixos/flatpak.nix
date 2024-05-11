@@ -14,6 +14,17 @@
   # https://flatpak.org/setup/NixOS
   services.flatpak.enable = true;
 
+  services.flatpak.remotes = [
+    {
+      name = "flathub";
+      location = "https://mirror.sjtu.edu.cn/flathub/flathub.flatpakrepo";
+    }
+        {
+      name = "flathub-origin";
+      location = "https://flathub.org/repo/flathub.flatpakrepo";
+    }
+  ];
+
   services.flatpak.packages = [
     {
       appId = "io.github.hypengw.Qcm";
