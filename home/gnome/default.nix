@@ -14,6 +14,25 @@
   };
 
   dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      clock-show-weekday = true;
+      color-scheme = "prefer-light";
+      cursor-size = 24;
+      cursor-theme = "Adwaita";
+      enable-animations = true;
+      enable-hot-corners = true;
+      font-name = "Noto Sans,  10";
+      gtk-theme = "Adwaita";
+      icon-theme = "breeze";
+      scaling-factor = 2;
+      text-scaling-factor = 1.0;
+      toolbar-style = "text";
+    };
+
+    "org/gnome/desktop/wm/preferences" = {
+      button-layout = "icon:minimize,maximize,close";
+    };
+
     "org/gnome/shell" = {
       disable-user-extensions = false;
       enabled-extensions = [
@@ -37,28 +56,22 @@
       ];
     };
 
-    "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-light";
-      enable-hot-corners = true;
-      clock-show-weekday = true;
-      cursor-theme = "Adwaita";
-      gtk-theme = "Adwaita";
-    };
-
     "org/gnome/desktop/privacy" = {
       report-technical-problems = "false";
     };
     "org/gnome/desktop/calendar" = {
       show-weekdate = true;
     };
+    "org/gnome/shell/extensions/caffeine" = {
+      countdown-timer = 0;
+      indicator-position-max = 1;
+      toggle-state = true;
+      user-enabled = true;
+    };
 
     "org/gnome/shell/extensions/bluetooth-quick-connect" = {
       show-battery-icon-on = true;
       show-battery-value-on = true;
-    };
-
-    "org/gnome/desktop/remote-desktop/rdp" = {
-      enable = true;
     };
   };
 

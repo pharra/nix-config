@@ -13,6 +13,8 @@
     };
   };
 
+  services.gnome.gnome-remote-desktop.enable = true;
+
   services = {
     libinput.enable = true;
 
