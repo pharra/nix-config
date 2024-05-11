@@ -14,11 +14,12 @@
   };
 
   services = {
+    libinput.enable = true;
+
     xserver = {
       enable = true;
 
       xkb.layout = "us"; # Keyboard layout & €-sign
-      libinput.enable = true;
 
       displayManager.gdm.enable = true; # Display Manager
       desktopManager.gnome.enable = true; # Window Manager

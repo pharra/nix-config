@@ -43,6 +43,11 @@
     ];
   };
 
+  networking.firewall = {
+    allowedTCPPorts = [445];
+    # allowedUDPPorts = [cfg.stunPort];
+  };
+
   systemd.services.ksmbd = {
     enable = true;
     description = "ksmbd userspace daemon";
