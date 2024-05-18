@@ -90,6 +90,11 @@
     };
 
     vscode-server.url = "github:nix-community/nixos-vscode-server";
+
+    NixVirt = {
+      url = "github:pharra/NixVirt";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -111,6 +116,7 @@
     nix-flatpak,
     plasma-manager,
     vscode-server,
+    NixVirt,
     ...
   }: let
     username = "wf";
@@ -145,6 +151,7 @@
         [
           impermanence.nixosModules.impermanence
           nix-flatpak.nixosModules.nix-flatpak
+          NixVirt.nixosModules.default
         ]
         ++ (builtins.attrValues modules);
 
@@ -266,7 +273,7 @@
       system = x64_system;
       _specialArgs =
         {
-          inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs home-modules;
+          inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs home-modules NixVirt;
           # use unstable branch for some packages to get the latest updates
           pkgs-unstable = import nixpkgs-unstable {
             system = x64_system; # refer the `system` parameter form outer scope recursively

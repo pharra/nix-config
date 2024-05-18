@@ -1,5 +1,26 @@
 {
   "nodes": {
+    "NixVirt": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "nixpkgs-ovmf": "nixpkgs-ovmf"
+      },
+      "locked": {
+        "lastModified": 1715529948,
+        "narHash": "sha256-XZL+2DDPytIqEZVD1YmQ/DVWmWPkDTb1SedJMTZ6t9Y=",
+        "owner": "pharra",
+        "repo": "NixVirt",
+        "rev": "5628aaa68526e94c8c2c27455751e09777fc7c81",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pharra",
+        "repo": "NixVirt",
+        "type": "github"
+      }
+    },
     "agenix": {
       "inputs": {
         "darwin": "darwin",
@@ -404,6 +425,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-ovmf": {
+      "locked": {
+        "lastModified": 1708984720,
+        "narHash": "sha256-gJctErLbXx4QZBBbGp78PxtOOzsDaQ+yw1ylNQBuSUY=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "13aff9b34cc32e59d35c62ac9356e4a41198a538",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-unstable": {
       "locked": {
         "lastModified": 1715266358,
@@ -528,6 +565,7 @@
     },
     "root": {
       "inputs": {
+        "NixVirt": "NixVirt",
         "agenix": "agenix",
         "deploy-rs": "deploy-rs",
         "home-manager": "home-manager_2",
