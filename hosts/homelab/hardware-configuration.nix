@@ -35,8 +35,8 @@ in {
       "10de:1aed" # UCSI
 
       # gtx 960
-      # "10de:1401"
-      # "10de:0fba"
+      "10de:1401"
+      "10de:0fba"
 
       #"1e4b:1202" # nvme
       #"1e4b:1602" # nvme
