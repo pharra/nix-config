@@ -42,6 +42,7 @@
     systemd-boot.enable = true;
   };
 
+  networking.firewall.enable = lib.mkForce false;
   networking = {
     hostName = "homelab_desktop";
     wireless.enable = false; # Enables wireless support via wpa_supplicant.
