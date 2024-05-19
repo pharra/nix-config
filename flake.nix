@@ -260,6 +260,37 @@
         home-module = import ./home/desktop-kde.nix;
       };
 
+      # homelab_desktop
+      homelab_desktop_modules_gnome = {
+        nixos-modules =
+          [
+            ./hosts/homelab_desktop
+            ./nixos/gnome.nix
+          ]
+          ++ common-nixos-modules;
+        home-module = import ./home/desktop-gnome.nix;
+      };
+
+      homelab_desktop_modules_deepin = {
+        nixos-modules =
+          [
+            ./hosts/homelab_desktop
+            ./nixos/deepin.nix
+          ]
+          ++ common-nixos-modules;
+        home-module = import ./home/desktop-deepin.nix;
+      };
+
+      homelab_desktop_modules_kde = {
+        nixos-modules =
+          [
+            ./hosts/homelab_desktop
+            ./nixos/kde.nix
+          ]
+          ++ common-nixos-modules;
+        home-module = import ./home/desktop-kde.nix;
+      };
+
       # azure
       azure_modules_base = {
         nixos-modules =
@@ -364,6 +395,15 @@
       homelab_deepin_args = homelab_modules_deepin // stable_args // {specialArgs = _specialArgs // {inherit netboot_args;};};
 
       homelab_kde_args = homelab_modules_kde // stable_args // {specialArgs = _specialArgs // {inherit netboot_args;};};
+
+      # homelab_desktop with gnome
+      homelab_desktop_gnome = nixosSystem (homelab_desktop_modules_gnome // stable_args // {specialArgs = _specialArgs;});
+
+      # homelab_desktop with kde
+      homelab_desktop_kde = nixosSystem (homelab_desktop_modules_kde // stable_args // {specialArgs = _specialArgs;});
+
+      # homelab_desktop with deepin
+      homelab_desktop_deepin = nixosSystem (homelab_desktop_modules_deepin // stable_args // {specialArgs = _specialArgs;});
     in {
       # desktop with gnome
       inherit desktop_gnome;
@@ -389,6 +429,9 @@
       homelab_deepin = nixosSystem homelab_deepin_args;
 
       homelab_kde = nixosSystem homelab_kde_args;
+
+      # homelab desktop
+      inherit homelab_desktop_gnome homelab_desktop_kde homelab_desktop_deepin;
     };
 
     deploy = {
