@@ -78,12 +78,6 @@
   };
 
   services.resolved = {
-    extraConfig = ''
-      MulticastDNS=true
-    '';
-    domains = [
-      "local"
-    ];
     enable = true;
   };
 
