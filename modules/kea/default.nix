@@ -247,7 +247,7 @@ in {
       mapAttrs' (_: network: {
         name = network.interface;
         value = {
-          allowedUDPPorts = [53 67 69 547];
+          allowedUDPPorts = [53 67 69 547 5353];
           allowedTCPPorts = [80];
         };
       })
