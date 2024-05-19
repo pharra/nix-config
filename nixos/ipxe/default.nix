@@ -203,28 +203,28 @@ in {
     root = "/etc/ipxe";
   };
 
-  services.dnsmasq = {
-    enable = false;
-    settings = {
-      interface = "${interface.ib},${interface.eth},${interface.intern}";
-      enable-tftp = true;
-      dhcp-range = ["interface:${interface.ib},192.168.30.50,192.168.30.150" "interface:${interface.eth},192.168.29.50,192.168.29.150" "interface:${interface.intern},192.168.28.50,192.168.28.150"];
-      listen-address = "192.168.30.1,192.168.29.1,192.168.28.1";
-      bind-interfaces = true;
-      log-dhcp = true;
-      tftp-root = "/etc/ipxe";
-      dhcp-match = "set:ipxe,175";
-      dhcp-boot = ["tag:!ipxe,ipxe.efi" "tag:ipxe,boot.ipxe"];
-      # local = "/intern/";
-      # domain = "intern";
-      # expand-hosts = true;
-      localise-queries = true;
-      host-record = ["homelab.intern,192.168.30.1" "homelab.intern,192.168.29.1" "homelab.intern,192.168.28.1"];
-    };
-  };
+  # services.dnsmasq = {
+  #   enable = false;
+  #   settings = {
+  #     interface = "${interface.ib},${interface.eth},${interface.intern}";
+  #     enable-tftp = true;
+  #     dhcp-range = ["interface:${interface.ib},192.168.30.50,192.168.30.150" "interface:${interface.eth},192.168.29.50,192.168.29.150" "interface:${interface.intern},192.168.28.50,192.168.28.150"];
+  #     listen-address = "192.168.30.1,192.168.29.1,192.168.28.1";
+  #     bind-interfaces = true;
+  #     log-dhcp = true;
+  #     tftp-root = "/etc/ipxe";
+  #     dhcp-match = "set:ipxe,175";
+  #     dhcp-boot = ["tag:!ipxe,ipxe.efi" "tag:ipxe,boot.ipxe"];
+  #     # local = "/intern/";
+  #     # domain = "intern";
+  #     # expand-hosts = true;
+  #     localise-queries = true;
+  #     host-record = ["homelab.intern,192.168.30.1" "homelab.intern,192.168.29.1" "homelab.intern,192.168.28.1"];
+  #   };
+  # };
 
   services.pixiecore = {
-    enable = true;
+    enable = false;
     listen = "192.168.31.200";
     kernel = netboot_installer.config.system.build.kernel + "/bzImage";
     initrd = netboot_installer.config.system.build.netbootRamdisk + "/initrd";

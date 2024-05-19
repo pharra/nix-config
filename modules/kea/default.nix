@@ -41,6 +41,9 @@ with lib; let
       netmask = mkOption {
         type = types.str;
       };
+      pool = mkOption {
+        type = types.str;
+      };
       pools = mkOption {
         type = types.listOf types.str;
       };
@@ -83,6 +86,9 @@ with lib; let
         type = types.str;
       };
       netmask = mkOption {
+        type = types.str;
+      };
+      pool = mkOption {
         type = types.str;
       };
       prefix = mkOption {
@@ -164,6 +170,11 @@ in {
       type = types.bool;
     };
 
+    IPXE = mkOption {
+      default = true;
+      type = types.bool;
+    };
+
     onlySLAAC = mkOption {
       default = false;
       type = types.bool;
@@ -236,7 +247,8 @@ in {
       mapAttrs' (_: network: {
         name = network.interface;
         value = {
-          allowedUDPPorts = [67 53 547];
+          allowedUDPPorts = [53 67 69 547];
+          allowedTCPPorts = [80];
         };
       })
       cfg.networks;
@@ -249,6 +261,28 @@ in {
     };
 
     networking.firewall.allowPing = true;
+
+    services.dnsmasq = {
+      enable = true;
+      settings = let
+        address = (mapAttrsToList (_: network: "${network.ipv4.address}") cfg.networks) ++ (mapAttrsToList (_: network: "${network.ipv6.address}") cfg.networks);
+      in {
+        interface = concatMapStringsSep "," (network: "${network.interface}") (attrValues cfg.networks);
+        enable-tftp = true;
+        dhcp-range = (mapAttrsToList (_: network: "interface:${network.interface},${network.ipv4.pool}") cfg.networks) ++ (mapAttrsToList (_: network: "${network.ipv6.pool},constructor:${network.interface},ra-stateless") cfg.networks);
+        listen-address = concatStringsSep "," address;
+        bind-interfaces = true;
+        log-dhcp = true;
+        tftp-root = "/etc/ipxe";
+        dhcp-match = "set:ipxe,175";
+        dhcp-boot = ["tag:!ipxe,ipxe.efi" "tag:ipxe,boot.ipxe"];
+        port = 0;
+        # local = "/intern/";
+        # domain = "intern";
+        # expand-hosts = true;
+        # localise-queries = true;
+      };
+    };
 
     services.resolved = {
       extraConfig = ''
@@ -283,183 +317,194 @@ in {
       };
     }));
 
-    services.radvd = {
-      enable = true;
-      config = ''
-        ${concatMapStringsSep "\n" (network: ''
-          interface ${network.interface} {
-            AdvSendAdvert on;
-            MinRtrAdvInterval 30;
-            MaxRtrAdvInterval 600;
-            AdvManagedFlag ${
-            if cfg.onlySLAAC
-            then "off"
-            else "on"
-          };                   #M bit=1
-            AdvOtherConfigFlag ${
-            if cfg.onlySLAAC
-            then "off"
-            else "on"
-          };               #O bit=1
-            AdvLinkMTU 1500;
-            AdvSourceLLAddress on;
-            AdvDefaultPreference high;
-            prefix ${network.ipv6.prefix}/${network.ipv6.delegated-len}
-            {
-              AdvOnLink on;
-              AdvAutonomous on;                   #A bit=1
-              AdvRouterAddr on;
-              AdvPreferredLifetime 3600;
-              AdvValidLifetime 7200;
-            };
-            # route ${network.ipv6.prefix}/${network.ipv6.delegated-len} {
-            # };
-            RDNSS ${network.ipv6.address}
-            {
-            };
-          };
-        '') (attrValues cfg.networks)}
-      '';
-    };
+    # services.radvd = {
+    #   enable = true;
+    #   config = let
+    #     SLAACStr =
+    #       if cfg.onlySLAAC
+    #       then "off"
+    #       else "on";
+    #   in ''
+    #     ${concatMapStringsSep "\n" (network: ''
+    #       interface ${network.interface} {
+    #         AdvSendAdvert on;
+    #         MinRtrAdvInterval 30;
+    #         MaxRtrAdvInterval 600;
+    #         AdvManagedFlag ${SLAACStr};                   #M bit=1
+    #         AdvOtherConfigFlag ${SLAACStr};               #O bit=1
+    #         AdvLinkMTU 1500;
+    #         AdvSourceLLAddress on;
+    #         AdvDefaultPreference high;
+    #         prefix ${network.ipv6.prefix}/${network.ipv6.delegated-len}
+    #         {
+    #           AdvOnLink on;
+    #           AdvAutonomous on;                   #A bit=1
+    #           AdvRouterAddr on;
+    #           AdvPreferredLifetime 3600;
+    #           AdvValidLifetime 7200;
+    #         };
+    #         # route ${network.ipv6.prefix}/${network.ipv6.delegated-len} {
+    #         # };
+    #         RDNSS ${network.ipv6.address}
+    #         {
+    #         };
+    #       };
+    #     '') (attrValues cfg.networks)}
+    #   '';
+    # };
 
-    services.kea = {
-      dhcp4 = {
-        enable = true;
-        settings = {
-          valid-lifetime = 3600;
-          renew-timer = 900;
-          rebind-timer = 1800;
+    # services.kea = {
+    #   dhcp4 = {
+    #     enable = true;
+    #     settings = {
+    #       valid-lifetime = 3600;
+    #       renew-timer = 900;
+    #       rebind-timer = 1800;
 
-          lease-database = {
-            type = "memfile";
-            persist = true;
-            name = "/var/lib/kea/dhcp4.leases";
-          };
+    #       lease-database = {
+    #         type = "memfile";
+    #         persist = true;
+    #         name = "/var/lib/kea/dhcp4.leases";
+    #       };
 
-          interfaces-config = {
-            interfaces = mapAttrsToList (_: network: "${network.interface}/${network.ipv4.address}") cfg.networks;
-          };
+    #       interfaces-config = {
+    #         interfaces = mapAttrsToList (_: network: "${network.interface}/${network.ipv4.address}") cfg.networks;
+    #       };
 
-          subnet4 =
-            mapAttrsToList (_: network: {
-              interface = network.interface;
-              subnet = network.ipv4.subnet;
-              pools = forEach network.ipv4.pools (item: {
-                pool = item;
-              });
-              ddns-qualifying-suffix = network.domain;
-              reservations = network.ipv4.reservations;
+    #       client-classes = [
+    #         {
+    #           name = "ipxe";
+    #           test = "option[77].hex == 'ipxe'";
+    #           boot-file-name = "boot.ipxe";
+    #         }
+    #         {
+    #           name = "pxe-uefi";
+    #           test = "not member('ipxe')";
+    #           boot-file-name = "ipxe.efi";
+    #         }
+    #       ];
 
-              option-data = [
-                {
-                  name = "domain-name-servers";
-                  data = network.ipv4.address;
-                }
-                {
-                  name = "routers";
-                  data = network.ipv4.address;
-                }
-              ];
-            })
-            cfg.networks;
+    #       subnet4 =
+    #         mapAttrsToList (_: network: {
+    #           interface = network.interface;
+    #           subnet = network.ipv4.subnet;
+    #           pools = forEach network.ipv4.pools (item: {
+    #             pool = item;
+    #           });
+    #           ddns-qualifying-suffix = network.domain;
+    #           reservations = network.ipv4.reservations;
+    #           next-server = network.ipv4.address;
 
-          # dhcp-ddns = {
-          #   enable-updates = true;
-          #   server-ip = "127.0.0.1";
-          #   server-port = 53001;
-          # };
-        };
-      };
+    #           option-data = [
+    #             {
+    #               name = "domain-name-servers";
+    #               data = network.ipv4.address;
+    #             }
+    #             {
+    #               name = "routers";
+    #               data = network.ipv4.address;
+    #             }
+    #           ];
+    #         })
+    #         cfg.networks;
 
-      dhcp6 = mkIf (! cfg.onlySLAAC) {
-        enable = true;
-        settings = {
-          valid-lifetime = 3600;
-          renew-timer = 900;
-          rebind-timer = 1800;
+    #       # dhcp-ddns = {
+    #       #   enable-updates = true;
+    #       #   server-ip = "127.0.0.1";
+    #       #   server-port = 53001;
+    #       # };
+    #     };
+    #   };
 
-          lease-database = {
-            type = "memfile";
-            persist = true;
-            name = "/var/lib/kea/dhcp6.leases";
-          };
+    #   dhcp6 = mkIf (! cfg.onlySLAAC) {
+    #     enable = true;
+    #     settings = {
+    #       valid-lifetime = 3600;
+    #       renew-timer = 900;
+    #       rebind-timer = 1800;
 
-          interfaces-config = {
-            interfaces = mapAttrsToList (_: network: "${network.interface}/${network.ipv6.address}") cfg.networks;
-          };
+    #       lease-database = {
+    #         type = "memfile";
+    #         persist = true;
+    #         name = "/var/lib/kea/dhcp6.leases";
+    #       };
 
-          # mac-sources = ["duid"];
+    #       interfaces-config = {
+    #         interfaces = mapAttrsToList (_: network: "${network.interface}/${network.ipv6.address}") cfg.networks;
+    #       };
 
-          subnet6 =
-            mapAttrsToList (_: network: {
-              interface = network.interface;
-              subnet = network.ipv6.subnet;
-              pools = forEach network.ipv6.pools (item: {
-                pool = item;
-              });
-              id = network.ipv6.id;
-              # pd-pools = [
-              #   {
-              #     prefix = network.ipv6.prefix;
-              #     prefix-len = lib.strings.toInt network.ipv6.netmask;
-              #     delegated-len = lib.strings.toInt network.ipv6.delegated-len;
-              #   }
-              # ];
-              ddns-qualifying-suffix = network.domain;
-              reservations = network.ipv6.reservations;
+    #       # mac-sources = ["duid"];
 
-              option-data = [
-                {
-                  name = "dns-servers";
-                  data = network.ipv6.address;
-                }
-                # {
-                #   name = "unicast";
-                #   data = network.ipv6.address;
-                # }
-                # {
-                #   name = "link-address";
-                #   data = network.ipv6.address;
-                # }
-              ];
-            })
-            cfg.networks;
+    #       subnet6 =
+    #         mapAttrsToList (_: network: {
+    #           interface = network.interface;
+    #           subnet = network.ipv6.subnet;
+    #           pools = forEach network.ipv6.pools (item: {
+    #             pool = item;
+    #           });
+    #           id = network.ipv6.id;
+    #           # pd-pools = [
+    #           #   {
+    #           #     prefix = network.ipv6.prefix;
+    #           #     prefix-len = lib.strings.toInt network.ipv6.netmask;
+    #           #     delegated-len = lib.strings.toInt network.ipv6.delegated-len;
+    #           #   }
+    #           # ];
+    #           ddns-qualifying-suffix = network.domain;
+    #           reservations = network.ipv6.reservations;
 
-          # dhcp-ddns = {
-          #   enable-updates = true;
-          #   server-ip = "127.0.0.1";
-          #   server-port = 53001;
-          # };
-        };
-      };
+    #           option-data = [
+    #             {
+    #               name = "dns-servers";
+    #               data = network.ipv6.address;
+    #             }
+    #             # {
+    #             #   name = "unicast";
+    #             #   data = network.ipv6.address;
+    #             # }
+    #             # {
+    #             #   name = "link-address";
+    #             #   data = network.ipv6.address;
+    #             # }
+    #           ];
+    #         })
+    #         cfg.networks;
 
-      # dhcp-ddns = {
-      #   enable = true;
-      #   settings = {
-      #     ip-address = "127.0.0.1";
-      #     port = 53001;
-      #     forward-ddns = {
-      #       ddns-domains =
-      #         mapAttrsToList (_: network: {
-      #           name = network.domain;
-      #           dns-servers = [
-      #             {
-      #               ip-address = network.ipv4.address;
-      #               port = 53;
-      #             }
-      #             {
-      #               ip-address = network.ipv6.address;
-      #               port = 53;
-      #             }
-      #           ];
-      #         })
-      #         cfg.networks;
-      #     };
-      #     reverse-ddns = {
-      #       ddns-domains = [];
-      #     };
-      #   };
-      # };
-    };
+    #       # dhcp-ddns = {
+    #       #   enable-updates = true;
+    #       #   server-ip = "127.0.0.1";
+    #       #   server-port = 53001;
+    #       # };
+    #     };
+    #   };
+
+    #   # dhcp-ddns = {
+    #   #   enable = true;
+    #   #   settings = {
+    #   #     ip-address = "127.0.0.1";
+    #   #     port = 53001;
+    #   #     forward-ddns = {
+    #   #       ddns-domains =
+    #   #         mapAttrsToList (_: network: {
+    #   #           name = network.domain;
+    #   #           dns-servers = [
+    #   #             {
+    #   #               ip-address = network.ipv4.address;
+    #   #               port = 53;
+    #   #             }
+    #   #             {
+    #   #               ip-address = network.ipv6.address;
+    #   #               port = 53;
+    #   #             }
+    #   #           ];
+    #   #         })
+    #   #         cfg.networks;
+    #   #     };
+    #   #     reverse-ddns = {
+    #   #       ddns-domains = [];
+    #   #     };
+    #   #   };
+    #   # };
+    # };
   };
 }
