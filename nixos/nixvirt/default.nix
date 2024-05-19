@@ -225,6 +225,14 @@ in {
                       # c1 0 1
                       address = pci_address 7 0 0;
                     }
+                    {
+                      type = "pci";
+                      mode = "subsystem";
+                      managed = true;
+                      source = {address = pci_address 66 0 1;};
+                      # c1 0 1
+                      address = pci_address 8 0 0;
+                    }
                   ];
                   interface = {
                     type = "bridge";
