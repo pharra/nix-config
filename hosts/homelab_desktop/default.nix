@@ -46,27 +46,30 @@
     hostName = "homelab_desktop";
     wireless.enable = false; # Enables wireless support via wpa_supplicant.
 
-    # Configure network proxy if necessary
-    # proxy.default = "http://user:password@proxy:port/";
-    # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
     networkmanager.enable = true;
+    networkmanager.unmanaged = ["*,except:interface-name:en*"];
+  };
 
-    # enableIPv6 = false; # disable ipv6
-    # interfaces.enp5s0 = {
-    #   useDHCP = false;
-    #   ipv4.addresses = [
-    #     {
-    #       address = "192.168.5.100";
-    #       prefixLength = 24;
-    #     }
-    #   ];
-    # };
-    # defaultGateway = "192.168.5.201";
-    # nameservers = [
-    #   "119.29.29.29" # DNSPod
-    #   "223.5.5.5" # AliDNS
-    # ];
+  systemd.network = {
+    enable = true;
+    wait-online.anyInterface = true;
+
+    networks = {
+      # Configure the bridge for its desired function
+      "40-en" = {
+        matchConfig.Name = "en*";
+        networkConfig = {
+          # start a DHCP Client for IPv4 Addressing/Routing
+          DHCP = "ipv4";
+          # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
+          IPv6AcceptRA = true;
+        };
+        linkConfig = {
+          # or "routable" with IP addresses configured
+          RequiredForOnline = "routable";
+        };
+      };
+    };
   };
 
   #virtualisation.docker.storageDriver = "btrfs";
