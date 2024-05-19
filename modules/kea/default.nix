@@ -271,6 +271,7 @@ in {
         enable-tftp = true;
         dhcp-range = (mapAttrsToList (_: network: "interface:${network.interface},${network.ipv4.pool}") cfg.networks) ++ (mapAttrsToList (_: network: "${network.ipv6.pool},constructor:${network.interface},ra-stateless") cfg.networks);
         listen-address = concatStringsSep "," address;
+        dhcp-option = mapAttrsToList (_: network: "interface:${network.interface},6,${network.ipv4.address}") cfg.networks;
         bind-interfaces = true;
         log-dhcp = true;
         tftp-root = "/etc/ipxe";
