@@ -149,6 +149,49 @@ in {
               devices =
                 ArchLinux.devices
                 // {
+                  interface = {
+                    type = "bridge";
+                    model = {type = "virtio";};
+                    source = {bridge = "br0";};
+                  };
+                };
+            }
+          );
+      }
+      {
+        definition = let
+          NixOS = linux_template {
+            name = "NixOS";
+            uuid = "ee43005c-2e7b-4af2-bfae-8c52eeb22673";
+            memory = {
+              count = 6;
+              unit = "GiB";
+            };
+            storage_vol = {
+              pool = "VMPool";
+              volume = "NixOS.qcow2";
+            };
+            nvram_path = /home/wf/Data/RAMPool/NixOS.fd;
+            no_graphics = true;
+          };
+        in
+          NixVirt.lib.domain.writeXML (
+            NixOS
+            // {
+              cpu = {
+                mode = "host-passthrough";
+                check = "none";
+                migratable = true;
+                topology = {
+                  sockets = 1;
+                  dies = 1;
+                  cores = 2;
+                  threads = 2;
+                };
+              };
+              devices =
+                NixOS.devices
+                // {
                   hostdev = [
                     {
                       type = "pci";
@@ -186,7 +229,7 @@ in {
                   interface = {
                     type = "bridge";
                     model = {type = "virtio";};
-                    source = {bridge = "br0";};
+                    source = {bridge = "br1";};
                   };
                 };
               # qemu-override = {
