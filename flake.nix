@@ -487,6 +487,13 @@
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."desktop_kde";
           };
         };
+
+        "homelab_desktop_gnome" = {
+          hostname = "homelab-desktop";
+          profiles.system = {
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."homelab_desktop_gnome";
+          };
+        };
       };
     };
 
