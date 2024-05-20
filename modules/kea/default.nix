@@ -293,9 +293,6 @@ in {
           DNSStubListenerExtra=${network.ipv6.address}
         '') (attrValues cfg.networks)}
       '';
-      domains = [
-        "local"
-      ];
       enable = true;
     };
 
