@@ -10,7 +10,7 @@
 }: {
   imports = [];
 
-  boot.initrd.availableKernelModules = ["ahci" "xhci_pci" "virtio_pci" "usbhid" "sr_mod" "virtio_blk"];
+  boot.initrd.availableKernelModules = ["ahci" "xhci_pci" "virtio_pci" "usbhid" "sr_mod" "virtio_blk" "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"];
   boot.initrd.kernelModules = ["nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"];
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = [];
