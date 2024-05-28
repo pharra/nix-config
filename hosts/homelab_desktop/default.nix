@@ -52,7 +52,7 @@
     wireless.enable = false; # Enables wireless support via wpa_supplicant.
 
     networkmanager.enable = true;
-    networkmanager.unmanaged = ["*,except:interface-name:en*"];
+    networkmanager.unmanaged = ["*,except:interface-name:wlp*"];
   };
 
   systemd.network = {
