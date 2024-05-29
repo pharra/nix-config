@@ -27,7 +27,7 @@ in {
   };
 
   specialisation = {
-    -vfio.configuration = {
+    vfio.configuration = {
       virtualisation.vfio.devices = [
         "10de:2684" # Graphics
         "10de:22ba" # Audio
