@@ -7,10 +7,12 @@
   ...
 } @ args: let
   interface = {
-    ib = "enp66s0";
+    #ib = "enp66s0";
     #ib = "ibp66s0";
     eth-to-bridge = "eno2";
-    eth = "enp66s0d1";
+    #eth = "enp66s0d1";
+    ib = "ib";
+    eth = "eth";
     intern = "br1";
   };
 in {
@@ -240,6 +242,20 @@ in {
   boot.kernel.sysctl."net.ipv4.ip_forward" = "1";
   boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = "1";
   networking.firewall.interfaces = {
+    "${interface.intern}" = {
+      allowedTCPPortRanges = [
+        {
+          from = 0;
+          to = 65535;
+        }
+      ];
+      allowedUDPPortRanges = [
+        {
+          from = 0;
+          to = 65535;
+        }
+      ];
+    };
     "${interface.ib}" = {
       allowedTCPPortRanges = [
         {
@@ -285,6 +301,19 @@ in {
         netdevConfig = {
           Kind = "bridge";
           Name = "br1";
+        };
+      };
+
+      "30-ib" = {
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "ib";
+        };
+      };
+      "30-eth" = {
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "eth";
         };
       };
     };

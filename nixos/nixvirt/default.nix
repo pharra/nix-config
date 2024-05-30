@@ -101,6 +101,64 @@
         };
       devices = base.devices // devices_override;
     };
+
+  windows_template = {
+    name,
+    uuid,
+    memory,
+    storage_vol ? null,
+    install_vol ? null,
+    virtio_drive ? true,
+    virtio_net ? true,
+    no_graphics ? false,
+    nvram_path,
+    install_virtio ? true,
+    ...
+  }: let
+    base =
+      NixVirt.lib.domain.templates.windows
+      {
+        inherit name uuid memory storage_vol install_vol nvram_path virtio_net virtio_drive install_virtio;
+      };
+
+    devices_override =
+      {
+        input = [
+          {
+            type = "mouse";
+            bus = "usb";
+          }
+          {
+            type = "keyboard";
+            bus = "usb";
+          }
+        ];
+      }
+      // (
+        if no_graphics
+        then {
+          channel = null;
+          graphics = null;
+          audio = null;
+          video = {
+            model = {
+              type = "none";
+            };
+          };
+          redirdev = null;
+        }
+        else {}
+      );
+  in
+    base
+    // {
+      os =
+        base.os
+        // {
+          bootmenu = {enable = true;};
+        };
+      devices = base.devices // devices_override;
+    };
 in {
   environment = {
     systemPackages = with pkgs; [
@@ -239,6 +297,125 @@ in {
                     model = {type = "virtio";};
                     source = {bridge = "br1";};
                   };
+                };
+              # qemu-override = {
+              #   device = {
+              #     alias = "hostdev0";
+              #     frontend = {
+              #       property = {
+              #         name = "x-vga";
+              #         type = "bool";
+              #         value = "true";
+              #       };
+              #     };
+              #   };
+              # };
+            }
+          );
+      }
+      {
+        definition = let
+          Windows = windows_template {
+            name = "Windows";
+            uuid = "ee43005c-2e7b-4af2-bfae-8c52eeb22678";
+            memory = {
+              count = 32;
+              unit = "GiB";
+            };
+            nvram_path = /home/wf/Data/RAMPool/Windows.fd;
+            no_graphics = true;
+            virtio_net = true;
+          };
+        in
+          NixVirt.lib.domain.writeXML (
+            Windows
+            // {
+              vcpu = {
+                placement = "static";
+                count = 16;
+              };
+              cpu = {
+                mode = "host-passthrough";
+                check = "none";
+                migratable = true;
+                topology = {
+                  sockets = 1;
+                  dies = 1;
+                  cores = 8;
+                  threads = 2;
+                };
+              };
+              devices =
+                Windows.devices
+                // {
+                  tpm = {
+                    model = "tpm-crb";
+                    backend = {
+                      type = "passthrough";
+                      device = {
+                        path = "/dev/tpm0";
+                      };
+                    };
+                  };
+                  hostdev = [
+                    {
+                      type = "pci";
+                      mode = "subsystem";
+                      managed = true;
+                      # RTX 4090 41:00.0
+                      source = {address = pci_address 65 0 0;};
+                      address = pci_address 5 0 0 // {multifunction = true;};
+                    }
+                    {
+                      type = "pci";
+                      mode = "subsystem";
+                      managed = true;
+                      source = {address = pci_address 65 0 1;};
+                      # RTX 4090 41:00.1
+                      address = pci_address 5 0 1 // {multifunction = true;};
+                    }
+                    {
+                      type = "pci";
+                      mode = "subsystem";
+                      managed = true;
+                      source = {address = pci_address 4 0 3;};
+                      # USB Controller 04:00.3
+                      address = pci_address 6 0 0;
+                    }
+                    {
+                      type = "pci";
+                      mode = "subsystem";
+                      managed = true;
+                      source = {address = pci_address 67 0 3;};
+                      # USB Controller 43:00.3
+                      address = pci_address 7 0 0;
+                    }
+                    {
+                      type = "pci";
+                      mode = "subsystem";
+                      managed = true;
+                      source = {address = pci_address 2 0 0;};
+                      # Intel SSD 760p 2:00.0
+                      address = pci_address 8 0 0;
+                    }
+                  ];
+                  interface = [
+                    {
+                      type = "bridge";
+                      model = {type = "virtio";};
+                      source = {bridge = "br0";};
+                    }
+                    {
+                      type = "bridge";
+                      model = {type = "virtio";};
+                      source = {bridge = "ib";};
+                    }
+                    {
+                      type = "bridge";
+                      model = {type = "virtio";};
+                      source = {bridge = "eth";};
+                    }
+                  ];
                 };
               # qemu-override = {
               #   device = {
