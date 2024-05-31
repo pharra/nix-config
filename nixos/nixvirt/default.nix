@@ -550,4 +550,22 @@ in {
       }
     ];
   };
+
+  virtualisation.libvirtd.hooks.qemu."10-cpu-manager" = pkgs.writeShellScript "cpu-qemu-hook" ''
+    #!/bin/sh
+    machine=$1
+    command=$2
+    # Dynamically VFIO bind/unbind the USB with the VM starting up/stopping
+    if [[ "$machine" = "Windows" ]]; then
+      if [ "$command" = "started" ]; then
+        systemctl set-property --runtime -- system.slice AllowedCPUs=0-2,11-18,27-31
+        systemctl set-property --runtime -- user.slice AllowedCPUs=0-2,11-18,27-31
+        systemctl set-property --runtime -- init.scope AllowedCPUs=0-2,11-18,27-31
+      elif [ "$command" = "release" ]; then
+        systemctl set-property --runtime -- system.slice AllowedCPUs=0-31
+        systemctl set-property --runtime -- user.slice AllowedCPUs=0-31
+        systemctl set-property --runtime -- init.scope AllowedCPUs=0-31
+      fi
+    fi
+  '';
 }

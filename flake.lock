@@ -8,11 +8,11 @@
         "nixpkgs-ovmf": "nixpkgs-ovmf"
       },
       "locked": {
-        "lastModified": 1717072594,
-        "narHash": "sha256-DeQbWxCy/bfdWVyD9cqa0G3riATFexLkiUnRoNxM3Qw=",
+        "lastModified": 1717157264,
+        "narHash": "sha256-d16k+Ty1jBQH9v3HZCECdoTqTItfKLiEEnBoNKdJmAY=",
         "owner": "pharra",
         "repo": "NixVirt",
-        "rev": "9953ce3b5034692054657224a734c73054ef46da",
+        "rev": "07fdc34bddc284a8b58cc736c7a1e2436853c66a",
         "type": "github"
       },
       "original": {

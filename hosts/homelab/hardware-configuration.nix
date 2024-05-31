@@ -35,7 +35,7 @@ in {
     cpuFreqGovernor = "performance";
     cpufreq = {
       min = 3000000;
-      max = 3200000;
+      max = 3500000;
     };
   };
 
