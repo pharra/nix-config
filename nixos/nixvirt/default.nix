@@ -344,6 +344,94 @@ in {
                   cores = 8;
                   threads = 2;
                 };
+                feature = {
+                  policy = "require";
+                  name = "topoext";
+                };
+              };
+              iothreads = {
+                count = 1;
+              };
+              cputune = {
+                vcpupin = [
+                  # core 1
+                  {
+                    vcpu = 0;
+                    cpuset = "3";
+                  }
+                  {
+                    vcpu = 1;
+                    cpuset = "4";
+                  }
+                  {
+                    vcpu = 2;
+                    cpuset = "5";
+                  }
+                  {
+                    vcpu = 3;
+                    cpuset = "6";
+                  }
+                  {
+                    vcpu = 4;
+                    cpuset = "7";
+                  }
+                  {
+                    vcpu = 5;
+                    cpuset = "8";
+                  }
+                  {
+                    vcpu = 6;
+                    cpuset = "9";
+                  }
+                  {
+                    vcpu = 7;
+                    cpuset = "10";
+                  }
+
+                  # core 2
+                  {
+                    vcpu = 8;
+                    cpuset = "19";
+                  }
+                  {
+                    vcpu = 9;
+                    cpuset = "20";
+                  }
+                  {
+                    vcpu = 10;
+                    cpuset = "21";
+                  }
+                  {
+                    vcpu = 11;
+                    cpuset = "22";
+                  }
+                  {
+                    vcpu = 12;
+                    cpuset = "23";
+                  }
+                  {
+                    vcpu = 13;
+                    cpuset = "24";
+                  }
+                  {
+                    vcpu = 14;
+                    cpuset = "25";
+                  }
+                  {
+                    vcpu = 15;
+                    cpuset = "26";
+                  }
+                ];
+                emulatorpin = {
+                  cpuset = "2,18";
+                };
+                iothreadpin = {
+                  iothread = 1;
+                  cpuset = "2,18";
+                };
+              };
+              memoryBacking = {
+                hugepages = {};
               };
               devices =
                 Windows.devices

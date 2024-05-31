@@ -18,15 +18,26 @@ in {
     "zfs"
   ];
   boot.blacklistedKernelModules = ["ast"];
-  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=34"];
+  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=34" "amd_pstate=active" "amd_pstate.shared_mem=1"];
   boot.kernelModules = ["kvm-amd"];
-  boot.extraModulePackages = [];
+  boot.extraModulePackages = with config.boot.kernelPackages; [
+    cpupower
+  ];
 
   # Enable nested virsualization, required by security containers and nested vm.
   # boot.extraModprobeConfig = "options kvm_intel nested=1"; # for intel cpu
   boot.extraModprobeConfig = ''
     options kvm_amd nested=1
   ''; # for amd cpu
+
+  powerManagement = {
+    enable = true;
+    cpuFreqGovernor = "performance";
+    cpufreq = {
+      min = 3000000;
+      max = 3200000;
+    };
+  };
 
   hardware.mlx4 = {
     enable = false;
@@ -37,12 +48,6 @@ in {
   specialisation = {
     vfio.configuration = {
       virtualisation.vfio.devices = [
-        # RTX 4090
-        "10de:2684"
-        "10de:22ba"
-
-        # intel 760p
-        "8086:f1a6"
       ];
     };
   };
@@ -59,6 +64,13 @@ in {
       # gtx 960
       "10de:1401"
       "10de:0fba"
+
+      # RTX 4090
+      "10de:2684"
+      "10de:22ba"
+
+      # intel 760p
+      "8086:f1a6"
 
       #"1e4b:1202" # nvme
       #"1e4b:1602" # nvme
