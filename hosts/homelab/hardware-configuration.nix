@@ -18,7 +18,7 @@ in {
     "zfs"
   ];
   boot.blacklistedKernelModules = ["ast"];
-  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=34" "amd_pstate=active" "amd_pstate.shared_mem=1"];
+  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=34" "amd_pstate=active" "amd_pstate.shared_mem=1" "pci=realloc"];
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = with config.boot.kernelPackages; [
     cpupower
@@ -28,6 +28,7 @@ in {
   # boot.extraModprobeConfig = "options kvm_intel nested=1"; # for intel cpu
   boot.extraModprobeConfig = ''
     options kvm_amd nested=1
+    options kvm ignore_msrs=1 report_ignored_msrs=0
   ''; # for amd cpu
 
   powerManagement = {

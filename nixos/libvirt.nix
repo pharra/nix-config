@@ -23,6 +23,9 @@
       onShutdown = "shutdown";
       qemu.verbatimConfig = ''
         namespaces = []
+        nvram = [
+        "${pkgs.OVMFFull.fd}/FV/OVMF_CODE.ms.fd:${pkgs.OVMFFull.fd}/FV/OVMF_VARS.ms.fd"
+        ]
         cgroup_device_acl = [
           "/dev/null", "/dev/full", "/dev/zero",
           "/dev/random", "/dev/urandom",
