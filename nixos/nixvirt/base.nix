@@ -112,7 +112,7 @@
     virtio_net ? true,
     no_graphics ? false,
     nvram_path,
-    install_virtio ? true,
+    install_virtio ? false,
     ...
   }: let
     base =

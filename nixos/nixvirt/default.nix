@@ -57,7 +57,11 @@ in {
     command=$2
     # Dynamically VFIO bind/unbind the USB with the VM starting up/stopping
     if [ "$machine" == "Windows" ]; then
-      if [ "$command" == "started" ]; then
+      if [ "$command" == "prepare" ]; then
+        echo -n "0000:41:00.0" > /sys/bus/pci/drivers/vfio-pci/unbind
+        echo 15 > /sys/bus/pci/devices/0000\:41\:00.0/resource1_resize
+        echo -n "0000:41:00.0" > /sys/bus/pci/drivers/vfio-pci/bind
+      elif [ "$command" == "started" ]; then
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-2,11-18,27-31
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-2,11-18,27-31
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-2,11-18,27-31
@@ -65,6 +69,9 @@ in {
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-31
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-31
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-31
+        echo -n "0000:41:00.0" > /sys/bus/pci/drivers/vfio-pci/unbind
+        echo 8 > /sys/bus/pci/devices/0000\:41\:00.0/resource1_resize
+        echo -n "0000:41:00.0" > /sys/bus/pci/drivers/vfio-pci/bind
       fi
     fi
   '';
