@@ -9,8 +9,8 @@
   ...
 }: let
   iscsi-scripts = pkgs.writeShellScriptBin "iscsi-scripts" ''
-    ${pkgs.openiscsi}/bin/iscsiadm -m discovery -t sendtargets -p homelab.intern
-    ${pkgs.openiscsi}/bin/iscsiadm -m node -p homelab.intern --targetname=iqn.2016-06.io.spdk:nixos --login
+    ${pkgs.openiscsi}/bin/iscsiadm -m discovery -t sendtargets -p homelab.local
+    ${pkgs.openiscsi}/bin/iscsiadm -m node -p homelab.local --targetname=iqn.2016-06.io.spdk:nixos --login
   '';
 in {
   imports = [

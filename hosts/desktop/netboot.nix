@@ -6,7 +6,7 @@
 }: {
   boot.iscsi-initiator = {
     name = "iqn.2023-11.org.nixos:desktop";
-    discoverPortal = "homelab.intern";
+    discoverPortal = "homelab.local";
     target = "iqn.2016-06.io.spdk:nixos";
   };
 
