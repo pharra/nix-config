@@ -253,12 +253,12 @@ in {
       })
       cfg.networks;
 
-    networking.nat = mkIf cfg.IPMasquerade {
-      enable = true;
-      internalInterfaces = mapAttrsToList (_: network: network.interface) cfg.networks;
-      externalInterface = "br0";
-      enableIPv6 = true;
-    };
+    # networking.nat = mkIf cfg.IPMasquerade {
+    #   enable = true;
+    #   internalInterfaces = mapAttrsToList (_: network: network.interface) cfg.networks;
+    #   externalInterface = "br0";
+    #   enableIPv6 = true;
+    # };
 
     networking.firewall.allowPing = true;
 
@@ -286,6 +286,7 @@ in {
     };
 
     services.resolved = {
+      llmnr = "true";
       extraConfig = ''
         MulticastDNS=true
         ${concatMapStringsSep "\n" (network: ''
@@ -303,8 +304,10 @@ in {
         bridgeConfig = {};
         networkConfig = {
           Address = ["${network.ipv4.address}/${network.ipv4.netmask}" "${network.ipv6.address}/${network.ipv6.netmask}"];
-          IPMasquerade = "ipv4";
+          IPMasquerade = "both";
           ConfigureWithoutCarrier = true;
+          IPv6AcceptRA = false;
+          IPv6PrivacyExtensions = "no";
           # MulticastDNS = true;
         };
         linkConfig = {
