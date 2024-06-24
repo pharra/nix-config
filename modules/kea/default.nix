@@ -286,9 +286,8 @@ in {
     };
 
     services.resolved = {
-      llmnr = "true";
       extraConfig = ''
-        MulticastDNS=true
+        MulticastDNS=yes
         ${concatMapStringsSep "\n" (network: ''
           DNSStubListenerExtra=${network.ipv4.address}
           DNSStubListenerExtra=${network.ipv6.address}
@@ -308,12 +307,13 @@ in {
           ConfigureWithoutCarrier = true;
           IPv6AcceptRA = false;
           IPv6PrivacyExtensions = "no";
-          # MulticastDNS = true;
+          MulticastDNS = true;
         };
         linkConfig = {
           # or "routable" with IP addresses configured
           ActivationPolicy = "always-up";
           RequiredForOnline = "no";
+          Multicast = true;
         };
       };
     }));

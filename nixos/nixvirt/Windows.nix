@@ -163,8 +163,8 @@ in {
                 type = "pci";
                 mode = "subsystem";
                 managed = true;
-                source = {address = pci_address 4 0 3;};
-                # USB Controller 04:00.3
+                source = {address = pci_address 5 0 3;};
+                # USB Controller 05:00.3
                 address = pci_address 6 0 0;
               }
               {
@@ -179,9 +179,17 @@ in {
                 type = "pci";
                 mode = "subsystem";
                 managed = true;
-                source = {address = pci_address 2 0 0;};
-                # Intel SSD 760p 2:00.0
+                source = {address = pci_address 3 0 0;};
+                # Intel SSD 760p 3:00.0
                 address = pci_address 8 0 0;
+              }
+              {
+                type = "pci";
+                mode = "subsystem";
+                managed = true;
+                source = {address = pci_address 1 0 1;};
+                # MLX 1:00.1
+                address = pci_address 9 0 0;
               }
             ];
             interface = [
@@ -190,16 +198,16 @@ in {
                 model = {type = "virtio";};
                 source = {bridge = "br0";};
               }
-              {
-                type = "bridge";
-                model = {type = "virtio";};
-                source = {bridge = "ib";};
-              }
-              {
-                type = "bridge";
-                model = {type = "virtio";};
-                source = {bridge = "eth";};
-              }
+              # {
+              #   type = "bridge";
+              #   model = {type = "virtio";};
+              #   source = {bridge = "ib";};
+              # }
+              # {
+              #   type = "bridge";
+              #   model = {type = "virtio";};
+              #   source = {bridge = "eth";};
+              # }
             ];
           };
         qemu-commandline = {

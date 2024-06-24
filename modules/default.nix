@@ -8,4 +8,6 @@
   tailscale-module = import ./tailscale;
   ddns-go-module = import ./ddns-go;
   kea-module = import ./kea;
+  systemd-iscsi-module = import ./systemd-iscsi;
+  nvmf-module = import ./nvmf;
 }

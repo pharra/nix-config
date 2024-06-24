@@ -12,7 +12,9 @@
     eth-to-bridge = "eno2";
     #eth = "enp66s0d1";
     ib = "ib";
-    eth = "eth";
+    #eth = "eth";
+    #ib = "enp1s0";
+    eth = "enp1s0d1";
     intern = "br1";
   };
 in {
@@ -350,10 +352,20 @@ in {
           DHCP = "ipv4";
           # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
           IPv6AcceptRA = true;
+          MulticastDNS = true;
+          Domains = ["local"];
+        };
+        dhcpV4Config = {
+          UseDomains = true;
+        };
+        ipv6AcceptRAConfig = {
+          UseDNS = true;
+          UseDomains = true;
         };
         linkConfig = {
           # or "routable" with IP addresses configured
           RequiredForOnline = "routable";
+          Multicast = true;
         };
       };
     };

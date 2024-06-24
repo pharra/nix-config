@@ -17,8 +17,12 @@ in {
   # boot.initrd.kernelModules = [];
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
+  boot.kernelParams = lib.mkForce ["console=ttyS0"];
 
-  hardware.mlx4.enable = true;
+  hardware.mlx4 = {
+    enable = true;
+    enableSRIOV = false;
+  };
 
   virtualisation.vfio = {
     enable = true;
@@ -37,8 +41,6 @@ in {
       ];
     };
   };
-
-  # boot.kernelParams = [];
 
   fileSystems."/" = {
     device = "/dev/disk/by-label/nixos";

@@ -116,6 +116,30 @@
           RequiredForOnline = "routable";
         };
       };
+
+      "40-eth" = {
+        matchConfig.Name = "!*d1 !lo";
+        networkConfig = {
+          # start a DHCP Client for IPv4 Addressing/Routing
+          DHCP = "ipv4";
+          # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
+          IPv6AcceptRA = true;
+          Domains = ["local"];
+          MulticastDNS = true;
+        };
+        dhcpV4Config = {
+          UseDomains = true;
+        };
+        ipv6AcceptRAConfig = {
+          UseDNS = true;
+          UseDomains = true;
+        };
+        linkConfig = {
+          # or "routable" with IP addresses configured
+          RequiredForOnline = "routable";
+          Multicast = true;
+        };
+      };
     };
   };
 

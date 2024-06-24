@@ -96,6 +96,7 @@ in {
       menu iPXE boot menu
       item --gap --             ------------------------- Operating systems ------------------------------
       item nixos      Boot NixOS
+      item nixos-kernel      Boot NixOS Kernel
       item nixos-installer Boot NixOS Installer
       item win      Boot Windows
       item win-install      Boot Windows Installer
@@ -139,11 +140,14 @@ in {
       ############ MAIN MENU ITEMS ############
       :nixos
       echo Booting nixos from iSCSI for ''${initiator-iqn}
-      #kernel desktop/bzImage init=${desktop_gnome.config.system.build.toplevel}/init ${toString desktop_gnome.config.boot.kernelParams}
-      #initrd desktop/initrd
-      #boot
-      set root-path ''${base-iscsi}:nixos
+      set root-path ''${base-iscsi}:nixosefi
       sanboot --drive 0x80 ''${root-path} || goto failed
+
+      :nixos-kernel
+      echo Booting nixos from iSCSI for ''${initiator-iqn}
+      kernel desktop/bzImage init=${desktop_gnome.config.system.build.toplevel}/init ${toString desktop_gnome.config.boot.kernelParams} console=ttyS0
+      initrd desktop/initrd
+      boot
 
       :nixos-installer
       echo Booting nixos installer
