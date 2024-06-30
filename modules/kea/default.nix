@@ -314,6 +314,7 @@ in {
           ActivationPolicy = "always-up";
           RequiredForOnline = "no";
           Multicast = true;
+          MTUBytes = "9000";
         };
       };
     }));

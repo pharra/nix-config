@@ -13,8 +13,8 @@
     #eth = "enp66s0d1";
     ib = "ib";
     #eth = "eth";
-    #ib = "enp1s0";
-    eth = "enp1s0d1";
+    eth = "enp1s0";
+    #eth = "enp1s0d1";
     intern = "br1";
   };
 in {
@@ -287,6 +287,7 @@ in {
       ];
     };
   };
+
   systemd.network = {
     enable = true;
     wait-online.anyInterface = true;
@@ -368,6 +369,24 @@ in {
           Multicast = true;
         };
       };
+
+      # "50-${interface.eth-dual}" = {
+      #   matchConfig.Name = "${interface.eth-dual}";
+      #   bridgeConfig = {};
+      #   networkConfig = {
+      #     Address = ["192.168.29.2/24" "fd00:0:29::2/64"];
+      #     ConfigureWithoutCarrier = true;
+      #     IPv6AcceptRA = false;
+      #     IPv6PrivacyExtensions = "no";
+      #     MulticastDNS = true;
+      #   };
+      #   linkConfig = {
+      #     # or "routable" with IP addresses configured
+      #     ActivationPolicy = "always-up";
+      #     RequiredForOnline = "no";
+      #     Multicast = true;
+      #   };
+      # };
     };
   };
 

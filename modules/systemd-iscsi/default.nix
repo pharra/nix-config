@@ -172,7 +172,7 @@ in {
             Type = "oneshot";
             ExecStartPre = "${pkgs.openiscsi}/bin/iscsiadm --mode discoverydb --type sendtargets --discover --portal ${escapeShellArg cfg.discoverPortal} --debug ${toString cfg.logLevel}";
             ExecStart =
-              "${pkgs.openiscsi}/bin/iscsiadm --mode node "
+              "${pkgs.openiscsi}/bin/iscsiadm --mode node --portal ${escapeShellArg cfg.discoverPortal} "
               + (
                 if cfg.loginAll
                 then "--loginall all"

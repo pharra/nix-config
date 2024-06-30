@@ -33,6 +33,17 @@ in {
     };
   };
 
+  hardware.mlx4 = {
+    enable = true;
+    enableSRIOV = false;
+  };
+
+  virtualisation.vfio = {
+    enable = true;
+    IOMMUType = "intel";
+    applyACSpatch = false;
+  };
+
   environment.systemPackages = with pkgs; [
     rsync
     git
@@ -81,7 +92,7 @@ in {
     networks = {
       # Configure the bridge for its desired function
       "40-eth" = {
-        matchConfig.Name = "!lo";
+        matchConfig.Name = "!enp0s3*";
         bridgeConfig = {};
         networkConfig = {
           # start a DHCP Client for IPv4 Addressing/Routing

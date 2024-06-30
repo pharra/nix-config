@@ -6,7 +6,7 @@
 }: {
   boot.iscsi-initiatord = {
     name = "iqn.2023-11.org.nixos:desktop";
-    discoverPortal = "homelab.local";
+    discoverPortal = "192.168.29.1";
     target = "iqn.2016-06.io.spdk:nixosefi";
   };
 
@@ -14,6 +14,9 @@
     enable = true;
     address = "192.168.29.1";
     target = "nqn.2016-06.io.spdk:nixos";
+    type = "rdma";
+    multipath = false;
+    multiAddress = "192.168.28.1";
   };
 
   boot.initrd = {
@@ -25,11 +28,11 @@
       dbus.enable = true;
       network = {
         enable = true;
-        wait-online.anyInterface = true;
+        wait-online.extraArgs = ["--ipv4" "--ipv6" "--interface=enp0s3"];
         networks = {
           # Configure the bridge for its desired function
           "40-eth" = {
-            matchConfig.Name = "*d1";
+            matchConfig.Name = "enp0s3*";
             networkConfig = {
               # start a DHCP Client for IPv4 Addressing/Routing
               DHCP = "ipv4";
@@ -46,9 +49,8 @@
               UseDomains = true;
             };
             linkConfig = {
-              # or "routable" with IP addresses configured
-              RequiredForOnline = "routable";
               Multicast = true;
+              MTUBytes = "9000";
             };
           };
         };
@@ -67,6 +69,7 @@
   environment = {
     systemPackages = with pkgs; [
       openiscsi
+      nvme-cli
     ];
   };
 }

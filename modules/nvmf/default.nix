@@ -10,6 +10,17 @@ in {
   options.boot.nvmf = with types; {
     enable = mkEnableOption "nvmf initiator to boot from. Note, booting from nvmf. requires networkd based networking.";
 
+    multipath = mkEnableOption "enable multipath";
+
+    multiAddress = mkOption {
+      description = lib.mdDoc ''
+        ip address to boot from.
+      '';
+      default = "192.168.1.1";
+      example = "192.168.1.1";
+      type = str;
+    };
+
     address = mkOption {
       description = lib.mdDoc ''
         ip address to boot from.
@@ -70,28 +81,20 @@ in {
       systemd = {
         packages = [pkgs.nvme-cli];
 
-        sockets.nvmf = {
-          wantedBy = ["sockets.target"];
-          conflicts = ["initrd-switch-root.target"];
-          before = ["initrd-switch-root.target"];
-        };
-
-        services.nvmf = {
-          wantedBy = ["initrd.target"];
-          conflicts = ["shutdown.target" "initrd-switch-root.target"];
-          before = ["initrd.target" "shutdown.target" "initrd-switch-root.target"];
-          wants = ["network-online.target"];
-          after = ["initrd-nixos-copy-secrets.service" "network-online.target"];
-        };
-
         services.nixos-nvmf = {
           requiredBy = ["initrd.target"];
-          after = ["network-online.target" "nvmf.service"];
-          wants = ["network-online.target" "nvmf.service"];
+          after = ["network-online.target"];
+          wants = ["network-online.target"];
           serviceConfig = {
             Type = "oneshot";
-            ExecStartPre = "${pkgs.nvme-cli}/bin/nvme discover -t ${cfg.type} -a ${cfg.address} -s ${toString cfg.port} -k 0 -c 0";
-            ExecStart = "${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.address} -s ${toString cfg.port} -k 0 -c 0";
+            ExecStartPre = "${pkgs.nvme-cli}/bin/nvme discover -t ${cfg.type} -a ${cfg.address} -s ${toString cfg.port} -Q 1024 -l 3600";
+            ExecStart =
+              ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.address} -s ${toString cfg.port} -Q 1024 -l 3600"]
+              ++ (
+                if cfg.multipath
+                then ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.multiAddress} -s ${toString cfg.port} -Q 1024 -l 3600"]
+                else []
+              );
           };
         };
       };

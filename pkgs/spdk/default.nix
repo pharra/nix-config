@@ -40,8 +40,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "spdk";
     repo = "spdk";
-    rev = "v${version}";
-    sha256 = "sha256-5znYELR6WvVXbfFKAcRtJnSwAE5WHmA8v1rvZUtszS4=";
+    rev = "a44a9620a68f2a8c29db1b7165d67fe7c070458c";
+    sha256 = "sha256-D7WFCvLhHC49iHqDTX+iTHCdBVMcrQT0K+fVuDPOfuI=";
     fetchSubmodules = true;
   };
 

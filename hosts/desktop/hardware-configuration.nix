@@ -27,7 +27,7 @@ in {
   virtualisation.vfio = {
     enable = true;
     IOMMUType = "intel";
-    applyACSpatch = true;
+    applyACSpatch = false;
   };
 
   specialisation = {

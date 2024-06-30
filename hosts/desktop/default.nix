@@ -25,7 +25,7 @@
     ../../nixos/user-group.nix
 
     ../../secrets/nixos.nix
-    ../../nixos/ccache.nix
+    #../../nixos/ccache.nix
   ];
 
   # Enable binfmt emulation of aarch64-linux, this is required for cross compilation.
@@ -118,7 +118,7 @@
       };
 
       "40-eth" = {
-        matchConfig.Name = "!*d1 !lo";
+        matchConfig.Name = "!enp0s3*";
         networkConfig = {
           # start a DHCP Client for IPv4 Addressing/Routing
           DHCP = "ipv4";
