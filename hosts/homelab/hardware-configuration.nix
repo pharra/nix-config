@@ -22,6 +22,9 @@ in {
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = with config.boot.kernelPackages; [
     cpupower
+    (pkgs.mlnx_ofed.overrideAttrs (_: {
+      kernel = kernel;
+    }))
   ];
 
   # Enable nested virsualization, required by security containers and nested vm.

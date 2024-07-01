@@ -20,4 +20,5 @@ in rec {
   caddy = pkgs.callPackage ./pkgs/caddy {};
   sub-store-cli = pkgs.callPackage ./pkgs/sub-store-cli {};
   aosp = pkgs.callPackage ./pkgs/aosp {};
+  mlnx_ofed = pkgs.callPackage ./pkgs/mlnx_ofed {kernel = pkgs.linuxPackages_latest.kernel;};
 }
