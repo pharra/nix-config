@@ -8,7 +8,7 @@
   buildFHSUserEnv,
 }: let
   build-scripts = writeShellScriptBin "build-scripts" ''
-    ./configure --with-njobs --with-core-mod --with-user_mad-mod --with-user_access-mod --with-addr_trans-mod --with-mlx5-mod --with-ipoib-mod --with-srp-mod --with-iser-mod
+    ./configure --with-njobs=8 --with-core-mod --with-user_mad-mod --with-user_access-mod --with-addr_trans-mod --with-mlx5-mod --with-ipoib-mod --with-srp-mod --with-iser-mod
     make -j8
   '';
   buildEnv = buildFHSUserEnv {
@@ -35,9 +35,9 @@ in
     dontUpdateAutotoolsGnuConfigScripts = true;
 
     postUnpack = ''
-      tar zxvf source/SOURCES/mlnx-ofed-kernel_24.04.OFED.24.04.0.6.6.1.orig.tar.gz
+      tar zxvf source/SOURCES/mlnx-ofed-kernel*
       rm -rf source
-      mv mlnx-ofed-kernel-24.04.OFED.24.04.0.6.6.1 source
+      mv mlnx-ofed-kernel* source
     '';
 
     # preConfigure = ''

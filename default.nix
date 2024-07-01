@@ -21,4 +21,5 @@ in rec {
   sub-store-cli = pkgs.callPackage ./pkgs/sub-store-cli {};
   aosp = pkgs.callPackage ./pkgs/aosp {};
   mlnx_ofed = pkgs.callPackage ./pkgs/mlnx_ofed {kernel = pkgs.linuxPackages_latest.kernel;};
+  mlnx4_ofed = pkgs.callPackage ./pkgs/mlnx4_ofed {kernel = pkgs.linuxPackages_5_15.kernel;};
 }
