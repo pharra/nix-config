@@ -54,69 +54,69 @@ in {
             # core 1
             {
               vcpu = 0;
-              cpuset = "3";
-            }
-            {
-              vcpu = 1;
               cpuset = "4";
             }
             {
-              vcpu = 2;
+              vcpu = 1;
               cpuset = "5";
             }
             {
-              vcpu = 3;
+              vcpu = 2;
               cpuset = "6";
             }
             {
-              vcpu = 4;
+              vcpu = 3;
               cpuset = "7";
             }
             {
-              vcpu = 5;
+              vcpu = 4;
               cpuset = "8";
             }
             {
-              vcpu = 6;
+              vcpu = 5;
               cpuset = "9";
             }
             {
-              vcpu = 7;
+              vcpu = 6;
               cpuset = "10";
             }
+            {
+              vcpu = 7;
+              cpuset = "11";
+            }
 
-            # core 2
+            # core 1
             {
               vcpu = 8;
-              cpuset = "19";
-            }
-            {
-              vcpu = 9;
               cpuset = "20";
             }
             {
-              vcpu = 10;
+              vcpu = 9;
               cpuset = "21";
             }
             {
-              vcpu = 11;
+              vcpu = 10;
               cpuset = "22";
             }
             {
-              vcpu = 12;
+              vcpu = 11;
               cpuset = "23";
             }
             {
-              vcpu = 13;
+              vcpu = 12;
               cpuset = "24";
             }
             {
-              vcpu = 14;
+              vcpu = 13;
               cpuset = "25";
             }
             {
-              vcpu = 15;
+              vcpu = 14;
               cpuset = "26";
+            }
+            {
+              vcpu = 15;
+              cpuset = "27";
             }
           ];
           emulatorpin = {
@@ -171,8 +171,8 @@ in {
                 type = "pci";
                 mode = "subsystem";
                 managed = true;
-                source = {address = pci_address 67 0 3;};
-                # USB Controller 43:00.3
+                source = {address = pci_address 68 0 3;};
+                # USB Controller 44:00.3
                 address = pci_address 7 0 0;
               }
               {
@@ -187,8 +187,8 @@ in {
                 type = "pci";
                 mode = "subsystem";
                 managed = true;
-                source = {address = pci_address 1 0 1;};
-                # MLX 1:00.1
+                source = {address = pci_address 1 0 2;};
+                # MLX5 01:00.2
                 address = pci_address 9 0 0;
               }
             ];

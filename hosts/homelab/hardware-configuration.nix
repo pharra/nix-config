@@ -18,15 +18,20 @@ in {
     "zfs"
   ];
   boot.blacklistedKernelModules = ["ast"];
-  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=34" "amd_pstate=active" "amd_pstate.shared_mem=1" "pci=realloc"];
+  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=64" "amd_pstate=active" "amd_pstate.shared_mem=1" "pci=realloc" "video=vesafb:off" "video=efifb:off"];
   boot.kernelModules = ["kvm-amd"];
+  #boot.kernelPackages = lib.mkForce pkgs.linuxPackages_5_4;
   boot.extraModulePackages = with config.boot.kernelPackages; [
     cpupower
-    (pkgs.mlnx_ofed.overrideAttrs (_: {
-      kernel = kernel;
-    }))
+    #    (pkgs.mlnx_ofed.override {kernel = kernel;})
   ];
-
+  # boot.kernelPatches = lib.singleton {
+  #   name = "disbale_mlx5";
+  #   patch = null;
+  #   extraConfig = ''
+  #     MLX5_CORE n
+  #   '';
+  # };
   # Enable nested virsualization, required by security containers and nested vm.
   # boot.extraModprobeConfig = "options kvm_intel nested=1"; # for intel cpu
   boot.extraModprobeConfig = ''
@@ -45,8 +50,15 @@ in {
 
   hardware.mlx4 = {
     enable = true;
-    opensm = true;
+    opensm = false;
     portTypeArray = "2,2";
+    applyPatch = false;
+  };
+
+  hardware.mlx5 = {
+    enable = true;
+    enableSRIOV = true;
+    interfaces = ["mlx5_0"];
   };
 
   specialisation = {
@@ -66,8 +78,8 @@ in {
       "10de:1aed" # UCSI
 
       # gtx 960
-      "10de:1401"
-      "10de:0fba"
+      #      "10de:1401"
+      #      "10de:0fba"
 
       # RTX 4090
       "10de:2684"

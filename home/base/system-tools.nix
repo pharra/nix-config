@@ -22,5 +22,6 @@
     fio # disk performance
 
     dnsutils
+    screen
   ];
 }

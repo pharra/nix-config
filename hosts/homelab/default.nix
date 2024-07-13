@@ -11,12 +11,31 @@
     #ib = "ibp66s0";
     eth-to-bridge = "eno2";
     #eth = "enp66s0d1";
-    ib = "ib";
+    ib = "mlx4_0";
     #eth = "eth";
-    eth = "enp1s0";
+    #eth = "enp1s0";
     #eth = "enp1s0d1";
+    eth = "mlx5_0";
     intern = "br1";
   };
+  interfaces = [
+    {
+      mac = "50:65:f3:8a:c7:71";
+      name = "mlx4_0";
+    }
+    {
+      mac = "50:65:f3:8a:c7:72";
+      name = "mlx4_1";
+    }
+    {
+      mac = "f4:6b:8c:13:cf:e6";
+      name = "mlx5_0";
+    }
+    {
+      mac = "f4:6b:8c:13:cf:e7";
+      name = "mlx5_1";
+    }
+  ];
 in {
   imports = [
     # Include the results of the hardware scan.
@@ -45,7 +64,7 @@ in {
     ../../nixos/media-server.nix
     ../../nixos/caddy.nix
     ../../nixos/aosp.nix
-    ../../nixos/ccache.nix
+    #    ../../nixos/ccache.nix
     ../../nixos/tailscale.nix
     ../../nixos/ddns-go.nix
     ../../nixos/nixvirt
@@ -100,6 +119,11 @@ in {
   services.duplicati = {
     enable = true;
     interface = "192.168.30.1";
+  };
+
+  net-name = {
+    enable = true;
+    inherit interfaces;
   };
 
   services.keaWithDDNS = {
@@ -408,7 +432,7 @@ in {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
     modesetting.enable = true;
     forceFullCompositionPipeline = true;
-    #open = true;
+    open = true;
     #powerManagement.enable = true;
   };
   # virtualisation.docker.enableNvidia = true; # for nvidia-docker
@@ -416,9 +440,9 @@ in {
   hardware.opengl = {
     enable = true;
     # if hardware.opengl.driSupport is enabled, mesa is installed and provides Vulkan for supported hardware.
-    driSupport = true;
+    #driSupport = true;
     # needed by nvidia-docker
-    driSupport32Bit = true;
+    #driSupport32Bit = true;
   };
 
   # This value determines the NixOS release from which the default

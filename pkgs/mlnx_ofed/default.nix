@@ -6,15 +6,17 @@
   coreutils,
   writeShellScriptBin,
   buildFHSUserEnv,
+  xz,
 }: let
   build-scripts = writeShellScriptBin "build-scripts" ''
     ./configure --with-njobs=8 --with-core-mod --with-user_mad-mod --with-user_access-mod --with-addr_trans-mod --with-mlx5-mod --with-ipoib-mod --with-srp-mod --with-iser-mod
     make -j8
+    find .  \( -name "*.ko" \) -exec xz {} \;
   '';
   buildEnv = buildFHSUserEnv {
     name = "fhs";
-    targetPkgs = pkgs: kernel.moduleBuildDependencies ++ [kernel.dev kernel];
-    multiPkgs = pkgs: kernel.moduleBuildDependencies ++ [kernel.dev kernel];
+    targetPkgs = pkgs: kernel.moduleBuildDependencies ++ [kernel.dev kernel xz];
+    multiPkgs = pkgs: kernel.moduleBuildDependencies ++ [kernel.dev kernel xz];
     runScript = "${build-scripts}/bin/build-scripts";
     extraBwrapArgs = ["--bind . `pwd`"];
   };
@@ -87,6 +89,6 @@ in
     buildPhase = "${buildEnv}/bin/${buildEnv.name}";
 
     installPhase = ''
-      find .  \( -name "*.ko" -o -name "*.ko.gz" \) -exec install -D {} -t "$out/lib/modules/${kernel.modDirVersion}/kernel/" \;
+      find .  \( -name "*.ko.xz" \) -exec install -D {} -T $out/lib/modules/${kernel.modDirVersion}/kernel/{} \;
     '';
   }

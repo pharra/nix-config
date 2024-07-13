@@ -23,10 +23,10 @@ in {
         pool = "VMPool";
         volume = "ArchLinux.qcow2";
       };
-      install_vol = {
-        pool = "ISOPool";
-        volume = "archlinux-2024.04.01-x86_64.iso";
-      };
+      # install_vol = {
+      #   pool = "ISOPool";
+      #   volume = "archlinux-2024.04.01-x86_64.iso";
+      # };
       nvram_path = /home/wf/Data/RAMPool/ArchLinux.fd;
       no_graphics = true;
     };

@@ -73,6 +73,11 @@
     openFirewall = true;
   };
 
+  services.logind.extraConfig = ''
+    # don't shutdown when power button is short-pressed
+    HandlePowerKey=ignore
+  '';
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -85,6 +90,7 @@
     git # used by nix flakes
     git-lfs # used by huggingface models
     fastfetch
+    pv
 
     # create a fhs environment by command `fhs`, so we can run non-nixos packages in nixos!
     (

@@ -35,7 +35,7 @@ in {
         Environment = "PCI_ALLOWED='none'";
         ExecStartPre = [
           "${pkgs.spdk}/scripts/setup.sh"
-          "${pkgs.kmod}/bin/modprobe ublk_drv"
+          #"${pkgs.kmod}/bin/modprobe ublk_drv"
         ];
         ExecStart = ''${pkgs.spdk}/bin/spdk_tgt -m 0x30003 -c /home/wf/spdk/rdma_config.json -f /var/run/spdk.pid -S /var/run'';
       };

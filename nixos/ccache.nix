@@ -11,18 +11,15 @@
     export CCACHE_UMASK=000
   '';
 
-  kernel_cache = pkgs.linuxPackages_latest.kernel.override {
+  kernel_cache = pkgs.linuxPackages_6_9.kernel.override {
     stdenv = pkgs.ccacheStdenv.override {
-      stdenv = pkgs.linuxPackages_latest.kernel.stdenv;
+      stdenv = pkgs.linuxPackages_6_9.kernel.stdenv;
       extraConfig = _extraConfig;
     };
   };
 in {
   programs.ccache.enable = true;
   programs.ccache.cacheDir = "/var/cache/ccache";
-  # programs.ccache.packageNames = ["linuxPackages_latest.kernel" "linuxPackages_latest.kvmfr"];
 
-  boot = {
-    kernelPackages = lib.mkForce (pkgs.linuxPackagesFor kernel_cache);
-  };
+  boot.kernelPackages = lib.mkForce (pkgs.linuxPackagesFor kernel_cache);
 }
