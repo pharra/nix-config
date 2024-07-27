@@ -171,8 +171,8 @@ in {
                 type = "pci";
                 mode = "subsystem";
                 managed = true;
-                source = {address = pci_address 68 0 3;};
-                # USB Controller 44:00.3
+                source = {address = pci_address 69 0 3;};
+                # USB Controller 45:00.3
                 address = pci_address 7 0 0;
               }
               {

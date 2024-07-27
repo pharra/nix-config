@@ -15,6 +15,10 @@
     target = "iqn.2016-06.io.spdk:nixosefi";
   };
 
+  hardware.mlx5 = {
+    enable = true;
+  };
+
   boot.nvmf = {
     enable = true;
     address = "192.168.29.1";

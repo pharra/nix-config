@@ -32,7 +32,7 @@
         networks = {
           # Configure the bridge for its desired function
           "40-eth" = {
-            matchConfig.Name = "enp0s3*";
+            matchConfig.Name = "!lo";
             networkConfig = {
               # start a DHCP Client for IPv4 Addressing/Routing
               DHCP = "ipv4";

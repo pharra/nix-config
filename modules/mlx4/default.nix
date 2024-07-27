@@ -44,7 +44,7 @@ in {
   config = lib.mkIf cfg.enable {
     boot.extraModprobeConfig = lib.mkIf cfg.enableSRIOV "options mlx4_core port_type_array=${cfg.portTypeArray} num_vfs=4,4,0 msi_x=1 enable_4k_uar=1 enable_qos=1 log_num_mac=7 log_num_mgm_entry_size=-1 log_mtts_per_seg=4";
 
-    boot.kernelModules = [
+    boot.kernelModules = lib.mkBefore [
       "mlx4_core"
       "mlx4_en"
       "mlx4_ib"
@@ -58,7 +58,7 @@ in {
       "svcrdma"
     ];
 
-    boot.initrd.kernelModules = [
+    boot.initrd.kernelModules = lib.mkBefore [
       "mlx4_core"
       "mlx4_en"
       "mlx4_ib"

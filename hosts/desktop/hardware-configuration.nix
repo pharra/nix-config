@@ -19,15 +19,14 @@ in {
   boot.extraModulePackages = [];
   boot.kernelParams = lib.mkForce ["console=ttyS0"];
 
-  hardware.mlx4 = {
-    enable = true;
-    enableSRIOV = false;
-  };
-
   virtualisation.vfio = {
     enable = true;
     IOMMUType = "intel";
-    applyACSpatch = false;
+    applyACSpatch = true;
+  };
+
+  hardware.mlx5 = {
+    enable = true;
   };
 
   specialisation = {

@@ -18,7 +18,7 @@ in {
     "zfs"
   ];
   boot.blacklistedKernelModules = ["ast"];
-  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=64" "amd_pstate=active" "amd_pstate.shared_mem=1" "pci=realloc" "video=vesafb:off" "video=efifb:off"];
+  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=64" "amd_pstate=active" "amd_pstate.shared_mem=1" "pci=realloc" "initcall_blacklist=sysfb_init"];
   boot.kernelModules = ["kvm-amd"];
   #boot.kernelPackages = lib.mkForce pkgs.linuxPackages_5_4;
   boot.extraModulePackages = with config.boot.kernelPackages; [
@@ -72,10 +72,10 @@ in {
     enable = true;
     IOMMUType = "amd";
     devices = [
-      "10de:21c4" # Graphics
-      "10de:1aeb" # Audio
-      "10de:1aec" # USB
-      "10de:1aed" # UCSI
+      #"10de:21c4" # Graphics
+      #"10de:1aeb" # Audio
+      #"10de:1aec" # USB
+      #"10de:1aed" # UCSI
 
       # gtx 960
       #      "10de:1401"

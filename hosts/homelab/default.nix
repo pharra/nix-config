@@ -11,7 +11,8 @@
     #ib = "ibp66s0";
     eth-to-bridge = "eno2";
     #eth = "enp66s0d1";
-    ib = "mlx4_0";
+    #ib = "mlx4_0";
+    ib = "ib";
     #eth = "eth";
     #eth = "enp1s0";
     #eth = "enp1s0d1";
