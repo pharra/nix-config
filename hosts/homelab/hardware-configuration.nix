@@ -100,6 +100,13 @@ in {
     neededForBoot = true;
   };
 
+  fileSystems."/" = {
+    device = "system/root";
+    fsType = "zfs";
+
+    neededForBoot = true;
+  };
+
   fileSystems."/nix" = {
     device = "system/nix";
     fsType = "zfs";

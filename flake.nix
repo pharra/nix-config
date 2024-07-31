@@ -14,6 +14,7 @@
 
     substituters = [
       # replace official cache with a mirror located in China
+      "https://cosmic.cachix.org/"
       "https://mirrors.ustc.edu.cn/nix-channels/store"
       "https://cache.nixos.org"
     ];
@@ -27,6 +28,7 @@
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
+      "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
     ];
   };
 
@@ -95,6 +97,11 @@
       url = "github:pharra/NixVirt";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixos-cosmic = {
+      url = "github:lilyinstarlight/nixos-cosmic";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -117,6 +124,7 @@
     plasma-manager,
     vscode-server,
     NixVirt,
+    nixos-cosmic,
     ...
   }: let
     username = "wf";
@@ -152,6 +160,7 @@
           impermanence.nixosModules.impermanence
           nix-flatpak.nixosModules.nix-flatpak
           NixVirt.nixosModules.default
+          nixos-cosmic.nixosModules.default
         ]
         ++ (builtins.attrValues modules);
 
@@ -258,6 +267,16 @@
           ]
           ++ common-nixos-modules;
         home-module = import ./home/desktop-kde.nix;
+      };
+
+      homelab_modules_cosmic = {
+        nixos-modules =
+          [
+            ./hosts/homelab
+            ./nixos/cosmic.nix
+          ]
+          ++ common-nixos-modules;
+        home-module = import ./home/desktop-cosmic.nix;
       };
 
       # homelab_desktop
@@ -396,6 +415,8 @@
 
       homelab_kde_args = homelab_modules_kde // stable_args // {specialArgs = _specialArgs // {inherit netboot_args;};};
 
+      homelab_cosmic_args = homelab_modules_cosmic // stable_args // {specialArgs = _specialArgs // {inherit netboot_args;};};
+
       # homelab_desktop with gnome
       homelab_desktop_gnome = nixosSystem (homelab_desktop_modules_gnome // stable_args // {specialArgs = _specialArgs;});
 
@@ -429,6 +450,8 @@
       homelab_deepin = nixosSystem homelab_deepin_args;
 
       homelab_kde = nixosSystem homelab_kde_args;
+
+      homelab_cosmic = nixosSystem homelab_cosmic_args;
 
       # homelab desktop
       inherit homelab_desktop_gnome homelab_desktop_kde homelab_desktop_deepin;
