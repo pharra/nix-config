@@ -164,7 +164,7 @@ in {
                 mode = "subsystem";
                 managed = true;
                 source = {address = pci_address 5 0 3;};
-                # USB Controller 05:00.3
+                # Front USB Controller 05:00.3
                 address = pci_address 6 0 0;
               }
               {
@@ -172,7 +172,7 @@ in {
                 mode = "subsystem";
                 managed = true;
                 source = {address = pci_address 69 0 3;};
-                # USB Controller 45:00.3
+                # Backend USB Controller 45:00.3
                 address = pci_address 7 0 0;
               }
               {

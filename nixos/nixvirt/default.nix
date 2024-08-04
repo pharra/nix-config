@@ -55,31 +55,32 @@ in {
   };
 
   virtualisation.libvirtd.hooks.qemu."10-cpu-manager" = pkgs.writeShellScript "cpu-qemu-hook" ''
-    machine=$1
-    command=$2
-    # Dynamically VFIO bind/unbind the USB with the VM starting up/stopping
-    if [ "$machine" == "Windows" ]; then
-      if [ "$command" == "prepare" ]; then
-        echo -n "0000:41:00.0" > /sys/bus/pci/drivers/vfio-pci/unbind
-        echo 15 > /sys/bus/pci/devices/0000\:41\:00.0/resource1_resize
-        echo -n "0000:41:00.0" > /sys/bus/pci/drivers/vfio-pci/bind
-      elif [ "$command" == "started" ]; then
-        ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-3,12-19,28-31
-        ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-3,12-19,28-31
-        ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-3,12-19,28-31
-      elif [ "$command" == "stopped" ]; then
-        ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-31
-        ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-31
-        ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-31
-        echo -n "0000:41:00.0" > /sys/bus/pci/drivers/vfio-pci/unbind
-        echo 8 > /sys/bus/pci/devices/0000\:41\:00.0/resource1_resize
-        echo -n "0000:41:00.0" > /sys/bus/pci/drivers/vfio-pci/bind
-      fi
-    fi
+        machine=$1
+        command=$2
+        # Dynamically VFIO bind/unbind the USB with the VM starting up/stopping
+        if [ "$machine" == "Windows" ]; then
+          if [ "$command" == "prepare" ]; then
+    #        echo -n "0000:41:00.0" > /sys/bus/pci/drivers/vfio-pci/unbind
+    #        echo 15 > /sys/bus/pci/devices/0000\:41\:00.0/resource1_resize
+    #        echo -n "0000:41:00.0" > /sys/bus/pci/drivers/vfio-pci/bind
+            echo "preparing"
+          elif [ "$command" == "started" ]; then
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-3,12-19,28-31
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-3,12-19,28-31
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-3,12-19,28-31
+          elif [ "$command" == "stopped" ]; then
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-31
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-31
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-31
+     #       echo -n "0000:41:00.0" > /sys/bus/pci/drivers/vfio-pci/unbind
+     #       echo 8 > /sys/bus/pci/devices/0000\:41\:00.0/resource1_resize
+     #       echo -n "0000:41:00.0" > /sys/bus/pci/drivers/vfio-pci/bind
+          fi
+        fi
   '';
 
-  # services.udev.extraRules = ''
-  #   # RTX 4090
-  #   ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{device}=="0x2684", ATTR{resource1_resize}="15"
-  # '';
+  services.udev.extraRules = ''
+    # RTX 4090
+    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{device}=="0x2684", ATTR{resource1_resize}="15"
+  '';
 }
