@@ -101,10 +101,30 @@ in {
   };
 
   fileSystems."/" = {
-    device = "system/root";
+    device = "system/blank";
     fsType = "zfs";
-
     neededForBoot = true;
+  };
+
+  boot.initrd.systemd.services.rollback = {
+    description = "Rollback ZFS datasets to a pristine state";
+    wantedBy = [
+      "initrd.target"
+    ];
+    after = [
+      "zfs-import-zroot.service"
+    ];
+    before = [
+      "sysroot.mount"
+    ];
+    path = with pkgs; [
+      zfs
+    ];
+    unitConfig.DefaultDependencies = "no";
+    serviceConfig.Type = "oneshot";
+    script = ''
+      zfs rollback -r system/blank@blank && echo "rollback complete"
+    '';
   };
 
   fileSystems."/nix" = {
