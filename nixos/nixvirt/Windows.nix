@@ -142,6 +142,13 @@ in {
                 };
               };
             };
+            graphics = {
+              type = "spice";
+              autoport = true;
+              listen = {type = "address";};
+              image = {compression = false;};
+              gl = {enable = false;};
+            };
             hostdev = [
               {
                 type = "pci";
@@ -167,14 +174,14 @@ in {
                 # Front USB Controller 05:00.3
                 address = pci_address 6 0 0;
               }
-              {
-                type = "pci";
-                mode = "subsystem";
-                managed = true;
-                source = {address = pci_address 69 0 3;};
-                # Backend USB Controller 45:00.3
-                address = pci_address 7 0 0;
-              }
+              #{
+              #  type = "pci";
+              #  mode = "subsystem";
+              #  managed = true;
+              #  source = {address = pci_address 69 0 3;};
+              #  # Backend USB Controller 45:00.3
+              #  address = pci_address 7 0 0;
+              #}
               {
                 type = "pci";
                 mode = "subsystem";
@@ -214,6 +221,10 @@ in {
           arg = [
             {value = "-fw_cfg";}
             {value = "opt/ovmf/X-PciMmio64Mb,string=65536";}
+            {value = "-device";}
+            {value = "{\"driver\":\"ivshmem-plain\",\"id\":\"shmem0\",\"memdev\":\"looking-glass\"}";}
+            {value = "-object";}
+            {value = "{\"qom-type\":\"memory-backend-file\",\"id\":\"looking-glass\",\"mem-path\":\"/dev/kvmfr0\",\"size\":268435456,\"share\":true}";}
           ];
         };
         # qemu-override = {

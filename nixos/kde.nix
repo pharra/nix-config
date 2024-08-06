@@ -25,6 +25,10 @@
     # };
   };
 
+  environment.systemPackages = with pkgs; [
+    kdePackages.kirigami
+  ];
+
   i18n.inputMethod = {
     fcitx5.plasma6Support = true;
   };

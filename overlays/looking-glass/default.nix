@@ -1,11 +1,11 @@
 self: super: {
   looking-glass-client = super.looking-glass-client.overrideAttrs (oldAttrs: rec {
-    version = "B7-rc1-21-ecd3692e";
+    version = "B7-rc1-30-d060e375";
     src = super.fetchFromGitHub {
       owner = "gnif";
       repo = "LookingGlass";
-      rev = "ecd3692e1e76c1ca9d89854af5343a92eba030e1";
-      sha256 = "sha256-GZkEaWuJL13LIT/w8ag06l3pO+V4Poo1bC9MmGYvLDI=";
+      rev = "d060e375ea47e4ca38894ea7bf02a85dbe29b1f8";
+      sha256 = "sha256-DuCznF2b3kbt6OfoOUD3ijJ1im7anxj25/xcQnIVnWc=";
       fetchSubmodules = true;
     };
     patches = [];

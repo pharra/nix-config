@@ -79,8 +79,23 @@ in {
         fi
   '';
 
-  services.udev.extraRules = ''
-    # RTX 4090
-    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{device}=="0x2684", ATTR{resource1_resize}="15"
-  '';
+  systemd.services.resize-bar = {
+    enable = true;
+    script = ''
+      set -e
+      echo -n "0000:41:00.0" | tee /sys/bus/pci/drivers/vfio-pci/unbind
+      echo 15 | tee /sys/bus/pci/devices/0000\:41\:00.0/resource1_resize
+      echo -n "0000:41:00.0" | tee /sys/bus/pci/drivers/vfio-pci/bind
+    '';
+    requiredBy = ["libvirtd.service"];
+    before = ["libvirtd.service"];
+    serviceConfig = {
+      Type = "oneshot";
+    };
+  };
+
+  #services.udev.extraRules = ''
+  #  # RTX 4090
+  #  ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{device}=="0x2684", ATTR{resource1_resize}="15"
+  #'';
 }

@@ -91,12 +91,12 @@
   boot.extraModulePackages = with config.boot.kernelPackages; [
     (kvmfr.overrideAttrs (_: {
       patches = [
-        # fix build for linux-6_10
-        (pkgs.fetchpatch {
-          url = "https://github.com/gnif/LookingGlass/commit/7305ce36af211220419eeab302ff28793d515df2.patch";
-          hash = "sha256-97nZsIH+jKCvSIPf1XPf3i8Wbr24almFZzMOhjhLOYk=";
-          stripLen = 1;
-        })
+        # # fix build for linux-6_10
+        # (pkgs.fetchpatch {
+        #   url = "https://github.com/gnif/LookingGlass/commit/7305ce36af211220419eeab302ff28793d515df2.patch";
+        #   hash = "sha256-97nZsIH+jKCvSIPf1XPf3i8Wbr24almFZzMOhjhLOYk=";
+        #   stripLen = 1;
+        # })
       ];
     }))
   ];
