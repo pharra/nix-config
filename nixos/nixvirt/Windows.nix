@@ -19,6 +19,10 @@ in {
         count = 32;
         unit = "GiB";
       };
+      storage_vol = {
+        pool = "VMPool";
+        volume = "Windows.qcow2";
+      };
       nvram_path = /home/wf/Data/RAMPool/Windows.fd;
       no_graphics = true;
       virtio_net = true;
