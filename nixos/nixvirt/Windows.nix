@@ -170,8 +170,8 @@ in {
                 type = "pci";
                 mode = "subsystem";
                 managed = true;
-                source = {address = pci_address 5 0 3;};
-                # Front USB Controller 05:00.3
+                source = {address = pci_address 4 0 3;};
+                # Front USB Controller 04:00.3
                 address = pci_address 6 0 0;
               }
               #{
