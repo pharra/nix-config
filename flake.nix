@@ -185,6 +185,16 @@
         home-module = import ./home/desktop-kde.nix;
       };
 
+      zed_modules_kde = {
+        nixos-modules =
+          [
+            ./hosts/zed
+            ./nixos/kde.nix
+          ]
+          ++ common-nixos-modules;
+        home-module = import ./home/desktop-kde.nix;
+      };
+
       # gs65
       gs65_modules_gnome = {
         nixos-modules =
@@ -361,6 +371,9 @@
 
       # minimal with base
       minimal_base = nixosSystem (minimal_modules_base // stable_args // {specialArgs = _specialArgs;});
+
+      # zed with kde
+      zed_kde = nixosSystem (zed_modules_kde // stable_args // {specialArgs = _specialArgs;});
 
       # azure vms
       azure_hk = nixosSystem (azure_modules_base

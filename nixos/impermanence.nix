@@ -62,7 +62,6 @@
         ".steam"
         ".vscode"
         ".vscode-cli"
-        ".vscode-server"
         ".wine"
       ];
       files = [
