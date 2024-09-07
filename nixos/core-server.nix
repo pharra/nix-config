@@ -25,7 +25,7 @@
   };
 
   # enable ccache in sandbox
-  nix.settings.extra-sandbox-paths = ["/var/cache/ccache"];
+  # nix.settings.extra-sandbox-paths = ["/var/cache/ccache"];
 
   # Manual optimise storage: nix-store --optimise
   # https://nixos.org/manual/nix/stable/command-ref/conf-file.html#conf-auto-optimise-store

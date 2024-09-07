@@ -44,6 +44,9 @@
 
       # desktop
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPhrg8hAISAafIIPiiUOmcFqH1X26dfUtSssJDEShwsU wf@desktop"
+
+      # zed
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAlUm683W8j3fmwb3akIqDSyfHbbKiqK8OdSb5RTxYYS wf@zed"
     ];
   };
 

@@ -457,6 +457,8 @@
       # azure vms
       inherit azure_hk azure_sg azure_us azure_jp;
 
+      inherit zed_kde;
+
       # homelab with gnome
       homelab_gnome = nixosSystem homelab_gnome_args;
 
