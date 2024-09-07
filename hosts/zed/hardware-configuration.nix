@@ -17,7 +17,7 @@ in {
   # boot.initrd.kernelModules = [];
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = [];
-  boot.kernelParams = lib.mkForce ["console=ttyS0"];
+  # boot.kernelParams = lib.mkForce ["console=ttyS0"];
 
   virtualisation.vfio = {
     enable = true;
