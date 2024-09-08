@@ -5,7 +5,7 @@
   NixVirt,
   ...
 } @ args: let
-  base = import ./base.nix args;
+  base = import ../../../nixos/nixvirt/base.nix args;
   linux_template = base.linux_template;
   pci_address = base.pci_address;
   usb_address = base.usb_address;

@@ -7,6 +7,7 @@
     configFile = {
       "kdeglobals"."KDE"."SingleClick".value = false;
       "kwinrc"."Wayland"."InputMethod[$e]".value = "/run/current-system/sw/share/applications/org.fcitx.Fcitx5.desktop";
+      "kwinrc"."Wayland"."VirtualKeyboardEnabled".value = true;
       "kwinrc"."Xwayland"."Scale".value = 2;
       "kxkbrc"."Layout"."DisplayNames".value = "";
       "kxkbrc"."Layout"."LayoutList".value = "us";

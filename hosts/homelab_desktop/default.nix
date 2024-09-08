@@ -94,9 +94,9 @@
   };
   # virtualisation.docker.enableNvidia = true; # for nvidia-docker
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    # if hardware.opengl.driSupport is enabled, mesa is installed and provides Vulkan for supported hardware.
+    # if hardware.graphics.driSupport is enabled, mesa is installed and provides Vulkan for supported hardware.
     driSupport = true;
     # needed by nvidia-docker
     driSupport32Bit = true;

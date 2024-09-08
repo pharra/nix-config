@@ -17,7 +17,8 @@ in {
   # boot.initrd.kernelModules = [];
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = [];
-  # boot.kernelParams = lib.mkForce ["console=ttyS0"];
+  # "console=ttyS0"
+  boot.kernelParams = lib.mkForce ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=32"];
 
   virtualisation.vfio = {
     enable = true;
@@ -30,6 +31,7 @@ in {
       #"10de:1aec" # USB
       #"10de:1aed" # UCSI
     ];
+    blacklistNvidia = true;
   };
 
   hardware.mlx5 = {

@@ -155,7 +155,7 @@
       os =
         base.os
         // {
-          bootmenu = {enable = true;};
+          bootmenu = {enable = false;};
         };
       devices = base.devices // devices_override;
     };

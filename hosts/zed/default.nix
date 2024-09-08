@@ -19,6 +19,7 @@
     ../../nixos/user-group.nix
 
     ../../secrets/nixos.nix
+    ./nixvirt
     #../../nixos/ccache.nix
   ];
 
@@ -88,6 +89,13 @@
       };
     };
     networks = {
+      # Connect the bridge ports to the bridge
+      "30-eno1" = {
+        matchConfig.Name = "eno1";
+        networkConfig.Bridge = "br0";
+        linkConfig.RequiredForOnline = "enslaved";
+      };
+
       "40-eth" = {
         matchConfig.Name = "!lo";
         networkConfig = {
@@ -118,9 +126,9 @@
   services.xserver.videoDrivers = ["amdgpu"]; # will install nvidia-vaapi-driver by default
 
   hardware = {
-    opengl = {
+    graphics = {
       enable = true;
-      # if hardware.opengl.driSupport is enabled, mesa is installed and provides Vulkan for supported hardware.
+      # if hardware.graphics.driSupport is enabled, mesa is installed and provides Vulkan for supported hardware.
       # driSupport = true;
       # needed by nvidia-docker
       # driSupport32Bit = true;

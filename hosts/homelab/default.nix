@@ -68,7 +68,6 @@ in {
     #    ../../nixos/ccache.nix
     ../../nixos/tailscale.nix
     ../../nixos/ddns-go.nix
-    ../../nixos/nixvirt
   ];
 
   # Enable binfmt emulation of aarch64-linux, this is required for cross compilation.
@@ -438,9 +437,9 @@ in {
   };
   # virtualisation.docker.enableNvidia = true; # for nvidia-docker
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    # if hardware.opengl.driSupport is enabled, mesa is installed and provides Vulkan for supported hardware.
+    # if hardware.graphics.driSupport is enabled, mesa is installed and provides Vulkan for supported hardware.
     #driSupport = true;
     # needed by nvidia-docker
     #driSupport32Bit = true;
