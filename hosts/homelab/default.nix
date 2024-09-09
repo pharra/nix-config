@@ -68,6 +68,7 @@ in {
     #    ../../nixos/ccache.nix
     ../../nixos/tailscale.nix
     ../../nixos/ddns-go.nix
+    ./nixvirt
   ];
 
   # Enable binfmt emulation of aarch64-linux, this is required for cross compilation.
