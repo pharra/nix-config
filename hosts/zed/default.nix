@@ -96,15 +96,16 @@
         linkConfig.RequiredForOnline = "enslaved";
       };
 
-      "40-eth" = {
-        matchConfig.Name = "!lo";
+      "40-br0" = {
+        matchConfig.Name = "br0";
+        bridgeConfig = {};
         networkConfig = {
           # start a DHCP Client for IPv4 Addressing/Routing
           DHCP = "ipv4";
           # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
           IPv6AcceptRA = true;
-          Domains = ["local"];
           MulticastDNS = true;
+          Domains = ["local"];
         };
         dhcpV4Config = {
           UseDomains = true;

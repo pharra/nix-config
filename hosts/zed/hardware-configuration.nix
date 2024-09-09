@@ -19,6 +19,10 @@ in {
   boot.extraModulePackages = [];
   # "console=ttyS0"
   boot.kernelParams = lib.mkForce ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=32"];
+  boot.extraModprobeConfig = ''
+    options kvm_amd nested=1
+    options kvm ignore_msrs=1 report_ignored_msrs=0
+  ''; # for amd cpu
 
   virtualisation.vfio = {
     enable = true;
