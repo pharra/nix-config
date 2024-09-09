@@ -532,6 +532,13 @@
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."homelab_desktop_gnome";
           };
         };
+
+        "zed_kde" = {
+          hostname = "zed.lan";
+          profiles.system = {
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."zed_kde";
+          };
+        };
       };
     };
 
