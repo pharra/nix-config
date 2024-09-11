@@ -71,13 +71,13 @@ in {
         "kvm.report_ignored_msrs=0"
       ]);
 
-    boot.kernelModules = [
+    boot.kernelModules = mkBefore [
       "vfio_pci"
       "vfio"
       "vfio_iommu_type1"
     ];
 
-    boot.initrd.kernelModules = [
+    boot.initrd.kernelModules = mkBefore [
       "vfio_pci"
       "vfio"
       "vfio_iommu_type1"

@@ -18,16 +18,17 @@ in {
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = [];
   # "console=ttyS0"
-  boot.kernelParams = lib.mkForce ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=32"];
+  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=32" "amd_pstate=active" "amd_pstate.shared_mem=1"];
   boot.extraModprobeConfig = ''
     options kvm_amd nested=1
-    options kvm ignore_msrs=1 report_ignored_msrs=0
+    softdep nvme pre: vfio-pci
   ''; # for amd cpu
 
   virtualisation.vfio = {
     enable = true;
     IOMMUType = "amd";
     applyACSpatch = true;
+    ignoreMSRs = true;
     devices = [
       "10de:2684" # Graphics
       "10de:22ba" # Audio
