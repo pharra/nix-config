@@ -190,14 +190,6 @@ in {
                 type = "pci";
                 mode = "subsystem";
                 managed = true;
-                source = {address = pci_address 3 0 0;};
-                # Intel SSD 760p 3:00.0
-                address = pci_address 8 0 0;
-              }
-              {
-                type = "pci";
-                mode = "subsystem";
-                managed = true;
                 source = {address = pci_address 1 0 2;};
                 # MLX5 01:00.2
                 address = pci_address 9 0 0;

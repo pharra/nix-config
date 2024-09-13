@@ -80,7 +80,7 @@ in {
   '';
 
   systemd.services.resize-bar = {
-    enable = true;
+    enable = false;
     script = ''
       set -e
       echo -n "0000:41:00.0" | tee /sys/bus/pci/drivers/vfio-pci/unbind
