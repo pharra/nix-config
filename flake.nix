@@ -185,6 +185,8 @@
         home-module = import ./home/desktop-kde.nix;
       };
 
+      # zed
+
       zed_modules_kde = {
         nixos-modules =
           [
@@ -193,6 +195,16 @@
           ]
           ++ common-nixos-modules;
         home-module = import ./home/desktop-kde.nix;
+      };
+
+      zed_modules_cosmic = {
+        nixos-modules =
+          [
+            ./hosts/zed
+            ./nixos/cosmic.nix
+          ]
+          ++ common-nixos-modules;
+        home-module = import ./home/desktop-cosmic.nix;
       };
 
       # gs65
@@ -375,6 +387,9 @@
       # zed with kde
       zed_kde = nixosSystem (zed_modules_kde // stable_args // {specialArgs = _specialArgs;});
 
+      # zed with cosmic
+      zed_cosmic = nixosSystem (zed_modules_cosmic // stable_args // {specialArgs = _specialArgs;});
+
       # azure vms
       azure_hk = nixosSystem (azure_modules_base
         // stable_args
@@ -457,7 +472,7 @@
       # azure vms
       inherit azure_hk azure_sg azure_us azure_jp;
 
-      inherit zed_kde;
+      inherit zed_kde zed_cosmic;
 
       # homelab with gnome
       homelab_gnome = nixosSystem homelab_gnome_args;
@@ -537,6 +552,12 @@
           hostname = "zed.lan";
           profiles.system = {
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."zed_kde";
+          };
+        };
+        "zed_cosmic" = {
+          hostname = "zed.lan";
+          profiles.system = {
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."zed_cosmic";
           };
         };
       };
