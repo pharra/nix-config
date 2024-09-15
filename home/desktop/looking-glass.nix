@@ -11,7 +11,8 @@
     # spice.enable = "yes";
     # win.autoScreensaver = "yes";
     # win.fullScreen = "yes";
-    # win.jitRender = "yes";
+    win.jitRender = "yes";
+    win.fpsMin = 120;
     # wayland.fractionScale = "no";
     # wayland.warpSupport = "no";
     # win.quickSplash = "yes";

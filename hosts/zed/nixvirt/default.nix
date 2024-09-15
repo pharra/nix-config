@@ -6,6 +6,7 @@
   ...
 } @ args: let
   Windows = import ./Windows.nix args;
+  Microsoft = import ./Microsoft.nix args;
 in {
   environment = {
     systemPackages = with pkgs; [
@@ -19,6 +20,7 @@ in {
   virtualisation.libvirt.connections."qemu:///system" = {
     domains = [
       Windows
+      Microsoft
     ];
     pools = [
       {

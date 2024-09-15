@@ -90,8 +90,8 @@
     };
     networks = {
       # Connect the bridge ports to the bridge
-      "30-eno1" = {
-        matchConfig.Name = "eno1";
+      "30-enp7s0" = {
+        matchConfig.Name = "enp7s0";
         networkConfig.Bridge = "br0";
         linkConfig.RequiredForOnline = "enslaved";
       };

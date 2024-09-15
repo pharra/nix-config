@@ -12,24 +12,28 @@
   drive_address = base.drive_address;
 in {
   definition = let
-    Windows = windows_template {
-      name = "Windows";
-      uuid = "ee43005c-2e7b-4af2-bfae-8c52eeb22678";
+    Microsoft = windows_template {
+      name = "Microsoft";
+      uuid = "ee43005c-2e7b-4af2-bfae-8c52eeb22679";
       memory = {
         count = 32;
         unit = "GiB";
       };
-      nvram_path = /home/wf/Data/RAMPool/Windows.fd;
+      storage_vol = {
+        pool = "VMPool";
+        volume = "Microsoft.qcow2";
+      };
+      nvram_path = /home/wf/Data/RAMPool/Microsoft.fd;
       no_graphics = true;
       virtio_net = true;
     };
   in
     NixVirt.lib.domain.writeXML (
-      Windows
+      Microsoft
       // {
         vcpu = {
           placement = "static";
-          count = 16;
+          count = 12;
         };
         cpu = {
           mode = "host-passthrough";
@@ -38,7 +42,7 @@ in {
           topology = {
             sockets = 1;
             dies = 1;
-            cores = 8;
+            cores = 6;
             threads = 2;
           };
           feature = {
@@ -131,17 +135,8 @@ in {
           hugepages = {};
         };
         devices =
-          Windows.devices
+          Microsoft.devices
           // {
-            tpm = {
-              model = "tpm-tis";
-              backend = {
-                type = "passthrough";
-                device = {
-                  path = "/dev/tpm0";
-                };
-              };
-            };
             graphics = {
               type = "spice";
               autoport = true;
@@ -166,22 +161,6 @@ in {
                 # RTX 4090 01:00.1
                 address = pci_address 5 0 1 // {multifunction = true;};
               }
-              #{
-              #  type = "pci";
-              #  mode = "subsystem";
-              #  managed = true;
-              #  source = {address = pci_address 69 0 3;};
-              #  # Backend USB Controller 45:00.3
-              #  address = pci_address 7 0 0;
-              #}
-              {
-                type = "pci";
-                mode = "subsystem";
-                managed = true;
-                source = {address = pci_address 4 0 0;};
-                # Intel SSD 760p 04:00.0
-                address = pci_address 8 0 0;
-              }
             ];
             interface = [
               {
@@ -203,18 +182,6 @@ in {
             {value = "{\"qom-type\":\"memory-backend-file\",\"id\":\"looking-glass\",\"mem-path\":\"/dev/kvmfr0\",\"size\":268435456,\"share\":true}";}
           ];
         };
-        # qemu-override = {
-        #   device = {
-        #     alias = "hostdev0";
-        #     frontend = {
-        #       property = {
-        #         name = "x-vga";
-        #         type = "bool";
-        #         value = "true";
-        #       };
-        #     };
-        #   };
-        # };
       }
     );
 }
