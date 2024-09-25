@@ -16,7 +16,7 @@ in {
       name = "Microsoft";
       uuid = "ee43005c-2e7b-4af2-bfae-8c52eeb22679";
       memory = {
-        count = 32;
+        count = 16;
         unit = "GiB";
       };
       storage_vol = {
@@ -24,7 +24,7 @@ in {
         volume = "Microsoft.qcow2";
       };
       nvram_path = /home/wf/Data/RAMPool/Microsoft.fd;
-      no_graphics = true;
+      no_graphics = false;
       virtio_net = true;
     };
   in
@@ -33,7 +33,7 @@ in {
       // {
         vcpu = {
           placement = "static";
-          count = 12;
+          count = 8;
         };
         cpu = {
           mode = "host-passthrough";
@@ -42,7 +42,7 @@ in {
           topology = {
             sockets = 1;
             dies = 1;
-            cores = 6;
+            cores = 4;
             threads = 2;
           };
           feature = {
@@ -53,114 +53,16 @@ in {
         iothreads = {
           count = 1;
         };
-        cputune = {
-          vcpupin = [
-            # core 1
-            {
-              vcpu = 0;
-              cpuset = "0";
-            }
-            {
-              vcpu = 1;
-              cpuset = "1";
-            }
-            {
-              vcpu = 2;
-              cpuset = "2";
-            }
-            {
-              vcpu = 3;
-              cpuset = "3";
-            }
-            {
-              vcpu = 4;
-              cpuset = "4";
-            }
-            {
-              vcpu = 5;
-              cpuset = "5";
-            }
-            {
-              vcpu = 6;
-              cpuset = "6";
-            }
-            {
-              vcpu = 7;
-              cpuset = "7";
-            }
-
-            # core 1
-            {
-              vcpu = 8;
-              cpuset = "16";
-            }
-            {
-              vcpu = 9;
-              cpuset = "17";
-            }
-            {
-              vcpu = 10;
-              cpuset = "18";
-            }
-            {
-              vcpu = 11;
-              cpuset = "19";
-            }
-            {
-              vcpu = 12;
-              cpuset = "20";
-            }
-            {
-              vcpu = 13;
-              cpuset = "21";
-            }
-            {
-              vcpu = 14;
-              cpuset = "22";
-            }
-            {
-              vcpu = 15;
-              cpuset = "23";
-            }
-          ];
-          emulatorpin = {
-            cpuset = "0,12";
-          };
-          iothreadpin = {
-            iothread = 1;
-            cpuset = "0,12";
-          };
-        };
-        memoryBacking = {
-          hugepages = {};
-        };
         devices =
           Microsoft.devices
           // {
             graphics = {
               type = "spice";
-              autoport = true;
-              listen = {type = "address";};
+              listen = {type = "none";};
               image = {compression = false;};
-              gl = {enable = false;};
+              gl = {enable = true;};
             };
             hostdev = [
-              {
-                type = "pci";
-                mode = "subsystem";
-                managed = true;
-                # RTX 4090 01:00.0
-                source = {address = pci_address 1 0 0;};
-                address = pci_address 5 0 0 // {multifunction = true;};
-              }
-              {
-                type = "pci";
-                mode = "subsystem";
-                managed = true;
-                source = {address = pci_address 1 0 1;};
-                # RTX 4090 01:00.1
-                address = pci_address 5 0 1 // {multifunction = true;};
-              }
             ];
             interface = [
               {
