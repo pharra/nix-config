@@ -16,6 +16,7 @@
     ./zfs.nix
     ./qemu.nix
     ./azure-tools
+    ./desktop
   ];
 
   # to install chrome, you need to enable unfree packages
