@@ -134,6 +134,12 @@
       # driSupport = true;
       # needed by nvidia-docker
       # driSupport32Bit = true;
+      extraPackages = with pkgs; [
+        amdvlk
+      ];
+      extraPackages32 = with pkgs; [
+        driversi686Linux.amdvlk
+      ];
     };
   };
 
@@ -177,6 +183,13 @@
     # intelBusId = "PCI:0:2:0";
     nvidiaBusId = "PCI:1:0:0";
     amdgpuBusId = "PCI:8:0:0"; # For AMD GPU
+  };
+
+  environment.variables = {
+    KWIN_DRM_DEVICES = "/dev/dri/card1:/dev/dri/card0";
+    __EGL_VENDOR_LIBRARY_FILENAMES = "${pkgs.mesa.drivers}/share/glvnd/egl_vendor.d/50_mesa.json";
+    __GLX_VENDOR_LIBRARY_NAME = "mesa";
+    #VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/radeon_icd.x86_64.json";
   };
 
   # This value determines the NixOS release from which the default
