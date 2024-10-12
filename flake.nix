@@ -102,6 +102,8 @@
       url = "github:lilyinstarlight/nixos-cosmic";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -125,6 +127,7 @@
     vscode-server,
     NixVirt,
     nixos-cosmic,
+    nixos-hardware,
     ...
   }: let
     username = "wf";
@@ -332,6 +335,17 @@
         home-module = import ./home/desktop-kde.nix;
       };
 
+      dot_modules_kde = {
+        nixos-modules =
+          [
+            ./hosts/dot
+            ./nixos/kde.nix
+            nixos-hardware.nixosModules.microsoft-surface-common
+          ]
+          ++ common-nixos-modules;
+        home-module = import ./home/desktop-kde.nix;
+      };
+
       # azure
       azure_modules_base = {
         nixos-modules =
@@ -453,6 +467,9 @@
 
       # homelab_desktop with deepin
       homelab_desktop_deepin = nixosSystem (homelab_desktop_modules_deepin // stable_args // {specialArgs = _specialArgs;});
+
+      # dot with kde
+      dot_kde = nixosSystem (dot_modules_kde // stable_args // {specialArgs = _specialArgs;});
     in {
       # desktop with gnome
       inherit desktop_gnome;
@@ -473,6 +490,8 @@
       inherit azure_hk azure_sg azure_us azure_jp;
 
       inherit zed_kde zed_cosmic;
+
+      inherit dot_kde;
 
       # homelab with gnome
       homelab_gnome = nixosSystem homelab_gnome_args;
@@ -558,6 +577,13 @@
           hostname = "zed.lan";
           profiles.system = {
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."zed_cosmic";
+          };
+        };
+
+        "dot_kde" = {
+          hostname = "dot.lan";
+          profiles.system = {
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."dot_kde";
           };
         };
       };
