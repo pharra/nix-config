@@ -19,7 +19,6 @@
     ../../nixos/user-group.nix
 
     ../../secrets/nixos.nix
-    #../../nixos/ccache.nix
   ];
 
   # Enable binfmt emulation of aarch64-linux, this is required for cross compilation.

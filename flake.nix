@@ -102,8 +102,6 @@
       url = "github:lilyinstarlight/nixos-cosmic";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -127,7 +125,6 @@
     vscode-server,
     NixVirt,
     nixos-cosmic,
-    nixos-hardware,
     ...
   }: let
     username = "wf";
@@ -340,7 +337,6 @@
           [
             ./hosts/dot
             ./nixos/kde.nix
-            nixos-hardware.nixosModules.microsoft-surface-common
           ]
           ++ common-nixos-modules;
         home-module = import ./home/desktop-kde.nix;

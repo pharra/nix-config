@@ -14,7 +14,7 @@
   boot.loader.systemd-boot.configurationLimit = lib.mkDefault 10;
   # boot.loader.grub.configurationLimit = 10;
 
-  boot.kernelPackages = lib.mkOptionDefault pkgs.linuxPackages_latest;
+  boot.kernelPackages = lib.mkOverride 1400 pkgs.linuxPackages_latest;
 
   hardware.enableRedistributableFirmware = true;
   # do garbage collection weekly to keep disk usage low
