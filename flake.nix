@@ -153,354 +153,260 @@
     modules = import ./modules;
     _home-modules = import ./home-modules;
     home-modules = [plasma-manager.homeManagerModules.plasma-manager vscode-server.homeModules.default] ++ (builtins.attrValues _home-modules);
-  in {
-    nixosConfigurations = let
-      common-nixos-modules =
-        [
-          impermanence.nixosModules.impermanence
-          nix-flatpak.nixosModules.nix-flatpak
-          NixVirt.nixosModules.default
-          nixos-cosmic.nixosModules.default
-        ]
-        ++ (builtins.attrValues modules);
 
-      #desktop
-      desktop_modules_gnome = {
-        nixos-modules =
-          [
-            ./hosts/desktop
-            ./nixos/gnome.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/desktop-gnome.nix;
-      };
+    common-nixos-modules =
+      [
+        impermanence.nixosModules.impermanence
+        nix-flatpak.nixosModules.nix-flatpak
+        NixVirt.nixosModules.default
+        nixos-cosmic.nixosModules.default
+      ]
+      ++ (builtins.attrValues modules);
 
-      desktop_modules_kde = {
-        nixos-modules =
-          [
-            ./hosts/desktop
-            ./nixos/kde.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/desktop-kde.nix;
-      };
+    system = x64_system;
 
-      # zed
+    _specialArgs =
+      {
+        inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs home-modules NixVirt;
+        # use unstable branch for some packages to get the latest updates
+        pkgs-unstable = import nixpkgs-unstable {
+          system = x64_system; # refer the `system` parameter form outer scope recursively
+          # To use chrome, we need to allow the installation of non-free software
+          config.allowUnfree = true;
+        };
 
-      zed_modules_kde = {
-        nixos-modules =
-          [
-            ./hosts/zed
-            ./nixos/kde.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/desktop-kde.nix;
-      };
+        pkgs-2305 = import nixpkgs-2305 {
+          system = x64_system; # refer the `system` parameter form outer scope recursively
+          # To use chrome, we need to allow the installation of non-free software
+          config.allowUnfree = true;
+        };
+      }
+      // inputs;
+    base_args = {
+      inherit home-manager nixos-generators system;
+    };
+    stable_args = base_args // {inherit nixpkgs;};
+    unstable_args = base_args // {nixpkgs = nixpkgs-unstable;};
 
-      zed_modules_cosmic = {
-        nixos-modules =
-          [
-            ./hosts/zed
-            ./nixos/cosmic.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/desktop-cosmic.nix;
-      };
+    servers = [
+      # azure
+      {
+        name = "azure_hk";
+        nixos-modules = [./hosts/azure];
+        specialArgs = {
+          inherit is_azure;
+          domain = "hk.azure.int4byte.com";
+        };
+      }
+
+      {
+        name = "azure_jp";
+        nixos-modules = [./hosts/azure];
+        specialArgs = {
+          inherit is_azure;
+          domain = "jp.azure.int4byte.com";
+        };
+      }
+
+      {
+        name = "azure_us";
+        nixos-modules = [./hosts/azure];
+        specialArgs = {
+          inherit is_azure;
+          domain = "us.azure.int4byte.com";
+        };
+      }
+
+      {
+        name = "azure_sg";
+        nixos-modules = [./hosts/azure];
+        specialArgs = {
+          inherit is_azure;
+          domain = "sg.azure.int4byte.com";
+        };
+      }
+
+      # installer
+      {
+        name = "netboot_installer";
+        nixos-modules = [./hosts/installer/netboot.nix];
+        specialArgs = {
+        };
+      }
+    ];
+
+    desktops = [
+      # desktop
+      {
+        name = "desktop";
+        nixos-modules = [./hosts/desktop];
+        specialArgs = {
+        };
+      }
+
+      # dot
+      {
+        name = "dot";
+        nixos-modules = [./hosts/dot];
+        specialArgs = {
+        };
+      }
 
       # gs65
-      gs65_modules_gnome = {
-        nixos-modules =
-          [
-            ./hosts/gs65
-            ./nixos/gnome.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/desktop-gnome.nix;
-      };
-
-      # vm
-      vm_modules_gnome = {
-        nixos-modules =
-          [
-            ./hosts/vm
-            ./nixos/gnome.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/desktop-gnome.nix;
-      };
-
-      # vm
-      vm_modules_deepin = {
-        nixos-modules =
-          [
-            ./hosts/vm
-            ./nixos/deepin.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/desktop-deepin.nix;
-      };
-
-      # netboot installer
-      installer_modules_base = {
-        nixos-modules =
-          [
-            ./hosts/installer/netboot.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/base.nix;
-      };
-
-      # minimal
-      minimal_modules_base = {
-        nixos-modules =
-          [
-            ./hosts/minimal
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/base.nix;
-      };
-
-      # homelab
-      homelab_modules_gnome = {
-        nixos-modules =
-          [
-            ./hosts/homelab
-            ./nixos/gnome.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/desktop-gnome.nix;
-      };
-
-      homelab_modules_deepin = {
-        nixos-modules =
-          [
-            ./hosts/homelab
-            ./nixos/deepin.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/desktop-deepin.nix;
-      };
-
-      homelab_modules_kde = {
-        nixos-modules =
-          [
-            ./hosts/homelab
-            ./nixos/kde.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/desktop-kde.nix;
-      };
-
-      homelab_modules_cosmic = {
-        nixos-modules =
-          [
-            ./hosts/homelab
-            ./nixos/cosmic.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/desktop-cosmic.nix;
-      };
+      {
+        name = "gs65";
+        nixos-modules = [./hosts/gs65];
+        specialArgs = {
+        };
+      }
 
       # homelab_desktop
-      homelab_desktop_modules_gnome = {
-        nixos-modules =
-          [
-            ./hosts/homelab_desktop
-            ./nixos/gnome.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/desktop-gnome.nix;
-      };
+      {
+        name = "homelab_desktop";
+        nixos-modules = [./hosts/homelab_desktop];
+        specialArgs = {
+        };
+      }
 
-      homelab_desktop_modules_deepin = {
-        nixos-modules =
-          [
-            ./hosts/homelab_desktop
-            ./nixos/deepin.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/desktop-deepin.nix;
-      };
+      # minimal
+      {
+        name = "minimal";
+        nixos-modules = [./hosts/minimal];
+        specialArgs = {
+        };
+      }
 
-      homelab_desktop_modules_kde = {
-        nixos-modules =
-          [
-            ./hosts/homelab_desktop
-            ./nixos/kde.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/desktop-kde.nix;
-      };
+      # vm
+      {
+        name = "vm";
+        nixos-modules = [./hosts/vm];
+        specialArgs = {
+        };
+      }
 
-      dot_modules_kde = {
-        nixos-modules =
-          [
-            ./hosts/dot
-            ./nixos/kde.nix
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/desktop-kde.nix;
-      };
+      # zed
+      {
+        name = "zed";
+        nixos-modules = [./hosts/zed];
+        specialArgs = {
+        };
+      }
+    ];
 
-      # azure
-      azure_modules_base = {
-        nixos-modules =
-          [
-            ./hosts/azure
-          ]
-          ++ common-nixos-modules;
-        home-module = import ./home/base.nix;
-      };
+    generateNixosConfigurations = f: (machines: builtins.map (machine: f machine) machines);
 
-      system = x64_system;
-      _specialArgs =
+    serversNixosConfigurations = builtins.listToAttrs (builtins.concatLists (generateNixosConfigurations (machine: let
+      in [
         {
-          inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs home-modules NixVirt;
-          # use unstable branch for some packages to get the latest updates
-          pkgs-unstable = import nixpkgs-unstable {
-            system = x64_system; # refer the `system` parameter form outer scope recursively
-            # To use chrome, we need to allow the installation of non-free software
-            config.allowUnfree = true;
-          };
-
-          pkgs-2305 = import nixpkgs-2305 {
-            system = x64_system; # refer the `system` parameter form outer scope recursively
-            # To use chrome, we need to allow the installation of non-free software
-            config.allowUnfree = true;
-          };
+          name = machine.name;
+          value = nixosSystem ({
+              nixos-modules = machine.nixos-modules ++ common-nixos-modules;
+              home-module = import ./home/base.nix;
+            }
+            // stable_args
+            // {specialArgs = _specialArgs // machine.specialArgs;});
         }
-        // inputs;
-      base_args = {
-        inherit home-manager nixos-generators system;
-      };
-      stable_args = base_args // {inherit nixpkgs;};
-      unstable_args = base_args // {nixpkgs = nixpkgs-unstable;};
+      ])
+      servers));
 
-      # desktop with gnome
-      desktop_gnome = nixosSystem (desktop_modules_gnome // stable_args // {specialArgs = _specialArgs;});
+    desktopsNixosConfigurations = builtins.listToAttrs (builtins.concatLists (generateNixosConfigurations (machine: let
+      in [
+        {
+          name = "${machine.name}_kde";
+          value = nixosSystem ({
+              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/kde.nix];
+              home-module = import ./home/desktop-kde.nix;
+            }
+            // stable_args
+            // {specialArgs = _specialArgs // machine.specialArgs;});
+        }
 
-      # desktop with kde
-      desktop_kde = nixosSystem (desktop_modules_kde // stable_args // {specialArgs = _specialArgs;});
+        {
+          name = "${machine.name}_gnome";
+          value = nixosSystem ({
+              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/gnome.nix];
+              home-module = import ./home/desktop-gnome.nix;
+            }
+            // stable_args
+            // {specialArgs = _specialArgs // machine.specialArgs;});
+        }
 
-      # gs65 with gnome
-      gs65_gnome = nixosSystem (gs65_modules_gnome // stable_args // {specialArgs = _specialArgs;});
+        {
+          name = "${machine.name}_cosmic";
+          value = nixosSystem ({
+              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/cosmic.nix];
+              home-module = import ./home/desktop-cosmic.nix;
+            }
+            // stable_args
+            // {specialArgs = _specialArgs // machine.specialArgs;});
+        }
+        {
+          name = "${machine.name}_deepin";
+          value = nixosSystem ({
+              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/deepin.nix];
+              home-module = import ./home/desktop-deepin.nix;
+            }
+            // stable_args
+            // {specialArgs = _specialArgs // machine.specialArgs;});
+        }
+      ])
+      desktops));
 
-      # vm with gnome
-      vm_gnome = nixosSystem (vm_modules_gnome // stable_args // {specialArgs = _specialArgs;});
+    homelabs = [
+      # homelab
+      {
+        name = "homelab";
+        nixos-modules = [./hosts/homelab];
+        specialArgs = {
+          netboot_args = {netboot_installer = serversNixosConfigurations."netboot_installer";};
+        };
+      }
+    ];
 
-      # netboot installer with base
-      netboot_installer = nixosSystem (installer_modules_base // stable_args // {specialArgs = _specialArgs;});
+    homelabsNixosConfigurations = builtins.listToAttrs (builtins.concatLists (generateNixosConfigurations (machine: let
+      in [
+        {
+          name = "${machine.name}_kde";
+          value = nixosSystem ({
+              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/kde.nix];
+              home-module = import ./home/desktop-kde.nix;
+            }
+            // stable_args
+            // {specialArgs = _specialArgs // machine.specialArgs;});
+        }
 
-      # minimal with base
-      minimal_base = nixosSystem (minimal_modules_base // stable_args // {specialArgs = _specialArgs;});
+        {
+          name = "${machine.name}_gnome";
+          value = nixosSystem ({
+              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/gnome.nix];
+              home-module = import ./home/desktop-gnome.nix;
+            }
+            // stable_args
+            // {specialArgs = _specialArgs // machine.specialArgs;});
+        }
 
-      # zed with kde
-      zed_kde = nixosSystem (zed_modules_kde // stable_args // {specialArgs = _specialArgs;});
-
-      # zed with cosmic
-      zed_cosmic = nixosSystem (zed_modules_cosmic // stable_args // {specialArgs = _specialArgs;});
-
-      # azure vms
-      azure_hk = nixosSystem (azure_modules_base
-        // stable_args
-        // {
-          specialArgs =
-            _specialArgs
-            // {
-              inherit is_azure;
-              domain = "hk.azure.int4byte.com";
-            };
-        });
-
-      azure_sg = nixosSystem (azure_modules_base
-        // stable_args
-        // {
-          specialArgs =
-            _specialArgs
-            // {
-              inherit is_azure;
-              domain = "sg.azure.int4byte.com";
-            };
-        });
-
-      azure_us = nixosSystem (azure_modules_base
-        // stable_args
-        // {
-          specialArgs =
-            _specialArgs
-            // {
-              inherit is_azure;
-              domain = "us.azure.int4byte.com";
-            };
-        });
-
-      azure_jp = nixosSystem (azure_modules_base
-        // stable_args
-        // {
-          specialArgs =
-            _specialArgs
-            // {
-              inherit is_azure;
-              domain = "jp.azure.int4byte.com";
-            };
-        });
-
-      netboot_args = {inherit desktop_gnome netboot_installer;};
-
-      homelab_gnome_args = homelab_modules_gnome // stable_args // {specialArgs = _specialArgs // {inherit netboot_args;};};
-
-      homelab_deepin_args = homelab_modules_deepin // stable_args // {specialArgs = _specialArgs // {inherit netboot_args;};};
-
-      homelab_kde_args = homelab_modules_kde // stable_args // {specialArgs = _specialArgs // {inherit netboot_args;};};
-
-      homelab_cosmic_args = homelab_modules_cosmic // stable_args // {specialArgs = _specialArgs // {inherit netboot_args;};};
-
-      # homelab_desktop with gnome
-      homelab_desktop_gnome = nixosSystem (homelab_desktop_modules_gnome // stable_args // {specialArgs = _specialArgs;});
-
-      # homelab_desktop with kde
-      homelab_desktop_kde = nixosSystem (homelab_desktop_modules_kde // stable_args // {specialArgs = _specialArgs;});
-
-      # homelab_desktop with deepin
-      homelab_desktop_deepin = nixosSystem (homelab_desktop_modules_deepin // stable_args // {specialArgs = _specialArgs;});
-
-      # dot with kde
-      dot_kde = nixosSystem (dot_modules_kde // stable_args // {specialArgs = _specialArgs;});
-    in {
-      # desktop with gnome
-      inherit desktop_gnome;
-
-      # desktop with kde
-      inherit desktop_kde;
-
-      # minimal with base
-      inherit minimal_base;
-
-      # gs65 with gnome
-      inherit gs65_gnome;
-
-      # vm with gnome
-      inherit vm_gnome;
-
-      # azure vms
-      inherit azure_hk azure_sg azure_us azure_jp;
-
-      inherit zed_kde zed_cosmic;
-
-      inherit dot_kde;
-
-      # homelab with gnome
-      homelab_gnome = nixosSystem homelab_gnome_args;
-
-      homelab_deepin = nixosSystem homelab_deepin_args;
-
-      homelab_kde = nixosSystem homelab_kde_args;
-
-      homelab_cosmic = nixosSystem homelab_cosmic_args;
-
-      # homelab desktop
-      inherit homelab_desktop_gnome homelab_desktop_kde homelab_desktop_deepin;
-    };
+        {
+          name = "${machine.name}_cosmic";
+          value = nixosSystem ({
+              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/cosmic.nix];
+              home-module = import ./home/desktop-cosmic.nix;
+            }
+            // stable_args
+            // {specialArgs = _specialArgs // machine.specialArgs;});
+        }
+        {
+          name = "${machine.name}_deepin";
+          value = nixosSystem ({
+              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/deepin.nix];
+              home-module = import ./home/desktop-deepin.nix;
+            }
+            // stable_args
+            // {specialArgs = _specialArgs // machine.specialArgs;});
+        }
+      ])
+      homelabs));
+  in {
+    nixosConfigurations = serversNixosConfigurations // desktopsNixosConfigurations // homelabsNixosConfigurations;
 
     deploy = {
       sshUser = "wf";

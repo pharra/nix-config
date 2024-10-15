@@ -10,7 +10,6 @@
 lib.mkIf (netboot_args != false)
 (let
   netboot_installer = netboot_args.netboot_installer;
-  desktop_gnome = netboot_args.desktop_gnome;
 in {
   environment.systemPackages = with pkgs; [
     ipxe
@@ -31,14 +30,6 @@ in {
 
     "ipxe/netboot/initrd" = {
       source = netboot_installer.config.system.build.netbootRamdisk + "/initrd";
-    };
-
-    "ipxe/desktop/bzImage" = {
-      source = desktop_gnome.config.system.build.kernel + "/bzImage";
-    };
-
-    "ipxe/desktop/initrd" = {
-      source = desktop_gnome.config.system.build.initialRamdisk + "/initrd";
     };
 
     "ipxe/boot.ipxe".text = ''
@@ -96,7 +87,6 @@ in {
       menu iPXE boot menu
       item --gap --             ------------------------- Operating systems ------------------------------
       item nixos      Boot NixOS
-      item nixos-kernel      Boot NixOS Kernel
       item nixos-installer Boot NixOS Installer
       item win      Boot Windows
       item win-install      Boot Windows Installer
@@ -142,12 +132,6 @@ in {
       echo Booting nixos from iSCSI for ''${initiator-iqn}
       set root-path ''${base-iscsi}:nixosefi
       sanboot --drive 0x80 ''${root-path} || goto failed
-
-      :nixos-kernel
-      echo Booting nixos from iSCSI for ''${initiator-iqn}
-      kernel desktop/bzImage init=${desktop_gnome.config.system.build.toplevel}/init ${toString desktop_gnome.config.boot.kernelParams} console=ttyS0
-      initrd desktop/initrd
-      boot
 
       :nixos-installer
       echo Booting nixos installer

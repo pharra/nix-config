@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   modulesPath,
   ...
 }: let
