@@ -29,6 +29,9 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
+  # Enable vscode server
+  programs.nix-ld.enable = true;
+
   fonts = {
     # use fonts specified by user rather than default ones
     enableDefaultPackages = false;

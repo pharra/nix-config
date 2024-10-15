@@ -91,8 +91,6 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    vscode-server.url = "github:nix-community/nixos-vscode-server";
-
     NixVirt = {
       url = "github:pharra/NixVirt";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -122,7 +120,6 @@
     mysecrets,
     nix-flatpak,
     plasma-manager,
-    vscode-server,
     NixVirt,
     nixos-cosmic,
     ...
@@ -152,7 +149,7 @@
 
     modules = import ./modules;
     _home-modules = import ./home-modules;
-    home-modules = [plasma-manager.homeManagerModules.plasma-manager vscode-server.homeModules.default] ++ (builtins.attrValues _home-modules);
+    home-modules = [plasma-manager.homeManagerModules.plasma-manager] ++ (builtins.attrValues _home-modules);
 
     common-nixos-modules =
       [

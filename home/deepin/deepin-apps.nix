@@ -1,6 +1,4 @@
 {pkgs, ...}: {
-  services.vscode-server.enable = true;
-
   programs = {
     firefox = {
       enable = true;
