@@ -55,12 +55,6 @@
     # community wayland nixpkgs
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
 
-    # generate iso/qcow2/docker/... image from nixos configuration
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     impermanence.url = "github:nix-community/impermanence";
 
     # secrets management
@@ -114,7 +108,6 @@
     nixpkgs-2305,
     nix-darwin,
     home-manager,
-    nixos-generators,
     impermanence,
     deploy-rs,
     mysecrets,
@@ -162,7 +155,7 @@
 
     system = x64_system;
 
-    _specialArgs =
+    commonSpecialArgs =
       {
         inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs home-modules NixVirt;
         # use unstable branch for some packages to get the latest updates
@@ -180,7 +173,7 @@
       }
       // inputs;
     base_args = {
-      inherit home-manager nixos-generators system;
+      inherit home-manager system;
     };
     stable_args = base_args // {inherit nixpkgs;};
     unstable_args = base_args // {nixpkgs = nixpkgs-unstable;};
@@ -189,6 +182,8 @@
       # azure
       {
         name = "azure_hk";
+        hostname = "hk.azure.int4byte.com";
+        builds = ["base"];
         nixos-modules = [./hosts/azure];
         specialArgs = {
           inherit is_azure;
@@ -198,6 +193,8 @@
 
       {
         name = "azure_jp";
+        hostname = "jp.azure.int4byte.com";
+        builds = ["base"];
         nixos-modules = [./hosts/azure];
         specialArgs = {
           inherit is_azure;
@@ -207,6 +204,8 @@
 
       {
         name = "azure_us";
+        hostname = "us.azure.int4byte.com";
+        builds = ["base"];
         nixos-modules = [./hosts/azure];
         specialArgs = {
           inherit is_azure;
@@ -216,6 +215,8 @@
 
       {
         name = "azure_sg";
+        hostname = "sg.azure.int4byte.com";
+        builds = ["base"];
         nixos-modules = [./hosts/azure];
         specialArgs = {
           inherit is_azure;
@@ -226,9 +227,8 @@
       # installer
       {
         name = "netboot_installer";
+        builds = ["base"];
         nixos-modules = [./hosts/installer/netboot.nix];
-        specialArgs = {
-        };
       }
     ];
 
@@ -236,273 +236,117 @@
       # desktop
       {
         name = "desktop";
+        builds = ["kde" "gnome" "cosmic" "deepin"];
         nixos-modules = [./hosts/desktop];
-        specialArgs = {
-        };
       }
 
       # dot
       {
         name = "dot";
+        builds = ["kde" "gnome" "cosmic" "deepin"];
         nixos-modules = [./hosts/dot];
-        specialArgs = {
-        };
       }
 
       # gs65
       {
         name = "gs65";
+        builds = ["kde" "gnome" "cosmic" "deepin"];
         nixos-modules = [./hosts/gs65];
-        specialArgs = {
-        };
       }
 
       # homelab_desktop
       {
         name = "homelab_desktop";
+        builds = ["kde" "gnome" "cosmic" "deepin"];
         nixos-modules = [./hosts/homelab_desktop];
-        specialArgs = {
-        };
       }
 
       # minimal
       {
         name = "minimal";
+        builds = ["kde" "gnome" "cosmic" "deepin" "base"];
         nixos-modules = [./hosts/minimal];
-        specialArgs = {
-        };
       }
 
       # vm
       {
         name = "vm";
+        builds = ["kde" "gnome" "cosmic" "deepin" "base"];
         nixos-modules = [./hosts/vm];
-        specialArgs = {
-        };
       }
 
       # zed
       {
         name = "zed";
+        builds = ["kde" "gnome" "cosmic" "deepin"];
         nixos-modules = [./hosts/zed];
-        specialArgs = {
-        };
       }
     ];
-
-    generateNixosConfigurations = f: (machines: builtins.map (machine: f machine) machines);
-
-    serversNixosConfigurations = builtins.listToAttrs (builtins.concatLists (generateNixosConfigurations (machine: let
-      in [
-        {
-          name = machine.name;
-          value = nixosSystem ({
-              nixos-modules = machine.nixos-modules ++ common-nixos-modules;
-              home-module = import ./home/base.nix;
-            }
-            // stable_args
-            // {specialArgs = _specialArgs // machine.specialArgs;});
-        }
-      ])
-      servers));
-
-    desktopsNixosConfigurations = builtins.listToAttrs (builtins.concatLists (generateNixosConfigurations (machine: let
-      in [
-        {
-          name = "${machine.name}_kde";
-          value = nixosSystem ({
-              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/kde.nix];
-              home-module = import ./home/desktop-kde.nix;
-            }
-            // stable_args
-            // {specialArgs = _specialArgs // machine.specialArgs;});
-        }
-
-        {
-          name = "${machine.name}_gnome";
-          value = nixosSystem ({
-              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/gnome.nix];
-              home-module = import ./home/desktop-gnome.nix;
-            }
-            // stable_args
-            // {specialArgs = _specialArgs // machine.specialArgs;});
-        }
-
-        {
-          name = "${machine.name}_cosmic";
-          value = nixosSystem ({
-              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/cosmic.nix];
-              home-module = import ./home/desktop-cosmic.nix;
-            }
-            // stable_args
-            // {specialArgs = _specialArgs // machine.specialArgs;});
-        }
-        {
-          name = "${machine.name}_deepin";
-          value = nixosSystem ({
-              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/deepin.nix];
-              home-module = import ./home/desktop-deepin.nix;
-            }
-            // stable_args
-            // {specialArgs = _specialArgs // machine.specialArgs;});
-        }
-      ])
-      desktops));
 
     homelabs = [
       # homelab
       {
         name = "homelab";
         nixos-modules = [./hosts/homelab];
+        builds = ["kde" "gnome" "cosmic" "deepin"];
         specialArgs = {
-          netboot_args = {netboot_installer = serversNixosConfigurations."netboot_installer";};
+          netboot_args = {netboot_installer = self.nixosConfigurations."netboot_installer_base";};
         };
       }
     ];
 
-    homelabsNixosConfigurations = builtins.listToAttrs (builtins.concatLists (generateNixosConfigurations (machine: let
-      in [
-        {
-          name = "${machine.name}_kde";
-          value = nixosSystem ({
-              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/kde.nix];
-              home-module = import ./home/desktop-kde.nix;
-            }
-            // stable_args
-            // {specialArgs = _specialArgs // machine.specialArgs;});
-        }
+    generateNixosConfigurations = f: (machines: builtins.map (machine: f machine) machines);
 
-        {
-          name = "${machine.name}_gnome";
-          value = nixosSystem ({
-              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/gnome.nix];
-              home-module = import ./home/desktop-gnome.nix;
-            }
-            // stable_args
-            // {specialArgs = _specialArgs // machine.specialArgs;});
-        }
-
-        {
-          name = "${machine.name}_cosmic";
-          value = nixosSystem ({
-              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/cosmic.nix];
-              home-module = import ./home/desktop-cosmic.nix;
-            }
-            // stable_args
-            // {specialArgs = _specialArgs // machine.specialArgs;});
-        }
-        {
-          name = "${machine.name}_deepin";
-          value = nixosSystem ({
-              nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/deepin.nix];
-              home-module = import ./home/desktop-deepin.nix;
-            }
-            // stable_args
-            // {specialArgs = _specialArgs // machine.specialArgs;});
-        }
-      ])
-      homelabs));
+    machinesNixosConfigurations = builtins.listToAttrs (builtins.concatLists (generateNixosConfigurations (machine: let
+    in
+      builtins.map (build: {
+        name = "${machine.name}_${build}";
+        value = nixosSystem ({
+            nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/${build}.nix];
+            home-module = import ./home/${build}.nix;
+          }
+          // stable_args
+          // {
+            specialArgs = let
+              machineSpecialArgs =
+                if builtins.hasAttr "specialArgs" machine
+                then machine.specialArgs
+                else {};
+            in
+              commonSpecialArgs // machineSpecialArgs;
+          });
+      })
+      machine.builds)
+    (servers ++ desktops ++ homelabs)));
   in {
-    nixosConfigurations = serversNixosConfigurations // desktopsNixosConfigurations // homelabsNixosConfigurations;
+    nixosConfigurations = machinesNixosConfigurations;
 
-    deploy = {
+    deploy = let
+      deployConfigurations = builtins.listToAttrs (builtins.concatLists (generateNixosConfigurations (machine: let
+      in
+        builtins.map (build: {
+          name = "${machine.name}_${build}";
+          value = {
+            hostname =
+              if builtins.hasAttr "hostname" machine
+              then machine.hostname
+              else "${machine.name}.lan";
+            profiles.system = {
+              path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."${machine.name}_${build}";
+            };
+          };
+        })
+        machine.builds)
+      (servers ++ desktops ++ homelabs)));
+    in {
       sshUser = "wf";
       user = "root";
       # sshOpts = ["-p" "2222"];
       autoRollback = false;
 
       magicRollback = false;
-      nodes = {
-        "azure_hk" = {
-          hostname = "hk.azure.int4byte.com";
-          profiles.system = {
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."azure_hk";
-          };
-        };
-        "azure_sg" = {
-          hostname = "sg.azure.int4byte.com";
-          profiles.system = {
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."azure_sg";
-          };
-        };
-        "azure_us" = {
-          hostname = "us.azure.int4byte.com";
-          profiles.system = {
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."azure_us";
-          };
-        };
-        "azure_jp" = {
-          hostname = "jp.azure.int4byte.com";
-          profiles.system = {
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."azure_jp";
-          };
-        };
-
-        "gs65_gnome" = {
-          hostname = "192.168.31.156";
-          profiles.system = {
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."gs65_gnome";
-          };
-        };
-
-        "desktop_gnome" = {
-          hostname = "desktop.local";
-          profiles.system = {
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."desktop_gnome";
-          };
-        };
-
-        "desktop_kde" = {
-          hostname = "192.168.29.127";
-          profiles.system = {
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."desktop_kde";
-          };
-        };
-
-        "homelab_desktop_gnome" = {
-          hostname = "homelab-desktop";
-          profiles.system = {
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."homelab_desktop_gnome";
-          };
-        };
-
-        "zed_kde" = {
-          hostname = "zed.lan";
-          profiles.system = {
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."zed_kde";
-          };
-        };
-        "zed_cosmic" = {
-          hostname = "zed.lan";
-          profiles.system = {
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."zed_cosmic";
-          };
-        };
-
-        "dot_kde" = {
-          hostname = "dot.lan";
-          profiles.system = {
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."dot_kde";
-          };
-        };
-      };
+      nodes = deployConfigurations;
     };
-
-    # take system images for idols
-    # https://github.com/nix-community/nixos-generators
-    packages."${x64_system}" =
-      # genAttrs returns an attribute set with the given keys and values(host => image).
-      nixpkgs.lib.genAttrs [
-        "desktop_gnome"
-        "homelab_gnome"
-        "vm_deepin"
-        "vm_gnome"
-        "gs65_gnome"
-      ] (
-        host:
-          self.nixosConfigurations.${host}.config.formats.iso
-      )
-      // nixpkgs.lib.filterAttrs (_: v: nixpkgs.lib.isDerivation v) legacyPackages.${x64_system};
 
     devShells."${x64_system}".default = let
       pkgs = import nixpkgs {
