@@ -85,5 +85,4 @@
   };
 
   system.stateVersion = config.system.nixos.release;
-  environment.noXlibs = false;
 }
