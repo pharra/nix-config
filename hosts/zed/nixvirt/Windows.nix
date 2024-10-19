@@ -120,11 +120,11 @@ in {
             }
           ];
           emulatorpin = {
-            cpuset = "0,12";
+            cpuset = "0,16";
           };
           iothreadpin = {
             iothread = 1;
-            cpuset = "0,12";
+            cpuset = "0,16";
           };
         };
         memoryBacking = {
@@ -178,8 +178,8 @@ in {
                 type = "pci";
                 mode = "subsystem";
                 managed = true;
-                source = {address = pci_address 4 0 0;};
-                # Intel SSD 760p 04:00.0
+                source = {address = pci_address 2 0 0;};
+                # Intel SSD 760p 02:00.0
                 address = pci_address 8 0 0;
               }
             ];
