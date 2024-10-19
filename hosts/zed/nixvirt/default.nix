@@ -82,7 +82,7 @@ in {
   };
 
   systemd.services.attach_gpu = {
-    enable = true;
+    enable = false;
     script = ''
       ${attach_gpu}/bin/attach_gpu
     '';
@@ -100,7 +100,7 @@ in {
     if [ "$machine" == "Windows" ]; then
       if [ "$command" == "prepare" ]; then
         ${pkgs.coreutils-full}/bin/echo "preparing"
-        ${detach_gpu}/bin/detach_gpu
+        # ${detach_gpu}/bin/detach_gpu
       elif [ "$command" == "started" ]; then
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=8-15,24-31
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=8-15,24-31
@@ -109,7 +109,7 @@ in {
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-31
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-31
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-31
-        ${attach_gpu}/bin/attach_gpu
+        # ${attach_gpu}/bin/attach_gpu
       fi
     fi
   '';
