@@ -442,10 +442,6 @@ in {
 
   hardware.graphics = {
     enable = true;
-    # if hardware.graphics.driSupport is enabled, mesa is installed and provides Vulkan for supported hardware.
-    #driSupport = true;
-    # needed by nvidia-docker
-    #driSupport32Bit = true;
   };
 
   # This value determines the NixOS release from which the default

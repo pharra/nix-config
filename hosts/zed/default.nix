@@ -130,15 +130,9 @@
     graphics = {
       enable = true;
       enable32Bit = true;
-      # if hardware.graphics.driSupport is enabled, mesa is installed and provides Vulkan for supported hardware.
-      # driSupport = true;
-      # needed by nvidia-docker
-      # driSupport32Bit = true;
+
       extraPackages = with pkgs; [
-        amdvlk
-      ];
-      extraPackages32 = with pkgs; [
-        driversi686Linux.amdvlk
+        rocmPackages.clr.icd
       ];
     };
   };
