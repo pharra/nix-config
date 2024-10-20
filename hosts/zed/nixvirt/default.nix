@@ -8,9 +8,13 @@
   Windows = import ./Windows.nix args;
   Microsoft = import ./Microsoft.nix args;
   attach_gpu = pkgs.writeShellScriptBin "attach_gpu" ''
-    ${pkgs.coreutils-full}/bin/echo -n "0000:01:00.0" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/unbind
-    ${pkgs.coreutils-full}/bin/echo -n "0000:01:00.1" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/unbind
-    ${pkgs.coreutils-full}/bin/echo -n "0000:01:00.1" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/snd_hda_intel/bind
+    nvidia_vendor="10de:2684"
+    sound_vendor="10de:22ba"
+    nvidia_bus_path=`${pkgs.pciutils}/bin/lspci -mm -d $nvidia_vendor | ${pkgs.gawk}/bin/awk '{ print $1 }'`
+    sound_bus_path=`${pkgs.pciutils}/bin/lspci -mm -d $sound_vendor | ${pkgs.gawk}/bin/awk '{ print $1 }'`
+    ${pkgs.coreutils-full}/bin/echo -n "0000:$nvidia_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/unbind
+    ${pkgs.coreutils-full}/bin/echo -n "0000:$sound_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/unbind
+    ${pkgs.coreutils-full}/bin/echo -n "0000:$sound_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/snd_hda_intel/bind
     ${pkgs.kmod}/bin/modprobe nvidia_drm modeset=1
     ${pkgs.kmod}/bin/modprobe nvidia nvidia_modeset nvidia_uvm
   '';
@@ -30,9 +34,15 @@
     ${pkgs.kmod}/bin/rmmod nvidia_modeset
     ${pkgs.kmod}/bin/rmmod nvidia_uvm
     ${pkgs.kmod}/bin/rmmod nvidia
-    ${pkgs.coreutils-full}/bin/echo -n "0000:01:00.1" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/snd_hda_intel/unbind
-    ${pkgs.coreutils-full}/bin/echo -n "0000:01:00.0" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/bind
-    ${pkgs.coreutils-full}/bin/echo -n "0000:01:00.1" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/bind
+
+    nvidia_vendor="10de:2684"
+    sound_vendor="10de:22ba"
+    nvidia_bus_path=`${pkgs.pciutils}/bin/lspci -mm -d $nvidia_vendor | ${pkgs.gawk}/bin/awk '{ print $1 }'`
+    sound_bus_path=`${pkgs.pciutils}/bin/lspci -mm -d $sound_vendor | ${pkgs.gawk}/bin/awk '{ print $1 }'`
+
+    ${pkgs.coreutils-full}/bin/echo -n "0000:$sound_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/snd_hda_intel/unbind
+    ${pkgs.coreutils-full}/bin/echo -n "0000:$nvidia_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/bind
+    ${pkgs.coreutils-full}/bin/echo -n "0000:$sound_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/bind
   '';
 in {
   environment = {

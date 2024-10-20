@@ -91,6 +91,8 @@
     git-lfs # used by huggingface models
     fastfetch
     pv
+    pciutils # lspci
+    usbutils # lsusb
 
     # create a fhs environment by command `fhs`, so we can run non-nixos packages in nixos!
     (

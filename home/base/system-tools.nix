@@ -16,8 +16,6 @@
     sysstat
     lm_sensors # for `sensors` command
     ethtool
-    pciutils # lspci
-    usbutils # lsusb
     dmidecode # a tool that reads information about your system's hardware from the BIOS according to the SMBIOS/DMI standard
     fio # disk performance
 
