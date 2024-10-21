@@ -41,6 +41,9 @@ in {
             cores = 8;
             threads = 2;
           };
+          # cache = {
+          #   mode = "passthrough";
+          # };
           feature = {
             policy = "require";
             name = "topoext";
@@ -130,6 +133,22 @@ in {
         memoryBacking = {
           hugepages = {};
         };
+        clock =
+          Windows.clock
+          // {
+            timer =
+              lib.lists.remove {
+                name = "hpet";
+                present = false;
+              }
+              Windows.clock.timer
+              ++ [
+                {
+                  name = "hpet";
+                  present = true;
+                }
+              ];
+          };
         devices =
           Windows.devices
           // {
