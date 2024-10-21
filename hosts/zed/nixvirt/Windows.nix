@@ -53,75 +53,16 @@ in {
           count = 1;
         };
         cputune = {
-          vcpupin = [
-            # core 1
-            {
-              vcpu = 0;
-              cpuset = "0";
-            }
-            {
-              vcpu = 1;
-              cpuset = "1";
-            }
-            {
-              vcpu = 2;
-              cpuset = "2";
-            }
-            {
-              vcpu = 3;
-              cpuset = "3";
-            }
-            {
-              vcpu = 4;
-              cpuset = "4";
-            }
-            {
-              vcpu = 5;
-              cpuset = "5";
-            }
-            {
-              vcpu = 6;
-              cpuset = "6";
-            }
-            {
-              vcpu = 7;
-              cpuset = "7";
-            }
+          vcpupin =
+            builtins.map (x: {
+              vcpu = x;
+              cpuset = toString x;
+            }) (lib.lists.range 0 5)
+            ++ builtins.map (x: {
+              vcpu = x;
+              cpuset = toString (x + 8);
+            }) (lib.lists.range 8 13);
 
-            # core 1
-            {
-              vcpu = 8;
-              cpuset = "16";
-            }
-            {
-              vcpu = 9;
-              cpuset = "17";
-            }
-            {
-              vcpu = 10;
-              cpuset = "18";
-            }
-            {
-              vcpu = 11;
-              cpuset = "19";
-            }
-            {
-              vcpu = 12;
-              cpuset = "20";
-            }
-            {
-              vcpu = 13;
-              cpuset = "21";
-            }
-            {
-              vcpu = 14;
-              cpuset = "22";
-            }
-            {
-              vcpu = 15;
-              cpuset = "23";
-            }
-          ];
           emulatorpin = {
             cpuset = "0,16";
           };
