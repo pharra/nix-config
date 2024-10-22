@@ -142,6 +142,14 @@ in {
                 # Intel SSD 760p 02:00.0
                 address = pci_address 8 0 0;
               }
+              {
+                type = "pci";
+                mode = "subsystem";
+                managed = true;
+                source = {address = pci_address 6 0 3;};
+                # Backend USB Controller 06:00.3
+                address = pci_address 9 0 0;
+              }
             ];
             interface = [
               {
