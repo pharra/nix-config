@@ -45,7 +45,6 @@ in rec {
         "docker"
         "git"
         "golang"
-        "fd"
         "systemd"
         "git-auto-fetch"
         "history-substring-search"
