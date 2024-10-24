@@ -27,7 +27,7 @@ in {
   virtualisation.vfio = {
     enable = true;
     IOMMUType = "amd";
-    applyACSpatch = true;
+    applyACSpatch = false;
     ignoreMSRs = true;
     devices = [
       "10de:2684" # Graphics
