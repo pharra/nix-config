@@ -79,11 +79,11 @@ in {
       }
     ];
 
-    # environment.systemPackages = with pkgs; [
-    #   opensm
-    #   rdma-core
-    #   pkgs-2305.mstflint
-    # ];
+    environment.systemPackages = with pkgs; [
+      opensm
+      rdma-core
+      pkgs-2305.mstflint
+    ];
 
     systemd.services.rdma = {
       enable = false;

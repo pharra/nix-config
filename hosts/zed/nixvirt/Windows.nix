@@ -146,7 +146,7 @@ in {
                 type = "pci";
                 mode = "subsystem";
                 managed = true;
-                source = {address = pci_address 6 0 3;};
+                source = {address = pci_address 7 0 3;};
                 # Backend USB Controller 06:00.3
                 address = pci_address 9 0 0;
               }

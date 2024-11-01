@@ -9,7 +9,22 @@
 #  Ai - my main computer, with NixOS + I5-13600KF + RTX 4090 GPU, for gaming & daily use.
 #
 #############################################################
-{
+let
+  interface = {
+    mlx4_0 = "mlx4_0";
+    mlx4_1 = "mlx4_1";
+  };
+  interfaces = [
+    {
+      mac = "50:65:f3:89:51:11";
+      name = "mlx4_0";
+    }
+    {
+      mac = "50:65:f3:89:51:12";
+      name = "mlx4_1";
+    }
+  ];
+in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -76,6 +91,11 @@
     # ];
   };
 
+  net-name = {
+    enable = true;
+    inherit interfaces;
+  };
+
   systemd.network = {
     enable = true;
     wait-online.anyInterface = true;
@@ -90,8 +110,8 @@
     };
     networks = {
       # Connect the bridge ports to the bridge
-      "30-enp5s0" = {
-        matchConfig.Name = "enp5s0";
+      "30-enp6s0" = {
+        matchConfig.Name = "enp6s0";
         networkConfig.Bridge = "br0";
         linkConfig.RequiredForOnline = "enslaved";
       };
@@ -99,6 +119,30 @@
       "40-br0" = {
         matchConfig.Name = "br0";
         bridgeConfig = {};
+        networkConfig = {
+          # start a DHCP Client for IPv4 Addressing/Routing
+          DHCP = "ipv4";
+          # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
+          IPv6AcceptRA = true;
+          MulticastDNS = true;
+          Domains = ["local"];
+        };
+        dhcpV4Config = {
+          UseDomains = true;
+        };
+        ipv6AcceptRAConfig = {
+          UseDNS = true;
+          UseDomains = true;
+        };
+        linkConfig = {
+          # or "routable" with IP addresses configured
+          RequiredForOnline = "routable";
+          Multicast = true;
+        };
+      };
+
+      "40-${interface.mlx4_1}" = {
+        matchConfig.Name = "${interface.mlx4_1}";
         networkConfig = {
           # start a DHCP Client for IPv4 Addressing/Routing
           DHCP = "ipv4";
