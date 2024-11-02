@@ -107,11 +107,46 @@
     options = ["bind"];
   };
 
-  services.nfs.server.enable = true;
-  services.nfs.server.exports = ''
-    /nfs         192.168.0.0/16(rw,fsid=0,no_subtree_check)
+  services.nfs = {
+    server.enable = true;
+    settings = {
+      nfsd.udp = false;
+      nfsd.rdma = true;
+      nfsd.vers2 = false;
+      nfsd.vers3 = false;
+      nfsd.vers4 = true;
+      nfsd."vers4.0" = false;
+      nfsd."vers4.1" = false;
+      nfsd."vers4.2" = true;
+    };
+  };
 
-    /nfs/persistent  192.168.0.0/16(rw,nohide,insecure,no_subtree_check)
-    /nfs/share  192.168.0.0/16(rw,nohide,insecure,no_subtree_check)
+  security.krb5 = {
+    enable = true;
+    settings = {
+      domain_realm."nfs.lan" = "NFS.LAN";
+      libdefaults.default_realm = "NFS.LAN";
+      realms."NFS.LAN" = {
+        admin_server = "homelab.lan";
+        kdc = "homelab.lan";
+      };
+    };
+  };
+
+  services.kerberos_server.enable = true;
+  services.kerberos_server.realms = {
+    "NFS.LAN".acl = [
+      {
+        access = "all";
+        principal = "admin/admin";
+      }
+    ];
+  };
+
+  services.nfs.server.exports = ''
+    /nfs         192.168.0.0/16(rw,fsid=0,no_subtree_check,sec=krb5p)
+
+    /nfs/persistent  192.168.0.0/16(rw,nohide,insecure,no_subtree_check,sec=krb5p)
+    /nfs/share/nfs  192.168.0.0/16(rw,nohide,insecure,no_subtree_check,sec=krb5p)
   '';
 }

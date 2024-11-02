@@ -28,6 +28,7 @@ in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ./cifs-mount.nix
 
     ../../nixos/libvirt.nix
     ../../nixos/core-desktop.nix
@@ -90,6 +91,8 @@ in {
     #   "223.5.5.5" # AliDNS
     # ];
   };
+
+  networking.firewall.enable = lib.mkForce false;
 
   net-name = {
     enable = true;
