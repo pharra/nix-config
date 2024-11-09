@@ -115,14 +115,14 @@ in {
                 mode = "subsystem";
                 managed = true;
                 # RTX 4090 01:00.0
-                source = {address = pci_address 1 0 0;};
+                source = {address = pci_address 3 0 0;};
                 address = pci_address 5 0 0 // {multifunction = true;};
               }
               {
                 type = "pci";
                 mode = "subsystem";
                 managed = true;
-                source = {address = pci_address 1 0 1;};
+                source = {address = pci_address 3 0 1;};
                 # RTX 4090 01:00.1
                 address = pci_address 5 0 1 // {multifunction = true;};
               }
