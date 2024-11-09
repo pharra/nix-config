@@ -118,6 +118,7 @@
       nfsd."vers4.0" = false;
       nfsd."vers4.1" = false;
       nfsd."vers4.2" = true;
+      nfsd.threads = 16;
     };
   };
 

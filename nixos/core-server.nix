@@ -14,7 +14,7 @@
   boot.loader.systemd-boot.configurationLimit = lib.mkDefault 10;
   # boot.loader.grub.configurationLimit = 10;
 
-  boot.kernelPackages = lib.mkOverride 1400 pkgs.linuxPackages_6_11;
+  boot.kernelPackages = lib.mkOverride 1400 pkgs.linuxPackages_6_6;
 
   hardware.enableRedistributableFirmware = true;
   # do garbage collection weekly to keep disk usage low
@@ -93,6 +93,7 @@
     pv
     pciutils # lspci
     usbutils # lsusb
+    nvme-cli # nvme tools
 
     # create a fhs environment by command `fhs`, so we can run non-nixos packages in nixos!
     (
