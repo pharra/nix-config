@@ -11,17 +11,12 @@
 #############################################################
 let
   interface = {
-    mlx4_0 = "mlx4_0";
-    mlx4_1 = "mlx4_1";
+    mlx5_0 = "mlx5_0";
   };
   interfaces = [
     {
-      mac = "50:65:f3:89:51:11";
-      name = "mlx4_0";
-    }
-    {
-      mac = "50:65:f3:89:51:12";
-      name = "mlx4_1";
+      mac = "9c:52:f8:8e:dd:d8";
+      name = "mlx5_0";
     }
   ];
 in {
@@ -145,8 +140,8 @@ in {
         };
       };
 
-      "40-${interface.mlx4_1}" = {
-        matchConfig.Name = "${interface.mlx4_1}";
+      "40-${interface.mlx5_0}" = {
+        matchConfig.Name = "${interface.mlx5_0}";
         networkConfig = {
           # start a DHCP Client for IPv4 Addressing/Routing
           DHCP = "ipv4";

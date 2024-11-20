@@ -35,11 +35,17 @@ in {
     boot.kernelModules = [
       "mlx5_core"
       "mlx5_ib"
+      "rdma_ucm"
+      "xprtrdma"
+      "svcrdma"
     ];
 
     boot.initrd.kernelModules = [
       "mlx5_core"
       "mlx5_ib"
+      "rdma_ucm"
+      "xprtrdma"
+      "svcrdma"
     ];
 
     environment.systemPackages = with pkgs; [

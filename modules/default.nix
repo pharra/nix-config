@@ -13,4 +13,5 @@
   nvmf-module = import ./nvmf;
   net-name-module = import ./net-name;
   surface-dtx-daemon = import ./surface-dtx-daemon;
+  nvme-auto-module = import ./nvme-auto;
 }

@@ -49,7 +49,7 @@ in {
   };
 
   hardware.mlx4 = {
-    enable = true;
+    enable = false;
     opensm = false;
     portTypeArray = "2,2";
     applyPatch = false;

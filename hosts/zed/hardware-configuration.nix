@@ -39,11 +39,10 @@ in {
     blacklistNvidia = true;
   };
 
-  hardware.mlx4 = {
+  hardware.mlx5 = {
     enable = true;
-    opensm = false;
-    portTypeArray = "2,2";
-    applyPatch = false;
+    enableSRIOV = true;
+    interfaces = ["mlx5_0"];
   };
 
   fileSystems."/" = {
