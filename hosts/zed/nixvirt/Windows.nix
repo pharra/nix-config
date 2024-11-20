@@ -90,9 +90,58 @@ in {
                 }
               ];
           };
+        os =
+          Windows.os
+          // {
+            boot = null;
+            bootmenu = {enable = false;};
+          };
         devices =
           Windows.devices
           // {
+            disk =
+              if builtins.isNull Windows.devices.disk
+              then []
+              else
+                Windows.devices.disk
+                ++ [
+                  {
+                    type = "volume";
+                    device = "disk";
+                    driver = {
+                      name = "qemu";
+                      type = "qcow2";
+                      cache = "none";
+                      discard = "unmap";
+                    };
+                    source = {
+                      pool = "DiskPool";
+                      volume = "Games.qcow2";
+                    };
+                    target = {
+                      dev = "vdd";
+                      bus = "virtio";
+                    };
+                  }
+                  {
+                    type = "volume";
+                    device = "disk";
+                    driver = {
+                      name = "qemu";
+                      type = "qcow2";
+                      cache = "none";
+                      discard = "unmap";
+                    };
+                    source = {
+                      pool = "DiskPool";
+                      volume = "Data.qcow2";
+                    };
+                    target = {
+                      dev = "vde";
+                      bus = "virtio";
+                    };
+                  }
+                ];
             tpm = {
               model = "tpm-tis";
               backend = {
