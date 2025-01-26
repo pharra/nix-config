@@ -7,7 +7,7 @@
     zsh.enable = true;
   };
 
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
 
   services.desktopManager.cosmic.enable = true;
   services.displayManager.cosmic-greeter.enable = true;

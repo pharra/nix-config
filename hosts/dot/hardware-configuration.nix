@@ -18,7 +18,7 @@ in {
   boot.kernelPackages = lib.mkForce pkgs.linux_surface;
   services.surface-dtx-daemon.enable = true;
   services.pipewire.enable = lib.mkForce false;
-  hardware.pulseaudio.enable = lib.mkForce true;
+  services.pulseaudio.enable = lib.mkForce true;
 
   boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "uas" "xhci_pci"];
   # boot.initrd.kernelModules = [];

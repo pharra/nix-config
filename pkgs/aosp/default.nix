@@ -1,9 +1,9 @@
 {
   pkgs,
-  buildFHSUserEnv,
+  buildFHSEnv,
   stdenv,
 }: let
-  fhs = buildFHSUserEnv {
+  fhs = buildFHSEnv {
     name = "android-env";
     targetPkgs = pkgs: (with pkgs; [
       git

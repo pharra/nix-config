@@ -33,7 +33,7 @@
     fcitx5.plasma6Support = true;
   };
 
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
 
   security.polkit.extraConfig = ''
     polkit.addRule(function(action, subject) {

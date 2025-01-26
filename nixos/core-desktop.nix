@@ -57,17 +57,11 @@
       source-han-serif # 思源宋体
 
       # nerdfonts
-      # https://github.com/NixOS/nixpkgs/blob/nixos-23.11/pkgs/data/fonts/nerdfonts/shas.nix
-      (nerdfonts.override {
-        fonts = [
-          # symbols icon only
-          "NerdFontsSymbolsOnly"
-          # Characters
-          "FiraCode"
-          "JetBrainsMono"
-          "Iosevka"
-        ];
-      })
+      nerd-fonts.symbols-only
+      nerd-fonts.fira-code
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.iosevka
+
       julia-mono
       dejavu_fonts
     ];
@@ -132,7 +126,7 @@
   # rtkit is optional but recommended
   security.rtkit.enable = true;
   # Disable pulseaudio, it conflicts with pipewire too.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
 
   # enable bluetooth & gui paring tools - blueman
   # or you can use cli:

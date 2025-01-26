@@ -5,7 +5,7 @@
   kernel, # The Linux kernel Nix package for which this module will be compiled.
   coreutils,
   writeShellScriptBin,
-  buildFHSUserEnv,
+  buildFHSEnv,
   xz,
 }: let
   build-scripts = writeShellScriptBin "build-scripts" ''
@@ -13,7 +13,7 @@
     make -j8
     find .  \( -name "*.ko" \) -exec xz {} \;
   '';
-  buildEnv = buildFHSUserEnv {
+  buildEnv = buildFHSEnv {
     name = "fhs";
     targetPkgs = pkgs: kernel.moduleBuildDependencies ++ [kernel.dev kernel xz];
     multiPkgs = pkgs: kernel.moduleBuildDependencies ++ [kernel.dev kernel xz];

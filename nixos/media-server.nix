@@ -7,19 +7,19 @@
   ...
 } @ args: {
   services.sonarr = {
-    enable = true;
+    enable = false;
     user = "sftp";
     group = "sftp";
   };
 
   services.radarr = {
-    enable = true;
+    enable = false;
     user = "sftp";
     group = "sftp";
   };
 
   services.prowlarr = {
-    enable = true;
+    enable = false;
   };
 
   services.jellyfin = {
