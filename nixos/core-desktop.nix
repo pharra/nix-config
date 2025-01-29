@@ -104,6 +104,7 @@
     #     pyquery
     #     pyyaml
     #   ]))
+    nekoray
   ];
 
   # PipeWire is a new low-level multimedia framework.

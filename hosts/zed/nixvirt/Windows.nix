@@ -105,42 +105,45 @@ in {
               else
                 Windows.devices.disk
                 ++ [
-                  {
-                    type = "volume";
-                    device = "disk";
-                    driver = {
-                      name = "qemu";
-                      type = "qcow2";
-                      cache = "none";
-                      discard = "unmap";
-                    };
-                    source = {
-                      pool = "DiskPool";
-                      volume = "Games.qcow2";
-                    };
-                    target = {
-                      dev = "vdd";
-                      bus = "virtio";
-                    };
-                  }
-                  {
-                    type = "volume";
-                    device = "disk";
-                    driver = {
-                      name = "qemu";
-                      type = "qcow2";
-                      cache = "none";
-                      discard = "unmap";
-                    };
-                    source = {
-                      pool = "DiskPool";
-                      volume = "Data.qcow2";
-                    };
-                    target = {
-                      dev = "vde";
-                      bus = "virtio";
-                    };
-                  }
+                  # Games.qcow2
+                  # {
+                  #   type = "volume";
+                  #   device = "disk";
+                  #   driver = {
+                  #     name = "qemu";
+                  #     type = "qcow2";
+                  #     cache = "none";
+                  #     discard = "unmap";
+                  #   };
+                  #   source = {
+                  #     pool = "DiskPool";
+                  #     volume = "Games.qcow2";
+                  #   };
+                  #   target = {
+                  #     dev = "vdd";
+                  #     bus = "virtio";
+                  #   };
+                  # }
+
+                  # Data.qcow2
+                  # {
+                  #   type = "volume";
+                  #   device = "disk";
+                  #   driver = {
+                  #     name = "qemu";
+                  #     type = "qcow2";
+                  #     cache = "none";
+                  #     discard = "unmap";
+                  #   };
+                  #   source = {
+                  #     pool = "DiskPool";
+                  #     volume = "Data.qcow2";
+                  #   };
+                  #   target = {
+                  #     dev = "vde";
+                  #     bus = "virtio";
+                  #   };
+                  # }
                 ];
             tpm = {
               model = "tpm-tis";
@@ -164,14 +167,14 @@ in {
                 mode = "subsystem";
                 managed = true;
                 # RTX 4090 01:00.0
-                source = {address = pci_address 3 0 0;};
+                source = {address = pci_address 1 0 0;};
                 address = pci_address 5 0 0 // {multifunction = true;};
               }
               {
                 type = "pci";
                 mode = "subsystem";
                 managed = true;
-                source = {address = pci_address 3 0 1;};
+                source = {address = pci_address 1 0 1;};
                 # RTX 4090 01:00.1
                 address = pci_address 5 0 1 // {multifunction = true;};
               }
@@ -191,14 +194,14 @@ in {
                 # Intel SSD 760p 02:00.0
                 address = pci_address 8 0 0;
               }
-              {
-                type = "pci";
-                mode = "subsystem";
-                managed = true;
-                source = {address = pci_address 7 0 3;};
-                # Backend USB Controller 06:00.3
-                address = pci_address 9 0 0;
-              }
+              # {
+              #   type = "pci";
+              #   mode = "subsystem";
+              #   managed = true;
+              #   source = {address = pci_address 7 0 3;};
+              #   # Backend USB Controller 06:00.3
+              #   address = pci_address 9 0 0;
+              # }
             ];
             interface = [
               {
