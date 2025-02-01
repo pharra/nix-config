@@ -11,7 +11,7 @@
 in {
   environment = {
     systemPackages = with pkgs; [
-      # azure-cli
+      azure-cli
       cacert
       azure-storage-azcopy
       jq
