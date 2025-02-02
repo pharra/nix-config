@@ -49,6 +49,10 @@
       origin = "flathub";
     }
     {
+      appId = "com.tencent.WeChat";
+      origin = "flathub";
+    }
+    {
       appId = "org.qbittorrent.qBittorrent";
       origin = "flathub";
     }
