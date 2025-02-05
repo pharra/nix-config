@@ -106,44 +106,44 @@ in {
                 Windows.devices.disk
                 ++ [
                   # Games.qcow2
-                  # {
-                  #   type = "volume";
-                  #   device = "disk";
-                  #   driver = {
-                  #     name = "qemu";
-                  #     type = "qcow2";
-                  #     cache = "none";
-                  #     discard = "unmap";
-                  #   };
-                  #   source = {
-                  #     pool = "DiskPool";
-                  #     volume = "Games.qcow2";
-                  #   };
-                  #   target = {
-                  #     dev = "vdd";
-                  #     bus = "virtio";
-                  #   };
-                  # }
+                  {
+                    type = "volume";
+                    device = "disk";
+                    driver = {
+                      name = "qemu";
+                      type = "qcow2";
+                      cache = "none";
+                      discard = "unmap";
+                    };
+                    source = {
+                      pool = "DiskPool";
+                      volume = "Games.qcow2";
+                    };
+                    target = {
+                      dev = "vdd";
+                      bus = "virtio";
+                    };
+                  }
 
                   # Data.qcow2
-                  # {
-                  #   type = "volume";
-                  #   device = "disk";
-                  #   driver = {
-                  #     name = "qemu";
-                  #     type = "qcow2";
-                  #     cache = "none";
-                  #     discard = "unmap";
-                  #   };
-                  #   source = {
-                  #     pool = "DiskPool";
-                  #     volume = "Data.qcow2";
-                  #   };
-                  #   target = {
-                  #     dev = "vde";
-                  #     bus = "virtio";
-                  #   };
-                  # }
+                  {
+                    type = "volume";
+                    device = "disk";
+                    driver = {
+                      name = "qemu";
+                      type = "qcow2";
+                      cache = "none";
+                      discard = "unmap";
+                    };
+                    source = {
+                      pool = "DiskPool";
+                      volume = "Data.qcow2";
+                    };
+                    target = {
+                      dev = "vde";
+                      bus = "virtio";
+                    };
+                  }
                 ];
             tpm = {
               model = "tpm-tis";
@@ -194,14 +194,14 @@ in {
                 # Intel SSD 760p 02:00.0
                 address = pci_address 8 0 0;
               }
-              # {
-              #   type = "pci";
-              #   mode = "subsystem";
-              #   managed = true;
-              #   source = {address = pci_address 7 0 3;};
-              #   # Backend USB Controller 06:00.3
-              #   address = pci_address 9 0 0;
-              # }
+              {
+                type = "pci";
+                mode = "subsystem";
+                managed = true;
+                source = {address = pci_address 7 0 3;};
+                # Backend USB Controller 07:00.3
+                address = pci_address 9 0 0;
+              }
             ];
             interface = [
               {
