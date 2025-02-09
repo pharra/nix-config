@@ -7,6 +7,6 @@
   ...
 }: {
   services.ddns-go = {
-    enable = true;
+    enable = false;
   };
 }
