@@ -173,51 +173,23 @@
     stable_args = base_args // {inherit nixpkgs;};
     unstable_args = base_args // {nixpkgs = nixpkgs-unstable;};
 
-    servers = [
+    hosts = let
+      mkAzureHost = region: {
+        name = "azure_${region}";
+        hostname = "${region}.azure.int4byte.com";
+        builds = ["base"];
+        nixos-modules = [./hosts/azure];
+        specialArgs = {
+          inherit is_azure;
+          domain = "${region}.azure.int4byte.com";
+        };
+      };
+    in [
       # azure
-      {
-        name = "azure_hk";
-        hostname = "hk.azure.int4byte.com";
-        builds = ["base"];
-        nixos-modules = [./hosts/azure];
-        specialArgs = {
-          inherit is_azure;
-          domain = "hk.azure.int4byte.com";
-        };
-      }
-
-      {
-        name = "azure_jp";
-        hostname = "jp.azure.int4byte.com";
-        builds = ["base"];
-        nixos-modules = [./hosts/azure];
-        specialArgs = {
-          inherit is_azure;
-          domain = "jp.azure.int4byte.com";
-        };
-      }
-
-      {
-        name = "azure_us";
-        hostname = "us.azure.int4byte.com";
-        builds = ["base"];
-        nixos-modules = [./hosts/azure];
-        specialArgs = {
-          inherit is_azure;
-          domain = "us.azure.int4byte.com";
-        };
-      }
-
-      {
-        name = "azure_sg";
-        hostname = "sg.azure.int4byte.com";
-        builds = ["base"];
-        nixos-modules = [./hosts/azure];
-        specialArgs = {
-          inherit is_azure;
-          domain = "sg.azure.int4byte.com";
-        };
-      }
+      (mkAzureHost "hk")
+      (mkAzureHost "jp")
+      (mkAzureHost "us")
+      (mkAzureHost "sg")
 
       # installer
       {
@@ -225,9 +197,7 @@
         builds = ["base"];
         nixos-modules = [./hosts/installer/netboot.nix];
       }
-    ];
 
-    desktops = [
       # dot
       {
         name = "dot";
@@ -255,9 +225,6 @@
         builds = ["kde" "gnome" "cosmic" "deepin"];
         nixos-modules = [./hosts/zed];
       }
-    ];
-
-    homelabs = [
       # homelab
       {
         name = "homelab";
@@ -291,7 +258,7 @@
           });
       })
       machine.builds)
-    (servers ++ desktops ++ homelabs)));
+    hosts));
   in {
     nixosConfigurations = machinesNixosConfigurations;
 
@@ -311,7 +278,7 @@
           };
         })
         machine.builds)
-      (servers ++ desktops ++ homelabs)));
+      hosts));
     in {
       sshUser = "wf";
       user = "root";
