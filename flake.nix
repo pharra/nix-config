@@ -228,13 +228,6 @@
     ];
 
     desktops = [
-      # desktop
-      {
-        name = "desktop";
-        builds = ["kde" "gnome" "cosmic" "deepin"];
-        nixos-modules = [./hosts/desktop];
-      }
-
       # dot
       {
         name = "dot";
@@ -249,25 +242,11 @@
         nixos-modules = [./hosts/gs65];
       }
 
-      # homelab_desktop
-      {
-        name = "homelab_desktop";
-        builds = ["kde" "gnome" "cosmic" "deepin"];
-        nixos-modules = [./hosts/homelab_desktop];
-      }
-
       # minimal
       {
         name = "minimal";
         builds = ["kde" "gnome" "cosmic" "deepin" "base"];
         nixos-modules = [./hosts/minimal];
-      }
-
-      # vm
-      {
-        name = "vm";
-        builds = ["kde" "gnome" "cosmic" "deepin" "base"];
-        nixos-modules = [./hosts/vm];
       }
 
       # zed
