@@ -50,7 +50,7 @@
       )
 
       for device in "''${devices[@]}"; do
-        if [ -e "$device" ] || compgen -G "$device" > /dev/null; then
+        if [ -e "$device" ] || [ -n "$(find $device 2>/dev/null)" ]; then
           echo "[$(date)] Checking device: $device"
           local count=$(${pkgs.lsof}/bin/lsof -e /run/user/1000/doc "$device" 2>/dev/null | wc -l)
           if [ $count -gt 0 ]; then
@@ -82,7 +82,7 @@
       )
 
       for device in "''${devices[@]}"; do
-        if [ -e "$device" ] || compgen -G "$device" > /dev/null; then
+        if [ -e "$device" ] || [ -n "$(find $device 2>/dev/null)" ]; then
           echo "[$(date)] Killing processes using device: $device"
           ${pkgs.lsof}/bin/lsof -e /run/user/1000/doc $device 2>/dev/null | ${pkgs.gawk}/bin/awk 'NR>1 {print $2}' | sort -u | ${pkgs.findutils}/bin/xargs -r kill $signal
         else
@@ -109,7 +109,8 @@
     for i in {1..3}; do
       echo "[$(date)] Waiting for processes to terminate (attempt $i/3)..."
       ${pkgs.coreutils-full}/bin/sleep 2
-      if ! check_nvidia_processes; then
+      check_nvidia_processes
+      if [ $? -eq 0 ]; then
         echo "[$(date)] All processes terminated successfully"
         break
       fi
@@ -118,14 +119,16 @@
     done
 
     # If processes still exist, use SIGKILL
-    if check_nvidia_processes; then
+    check_nvidia_processes
+    if [ $? -ne 0 ]; then
       echo "[$(date)] Some processes still running, using SIGKILL..."
       kill_nvidia_processes "-9"
       ${pkgs.coreutils-full}/bin/sleep 2
     fi
 
     # Final check
-    if check_nvidia_processes; then
+    check_nvidia_processes
+    if [ $? -ne 0 ]; then
       echo "[$(date)] ERROR: Failed to kill all NVIDIA processes"
       exit 1
     fi
