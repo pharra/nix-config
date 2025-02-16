@@ -63,6 +63,9 @@
         ".vscode"
         ".vscode-cli"
         ".vscode-server"
+        ".cursor"
+        ".cursor-cli"
+        ".cursor-server"
         ".wine"
       ];
       files = [

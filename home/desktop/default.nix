@@ -19,6 +19,8 @@
 
     # misc
     flameshot
+
+    code-cursor
   ];
 
   # GitHub CLI tool
