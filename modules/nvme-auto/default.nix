@@ -72,6 +72,7 @@ in {
         wants = ["network-online.target"];
         serviceConfig = {
           Type = "oneshot";
+          RemainAfterExit = "yes";
           ExecStartPre = "${pkgs.nvme-cli}/bin/nvme discover -t ${cfg.type} -a ${cfg.address} -s ${toString cfg.port}";
           ExecStart =
             ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.address} -s ${toString cfg.port}"]

@@ -61,6 +61,7 @@ in {
       before = ["libvirtd.service"];
       serviceConfig = {
         Type = "oneshot";
+        RemainAfterExit = "yes";
       };
     };
 
