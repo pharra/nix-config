@@ -9,4 +9,5 @@
   # qemu-overlay = import ./qemu-vfio-user;
   evdi-overlay = import ./evdi;
   tailscale-overlay = import ./tailscale;
+  # kwin-overlay = import ./kwin;
 }

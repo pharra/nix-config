@@ -1,0 +1,531 @@
+diff --git a/src/backends/drm/drm_backend.cpp b/src/backends/drm/drm_backend.cpp
+index 008765e81b..4fccb60af0 100644
+--- a/src/backends/drm/drm_backend.cpp
++++ b/src/backends/drm/drm_backend.cpp
+@@ -7,6 +7,7 @@
+     SPDX-License-Identifier: GPL-2.0-or-later
+ */
+ #include "drm_backend.h"
++#include <fcntl.h>
+ 
+ #include "config-kwin.h"
+ 
+@@ -189,7 +190,8 @@ void DrmBackend::handleUdevEvent()
+ 
+ DrmGpu *DrmBackend::addGpu(const QString &fileName)
+ {
+-    int fd = m_session->openRestricted(fileName);
++    int fd = open(fileName.toStdString().c_str(), 0);
++    fd = fcntl(fd, F_DUPFD_CLOEXEC, 0);
+     if (fd < 0) {
+         qCWarning(KWIN_DRM) << "failed to open drm device at" << fileName;
+         return nullptr;
+diff --git a/src/backends/drm/drm_backend.h b/src/backends/drm/drm_backend.h
+index 45419ccfb9..35ab0dafe8 100644
+--- a/src/backends/drm/drm_backend.h
++++ b/src/backends/drm/drm_backend.h
+@@ -49,6 +49,11 @@ public:
+     Outputs outputs() const override;
+     Session *session() const override;
+ 
++    void setSession(KWin::Session *sess)
++    {
++        m_session = sess;
++    }
++
+     QList<CompositingType> supportedCompositors() const override;
+ 
+     QString supportInformation() const override;
+diff --git a/src/backends/wayland/wayland_backend.cpp b/src/backends/wayland/wayland_backend.cpp
+index f50f34dc3b..74c0fe67d9 100644
+--- a/src/backends/wayland/wayland_backend.cpp
++++ b/src/backends/wayland/wayland_backend.cpp
+@@ -61,9 +61,8 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Keyboard *keyboard, Way
+         InputRedirection::KeyboardKeyState state;
+         switch (nativeState) {
+         case Keyboard::KeyState::Pressed:
+-            if (key == KEY_RIGHTCTRL) {
+-                m_seat->backend()->togglePointerLock();
+-            }
++            // Always toggle (turn on) pointer lock
++            m_seat->backend()->togglePointerLock();
+             state = InputRedirection::KeyboardKeyPressed;
+             m_pressedKeys.insert(key);
+             break;
+@@ -173,8 +172,19 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::RelativePointer *relati
+     : m_seat(seat)
+     , m_relativePointer(relativePointer)
+ {
++    static double pointbufferx = 0;
++    static double pointbuffery = 0;
++    // removed pointer accel here, to make games not change sens based on raw input (ATTENTION: WINE/Proton DOES ONLY int-value ptr movements, therefore the smoothing shenanigans)
+     connect(relativePointer, &RelativePointer::relativeMotion, this, [this](const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 timestamp) {
+-        Q_EMIT pointerMotion(sizeToPoint(delta), sizeToPoint(deltaNonAccelerated), std::chrono::microseconds(timestamp), this);
++        double scaledx = delta.width();
++        double scaledy = delta.height();
++        pointbufferx += scaledx - static_cast<int>(scaledx);
++        pointbuffery += scaledy - static_cast<int>(scaledy);
++
++        Q_EMIT pointerMotion(sizeToPoint(delta), sizeToPoint(QSizeF(static_cast<int>(scaledx) + static_cast<int>(pointbufferx), static_cast<int>(scaledy) + static_cast<int>(pointbuffery))), std::chrono::microseconds(timestamp), this);
++
++        pointbufferx -= static_cast<int>(pointbufferx);
++        pointbuffery -= static_cast<int>(pointbuffery);
+     });
+ }
+ 
+@@ -556,9 +566,9 @@ void WaylandBackend::togglePointerLock()
+     }
+ 
+     for (auto output : std::as_const(m_outputs)) {
+-        output->lockPointer(m_seat->pointerDevice()->nativePointer(), !m_pointerLockRequested);
++        output->lockPointer(m_seat->pointerDevice()->nativePointer(), true);
+     }
+-    m_pointerLockRequested = !m_pointerLockRequested;
++    // Always lock no unlock
+ }
+ 
+ QList<CompositingType> WaylandBackend::supportedCompositors() const
+diff --git a/src/backends/wayland/wayland_output.cpp b/src/backends/wayland/wayland_output.cpp
+index c471cc7882..9ef6a511b0 100644
+--- a/src/backends/wayland/wayland_output.cpp
++++ b/src/backends/wayland/wayland_output.cpp
+@@ -176,14 +176,8 @@ RenderLoop *WaylandOutput::renderLoop() const
+ 
+ bool WaylandOutput::updateCursorLayer()
+ {
+-    if (m_hasPointerLock) {
+-        m_cursor->setEnabled(false);
+-        return false;
+-    } else {
+-        m_cursor->setEnabled(Compositor::self()->backend()->cursorLayer(this)->isEnabled());
+-        // the layer already takes care of updating the image
+-        return true;
+-    }
++    // DISABLED, since cursorlayer is non-existent
++    return false;
+ }
+ 
+ void WaylandOutput::init(const QSize &pixelSize, qreal scale)
+@@ -303,7 +297,10 @@ void WaylandOutput::lockPointer(Pointer *pointer, bool lock)
+         }
+         return;
+     }
+-
++    if (m_pointerLock) {
++        // Already locked from autolock
++        return;
++    }
+     Q_ASSERT(!m_pointerLock);
+     m_pointerLock.reset(m_backend->display()->pointerConstraints()->lockPointer(surface(), pointer, nullptr, PointerConstraints::LifeTime::OneShot));
+     if (!m_pointerLock->isValid()) {
+diff --git a/src/compositor.h b/src/compositor.h
+index 4c45ff38d6..164c0bfba9 100644
+--- a/src/compositor.h
++++ b/src/compositor.h
+@@ -160,8 +160,11 @@ protected:
+     QTimer m_unusedSupportPropertyTimer;
+ #endif
+     std::unique_ptr<WorkspaceScene> m_scene;
++    std::unique_ptr<WorkspaceScene> m_scene2;
+     std::unique_ptr<CursorScene> m_cursorScene;
++    std::unique_ptr<CursorScene> m_cursorScene2;
+     std::unique_ptr<RenderBackend> m_backend;
++    std::unique_ptr<RenderBackend> m_backend2;
+     QHash<RenderLoop *, RenderLayer *> m_superlayers;
+ };
+ 
+diff --git a/src/compositor_wayland.cpp b/src/compositor_wayland.cpp
+index 52d1920963..773be5b79b 100644
+--- a/src/compositor_wayland.cpp
++++ b/src/compositor_wayland.cpp
+@@ -30,6 +30,9 @@
+ #include "window.h"
+ #include "workspace.h"
+ 
++#include "backends/drm/drm_output.h"
++#include "backends/wayland/wayland_output.h"
++
+ #if KWIN_BUILD_NOTIFICATIONS
+ #include <KNotification>
+ #endif
+@@ -171,6 +174,14 @@ void WaylandCompositor::start()
+         }
+     }
+ 
++    // DIY QPAINTER-WAYLAND INITILIZER
++    {
++        std::unique_ptr<QPainterBackend> backend(kwinApp()->outputBackend2()->createQPainterBackend());
++        m_scene2 = std::make_unique<WorkspaceSceneQPainter>(backend.get());
++        m_cursorScene2 = std::make_unique<CursorScene>(std::make_unique<ItemRendererQPainter>());
++        m_backend2 = std::move(backend);
++    }
++
+     if (!m_backend) {
+         m_state = State::Off;
+ 
+@@ -201,6 +212,7 @@ void WaylandCompositor::start()
+     for (Output *output : outputs) {
+         addOutput(output);
+     }
++    addOutput(kwinApp()->outputBackend2()->outputs()[0]);
+     connect(workspace(), &Workspace::outputAdded, this, &WaylandCompositor::addOutput);
+     connect(workspace(), &Workspace::outputRemoved, this, &WaylandCompositor::removeOutput);
+ 
+@@ -292,6 +304,102 @@ static bool checkForBlackBackground(SurfaceItem *background)
+     return nits.lengthSquared() <= (0.1 * 0.1);
+ }
+ 
++void WaylandCompositor::drawOnce(RenderLoop *renderLoop)
++{
++    if (m_backend->checkGraphicsReset()) {
++        qCDebug(KWIN_CORE) << "Graphics reset occurred";
++#if KWIN_BUILD_NOTIFICATIONS
++        KNotification::event(QStringLiteral("graphicsreset"), i18n("Desktop effects were restarted due to a graphics reset"));
++#endif
++        reinitialize();
++        return;
++    }
++
++    Output *output = kwinApp()->outputBackend2()->outputs()[0];
++
++    OutputLayer *primaryLayer = m_backend2->primaryLayer(output);
++
++    bool wrongbackend = true;
++
++    fTraceDuration("Paint (", output->name(), ")");
++
++    RenderLayer *superLayer = m_superlayers[renderLoop];
++    // superLayer->setOutputLayer(primaryLayer);
++
++    renderLoop->prepareNewFrame();
++    auto frame = std::make_shared<OutputFrame>(renderLoop, std::chrono::nanoseconds(1'000'000'000'000 / 60000));
++    bool directScanout = false;
++
++    if (primaryLayer->needsRepaint() || superLayer->needsRepaint()) {
++        auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
++        renderLoop->beginPaint();
++
++        QRegion surfaceDamage = primaryLayer->repaints();
++        primaryLayer->resetRepaints();
++        // prePaintPass(superLayer, &surfaceDamage);
++        frame->setDamage(surfaceDamage);
++
++        Window *const activeWindow = workspace()->activeWindow();
++        SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() && activeWindow->isOnOutput(output) ? activeWindow->surfaceItem() : nullptr;
++        frame->setContentType(activeWindow && activeFullscreenItem ? activeFullscreenItem->contentType() : ContentType::None);
++
++        const bool wantsAdaptiveSync = activeWindow && activeWindow->isOnOutput(output) && activeWindow->wantsAdaptiveSync();
++        const bool vrr = (output->capabilities() & Output::Capability::Vrr) && (output->vrrPolicy() == VrrPolicy::Always || (output->vrrPolicy() == VrrPolicy::Automatic && wantsAdaptiveSync));
++        const bool tearing = true; //(output->capabilities() & Output::Capability::Tearing) && options->allowTearing() && activeFullscreenItem && activeWindow->wantsTearing(activeFullscreenItem->presentationHint() == PresentationModeHint::Async);
++        if (vrr) {
++            frame->setPresentationMode(tearing ? PresentationMode::AdaptiveAsync : PresentationMode::AdaptiveSync);
++        } else {
++            frame->setPresentationMode(tearing ? PresentationMode::Async : PresentationMode::VSync);
++        }
++
++        const uint32_t planeCount = 1;
++        primaryLayer->notifyNoScanoutCandidate();
++
++        if (!directScanout) {
++            primaryLayer->setTargetRect(QRect(QPoint(0, 0), output->modeSize()));
++            if (auto beginInfo = primaryLayer->beginFrame()) {
++                auto &[renderTarget, repaint] = beginInfo.value();
++
++                const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect().toAlignedRect());
++                if (!wrongbackend) {
++                    paintPass(superLayer, renderTarget, bufferDamage);
++                }
++
++                primaryLayer->endFrame(bufferDamage, surfaceDamage, frame.get());
++            }
++        }
++
++        // postPaintPass(superLayer);
++        if (!directScanout) {
++            totalTimeQuery->end();
++            frame->addRenderTimeQuery(std::move(totalTimeQuery));
++        }
++    }
++
++    if (!directScanout) {
++        if (wrongbackend) {
++            m_backend2->present(output, frame);
++        } else {
++            if (!m_backend->present(output, frame)) {
++                m_backend->repairPresentation(output);
++            }
++        }
++    }
++
++    framePass(superLayer, frame.get());
++
++    // TODO: move this into the cursor layer
++    const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
++    if (!Cursors::self()->isCursorHidden()) {
++        Cursor *cursor = Cursors::self()->currentCursor();
++        if (cursor->geometry().intersects(output->geometry())) {
++            if (CursorSource *source = cursor->source()) {
++                source->frame(frameTime);
++            }
++        }
++    }
++}
++
+ void WaylandCompositor::composite(RenderLoop *renderLoop)
+ {
+     if (m_backend->checkGraphicsReset()) {
+@@ -406,8 +514,18 @@ void WaylandCompositor::addOutput(Output *output)
+     if (output->isPlaceholder()) {
+         return;
+     }
++    bool is_waylandoutput = false;
++    if (!dynamic_cast<KWin::DrmOutput *>(output)) {
++        is_waylandoutput = true;
++    }
++
+     auto workspaceLayer = new RenderLayer(output->renderLoop());
+-    workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene.get(), output));
++    if (is_waylandoutput) {
++        workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene2.get(), output));
++    } else {
++        workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene.get(), output));
++    }
++
+     workspaceLayer->setGeometry(output->rectF());
+     connect(output, &Output::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
+         workspaceLayer->setGeometry(output->rectF());
+@@ -415,17 +533,26 @@ void WaylandCompositor::addOutput(Output *output)
+ 
+     auto cursorLayer = new RenderLayer(output->renderLoop());
+     cursorLayer->setVisible(false);
+-    if (m_backend->compositingType() == OpenGLCompositing) {
+-        cursorLayer->setDelegate(std::make_unique<CursorDelegateOpenGL>(m_cursorScene.get(), output));
++    if (is_waylandoutput) {
++        if (m_backend->compositingType() == OpenGLCompositing) {
++            cursorLayer->setDelegate(std::make_unique<CursorDelegateOpenGL>(m_cursorScene2.get(), output));
++        } else {
++            cursorLayer->setDelegate(std::make_unique<CursorDelegateQPainter>(m_cursorScene2.get(), output));
++        }
+     } else {
+-        cursorLayer->setDelegate(std::make_unique<CursorDelegateQPainter>(m_cursorScene.get(), output));
++        if (m_backend->compositingType() == OpenGLCompositing) {
++            cursorLayer->setDelegate(std::make_unique<CursorDelegateOpenGL>(m_cursorScene.get(), output));
++        } else {
++            cursorLayer->setDelegate(std::make_unique<CursorDelegateQPainter>(m_cursorScene.get(), output));
++        }
+     }
++
+     cursorLayer->setParent(workspaceLayer);
+     cursorLayer->setSuperlayer(workspaceLayer);
+ 
+     static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR") == 1;
+ 
+-    auto updateCursorLayer = [this, output, cursorLayer]() {
++    auto updateCursorLayer = [this, output, cursorLayer, is_waylandoutput]() {
+         const Cursor *cursor = Cursors::self()->currentCursor();
+         const QRectF outputLocalRect = output->mapFromGlobal(cursor->geometry());
+         const auto outputLayer = m_backend->cursorLayer(output);
+@@ -437,7 +564,7 @@ void WaylandCompositor::addOutput(Output *output)
+             cursorLayer->setVisible(false);
+             return true;
+         }
+-        const auto renderHardwareCursor = [&]() {
++        const auto renderHardwareCursor = [&, is_waylandoutput]() {
+             if (!outputLayer || forceSoftwareCursor) {
+                 return false;
+             }
+@@ -464,7 +591,12 @@ void WaylandCompositor::addOutput(Output *output)
+                 const RenderTarget &renderTarget = beginInfo->renderTarget;
+ 
+                 RenderLayer renderLayer(output->renderLoop());
+-                renderLayer.setDelegate(std::make_unique<SceneDelegate>(m_cursorScene.get(), output));
++                if (is_waylandoutput) {
++                    renderLayer.setDelegate(std::make_unique<SceneDelegate>(m_cursorScene2.get(), output));
++                } else {
++                    renderLayer.setDelegate(std::make_unique<SceneDelegate>(m_cursorScene.get(), output));
++                }
++
+                 renderLayer.setOutputLayer(outputLayer);
+ 
+                 renderLayer.delegate()->prePaint();
+@@ -529,13 +661,19 @@ void WaylandCompositor::addOutput(Output *output)
+         cursorLayer->setVisible(shouldBeVisible && !hardwareCursor);
+         cursorLayer->setGeometry(outputLocalRect);
+     };
+-    updateCursorLayer();
+-    connect(output, &Output::geometryChanged, cursorLayer, updateCursorLayer);
+-    connect(Cursors::self(), &Cursors::currentCursorChanged, cursorLayer, updateCursorLayer);
+-    connect(Cursors::self(), &Cursors::hiddenChanged, cursorLayer, updateCursorLayer);
+-    connect(Cursors::self(), &Cursors::positionChanged, cursorLayer, moveCursorLayer);
++
++    if (!is_waylandoutput) {
++        updateCursorLayer();
++        connect(output, &Output::geometryChanged, cursorLayer, updateCursorLayer);
++        connect(Cursors::self(), &Cursors::currentCursorChanged, cursorLayer, updateCursorLayer);
++        connect(Cursors::self(), &Cursors::hiddenChanged, cursorLayer, updateCursorLayer);
++        connect(Cursors::self(), &Cursors::positionChanged, cursorLayer, moveCursorLayer);
++    }
+ 
+     addSuperLayer(workspaceLayer);
++    if (is_waylandoutput) {
++        drawOnce(output->renderLoop());
++    }
+ }
+ 
+ void WaylandCompositor::removeOutput(Output *output)
+diff --git a/src/compositor_wayland.h b/src/compositor_wayland.h
+index 1fe43a7bd2..3edb919275 100644
+--- a/src/compositor_wayland.h
++++ b/src/compositor_wayland.h
+@@ -36,6 +36,7 @@ private:
+ 
+     void addOutput(Output *output);
+     void removeOutput(Output *output);
++    void drawOnce(RenderLoop *renderLoop);
+ 
+     CompositingType m_selectedCompositor = NoCompositing;
+ };
+diff --git a/src/core/renderloop.cpp b/src/core/renderloop.cpp
+index d89574dec8..05d7435aad 100644
+--- a/src/core/renderloop.cpp
++++ b/src/core/renderloop.cpp
+@@ -5,6 +5,7 @@
+ */
+ 
+ #include "renderloop.h"
++#include "backends/drm/drm_output.h"
+ #include "options.h"
+ #include "renderloop_p.h"
+ #include "scene/surfaceitem.h"
+@@ -30,6 +31,10 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, Output *output)
+     : q(q)
+     , output(output)
+ {
++    // do not start compositor loop for wayland output
++    if (!dynamic_cast<KWin::DrmAbstractOutput *>(output)) {
++        return;
++    }
+     compositeTimer.setSingleShot(true);
+     QObject::connect(&compositeTimer, &QTimer::timeout, q, [this]() {
+         dispatch();
+@@ -52,13 +57,14 @@ void RenderLoopPrivate::scheduleNextRepaint()
+ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimestamp)
+ {
+     pendingReschedule = false;
+-    const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / refreshRate);
++    // const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / refreshRate);
+     const std::chrono::nanoseconds currentTime(std::chrono::steady_clock::now().time_since_epoch());
+-
++    nextPresentationTimestamp = currentTime;
++    /*
+     // Estimate when it's a good time to perform the next compositing cycle.
+     // the 1ms on top of the safety margin is required for timer and scheduler inaccuracies
+-    std::chrono::nanoseconds expectedCompositingTime = std::min(renderJournal.result() + safetyMargin + 1ms, 2 * vblankInterval);
+-
++    // std::chrono::nanoseconds expectedCompositingTime = std::min(renderJournal.result() + safetyMargin + 1ms, 2 * vblankInterval);
++    std::chrono::nanoseconds expectedCompositingTime = std::chrono::nanoseconds{0};
+     if (presentationMode == PresentationMode::VSync) {
+         // normal presentation: pageflips only happen at vblank
+         const uint64_t pageflipsSince = std::max<int64_t>((currentTime - lastPresentationTimestamp) / vblankInterval, 0);
+@@ -114,10 +120,11 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
+             // TODO read minimum refresh rate from the EDID and take it into account here
+             nextPresentationTimestamp = lastPresentationTimestamp + vblankInterval;
+         }
+-    }
++    }*/
+ 
+-    const std::chrono::nanoseconds nextRenderTimestamp = nextPresentationTimestamp - expectedCompositingTime;
+-    compositeTimer.start(std::max(0ms, std::chrono::duration_cast<std::chrono::milliseconds>(nextRenderTimestamp - currentTime)));
++    // const std::chrono::nanoseconds nextRenderTimestamp = nextPresentationTimestamp - expectedCompositingTime;
++    // push out frames as quickly as possible, not 0 because that would mean every event loop (good for 500 hz this way)
++    compositeTimer.start(2ms);
+ }
+ 
+ void RenderLoopPrivate::delayScheduleRepaint()
+diff --git a/src/main.cpp b/src/main.cpp
+index 112a5be868..a297812452 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -663,7 +663,7 @@ void Application::setProcessStartupEnvironment(const QProcessEnvironment &enviro
+ 
+ void Application::setOutputBackend(std::unique_ptr<OutputBackend> &&backend)
+ {
+-    Q_ASSERT(!m_outputBackend);
++    m_outputBackend2 = std::move(m_outputBackend);
+     m_outputBackend = std::move(backend);
+ }
+ 
+diff --git a/src/main.h b/src/main.h
+index e1a691a1a4..e36a1624ec 100644
+--- a/src/main.h
++++ b/src/main.h
+@@ -251,6 +251,11 @@ public:
+     {
+         return m_outputBackend.get();
+     }
++
++    OutputBackend *outputBackend2() const
++    {
++        return m_outputBackend2.get();
++    }
+     void setOutputBackend(std::unique_ptr<OutputBackend> &&backend);
+ 
+     Session *session() const
+@@ -413,6 +418,7 @@ private:
+ #endif
+     std::unique_ptr<Session> m_session;
+     std::unique_ptr<OutputBackend> m_outputBackend;
++    std::unique_ptr<OutputBackend> m_outputBackend2;
+     bool m_terminating = false;
+     qreal m_xwaylandScale = 1;
+     QProcessEnvironment m_processEnvironment;
+diff --git a/src/main_wayland.cpp b/src/main_wayland.cpp
+index 279b0ede57..804731bca3 100644
+--- a/src/main_wayland.cpp
++++ b/src/main_wayland.cpp
+@@ -54,6 +54,9 @@
+ #include <iomanip>
+ #include <iostream>
+ 
++#include "backends/drm/drm_abstract_output.h"
++#include "backends/wayland/wayland_qpainter_backend.h"
++
+ Q_IMPORT_PLUGIN(KWinIntegrationPlugin)
+ #if KWIN_BUILD_GLOBALSHORTCUTS
+ Q_IMPORT_PLUGIN(KGlobalAccelImpl)
+@@ -129,6 +132,14 @@ ApplicationWayland::~ApplicationWayland()
+     delete WaylandServer::self();
+ }
+ 
++static KWin::Wayland::WaylandBackend staticwayland = KWin::Wayland::WaylandBackend(KWin::Wayland::WaylandBackendOptions{
++    .socketName = "wayland-0",
++    .outputCount = 1,
++    .outputScale = 1,
++    .outputSize = QSize(256, 256),
++});
++static KWin::DrmBackend staticdrm = KWin::DrmBackend(KWin::Session::create(KWin::Session::Type::Noop).get());
++
+ void ApplicationWayland::performStartup()
+ {
+ #if KWIN_BUILD_X11
+@@ -139,14 +150,17 @@ void ApplicationWayland::performStartup()
+ #endif
+     createOptions();
+ 
+-    if (!outputBackend()->initialize()) {
+-        std::exit(1);
+-    }
++    staticwayland.initialize();
++    staticdrm.setSession(this->session());
++    staticdrm.initialize();
++    this->setOutputBackend(std::unique_ptr<KWin::Wayland::WaylandBackend>(&staticwayland));
+ 
+     createInput();
+     createInputMethod();
+     createTabletModeManager();
+ 
++    this->setOutputBackend(std::unique_ptr<KWin::DrmBackend>(&staticdrm));
++
+     WaylandCompositor::create();
+     createWorkspace();
+     createColorManager();
