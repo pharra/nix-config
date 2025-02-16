@@ -81,6 +81,7 @@ in {
               then ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.multiAddress} -s ${toString cfg.port}"]
               else []
             );
+          ExecStop = "${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\"";
         };
       };
     };
