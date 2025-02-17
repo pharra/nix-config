@@ -214,7 +214,7 @@ in {
   hardware.nvidia.prime = {
     offload = {
       enable = true;
-      enableOffloadCmd = true;
+      enableOffloadCmd = false;
     };
     # Make sure to use the correct Bus ID values for your system!
     # intelBusId = "PCI:0:2:0";
@@ -228,6 +228,17 @@ in {
     __GLX_VENDOR_LIBRARY_NAME = "mesa";
     #VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/radeon_icd.x86_64.json";
   };
+
+  environment.systemPackages = [
+    (pkgs.writeShellScriptBin "nvidia-offload" ''
+      export __NV_PRIME_RENDER_OFFLOAD=1
+      export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+      export __GLX_VENDOR_LIBRARY_NAME=nvidia
+      export __VK_LAYER_NV_optimus=NVIDIA_only
+      export __EGL_VENDOR_LIBRARY_FILENAMES=${config.boot.kernelPackages.nvidiaPackages.stable}/share/glvnd/egl_vendor.d/10_nvidia.json
+      exec "$@"
+    '')
+  ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
