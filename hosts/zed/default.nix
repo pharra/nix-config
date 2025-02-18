@@ -223,7 +223,7 @@ in {
   };
 
   environment.variables = {
-    KWIN_DRM_DEVICES = "/dev/dri/card0";
+    KWIN_DRM_DEVICES = "/dev/dri/by-path/pci-0000\:07\:00.0-card";
     __EGL_VENDOR_LIBRARY_FILENAMES = "${pkgs.mesa.drivers}/share/glvnd/egl_vendor.d/50_mesa.json";
     __GLX_VENDOR_LIBRARY_NAME = "mesa";
     #VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/radeon_icd.x86_64.json";
