@@ -18,6 +18,7 @@
     displayManager.sddm.enable = true; # Display Manager
     #displayManager.sddm.autoLogin.relogin = true;
     displayManager.sddm.wayland.enable = true;
+    displayManager.sddm.enableHidpi = true;
     desktopManager.plasma6.enable = true; # Window Manager
     # displayManager.autoLogin = {
     #   enable = true;
