@@ -15,7 +15,7 @@
     ${pkgs.coreutils-full}/bin/echo -n "0000:$nvidia_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/unbind
     ${pkgs.coreutils-full}/bin/echo -n "0000:$sound_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/unbind
     ${pkgs.coreutils-full}/bin/echo -n "0000:$sound_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/snd_hda_intel/bind
-    ${pkgs.kmod}/bin/modprobe nvidia_drm modeset=1 fbdev=1
+    ${pkgs.kmod}/bin/modprobe nvidia_drm modeset=1 fbdev=0
     ${pkgs.kmod}/bin/modprobe nvidia nvidia_modeset nvidia_uvm
   '';
 
@@ -45,17 +45,17 @@
       local total_count=0
       local devices=(
         "/dev/nvidia0"
-        "/sys/bus/pci/devices/0000:$nvidia_bus_path/drm/card*"
-        "/sys/bus/pci/devices/0000:$nvidia_bus_path/drm/renderD*"
+        "/dev/dri/by-path/pci-0000:$nvidia_bus_path-card"
+        "/dev/dri/by-path/pci-0000:$nvidia_bus_path-render"
       )
 
       for device in "''${devices[@]}"; do
         if [ -e "$device" ] || [ -n "$(find $device 2>/dev/null)" ]; then
           echo "[$(date)] Checking device: $device"
-          local count=$(${pkgs.lsof}/bin/lsof -e /run/user/1000/doc "$device" 2>/dev/null | wc -l)
+          local count=$(${pkgs.lsof}/bin/lsof "$device" 2>/dev/null | wc -l)
           if [ $count -gt 0 ]; then
             echo "[$(date)] Found $count processes using device:"
-            ${pkgs.lsof}/bin/lsof -e /run/user/1000/doc "$device" 2>/dev/null | awk '{print $9}' | sort -u
+            ${pkgs.lsof}/bin/lsof "$device" 2>/dev/null | awk '{print $9}' | sort -u
             total_count=$((total_count + count))
           fi
         else
@@ -77,14 +77,14 @@
       echo "[$(date)] Attempting to kill processes with signal: ${signal:-SIGTERM}"
       local devices=(
         "/dev/nvidia0"
-        "/sys/bus/pci/devices/0000:$nvidia_bus_path/drm/card*"
-        "/sys/bus/pci/devices/0000:$nvidia_bus_path/drm/renderD*"
+        "/dev/dri/by-path/pci-0000:$nvidia_bus_path-card"
+        "/dev/dri/by-path/pci-0000:$nvidia_bus_path-render"
       )
 
       for device in "''${devices[@]}"; do
         if [ -e "$device" ] || [ -n "$(find $device 2>/dev/null)" ]; then
           echo "[$(date)] Killing processes using device: $device"
-          ${pkgs.lsof}/bin/lsof -e /run/user/1000/doc $device 2>/dev/null | ${pkgs.gawk}/bin/awk 'NR>1 {print $2}' | sort -u | ${pkgs.findutils}/bin/xargs -r kill $signal
+          ${pkgs.lsof}/bin/lsof $device 2>/dev/null | ${pkgs.gawk}/bin/awk 'NR>1 {print $2}' | sort -u | ${pkgs.findutils}/bin/xargs -r kill $signal
         else
           echo "[$(date)] Device not found: $device"
         fi
