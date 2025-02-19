@@ -15,7 +15,7 @@
     ${pkgs.coreutils-full}/bin/echo -n "0000:$nvidia_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/unbind
     ${pkgs.coreutils-full}/bin/echo -n "0000:$sound_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/unbind
     ${pkgs.coreutils-full}/bin/echo -n "0000:$sound_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/snd_hda_intel/bind
-    ${pkgs.kmod}/bin/modprobe nvidia_drm modeset=1 fbdev=0
+    ${pkgs.kmod}/bin/modprobe nvidia_drm modeset=1 fbdev=1
     ${pkgs.kmod}/bin/modprobe nvidia nvidia_modeset nvidia_uvm
   '';
 

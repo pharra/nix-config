@@ -188,11 +188,11 @@ in {
     # Enable this if you have graphical corruption issues or application crashes after waking
     # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead
     # of just the bare essentials.
-    powerManagement.enable = false;
+    powerManagement.enable = true;
 
     # Fine-grained power management. Turns off GPU when not in use.
     # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    powerManagement.finegrained = false;
+    powerManagement.finegrained = true;
 
     # Use the NVidia open source kernel module (not to be confused with the
     # independent third-party "nouveau" open source driver).
@@ -223,7 +223,7 @@ in {
   };
 
   environment.variables = {
-    KWIN_DRM_DEVICES = "/dev/dri/by-path/pci-0000\:07\:00.0-card";
+    # KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
     __EGL_VENDOR_LIBRARY_FILENAMES = "${pkgs.mesa.drivers}/share/glvnd/egl_vendor.d/50_mesa.json";
     __GLX_VENDOR_LIBRARY_NAME = "mesa";
     #VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/radeon_icd.x86_64.json";
@@ -242,7 +242,7 @@ in {
 
   services.displayManager.sddm.settings = {
     General = {
-      GreeterEnvironment = "QT_WAYLAND_SHELL_INTEGRATION=layer-shell,KWIN_DRM_DEVICES=/dev/dri/by-path/pci-0000\:07\:00.0-card";
+      GreeterEnvironment = "QT_WAYLAND_SHELL_INTEGRATION=layer-shell,__EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa.drivers}/share/glvnd/egl_vendor.d/50_mesa.json,__GLX_VENDOR_LIBRARY_NAME=mesa";
     };
   };
 
