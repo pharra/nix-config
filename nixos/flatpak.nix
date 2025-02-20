@@ -56,5 +56,9 @@
       appId = "org.qbittorrent.qBittorrent";
       origin = "flathub";
     }
+    {
+      appId = "org.telegram.desktop";
+      origin = "flathub";
+    }
   ];
 }
