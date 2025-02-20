@@ -50,6 +50,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    catppuccin.url = "github:catppuccin/nix";
+
     impermanence.url = "github:nix-community/impermanence";
 
     # secrets management
@@ -110,6 +112,7 @@
     plasma-manager,
     NixVirt,
     nixos-cosmic,
+    catppuccin,
     ...
   }: let
     username = "wf";
@@ -137,7 +140,19 @@
 
     modules = import ./modules;
     _home-modules = import ./home-modules;
-    home-modules = [plasma-manager.homeManagerModules.plasma-manager] ++ (builtins.attrValues _home-modules);
+    home-modules =
+      [
+        plasma-manager.homeManagerModules.plasma-manager
+        catppuccin.homeManagerModules.catppuccin
+
+        {
+          catppuccin = {
+            flavor = "mocha";
+            enable = true;
+          };
+        }
+      ]
+      ++ (builtins.attrValues _home-modules);
 
     common-nixos-modules =
       [
@@ -145,6 +160,14 @@
         nix-flatpak.nixosModules.nix-flatpak
         NixVirt.nixosModules.default
         nixos-cosmic.nixosModules.default
+        catppuccin.nixosModules.catppuccin
+
+        {
+          catppuccin = {
+            flavor = "mocha";
+            enable = true;
+          };
+        }
       ]
       ++ (builtins.attrValues modules);
 
