@@ -91,7 +91,7 @@ in {
       #"1e4b:1202" # nvme
       #"1e4b:1602" # nvme
     ];
-    applyACSpatch = true;
+    applyACSpatch = false;
   };
 
   fileSystems."/system" = {

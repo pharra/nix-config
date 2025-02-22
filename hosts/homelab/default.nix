@@ -121,7 +121,7 @@ in {
 
   services.duplicati = {
     enable = true;
-    interface = "192.168.30.1";
+    interface = "192.168.29.1";
   };
 
   net-name = {
