@@ -61,6 +61,13 @@ in {
     interfaces = ["mlx5_0"];
   };
 
+  hardware.net-sriov = {
+    enable = true;
+    interfaces = [
+      { number = 2; name = "eno1"; }
+    ];
+  };
+
   specialisation = {
     vfio.configuration = {
       virtualisation.vfio.devices = [
