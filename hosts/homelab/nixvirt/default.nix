@@ -8,6 +8,7 @@
   NixOS = import ./NixOS.nix args;
   ArchLinux = import ./ArchLinux.nix args;
   Windows = import ./Windows.nix args;
+  Kwrt = import ./Kwrt.nix args;
 in {
   environment = {
     systemPackages = with pkgs; [
@@ -23,6 +24,7 @@ in {
       ArchLinux
       NixOS
       Windows
+      Kwrt
     ];
     pools = [
       {
