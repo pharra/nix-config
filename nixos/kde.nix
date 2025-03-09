@@ -28,6 +28,7 @@
 
   environment.systemPackages = with pkgs; [
     kdePackages.kirigami
+    kdePackages.wallpaper-engine-plugin
   ];
 
   i18n.inputMethod = {
