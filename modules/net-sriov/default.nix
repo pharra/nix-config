@@ -27,23 +27,26 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.services = foldl' (services: interface:
-      let
-        name = interface.name;
-        number = interface.number;
-      in
-        services // {
-          "${name}-sriov" = {
-            enable = true;
-            script = "set -e\n" + "echo ${toString number} | tee /sys/class/net/${name}/device/sriov_numvfs";
-            requiredBy = ["network.target"];
-            before = ["network.target"];
-            serviceConfig = {
-              Type = "oneshot";
-              RemainAfterExit = "yes";
+    systemd.services =
+      foldl' (
+        services: interface: let
+          name = interface.name;
+          number = interface.number;
+        in
+          services
+          // {
+            "${name}-sriov" = {
+              enable = true;
+              script = "set -e\n" + "echo ${toString number} | tee /sys/class/net/${name}/device/sriov_numvfs";
+              requiredBy = ["network.target"];
+              before = ["network.target"];
+              serviceConfig = {
+                Type = "oneshot";
+                RemainAfterExit = "yes";
+              };
             };
-          };
-        }
-    ) {} cfg.interfaces;
+          }
+      ) {}
+      cfg.interfaces;
   };
 }

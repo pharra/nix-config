@@ -62,9 +62,12 @@ in {
   };
 
   hardware.net-sriov = {
-    enable = true;
+    enable = false;
     interfaces = [
-      { number = 2; name = "eno1"; }
+      {
+        number = 2;
+        name = "eno1";
+      }
     ];
   };
 
