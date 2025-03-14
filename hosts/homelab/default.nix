@@ -3,6 +3,7 @@
   lib,
   pkgs,
   libs,
+  mysecrets,
   netboot_args,
   ...
 } @ args: let
@@ -107,6 +108,25 @@ in {
     systemd-boot.enable = true;
   };
 
+  age.secrets."restic_password" = {
+    file = "${mysecrets}/restic_password.age";
+    mode = "777";
+  };
+  services.restic.backups = {
+    local = {
+      user = "sftp";
+      repository = "/share/restic";
+      initialize = true; # initializes the repo, don't set if you want manual control
+      passwordFile = config.age.secrets.restic_password.path;
+      paths = ["/share/sftp/Android"];
+      timerConfig = {
+        OnCalendar = "03:00";
+        Persistent = true;
+        RandomizedDelaySec = "1h";
+      };
+    };
+  };
+
   systemd.services = {
     tune-usb-autosuspend = {
       description = "Disable USB autosuspend";
@@ -120,7 +140,7 @@ in {
   };
 
   services.duplicati = {
-    enable = true;
+    enable = false;
     interface = "192.168.29.1";
   };
 
