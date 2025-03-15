@@ -111,6 +111,7 @@ in {
   age.secrets."restic_password" = {
     file = "${mysecrets}/restic_password.age";
     mode = "777";
+    path = "/etc/restic_password";
   };
   services.restic.backups = {
     local = {
