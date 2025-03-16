@@ -94,7 +94,7 @@
     pciutils # lspci
     usbutils # lsusb
     nvme-cli # nvme tools
-
+    rclone
     # create a fhs environment by command `fhs`, so we can run non-nixos packages in nixos!
     (
       let
