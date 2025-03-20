@@ -4,8 +4,8 @@ self: super: {
     src = super.fetchFromGitHub {
       owner = "gnif";
       repo = "LookingGlass";
-      rev = "e25492a3a36f7e1fde6e3c3014620525a712a64a";
-      sha256 = "sha256-DBmCJRlB7KzbWXZqKA0X4VTpe+DhhYG5uoxsblPXVzg=";
+      rev = "b526eb3da0c6f29c74cf0c3d288cc0d3d251fbdb";
+      sha256 = "sha256-r2g+0KQMr7JQXqXU1OZNmrvDre7PdaeTOuGEmlRRWBM=";
       fetchSubmodules = true;
     };
     patches = [./nanosvg-unvendor.diff];
