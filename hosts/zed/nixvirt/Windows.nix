@@ -178,14 +178,14 @@ in {
                 # RTX 4090 01:00.1
                 address = pci_address 5 0 1 // {multifunction = true;};
               }
-              #{
-              #  type = "pci";
-              #  mode = "subsystem";
-              #  managed = true;
-              #  source = {address = pci_address 69 0 3;};
-              #  # Backend USB Controller 45:00.3
-              #  address = pci_address 7 0 0;
-              #}
+              {
+                type = "pci";
+                mode = "subsystem";
+                managed = true;
+                source = {address = pci_address 3 0 1;};
+                # MLX 5 03:00.1
+                address = pci_address 7 0 0;
+              }
               {
                 type = "pci";
                 mode = "subsystem";
