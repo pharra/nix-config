@@ -13,7 +13,7 @@
       "kxkbrc"."Layout"."LayoutList".value = "us";
       "kxkbrc"."Layout"."Use".value = true;
       "kxkbrc"."Layout"."VariantList".value = "";
-      "plasma-localerc"."Formats"."LANG".value = "en_US.UTF-8";
+      "plasma-localerc"."Formats"."LANG".value = "zh_CN.UTF-8";
     };
   };
 }
