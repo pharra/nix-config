@@ -247,7 +247,21 @@
         name = "zed";
         builds = ["kde" "gnome" "cosmic" "deepin"];
         nixos-modules = [./hosts/zed];
+        specialArgs = {
+          boot_from_network = false;
+        };
       }
+
+      # zed with netboot
+      {
+        name = "zed_netboot";
+        builds = ["kde" "gnome" "cosmic" "deepin"];
+        nixos-modules = [./hosts/zed];
+        specialArgs = {
+          boot_from_network = true;
+        };
+      }
+
       # homelab
       {
         name = "homelab";

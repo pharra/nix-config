@@ -87,6 +87,7 @@ in {
       menu iPXE boot menu
       item --gap --             ------------------------- Operating systems ------------------------------
       item nixos      Boot NixOS
+      item zed_nixos      Boot NixOS on zed
       item nixos-installer Boot NixOS Installer
       item win      Boot Windows
       item win-install      Boot Windows Installer
@@ -131,6 +132,11 @@ in {
       :nixos
       echo Booting nixos from iSCSI for ''${initiator-iqn}
       set root-path ''${base-iscsi}:nixosefi
+      sanboot --drive 0x80 ''${root-path} || goto failed
+
+      :zed_nixos
+      echo Booting nixos from iSCSI for ''${initiator-iqn}
+      set root-path ''${base-iscsi}:zednixosefi
       sanboot --drive 0x80 ''${root-path} || goto failed
 
       :nixos-installer

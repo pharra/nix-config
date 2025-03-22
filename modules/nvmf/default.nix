@@ -79,20 +79,35 @@ in {
       kernelModules = ["nvme-rdma" "nvme-tcp"];
 
       systemd = {
-        packages = [pkgs.nvme-cli];
+        packages = [pkgs.nvme-cli pkgs.iputils pkgs.coreutils-full];
+
+        services.ensure-network = {
+          enable = true;
+          before = ["network-online.target"];
+          after = ["nss-lookup.target"];
+          unitConfig = {
+            DefaultDependencies = "no";
+          };
+          serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = "yes";
+            ExecStart = "until ${pkgs.iputils}/bin/ping -c 1 ${cfg.address}; do ${pkgs.coreutils-full}/bin/sleep 1; done";
+          };
+        };
 
         services.nixos-nvmf = {
           requiredBy = ["initrd.target"];
-          after = ["network-online.target"];
-          wants = ["network-online.target"];
+          after = ["ensure-network.service"];
+          wants = ["ensure-network.service"];
           serviceConfig = {
             Type = "oneshot";
-            ExecStartPre = "${pkgs.nvme-cli}/bin/nvme discover -t ${cfg.type} -a ${cfg.address} -s ${toString cfg.port} -Q 1024 -l 3600";
+            RemainAfterExit = "yes";
+            ExecStartPre = "${pkgs.nvme-cli}/bin/nvme discover -t ${cfg.type} -a ${cfg.address} -s ${toString cfg.port}";
             ExecStart =
-              ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.address} -s ${toString cfg.port} -Q 1024 -l 3600"]
+              ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.address} -s ${toString cfg.port}"]
               ++ (
                 if cfg.multipath
-                then ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.multiAddress} -s ${toString cfg.port} -Q 1024 -l 3600"]
+                then ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.multiAddress} -s ${toString cfg.port}"]
                 else []
               );
           };

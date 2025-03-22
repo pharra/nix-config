@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  boot_from_network,
   ...
 } @ args:
 #############################################################
@@ -31,6 +32,10 @@ in {
 
     ../../secrets/nixos.nix
     ./nixvirt
+    (import ./netboot.nix {
+      inherit boot_from_network config pkgs lib;
+      interface = interface.mlx5_0;
+    })
     #../../nixos/ccache.nix
   ];
 
