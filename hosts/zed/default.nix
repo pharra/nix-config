@@ -145,7 +145,7 @@ in {
         };
       };
 
-      "40-${interface.mlx5_0}" = {
+      "40-${interface.mlx5_0}" = lib.mkIf (boot_from_network != true) {
         matchConfig.Name = "${interface.mlx5_0}";
         networkConfig = {
           # start a DHCP Client for IPv4 Addressing/Routing

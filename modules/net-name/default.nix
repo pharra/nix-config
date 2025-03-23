@@ -28,6 +28,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    boot.initrd.services.udev.rules = concatMapStringsSep "\n" (interface: "ACTION==\"add\", SUBSYSTEM==\"net\", ATTR{address}==\"${interface.mac}\", NAME=\"${interface.name}\"") cfg.interfaces;
     services.udev.extraRules = concatMapStringsSep "\n" (interface: "ACTION==\"add\", SUBSYSTEM==\"net\", ATTR{address}==\"${interface.mac}\", NAME=\"${interface.name}\"") cfg.interfaces;
   };
 }

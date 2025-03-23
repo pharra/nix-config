@@ -79,6 +79,7 @@ in {
       kernelModules = ["nvme-rdma" "nvme-tcp"];
 
       systemd = {
+        initrdBin = [pkgs.iputils];
         packages = [pkgs.nvme-cli pkgs.iputils pkgs.coreutils-full];
 
         services.ensure-network = {
@@ -90,8 +91,7 @@ in {
           };
           serviceConfig = {
             Type = "oneshot";
-            RemainAfterExit = "yes";
-            ExecStart = "until ${pkgs.iputils}/bin/ping -c 1 ${cfg.address}; do ${pkgs.coreutils-full}/bin/sleep 1; done";
+            ExecStart = "${pkgs.bashInteractive}/bin/sh -c 'until ${pkgs.iputils}/bin/ping -c 1 ${cfg.address}; do ${pkgs.coreutils-full}/bin/sleep 1; done'";
           };
         };
 
@@ -101,7 +101,6 @@ in {
           wants = ["ensure-network.service"];
           serviceConfig = {
             Type = "oneshot";
-            RemainAfterExit = "yes";
             ExecStartPre = "${pkgs.nvme-cli}/bin/nvme discover -t ${cfg.type} -a ${cfg.address} -s ${toString cfg.port}";
             ExecStart =
               ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.address} -s ${toString cfg.port}"]
