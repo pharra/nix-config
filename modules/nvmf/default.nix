@@ -58,18 +58,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # The "scripted" networking configuration (ie: non-networkd)
-    # doesn't properly order the start and stop of the interfaces, and the
-    # network interfaces are torn down before unmounting disks. Since this
-    # module is specifically for very-early-boot network mounts, we need
-    # the network to stay on.
-    #
-    # We could probably fix the scripted options to properly order, but I'm
-    # not inclined to invest that time today. Hopefully this gets users far
-    # enough along and they can just use networkd.
-    networking.useNetworkd = true;
-    networking.useDHCP = false; # Required to set useNetworkd = true
-
     boot.initrd = {
       # By default, the stage-1 disables the network and resets the interfaces
       # on startup. Since our startup disks are on the network, we can't let
@@ -79,8 +67,7 @@ in {
       kernelModules = ["nvme-rdma" "nvme-tcp"];
 
       systemd = {
-        initrdBin = [pkgs.iputils];
-        packages = [pkgs.nvme-cli pkgs.iputils pkgs.coreutils-full];
+        initrdBin = [pkgs.iputils pkgs.nvme-cli pkgs.iputils pkgs.coreutils];
 
         services.ensure-network = {
           enable = true;
@@ -91,7 +78,7 @@ in {
           };
           serviceConfig = {
             Type = "oneshot";
-            ExecStart = "${pkgs.bashInteractive}/bin/sh -c 'until ${pkgs.iputils}/bin/ping -c 1 ${cfg.address}; do ${pkgs.coreutils-full}/bin/sleep 1; done'";
+            ExecStart = "${pkgs.bashInteractive}/bin/sh -c 'until ${pkgs.iputils}/bin/ping -c 1 ${cfg.address}; do ${pkgs.coreutils}/bin/sleep 1; done'";
           };
         };
 
