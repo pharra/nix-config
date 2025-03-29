@@ -60,6 +60,10 @@ lib.mkIf boot_from_network {
     services.resolved.enable = true;
   };
 
+  systemd.network.networks = {
+    "40-${interface}" = lib.mkForce {};
+  };
+
   fileSystems."/" = lib.mkForce {
     device = "/dev/disk/by-label/zed_nixos";
     fsType = "ext4";
