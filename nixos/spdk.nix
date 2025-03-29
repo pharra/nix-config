@@ -85,11 +85,9 @@ in {
     spdk-scripts
     bind-vfio-scripts
     unbind-vfio-scripts
-    spdk-dashboard
   ];
 
   services.spdk = {
     enable = true;
-    dashboard = true;
   };
 }

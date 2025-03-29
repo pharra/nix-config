@@ -10,18 +10,11 @@ in {
   options = {
     services.spdk = {
       enable = mkEnableOption "spdk service";
-      dashboard = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = ''
-          enable spdk dashboard
-        '';
-      };
     };
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [pkgs.spdk] ++ lib.lists.optionals cfg.dashboard [pkgs.spdk-dashboard];
+    environment.systemPackages = [pkgs.spdk];
 
     systemd.services.spdk = {
       enable = true;
@@ -38,18 +31,6 @@ in {
           #"${pkgs.kmod}/bin/modprobe ublk_drv"
         ];
         ExecStart = ''${pkgs.spdk}/bin/spdk_tgt -m 0x30003 -c /home/wf/spdk/rdma_config.json -f /var/run/spdk.pid -S /var/run'';
-      };
-    };
-
-    systemd.services.spdk-dashboard = mkIf cfg.dashboard {
-      enable = true;
-      wantedBy = ["multi-user.target"];
-      after = ["spdk.service"];
-      requires = ["spdk.service"];
-      description = "Starts the spdk dashboard";
-      serviceConfig = {
-        Type = "simple";
-        ExecStart = ''${pkgs.spdk-dashboard}/bin/spdk-dashboard'';
       };
     };
 
