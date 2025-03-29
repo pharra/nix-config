@@ -21,5 +21,6 @@
 
     dnsutils
     screen
+    appimage-run
   ];
 }
