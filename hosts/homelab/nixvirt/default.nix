@@ -17,7 +17,6 @@ in {
   };
 
   virtualisation.libvirt.enable = true;
-  virtualisation.libvirt.forceRedefine = false;
   virtualisation.libvirt.verbose = true;
   virtualisation.libvirt.connections."qemu:///system" = {
     domains = [

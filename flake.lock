@@ -4,19 +4,18 @@
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
-        ],
-        "nixpkgs-ovmf": "nixpkgs-ovmf"
+        ]
       },
       "locked": {
-        "lastModified": 1722260669,
-        "narHash": "sha256-HpOjVGD/DLvOp77ULDsJXCToO4GC3TlTFrbnbTqmkes=",
-        "owner": "pharra",
+        "lastModified": 1741549407,
+        "narHash": "sha256-f9SXK+/rvlryDNlc++Eva/hYjbkf7OCalWwmwifRhtI=",
+        "owner": "AshleyYakeley",
         "repo": "NixVirt",
-        "rev": "a9730acaec5568a718b57bb4b327d035c09971f0",
+        "rev": "9950b932dce4ae6b9bda7c83d41705c1a14e10f0",
         "type": "github"
       },
       "original": {
-        "owner": "pharra",
+        "owner": "AshleyYakeley",
         "repo": "NixVirt",
         "type": "github"
       }
@@ -198,10 +197,10 @@
     "mysecrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1742131395,
-        "narHash": "sha256-FUdSEqve94/WS1AqMZL0m9wONHkM9drMKaZ1xXQ5TD8=",
+        "lastModified": 1743652704,
+        "narHash": "sha256-HtSHUPq/AncYAYaPJfS7/i65EqmmvfcMshSiSPQEoF0=",
         "ref": "refs/heads/main",
-        "rev": "cef8840f7cc89310c331981a6ab95646a6668ad5",
+        "rev": "156c4d20a006b2d9d9ed45a48f607079c6925040",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/pharra/agenix-secrets.git"
@@ -294,22 +293,6 @@
       "original": {
         "owner": "nixos",
         "ref": "nixos-23.05",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs-ovmf": {
-      "locked": {
-        "lastModified": 1708984720,
-        "narHash": "sha256-gJctErLbXx4QZBBbGp78PxtOOzsDaQ+yw1ylNQBuSUY=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "13aff9b34cc32e59d35c62ac9356e4a41198a538",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }

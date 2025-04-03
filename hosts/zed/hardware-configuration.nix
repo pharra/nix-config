@@ -109,6 +109,11 @@ in {
       "10de:2684" # Graphics
       "10de:22ba" # Audio
       "8086:f1a6" # nvme
+
+      # "10de:21c4" # GTX 1650 Super
+      # "10de:1aeb"
+      # "10de:1aec"
+      # "10de:1aed"
     ];
     blacklistNvidia = true;
   };

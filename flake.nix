@@ -83,7 +83,7 @@
     };
 
     NixVirt = {
-      url = "github:pharra/NixVirt";
+      url = "github:AshleyYakeley/NixVirt";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

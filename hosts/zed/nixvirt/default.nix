@@ -7,9 +7,17 @@
 } @ args: let
   Windows = import ./Windows.nix args;
   Microsoft = import ./Microsoft.nix args;
+  Linux = import ./Linux.nix args;
+
   attach_gpu = pkgs.writeShellScriptBin "attach_gpu" ''
-    nvidia_vendor="10de:2684"
-    sound_vendor="10de:22ba"
+    nvidia_vendor="$1"
+    sound_vendor="$2"
+
+    if [ -z "$nvidia_vendor" ] || [ -z "$sound_vendor" ]; then
+      echo "Usage: attach_gpu <nvidia_vendor> <sound_vendor>"
+      exit 1
+    fi
+
     nvidia_bus_path=`${pkgs.pciutils}/bin/lspci -mm -d $nvidia_vendor | ${pkgs.gawk}/bin/awk '{ print $1 }'`
     sound_bus_path=`${pkgs.pciutils}/bin/lspci -mm -d $sound_vendor | ${pkgs.gawk}/bin/awk '{ print $1 }'`
     ${pkgs.coreutils-full}/bin/echo -n "0000:$nvidia_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/unbind
@@ -20,14 +28,19 @@
   '';
 
   detach_gpu = pkgs.writeShellScriptBin "detach_gpu" ''
-    nvidia_vendor="10de:2684"
-    sound_vendor="10de:22ba"
+    nvidia_vendor="$1"
+    sound_vendor="$2"
+
+    if [ -z "$nvidia_vendor" ] || [ -z "$sound_vendor" ]; then
+      echo "Usage: detach_gpu <nvidia_vendor> <sound_vendor>"
+      exit 1
+    fi
+
     echo "[$(date)] Looking for devices with vendor IDs: NVIDIA=$nvidia_vendor, Sound=$sound_vendor"
 
     nvidia_bus_path=`${pkgs.pciutils}/bin/lspci -mm -d $nvidia_vendor | ${pkgs.gawk}/bin/awk '{ print $1 }'`
     sound_bus_path=`${pkgs.pciutils}/bin/lspci -mm -d $sound_vendor | ${pkgs.gawk}/bin/awk '{ print $1 }'`
 
-    # Check if devices were found
     if [ -z "$nvidia_bus_path" ]; then
       echo "[$(date)] ERROR: NVIDIA device not found"
       exit 1
@@ -184,12 +197,12 @@ in {
   };
 
   virtualisation.libvirt.enable = true;
-  virtualisation.libvirt.forceRedefine = false;
   virtualisation.libvirt.verbose = true;
   virtualisation.libvirt.connections."qemu:///system" = {
     domains = [
       Windows
       Microsoft
+      Linux
     ];
     pools = [
       {
@@ -233,7 +246,7 @@ in {
   systemd.services.attach_gpu = {
     enable = false;
     script = ''
-      ${attach_gpu}/bin/attach_gpu
+      ${attach_gpu}/bin/attach_gpu "10de:2684" "10de:22ba"
     '';
     requiredBy = ["libvirtd.service"];
     before = ["libvirtd.service"];
@@ -245,11 +258,10 @@ in {
   virtualisation.libvirtd.hooks.qemu."10-cpu-manager" = pkgs.writeShellScript "cpu-qemu-hook" ''
     machine=$1
     command=$2
-    # Dynamically VFIO bind/unbind the USB with the VM starting up/stopping
     if [ "$machine" == "Windows" ]; then
       if [ "$command" == "prepare" ]; then
         ${pkgs.coreutils-full}/bin/echo "preparing"
-        # ${detach_gpu}/bin/detach_gpu
+        # ${detach_gpu}/bin/detach_gpu "10de:2684" "10de:22ba"
       elif [ "$command" == "started" ]; then
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=8-15,24-31
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=8-15,24-31
@@ -258,7 +270,7 @@ in {
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-31
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-31
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-31
-        # ${attach_gpu}/bin/attach_gpu
+        # ${attach_gpu}/bin/attach_gpu "10de:2684" "10de:22ba"
       fi
     fi
   '';
