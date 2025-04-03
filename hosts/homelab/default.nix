@@ -118,6 +118,49 @@ in {
     mode = "777";
     path = "/etc/rclone_config.conf";
   };
+  systemd.mounts = [
+    {
+      type = "rclone";
+      what = "aliyundrive:/movies";
+      where = "/share/media/aliyundrive/movies";
+      mountConfig = {
+        Options = "rw,gid=sftp,uid=sftp,allow_other,args2env,vfs-cache-mode=writes,config=${config.age.secrets.rclone_config.path}";
+      };
+    }
+    {
+      type = "rclone";
+      what = "aliyundrive:/tv";
+      where = "/share/media/aliyundrive/tv";
+      mountConfig = {
+        Options = "rw,gid=sftp,uid=sftp,allow_other,args2env,vfs-cache-mode=writes,config=${config.age.secrets.rclone_config.path}";
+      };
+    }
+    {
+      type = "rclone";
+      what = "quark:/";
+      where = "/share/media/quark";
+      mountConfig = {
+        Options = "rw,gid=sftp,uid=sftp,allow_other,args2env,vfs-cache-mode=writes,config=${config.age.secrets.rclone_config.path}";
+      };
+    }
+  ];
+
+  systemd.automounts = [
+    {
+      wantedBy = ["multi-user.target"];
+      automountConfig = {
+        TimeoutIdleSec = "600";
+      };
+      where = "/share/media/aliyundrive/movies";
+    }
+    {
+      wantedBy = ["multi-user.target"];
+      automountConfig = {
+        TimeoutIdleSec = "600";
+      };
+      where = "/share/media/aliyundrive/tv";
+    }
+  ];
   services.restic.backups = {
     sftp_android = {
       user = "sftp";
