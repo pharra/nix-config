@@ -56,4 +56,5 @@ in {
           };
       }
     );
+  active = true;
 }
