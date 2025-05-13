@@ -16,6 +16,7 @@ in rec {
 
   inherit linux_mlx linux_surface;
   spdk = pkgs.callPackage ./pkgs/spdk {};
+  xiraid = pkgs.callPackage ./pkgs/xiraid {};
   mcontrolcenter = pkgs.libsForQt5.callPackage ./pkgs/mcontrolcenter/default.nix {};
   caddy = pkgs.callPackage ./pkgs/caddy {};
   sub-store-cli = pkgs.callPackage ./pkgs/sub-store-cli {};

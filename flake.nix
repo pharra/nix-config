@@ -50,8 +50,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    catppuccin.url = "github:catppuccin/nix";
-
     impermanence.url = "github:nix-community/impermanence";
 
     # secrets management
@@ -112,7 +110,6 @@
     plasma-manager,
     NixVirt,
     nixos-cosmic,
-    catppuccin,
     ...
   }: let
     username = "wf";
@@ -143,14 +140,6 @@
     home-modules =
       [
         plasma-manager.homeManagerModules.plasma-manager
-        catppuccin.homeManagerModules.catppuccin
-
-        {
-          catppuccin = {
-            flavor = "mocha";
-            enable = true;
-          };
-        }
       ]
       ++ (builtins.attrValues _home-modules);
 
@@ -160,14 +149,6 @@
         nix-flatpak.nixosModules.nix-flatpak
         NixVirt.nixosModules.default
         nixos-cosmic.nixosModules.default
-        catppuccin.nixosModules.catppuccin
-
-        {
-          catppuccin = {
-            flavor = "mocha";
-            enable = true;
-          };
-        }
       ]
       ++ (builtins.attrValues modules);
 
@@ -246,6 +227,7 @@
       {
         name = "zed";
         builds = ["kde" "gnome" "cosmic" "deepin"];
+        hostname = "zed";
         nixos-modules = [./hosts/zed];
         specialArgs = {
           boot_from_network = false;
@@ -261,6 +243,14 @@
         specialArgs = {
           boot_from_network = true;
         };
+      }
+
+      # luris
+      {
+        name = "luris";
+        builds = ["kde" "gnome" "cosmic" "deepin"];
+        nixos-modules = [./hosts/luris];
+        hostname = "luris.lan";
       }
 
       # homelab
@@ -361,6 +351,8 @@
           exec zsh
         '';
       };
+
+    inherit legacyPackages;
 
     # format the nix code in this flake
     # alejandra is a nix formatter with a beautiful output

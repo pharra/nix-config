@@ -218,7 +218,7 @@ in {
   # };
 
   services.pixiecore = {
-    enable = false;
+    enable = true;
     listen = "192.168.31.200";
     kernel = netboot_installer.config.system.build.kernel + "/bzImage";
     initrd = netboot_installer.config.system.build.netbootRamdisk + "/initrd";
