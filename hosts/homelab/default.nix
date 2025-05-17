@@ -536,7 +536,9 @@ in {
     open = true;
     #powerManagement.enable = true;
   };
-  # virtualisation.docker.enableNvidia = true; # for nvidia-docker
+  hardware.nvidia-container-toolkit.enable = true; # for nvidia-docker
+  virtualisation.docker.daemon.settings.features.cdi = true;
+  virtualisation.docker.rootless.daemon.settings.features.cdi = true;
 
   hardware.graphics = {
     enable = true;
