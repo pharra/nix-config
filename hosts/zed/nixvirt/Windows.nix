@@ -22,6 +22,7 @@ in {
       nvram_path = /home/wf/Data/RAMPool/Windows.fd;
       no_graphics = true;
       virtio_net = true;
+      # install_vol = "/home/wf/Data/ISOPool/Win11_24H2_Chinese_Simplified_x64.iso";
     };
   in
     NixVirt.lib.domain.writeXML (
@@ -33,8 +34,8 @@ in {
         };
         cpu = {
           mode = "host-passthrough";
-          check = "full";
-          migratable = true;
+          check = "none";
+          migratable = false;
           topology = {
             sockets = 1;
             dies = 1;
@@ -44,10 +45,16 @@ in {
           # cache = {
           #   mode = "passthrough";
           # };
-          feature = {
-            policy = "require";
-            name = "topoext";
-          };
+          feature = [
+            {
+              policy = "require";
+              name = "topoext";
+            }
+            {
+              policy = "disable";
+              name = "hypervisor";
+            }
+          ];
         };
         iothreads = {
           count = 1;
@@ -95,6 +102,24 @@ in {
           // {
             boot = null;
             bootmenu = {enable = false;};
+            smbios = {
+              mode = "host";
+            };
+          };
+        features =
+          Windows.features
+          // {
+            kvm = {
+              hidden.state = true;
+            };
+            hyperv =
+              Windows.features.hyperv
+              // {
+                vendor_id = {
+                  state = true;
+                  value = "1234567890ab";
+                };
+              };
           };
         devices =
           Windows.devices
