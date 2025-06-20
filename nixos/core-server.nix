@@ -14,7 +14,7 @@
   boot.loader.systemd-boot.configurationLimit = lib.mkDefault 10;
   # boot.loader.grub.configurationLimit = 10;
 
-  boot.kernelPackages = lib.mkOverride 1400 pkgs.linuxPackages_6_11;
+  boot.kernelPackages = lib.mkOverride 1400 pkgs.linuxPackages_6_12;
 
   hardware.enableRedistributableFirmware = true;
   # do garbage collection weekly to keep disk usage low
@@ -81,7 +81,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    deploy-rs.defaultPackage.x86_64-linux
+    deploy-rs.packages.x86_64-linux.default
     nmap
     wget
     curl
