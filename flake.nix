@@ -41,6 +41,9 @@
     nixpkgs-2305.url = "github:nixos/nixpkgs/nixos-23.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    # nixos wsl
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+
     # home-manager, used for managing user configuration
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
@@ -110,6 +113,7 @@
     plasma-manager,
     NixVirt,
     nixos-cosmic,
+    nixos-wsl,
     ...
   }: let
     username = "wf";
@@ -251,6 +255,14 @@
         builds = ["kde" "gnome" "cosmic" "deepin"];
         nixos-modules = [./hosts/luris];
         hostname = "luris.lan";
+      }
+
+      # dat
+      {
+        name = "dat";
+        builds = ["kde" "gnome" "cosmic" "deepin"];
+        nixos-modules = [./hosts/dat nixos-wsl.nixosModules.default];
+        hostname = "dat.lan";
       }
 
       # homelab
