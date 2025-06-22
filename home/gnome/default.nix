@@ -90,7 +90,6 @@
     gnomeExtensions.just-perfection
     gnomeExtensions.caffeine
     gnomeExtensions.clipboard-indicator
-    gnomeExtensions.workspace-indicator-2
     gnomeExtensions.bluetooth-quick-connect
     gnomeExtensions.gsconnect # kdeconnect enabled in default.nix
     gnomeExtensions.pip-on-top

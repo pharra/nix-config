@@ -1,6 +1,4 @@
 {pkgs, ...}: {
-  services.blueman.enable = true;
-
   programs = {
     firefox = {
       enable = true;

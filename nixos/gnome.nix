@@ -44,27 +44,14 @@
   environment = {
     systemPackages = with pkgs; [
       # Packages installed
-      gnome.dconf-editor
-      gnome.gnome-tweaks
-      gnome.adwaita-icon-theme
+      dconf-editor
+      gnome-tweaks
+      adwaita-icon-theme
     ];
-    gnome.excludePackages =
-      (with pkgs; [
-        # Gnome ignored packages
-        gnome-tour
-      ])
-      ++ (with pkgs.gnome; [
-        epiphany
-        geary
-        gnome-characters
-        tali
-        iagno
-        hitori
-        atomix
-        yelp
-        gnome-contacts
-        gnome-initial-setup
-      ]);
+    gnome.excludePackages = with pkgs; [
+      # Gnome ignored packages
+      gnome-tour
+    ];
   };
 
   services.xserver.displayManager.gdm.autoSuspend = false;

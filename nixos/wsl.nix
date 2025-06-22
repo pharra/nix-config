@@ -75,7 +75,6 @@ with lib; {
     enable = true;
     extraPackages = with pkgs; [
       config.hardware.graphics.package
-      config.hardware.graphics.package32
       libvdpau-va-gl
     ];
   };
