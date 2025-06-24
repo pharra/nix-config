@@ -14,7 +14,6 @@
 
     substituters = [
       # replace official cache with a mirror located in China
-      "https://cosmic.cachix.org/"
       "https://mirrors.ustc.edu.cn/nix-channels/store"
       "https://cache.nixos.org"
     ];
@@ -26,7 +25,6 @@
     extra-trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
     ];
   };
 
@@ -87,11 +85,6 @@
       url = "github:AshleyYakeley/NixVirt";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    nixos-cosmic = {
-      url = "github:lilyinstarlight/nixos-cosmic";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -112,7 +105,6 @@
     nix-flatpak,
     plasma-manager,
     NixVirt,
-    nixos-cosmic,
     nixos-wsl,
     ...
   }: let
@@ -152,7 +144,6 @@
         impermanence.nixosModules.impermanence
         nix-flatpak.nixosModules.nix-flatpak
         NixVirt.nixosModules.default
-        nixos-cosmic.nixosModules.default
       ]
       ++ (builtins.attrValues modules);
 
