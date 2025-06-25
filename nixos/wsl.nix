@@ -76,16 +76,14 @@ with lib; {
     enable = true;
     enable32Bit = true;
     extraPackages = with pkgs; [
+      mesa
       config.hardware.graphics.package
       libvdpau-va-gl
-      # mesa
-      vaapiVdpau
     ];
     extraPackages32 = with pkgs; [
+      driversi686Linux.mesa
       config.hardware.graphics.package32
       driversi686Linux.libvdpau-va-gl
-      # driversi686Linux.mesa
-      vaapiVdpau
     ];
   };
 }
