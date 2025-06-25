@@ -12,26 +12,22 @@
       [
         "llvmpipe"
         "i915"
+        "d3d12"
       ]
       ++ (lib.optionals hasAmd [
         "radeonsi"
       ])
       ++ (lib.optionals hasNvidia [
         "zink"
-      ])
-      ++ (lib.optionals (config ? wsl) [
-        "d3d12"
       ]);
 
     vulkanDrivers =
       [
         "swrast"
+        "microsoft-experimental"
       ]
       ++ (lib.optionals hasAmd [
         "amd"
-      ])
-      ++ (lib.optionals (config ? wsl) [
-        "microsoft-experimental"
       ]);
 
     eglPlatforms = [
