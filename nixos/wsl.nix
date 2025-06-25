@@ -79,11 +79,14 @@ with lib; {
       mesa
       config.hardware.graphics.package
       libvdpau-va-gl
+      libva-vdpau-driver
+      libva
     ];
     extraPackages32 = with pkgs; [
       driversi686Linux.mesa
       config.hardware.graphics.package32
       driversi686Linux.libvdpau-va-gl
+      driversi686Linux.libva-vdpau-driver
     ];
   };
 }
