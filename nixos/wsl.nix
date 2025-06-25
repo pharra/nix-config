@@ -64,6 +64,7 @@ with lib; {
       "/usr/lib/wsl/lib"
       "/run/opengl-driver/lib"
       "${pkgs.linuxPackages.nvidia_x11_latest}/lib"
+      "${pkgs.ncurses5}/lib"
     ];
     NIX_LD_LIBRARY_PATH_x86_64_linux = [
       "/usr/lib/wsl/lib"
@@ -73,9 +74,18 @@ with lib; {
 
   hardware.graphics = {
     enable = true;
+    enable32Bit = true;
     extraPackages = with pkgs; [
       config.hardware.graphics.package
       libvdpau-va-gl
+      mesa
+      vaapiVdpau
+    ];
+    extraPackages32 = with pkgs; [
+      config.hardware.graphics.package32
+      driversi686Linux.libvdpau-va-gl
+      driversi686Linux.mesa
+      vaapiVdpau
     ];
   };
 }
