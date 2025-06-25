@@ -7,55 +7,38 @@
   inherit (lib) mkOption optionals mkIf;
   cfg = config.hardware.graphics;
 
-  mkMesa = pkg:
-    (pkg.override {
-      galliumDrivers =
-        [
-          "llvmpipe"
-        ]
-        ++ (lib.optionals hasAmd [
-          "radeonsi"
-        ])
-        ++ (lib.optionals hasNvidia [
-          "zink"
-        ])
-        ++ (lib.optionals (config ? wsl) [
-          "d3d12"
-        ]);
+  mkMesa = pkg: (pkg.override {
+    galliumDrivers =
+      [
+        "llvmpipe"
+        "i915"
+      ]
+      ++ (lib.optionals hasAmd [
+        "radeonsi"
+      ])
+      ++ (lib.optionals hasNvidia [
+        "zink"
+      ])
+      ++ (lib.optionals (config ? wsl) [
+        "d3d12"
+      ]);
 
-      vulkanDrivers =
-        [
-          "swrast"
-        ]
-        ++ (lib.optionals hasAmd [
-          "amd"
-        ])
-        ++ (lib.optionals (config ? wsl) [
-          "microsoft-experimental"
-        ]);
+    vulkanDrivers =
+      [
+        "swrast"
+      ]
+      ++ (lib.optionals hasAmd [
+        "amd"
+      ])
+      ++ (lib.optionals (config ? wsl) [
+        "microsoft-experimental"
+      ]);
 
-      eglPlatforms = [
-        "x11"
-        "wayland"
-      ];
-    }).overrideAttrs
-    (old: {
-      inherit ((pkgs.mesa-radeonsi-jupiter or old)) patches;
-
-      mesonFlags =
-        old.mesonFlags
-        ++ [
-          # Not compiling nouveau so disable it.
-          (lib.mesonEnable "gallium-xa" false)
-        ];
-
-      outputs = let
-        removals = [
-          "spirv2dxil"
-        ];
-      in
-        builtins.filter (out: !(builtins.elem out removals)) old.outputs;
-    });
+    eglPlatforms = [
+      "x11"
+      "wayland"
+    ];
+  });
 
   testHas = manufacturer:
     if cfg.manufacturer == null
