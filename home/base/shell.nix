@@ -75,7 +75,7 @@ in rec {
       }
     ];
 
-    initExtra = ''
+    initContent = ''
       # config of zsh-users/zsh-syntax-highlighting
       typeset -A ZSH_HIGHLIGHT_STYLES
 

@@ -34,7 +34,7 @@
           "microsoft-experimental"
         ]);
 
-      eglPlatforms = lib.optionals (!config.host.device.isHeadless) [
+      eglPlatforms = [
         "x11"
         "wayland"
       ];
@@ -50,7 +50,7 @@
         ];
 
       outputs = let
-        removals = lib.optionals (!config.host.device.isHeadless) [
+        removals = [
           "spirv2dxil"
         ];
       in
