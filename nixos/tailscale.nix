@@ -17,7 +17,7 @@
 
   services.derper = {
     enable = true;
-    hostname = "tailscale.inc4byte.work";
+    hostname = "tailscale.int4byte.cfd";
   };
 
   services.tailscale = {
