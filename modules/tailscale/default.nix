@@ -15,7 +15,7 @@ in {
       };
       package = mkOption {
         type = types.package;
-        default = pkgs.tailscale;
+        default = pkgs.tailscale.derper;
       };
       httpPort = mkOption {
         type = types.int;
