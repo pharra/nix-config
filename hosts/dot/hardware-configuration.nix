@@ -15,7 +15,7 @@ in {
 
   services.iptsd.enable = lib.mkDefault true;
   environment.systemPackages = [pkgs.surface-control];
-  boot.kernelPackages = lib.mkForce pkgs.linux_surface;
+  hardware.microsoft-surface.kernelVersion = "stable";
   services.surface-dtx-daemon.enable = true;
   services.pipewire.enable = lib.mkForce false;
   services.pulseaudio.enable = lib.mkForce true;

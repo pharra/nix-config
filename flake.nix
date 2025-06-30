@@ -89,6 +89,8 @@
       url = "github:AshleyYakeley/NixVirt";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -110,6 +112,7 @@
     plasma-manager,
     NixVirt,
     nixos-wsl,
+    nixos-hardware,
     ...
   }: let
     username = "wf";
@@ -205,7 +208,8 @@
       {
         name = "dot";
         builds = ["kde" "gnome" "cosmic" "deepin"];
-        nixos-modules = [./hosts/dot];
+        hostname = "dot.lan";
+        nixos-modules = [./hosts/dot nixos-hardware.nixosModules.microsoft-surface-common];
       }
 
       # gs65

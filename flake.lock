@@ -225,6 +225,22 @@
         "type": "github"
       }
     },
+    "nixos-hardware": {
+      "locked": {
+        "lastModified": 1750837715,
+        "narHash": "sha256-2m1ceZjbmgrJCZ2PuQZaK4in3gcg3o6rZ7WK6dr5vAA=",
+        "owner": "NixOS",
+        "repo": "nixos-hardware",
+        "rev": "98236410ea0fe204d0447149537a924fb71a6d4f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixos-hardware",
+        "type": "github"
+      }
+    },
     "nixos-wsl": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -344,6 +360,7 @@
         "mysecrets": "mysecrets",
         "nix-darwin": "nix-darwin",
         "nix-flatpak": "nix-flatpak",
+        "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-2305": "nixpkgs-2305",

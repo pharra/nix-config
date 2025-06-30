@@ -7,14 +7,13 @@
 #     nix-build -A mypackage
 {pkgs ? import <nixpkgs> {}}: let
   linux_mlx = pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor (pkgs.callPackage ./pkgs/linux {}));
-  linux_surface = pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor (pkgs.callPackage ./pkgs/linux-surface {}));
 in rec {
   # The `lib`, `modules`, and `overlay` names are special
   # lib = import ./lib {inherit pkgs;}; # functions
   # modules = import ./modules; # NixOS modules
   overlays = import ./overlays; # nixpkgs overlays
 
-  inherit linux_mlx linux_surface;
+  inherit linux_mlx;
   spdk = pkgs.callPackage ./pkgs/spdk {};
   xiraid = pkgs.callPackage ./pkgs/xiraid {};
   mcontrolcenter = pkgs.libsForQt5.callPackage ./pkgs/mcontrolcenter/default.nix {};
