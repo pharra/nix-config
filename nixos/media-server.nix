@@ -23,12 +23,12 @@
   };
 
   services.jellyfin = {
-    enable = true;
+    enable = false;
     user = "sftp";
     group = "sftp";
   };
 
   services.jellyseerr = {
-    enable = true;
+    enable = false;
   };
 }
