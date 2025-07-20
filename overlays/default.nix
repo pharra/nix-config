@@ -8,5 +8,6 @@
   flatpak-overlay = import ./flatpak;
   # qemu-overlay = import ./qemu-vfio-user;
   evdi-overlay = import ./evdi;
+  deepin-icon-theme-overlay = import ./deepin-icon-theme;
   # kwin-overlay = import ./kwin;
 }
