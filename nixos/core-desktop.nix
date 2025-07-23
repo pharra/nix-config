@@ -23,6 +23,9 @@
   # to install chrome, you need to enable unfree packages
   nixpkgs.config.allowUnfree = lib.mkForce true;
 
+  # Select internationalisation properties.
+  i18n.defaultLocale = lib.mkForce "zh_CN.UTF-8";
+
   # windows dual boot
   time.hardwareClockInLocalTime = true;
 
