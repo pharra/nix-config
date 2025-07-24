@@ -35,9 +35,10 @@
       where = "/zed";
     }
     {
-      type = "ntfs3";
-      what = "/dev/disk/by-uuid/CAF4D2D1F4D2BEBF";
-      where = "/oct";
+      type = "exfat";
+      what = "/dev/disk/by-uuid/38C7-538C";
+      where = "/common";
+      options = "uid=1000,gid=100";
     }
   ];
 
@@ -47,7 +48,7 @@
       automountConfig = {
         TimeoutIdleSec = "600";
       };
-      requires = ["nvme-auto.service"];
+      requires = ["nvme-auto-zed.service"];
       where = "/zed";
     }
     {
@@ -55,8 +56,8 @@
       automountConfig = {
         TimeoutIdleSec = "600";
       };
-      requires = ["nvme-auto.service"];
-      where = "/oct";
+      requires = ["nvme-auto-common.service"];
+      where = "/common";
     }
   ];
 
@@ -68,9 +69,9 @@
       type = "rdma";
     }
     {
-      name = "oct";
+      name = "common";
       address = "192.168.29.1";
-      target = "nqn.2016-06.io.spdk:oct";
+      target = "nqn.2016-06.io.spdk:common";
       type = "rdma";
     }
   ];
