@@ -48,7 +48,7 @@ in {
     "ext4"
     "btrfs"
     "xfs"
-    #"zfs"
+    "zfs"
     "ntfs"
     "fat"
     "vfat"
@@ -70,6 +70,8 @@ in {
     hostName = "zed";
     domain = "lan";
     wireless.enable = false; # Enables wireless support via wpa_supplicant.
+
+    hostId = "88fcb8e6";
 
     # Configure network proxy if necessary
     # proxy.default = "http://user:password@proxy:port/";

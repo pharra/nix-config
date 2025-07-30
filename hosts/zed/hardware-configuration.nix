@@ -125,31 +125,31 @@ in {
   };
 
   fileSystems."/system" = {
-    device = "system";
+    device = "zed";
     fsType = "zfs";
     neededForBoot = true;
   };
 
   fileSystems."/tmp" = {
-    device = "system/tmp";
+    device = "zed/tmp";
     fsType = "zfs";
     neededForBoot = true;
   };
 
   fileSystems."/nix" = {
-    device = "system/nix";
+    device = "zed/nix";
     fsType = "zfs";
     neededForBoot = true;
   };
 
   fileSystems."/nix/persistent" = {
-    device = "system/persistent";
+    device = "zed/persistent";
     fsType = "zfs";
     neededForBoot = true;
   };
 
   fileSystems."/boot/efi" = {
-    device = "/dev/disk/by-label/boot";
+    device = "/dev/disk/by-label/zed_boot";
     fsType = "vfat";
   };
 
