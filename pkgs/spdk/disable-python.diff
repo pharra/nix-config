@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index 657821bf5..930feb7e4 100644
+--- a/Makefile
++++ b/Makefile
+@@ -24,7 +24,7 @@ DIRS-$(CONFIG_VFIO_USER) += vfiouserbuild
+ DIRS-$(CONFIG_SMA) += proto
+ DIRS-$(CONFIG_XNVME) += xnvmebuild
+ DIRS-$(CONFIG_GOLANG) += go/rpc
+-DIRS-y += python
++# DIRS-y += python
+ 
+ .PHONY: all clean $(DIRS-y) include/spdk/config.h mk/config.mk \
+ 	cc_version cxx_version ar_version .libs_only_other .ldflags ldflags install \

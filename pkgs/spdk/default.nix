@@ -32,100 +32,144 @@
   fuse3,
   fetchFromGitHub,
   autoPatchelfHook,
-}:
-stdenv.mkDerivation rec {
-  pname = "spdk";
-  version = "24.01";
-
+}: let
   src = fetchFromGitHub {
     owner = "spdk";
     repo = "spdk";
-    rev = "a44a9620a68f2a8c29db1b7165d67fe7c070458c";
-    sha256 = "sha256-D7WFCvLhHC49iHqDTX+iTHCdBVMcrQT0K+fVuDPOfuI=";
+    rev = "bc6e91d14fb2f1a4b0d14ea28b6ac807681623e5";
+    sha256 = "sha256-UCuMkIvsDT8il/WsY6f6LaTE6j4YZu5aXfPEY2WIRH4=";
     fetchSubmodules = true;
   };
+in {
+  spdk = stdenv.mkDerivation rec {
+    pname = "spdk";
+    version = "25.05";
 
-  nativeBuildInputs = [
-    python3
-    python3.pkgs.configshell
-    python3.pkgs.sphinx
-    python3.pkgs.pyelftools
-    python3.pkgs.setuptools
-    python3.pkgs.pip
-    python3.pkgs.wheel
-    python3.pkgs.wrapPython
-    pkg-config
-    ensureNewerSourcesForZipFilesHook
-    autoPatchelfHook
-  ];
+    inherit src;
 
-  buildInputs = [
-    cunit
-    libaio
-    libbsd
-    libuuid
-    numactl
-    openssl
-    ncurses
-    pkg-config
-    zlib
-    libpcap
-    libnl
-    libelf
-    jansson
-    nasm
-    autoconf269
-    automake
-    libtool
-    liburing
-    json_c
-    cmocka
-    meson
-    ninja
-    rdma-core
-    fuse3
-  ];
+    nativeBuildInputs = [
+      python3
+      python3.pkgs.configshell
+      python3.pkgs.sphinx
+      python3.pkgs.pyelftools
+      python3.pkgs.setuptools
+      python3.pkgs.pip
+      python3.pkgs.wheel
+      python3.pkgs.wrapPython
+      pkg-config
+      ensureNewerSourcesForZipFilesHook
+      autoPatchelfHook
+    ];
 
-  preConfigure = ''
-    export AS=nasm
-  '';
+    buildInputs = [
+      cunit
+      libaio
+      libbsd
+      libuuid
+      numactl
+      openssl
+      ncurses
+      pkg-config
+      zlib
+      libpcap
+      libnl
+      libelf
+      jansson
+      nasm
+      autoconf269
+      automake
+      libtool
+      liburing
+      json_c
+      cmocka
+      meson
+      ninja
+      rdma-core
+      fuse3
+    ];
 
-  propagatedBuildInputs = [
-    python3.pkgs.configshell
-  ];
+    preConfigure = ''
+      export AS=nasm
+    '';
 
-  postPatch = ''
-    patchShebangs .
-  '';
+    propagatedBuildInputs = [
+      python3.pkgs.configshell
+    ];
 
-  dontUseMesonConfigure = true;
-  enableParallelBuilding = true;
-  dontUseNinjaBuild = true;
-  dontUseNinjaInstall = true;
+    patches = [
+      # Fixes build with isa-l-crypto.
+      ./isa-l-crypto.diff
+      ./disable-python.diff
+      ./fix-spdk_top.diff
+    ];
 
-  configureFlags = ["--with-rdma" "--with-uring"];
-  #configureFlags = ["--with-rdma" "--with-uring" "--with-ublk" "--with-vfio-user" "--with-raid5f"];
+    postPatch = ''
+      patchShebangs .
+    '';
 
-  postInstall = ''
-    cp -r scripts $out
-  '';
-  postCheck = ''
-    python3 -m spdk
-  '';
+    dontUseMesonConfigure = true;
+    enableParallelBuilding = true;
+    dontUseNinjaBuild = true;
+    dontUseNinjaInstall = true;
 
-  postFixup = ''
-    wrapPythonPrograms
-  '';
+    configureFlags = ["--with-rdma" "--with-uring"];
+    #configureFlags = ["--with-rdma" "--with-uring" "--with-ublk" "--with-vfio-user" "--with-raid5f"];
 
-  env.NIX_CFLAGS_COMPILE = "-mssse3"; # Necessary to compile.
-  # otherwise does not find strncpy when compiling
-  NIX_LDFLAGS = "-lbsd";
+    postInstall = ''
+      cp -r scripts $out
+    '';
+    postCheck = ''
+      python3 -m spdk
+    '';
 
-  meta = with lib; {
-    description = "Set of libraries for fast user-mode storage";
-    homepage = "https://spdk.io/";
-    license = licenses.bsd3;
-    platforms = ["x86_64-linux"];
-    maintainers = with maintainers; [orivej];
+    postFixup = ''
+      wrapPythonPrograms
+    '';
+
+    env.NIX_CFLAGS_COMPILE = "-mssse3"; # Necessary to compile.
+    # otherwise does not find strncpy when compiling
+    NIX_LDFLAGS = "-lbsd";
+
+    meta = with lib; {
+      description = "Set of libraries for fast user-mode storage";
+      homepage = "https://spdk.io/";
+      license = licenses.bsd3;
+      platforms = ["x86_64-linux"];
+      maintainers = with maintainers; [orivej];
+    };
+  };
+
+  spdk-python = python3.pkgs.buildPythonApplication rec {
+    pname = "spdk";
+    version = "25.05";
+    pyproject = true;
+
+    inherit src;
+
+    preConfigure = ''
+      cd python
+      echo -n "__version__ = '25.9rc0'" > spdk/version.py
+    '';
+
+    build-system = with python3.pkgs; [
+      setuptools
+      hatchling
+    ];
+
+    dependencies = with python3.pkgs; [
+      configshell
+      sphinx
+      pyelftools
+      setuptools
+      wheel
+    ];
+
+    meta = with lib; {
+      description = "Set of libraries for fast user-mode storage";
+      homepage = "https://spdk.io/";
+      license = licenses.bsd3;
+      platforms = ["x86_64-linux"];
+      maintainers = with maintainers; [orivej];
+    };
   };
 }
