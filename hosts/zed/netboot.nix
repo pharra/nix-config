@@ -64,16 +64,16 @@ lib.mkIf boot_from_network {
     "40-${interface}" = lib.mkForce {};
   };
 
-  fileSystems."/" = lib.mkForce {
-    device = "/dev/disk/by-label/zed_nixos";
-    fsType = "ext4";
-    neededForBoot = true;
-  };
+  # fileSystems."/" = lib.mkForce {
+  #   device = "/dev/disk/by-label/zed_nixos";
+  #   fsType = "ext4";
+  #   neededForBoot = true;
+  # };
 
-  fileSystems."/boot/efi" = lib.mkForce {
-    device = "/dev/disk/by-label/zed_boot";
-    fsType = "vfat";
-  };
+  # fileSystems."/boot/efi" = lib.mkForce {
+  #   device = "/dev/disk/by-label/zed_boot";
+  #   fsType = "vfat";
+  # };
 
   environment = {
     systemPackages = with pkgs; [

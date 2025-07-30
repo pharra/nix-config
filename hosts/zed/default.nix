@@ -26,6 +26,8 @@ in {
     ./hardware-configuration.nix
     ./cifs-mount.nix
 
+    ../../nixos/impermanence.nix
+
     ../../nixos/libvirt.nix
     ../../nixos/core-desktop.nix
     ../../nixos/user-group.nix

@@ -94,7 +94,7 @@ in {
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = [];
   # "console=ttyS0"
-  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=32" "amd_pstate=active" "amd_pstate.shared_mem=1"];
+  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=0" "amd_pstate=active" "amd_pstate.shared_mem=1"];
   boot.extraModprobeConfig = ''
     options kvm_amd nested=1
     softdep nvme pre: vfio-pci
@@ -124,9 +124,27 @@ in {
     interfaces = ["mlx5_0"];
   };
 
-  fileSystems."/" = {
-    device = "/dev/disk/by-label/nixos";
-    fsType = "ext4";
+  fileSystems."/system" = {
+    device = "system";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/tmp" = {
+    device = "system/tmp";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/nix" = {
+    device = "system/nix";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/nix/persistent" = {
+    device = "system/persistent";
+    fsType = "zfs";
     neededForBoot = true;
   };
 
