@@ -86,6 +86,7 @@ in {
     bind-vfio-scripts
     unbind-vfio-scripts
     xiraid
+    spdk-python
   ];
 
   services.spdk = {

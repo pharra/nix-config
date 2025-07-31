@@ -7,6 +7,7 @@
 #     nix-build -A mypackage
 {pkgs ? import <nixpkgs> {}}: let
   linux_mlx = pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor (pkgs.callPackage ./pkgs/linux {}));
+  spdk_pkgs = pkgs.callPackage ./pkgs/spdk {};
 in rec {
   # The `lib`, `modules`, and `overlay` names are special
   # lib = import ./lib {inherit pkgs;}; # functions
@@ -14,7 +15,8 @@ in rec {
   overlays = import ./overlays; # nixpkgs overlays
 
   inherit linux_mlx;
-  spdk = pkgs.callPackage ./pkgs/spdk {};
+  spdk = spdk_pkgs.spdk;
+  spdk-python = spdk_pkgs.spdk-python;
   xiraid = pkgs.callPackage ./pkgs/xiraid {};
   mcontrolcenter = pkgs.libsForQt5.callPackage ./pkgs/mcontrolcenter/default.nix {};
   caddy = pkgs.callPackage ./pkgs/caddy {};
