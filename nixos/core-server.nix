@@ -115,6 +115,33 @@
     enable = true;
   };
 
+  security.pam.loginLimits = [
+    {
+      domain = "*";
+      item = "memlock";
+      type = "soft";
+      value = "unlimited";
+    }
+    {
+      domain = "*";
+      item = "memlock";
+      type = "hard";
+      value = "unlimited";
+    }
+    {
+      domain = "root";
+      item = "memlock";
+      type = "soft";
+      value = "unlimited";
+    }
+    {
+      domain = "root";
+      item = "memlock";
+      type = "hard";
+      value = "unlimited";
+    }
+  ];
+
   # for power management
   # services.upower.enable = true;
   # powerManagement.enable = true;

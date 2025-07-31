@@ -78,11 +78,11 @@ in {
     parted
     nvme-cli
     openiscsi
-    spdk-iscsi-scripts
-    spdk-nvmf-scripts
-    spdk-vhost-scripts
-    spdk-nvme-scripts
-    spdk-scripts
+    #spdk-iscsi-scripts
+    #spdk-nvmf-scripts
+    #spdk-vhost-scripts
+    #spdk-nvme-scripts
+    #spdk-scripts
     bind-vfio-scripts
     unbind-vfio-scripts
     xiraid
@@ -90,6 +90,6 @@ in {
   ];
 
   services.spdk = {
-    enable = true;
+    enable = false;
   };
 }

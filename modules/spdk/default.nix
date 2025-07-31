@@ -33,32 +33,5 @@ in {
         ExecStart = ''${pkgs.spdk}/bin/spdk_tgt -m 0x30003 -c /home/wf/spdk/rdma_config.json -f /var/run/spdk.pid -S /var/run'';
       };
     };
-
-    security.pam.loginLimits = [
-      {
-        domain = "*";
-        item = "memlock";
-        type = "soft";
-        value = "unlimited";
-      }
-      {
-        domain = "*";
-        item = "memlock";
-        type = "hard";
-        value = "unlimited";
-      }
-      {
-        domain = "root";
-        item = "memlock";
-        type = "soft";
-        value = "unlimited";
-      }
-      {
-        domain = "root";
-        item = "memlock";
-        type = "hard";
-        value = "unlimited";
-      }
-    ];
   };
 }
