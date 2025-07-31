@@ -242,7 +242,7 @@
         name = "zed_netboot";
         builds = ["kde" "gnome" "cosmic" "deepin"];
         nixos-modules = [./hosts/zed];
-        hostname = "zed.lan";
+        hostname = "zed";
         specialArgs = {
           boot_from_network = true;
         };

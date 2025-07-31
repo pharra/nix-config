@@ -6,7 +6,9 @@
   nix.settings.trusted-users = [username];
 
   users.groups = {
-    "${username}" = {};
+    "${username}" = {
+      gid = 1000;
+    };
     docker = {};
     wireshark = {};
   };

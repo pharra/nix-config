@@ -35,10 +35,15 @@
       where = "/zed";
     }
     {
-      type = "exfat";
-      what = "/dev/disk/by-uuid/38C7-538C";
+      type = "ntfs3";
+      what = "/dev/disk/by-uuid/10DAC033DAC0173E";
       where = "/common";
-      options = "uid=1000,gid=100";
+      # options = "uid=1000,gid=100";
+    }
+    {
+      type = "ext4";
+      what = "/dev/disk/by-label/steam_compact";
+      where = "/common/SteamLibrary/steamapps/compatdata";
     }
   ];
 
@@ -58,6 +63,14 @@
       };
       requires = ["nvme-auto-common.service"];
       where = "/common";
+    }
+    {
+      wantedBy = ["multi-user.target"];
+      automountConfig = {
+        TimeoutIdleSec = "600";
+      };
+      requires = ["nvme-auto-common.service"];
+      where = "/common/SteamLibrary/steamapps/compatdata";
     }
   ];
 

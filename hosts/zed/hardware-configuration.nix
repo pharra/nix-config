@@ -155,5 +155,12 @@ in {
 
   swapDevices = [];
 
+  systemd.sleep.extraConfig = "
+    AllowSuspend=no
+    AllowHibernation=no
+    AllowHybridSleep=no
+    AllowSuspendThenHibernate=no
+  ";
+
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }
