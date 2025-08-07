@@ -38,8 +38,7 @@ in {
             "${name}-sriov" = {
               enable = true;
               script = "set -e\n" + "echo ${toString number} | tee /sys/class/net/${name}/device/sriov_numvfs";
-              requiredBy = ["network.target"];
-              before = ["network.target"];
+              wantedBy = ["network.target"];
               serviceConfig = {
                 Type = "oneshot";
                 RemainAfterExit = "yes";

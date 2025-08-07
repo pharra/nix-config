@@ -50,7 +50,7 @@
   systemd.services.ntfsfix = {
     after = ["nvme-auto-common.service"];
     wants = ["nvme-auto-common.service"];
-    requiredBy = ["common.automount"];
+    wantedBy = ["common.automount"];
     serviceConfig = {
       Type = "oneshot";
       ExecStart = ["${pkgs.ntfs3g}/bin/ntfsfix -d /dev/disk/by-uuid/10DAC033DAC0173E"];
