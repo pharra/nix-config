@@ -210,7 +210,7 @@ in {
           name = "VMPool";
           uuid = "650c5bbb-eebd-4cea-8a2f-36e1a75a8683";
           type = "dir";
-          target = {path = "/home/wf/Data/VMPool";};
+          target = {path = "/fluent/VMPool";};
         };
       }
 
@@ -219,7 +219,7 @@ in {
           name = "ISOPool";
           uuid = "650c5bbb-eebd-4cea-8a2f-36e1a75a8684";
           type = "dir";
-          target = {path = "/home/wf/Data/ISOPool";};
+          target = {path = "/fluent/ISOPool";};
         };
       }
 
@@ -228,7 +228,7 @@ in {
           name = "RAMPool";
           uuid = "650c5bbb-eebd-4cea-8a2f-36e1a75a8685";
           type = "dir";
-          target = {path = "/home/wf/Data/RAMPool";};
+          target = {path = "/fluent/RAMPool";};
         };
       }
 

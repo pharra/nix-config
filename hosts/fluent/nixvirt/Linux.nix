@@ -23,11 +23,11 @@ in {
         pool = "DiskPool";
         volume = "Linux.qcow2";
       };
-      # install_vol = {
-      #   pool = "ISOPool";
-      #   volume = "archlinux-2025.04.01-x86_64.iso";
-      # };
-      nvram_path = /home/wf/Data/RAMPool/Linux.fd;
+      install_vol = {
+        pool = "ISOPool";
+        volume = "archlinux-2025.04.01-x86_64.iso";
+      };
+      nvram_path = /fluent/RAMPool/Linux.fd;
       no_graphics = true;
     };
   in
