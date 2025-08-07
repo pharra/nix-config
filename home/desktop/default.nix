@@ -2,7 +2,6 @@
   imports = [
     #./immutable-file.nix
     ./media.nix
-    ./ssh.nix
     ./xdg.nix
     ./looking-glass.nix
     ./autostart.nix

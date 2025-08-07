@@ -129,7 +129,7 @@ in {
       # the network not work.
       network.flushBeforeStage2 = false;
 
-      kernelModules = ["iscsi_tcp"];
+      kernelModules = ["iscsi_tcp" "crc32c"];
 
       systemd = {
         packages = [pkgs.openiscsi];

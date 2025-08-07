@@ -57,7 +57,7 @@ in {
 
   hardware.mlx5 = {
     enable = true;
-    enableSRIOV = true;
+    enableSRIOV = false;
     interfaces = ["mlx5_0"];
   };
 
@@ -69,6 +69,14 @@ in {
         name = "eno1";
       }
     ];
+  };
+
+  hardware.mlnx-ofed = {
+    enable = true;
+    fwctl.enable = true;
+    nvme.enable = true;
+    nfsrdma.enable = true;
+    kernel-mft.enable = true;
   };
 
   specialisation = {
@@ -158,6 +166,11 @@ in {
   fileSystems."/boot/efi" = {
     device = "/dev/disk/by-label/zfs_boot";
     fsType = "vfat";
+  };
+
+  fileSystems."/share/win" = {
+    device = "/dev/disk/by-label/smb";
+    fsType = "ext4";
   };
 
   swapDevices = [];

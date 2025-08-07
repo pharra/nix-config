@@ -140,7 +140,7 @@ in {
   };
 
   spdk-python = python3.pkgs.buildPythonApplication rec {
-    pname = "spdk";
+    pname = "spdk-python";
     version = "25.05";
     pyproject = true;
 

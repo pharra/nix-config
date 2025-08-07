@@ -31,8 +31,8 @@
   systemd.mounts = [
     {
       type = "ext4";
-      what = "/dev/disk/by-label/zed";
-      where = "/zed";
+      what = "/dev/disk/by-label/fluent";
+      where = "/fluent";
     }
     {
       type = "ntfs3";
@@ -49,8 +49,9 @@
 
   systemd.services.ntfsfix = {
     after = ["nvme-auto-common.service"];
+    before = ["common.automount"];
     wants = ["nvme-auto-common.service"];
-    requiredBy = ["common.automount"];
+    wantedBy = ["multi-user.target"];
     serviceConfig = {
       Type = "oneshot";
       ExecStart = ["${pkgs.ntfs3g}/bin/ntfsfix -d /dev/disk/by-uuid/10DAC033DAC0173E"];
@@ -63,17 +64,16 @@
       automountConfig = {
         TimeoutIdleSec = "600";
       };
-      requires = ["nvme-auto-zed.service"];
-      after = ["nvme-auto-zed.service"];
-      wants = ["nvme-auto-zed.service"];
-      where = "/zed";
+      after = ["nvme-auto-fluent.service"];
+      wants = ["nvme-auto-fluent.service"];
+      where = "/fluent";
     }
     {
       wantedBy = ["multi-user.target"];
       automountConfig = {
         TimeoutIdleSec = "600";
       };
-      requires = ["ntfsfix.service"];
+      after = ["ntfsfix.service"];
       where = "/common";
     }
     {
@@ -81,18 +81,17 @@
       automountConfig = {
         TimeoutIdleSec = "600";
       };
-      requires = ["common.mount"];
-      after = ["common.mount"];
-      wants = ["common.mount"];
+      after = ["common.automount"];
+      wants = ["common.automount"];
       where = "/common/SteamLibrary/steamapps/compatdata";
     }
   ];
 
   services.nvme-auto = [
     {
-      name = "zed";
+      name = "fluent";
       address = "192.168.29.1";
-      target = "nqn.2016-06.io.spdk:zed";
+      target = "nqn.2016-06.io.spdk:fluent";
       type = "rdma";
     }
     {

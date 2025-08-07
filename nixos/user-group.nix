@@ -24,10 +24,10 @@
       "users"
       "networkmanager"
       "wheel"
-      "docker"
       "wireshark"
       "adbusers"
       "libvirtd"
+      "video"
     ];
     openssh.authorizedKeys.keys = [
       # win desktop

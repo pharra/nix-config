@@ -12,8 +12,11 @@
   nixConfig = {
     experimental-features = ["nix-command" "flakes"];
 
+    post-build-hook = ./scripts/upload-to-cache.sh;
+
     substituters = [
       # replace official cache with a mirror located in China
+      "https://nix-cache.int4byte.cfd:8443/main"
       "https://mirrors.ustc.edu.cn/nix-channels/store"
       "https://cache.nixos.org"
     ];
@@ -23,6 +26,7 @@
       "https://nix-community.cachix.org"
     ];
     extra-trusted-public-keys = [
+      "main:WQXkIvYUyD/sBdzvFu9Fq4/ub4IH+cpLIZOcqqnPCzw="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
@@ -37,6 +41,7 @@
     # Official NixOS package source, using nixos's stable branch by default
     # nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "github:FriedrichAltheide/nixpkgs/add-depmod-overrides";
     nixpkgs-2305.url = "github:nixos/nixpkgs/nixos-23.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
@@ -91,6 +96,11 @@
     };
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    mlnx-ofed-nixos = {
+      url = "github:codgician/mlnx-ofed-nixos";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -151,6 +161,10 @@
         impermanence.nixosModules.impermanence
         nix-flatpak.nixosModules.nix-flatpak
         NixVirt.nixosModules.default
+        # Add packages from this repo and set up binary cache
+        inputs.mlnx-ofed-nixos.nixosModules.setupCacheAndOverlays
+        # Add configuration options from this repo
+        inputs.mlnx-ofed-nixos.nixosModules.default
       ]
       ++ (builtins.attrValues modules);
 
@@ -232,20 +246,14 @@
         builds = ["kde" "gnome" "cosmic" "deepin"];
         hostname = "zed";
         nixos-modules = [./hosts/zed];
-        specialArgs = {
-          boot_from_network = false;
-        };
       }
 
-      # zed with netboot
+      # fluent
       {
-        name = "zed_netboot";
-        builds = ["kde" "gnome" "cosmic" "deepin"];
-        nixos-modules = [./hosts/zed];
-        hostname = "zed";
-        specialArgs = {
-          boot_from_network = true;
-        };
+        name = "fluent";
+        builds = ["kde" "gnome" "cosmic" "deepin" "base"];
+        nixos-modules = [./hosts/fluent];
+        hostname = "fluent";
       }
 
       # luris

@@ -43,6 +43,14 @@ in {
     ];
   };
 
+  hardware.mlnx-ofed = {
+    enable = true;
+    fwctl.enable = true;
+    nvme.enable = false;
+    nfsrdma.enable = true;
+    kernel-mft.enable = true;
+  };
+
   services.sunshine = {
     enable = true;
     autoStart = true;
@@ -52,17 +60,6 @@ in {
 
   specialisation = {
     no-nvidia.configuration = {
-      hardware.nvidia.prime = {
-        offload = {
-          enable = true;
-          enableOffloadCmd = false;
-        };
-        # Make sure to use the correct Bus ID values for your system!
-        # intelBusId = "PCI:0:2:0";
-        nvidiaBusId = "PCI:1:0:0";
-        amdgpuBusId = "PCI:7:0:0"; # For AMD GPU
-      };
-
       environment.variables = {
         # KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
         __EGL_VENDOR_LIBRARY_FILENAMES = "${pkgs.mesa.drivers}/share/glvnd/egl_vendor.d/50_mesa.json";
@@ -120,7 +117,7 @@ in {
 
   hardware.mlx5 = {
     enable = true;
-    enableSRIOV = true;
+    enableSRIOV = false;
     interfaces = ["mlx5_0"];
   };
 
@@ -155,12 +152,12 @@ in {
 
   swapDevices = [];
 
-  systemd.sleep.extraConfig = "
-    AllowSuspend=no
-    AllowHibernation=no
-    AllowHybridSleep=no
-    AllowSuspendThenHibernate=no
-  ";
+  # systemd.sleep.extraConfig = "
+  #   AllowSuspend=no
+  #   AllowHibernation=no
+  #   AllowHybridSleep=no
+  #   AllowSuspendThenHibernate=no
+  # ";
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }

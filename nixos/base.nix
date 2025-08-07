@@ -3,4 +3,7 @@
   username,
   ...
 }: {
+  programs = {
+    zsh.enable = true;
+  };
 }

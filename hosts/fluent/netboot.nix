@@ -3,20 +3,18 @@
   pkgs,
   lib,
   interface,
-  boot_from_network ? false,
   ...
-} @ args:
-lib.mkIf boot_from_network {
+} @ args: {
   boot.iscsi-initiatord = {
-    name = "iqn.2020-08.org.linux-iscsi.initiatorhost:zed";
+    name = "iqn.2020-08.org.linux-iscsi.initiatorhost:fluent";
     discoverPortal = "192.168.29.1";
-    target = "iqn.2016-06.io.spdk:zednixosefi";
+    target = "iqn.2016-06.io.spdk:fluentnixosefi";
   };
 
   boot.nvmf = {
-    enable = true;
+    enable = false;
     address = "192.168.29.1";
-    target = "nqn.2016-06.io.spdk:zed_nixos";
+    target = "nqn.2016-06.io.spdk:fluent_nixos";
     type = "rdma";
   };
 
@@ -63,17 +61,6 @@ lib.mkIf boot_from_network {
   systemd.network.networks = {
     "40-${interface}" = lib.mkForce {};
   };
-
-  # fileSystems."/" = lib.mkForce {
-  #   device = "/dev/disk/by-label/zed_nixos";
-  #   fsType = "ext4";
-  #   neededForBoot = true;
-  # };
-
-  # fileSystems."/boot/efi" = lib.mkForce {
-  #   device = "/dev/disk/by-label/zed_boot";
-  #   fsType = "vfat";
-  # };
 
   environment = {
     systemPackages = with pkgs; [

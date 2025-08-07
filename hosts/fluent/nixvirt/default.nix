@@ -200,8 +200,8 @@ in {
   virtualisation.libvirt.verbose = true;
   virtualisation.libvirt.connections."qemu:///system" = {
     domains = [
-      Windows
-      Microsoft
+      # Windows
+      # Microsoft
       Linux
     ];
     pools = [
@@ -237,7 +237,7 @@ in {
           name = "DiskPool";
           uuid = "650c5bbb-eebd-4cea-8a2f-36e1a75a8686";
           type = "dir";
-          target = {path = "/zed/DiskPool";};
+          target = {path = "/fluent/DiskPool";};
         };
       }
     ];

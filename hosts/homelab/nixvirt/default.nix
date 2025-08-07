@@ -91,7 +91,7 @@ in {
       echo 15 | tee /sys/bus/pci/devices/0000\:41\:00.0/resource1_resize
       echo -n "0000:41:00.0" | tee /sys/bus/pci/drivers/vfio-pci/bind
     '';
-    requiredBy = ["libvirtd.service"];
+    wantedBy = ["multi-user.target"];
     before = ["libvirtd.service"];
     serviceConfig = {
       Type = "oneshot";

@@ -30,6 +30,7 @@ in {
   environment.systemPackages = with pkgs; [
     swtpm-scripts
     qemu-scripts
+    distrobox
   ];
 
   #   systemd.services.spdk = {

@@ -57,7 +57,7 @@ in {
     systemd.services.mlx5-sriov = lib.mkIf cfg.enableSRIOV {
       enable = true;
       script = "set -e\n" + concatMapStringsSep "\n" (interface: "echo 8 | tee /sys/class/net/${interface}/device/sriov_numvfs") cfg.interfaces;
-      requiredBy = ["libvirtd.service"];
+      wantedBy = ["multi-user.target"];
       before = ["libvirtd.service"];
       serviceConfig = {
         Type = "oneshot";

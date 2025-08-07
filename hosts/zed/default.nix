@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  boot_from_network,
   ...
 } @ args:
 #############################################################
@@ -34,10 +33,6 @@ in {
 
     ../../secrets/nixos.nix
     ./nixvirt
-    (import ./netboot.nix {
-      inherit boot_from_network config pkgs lib;
-      interface = interface.mlx5_0;
-    })
     #../../nixos/ccache.nix
   ];
 
@@ -189,6 +184,178 @@ in {
     };
   };
 
+  # boot.depmod.overrides = [
+  #   {
+  #     moduleName = "mlxsw_spectrum";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/net/ethernet/mellanox/mlxsw/mlxsw_spectrum.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "mlxfw";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "mlx5_dpll";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/net/ethernet/mellanox/mlx5/core/mlx5_dpll.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "mlx5_core";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "ib_mthca";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/mthca/ib_mthca.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "usnic_verbs";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/usnic/usnic_verbs.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "mana_ib";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/mana/mana_ib.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "irdma";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/irdma/irdma.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "hfi1";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/hfi1/hfi1.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "ib_qib";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/qib/ib_qib.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "bnxt_re";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/bnxt_re/bnxt_re.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "ocrdma";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/ocrdma/ocrdma.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "vmw_pvrdma";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/vmw_pvrdma/vmw_pvrdma.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "erdma";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/erdma/erdma.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "efa";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/efa/efa.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "qedr";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/qedr/qedr.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "iw_cxgb4";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/cxgb4/iw_cxgb4.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "mlx5_ib";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/mlx5/mlx5_ib.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "ib_srpt";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/ulp/srpt/ib_srpt.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "ib_ipoib";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/ulp/ipoib/ib_ipoib.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "iw_cm";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/iw_cm.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "ib_umad";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/ib_umad.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "rdma_ucm";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/rdma_ucm.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "ib_uverbs";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/ib_uverbs.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "ib_ucm";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/ib_ucm.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "ib_core";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/ib_core.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "ib_cm";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/ib_cm.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "rdma_cm";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/rdma_cm.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "siw";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/sw/siw/siw.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "rdmavt";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/sw/rdmavt/rdmavt.ko.xz";
+  #   }
+  #   {
+  #     moduleName = "mlx5-vfio-pci";
+  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
+  #     modulePath = "extra/mlnx-ofa_kernel/drivers/vfio/pci/mlx5/mlx5-vfio-pci.ko.xz";
+  #   }
+  # ];
+
+  # boot.kernelPatches = lib.singleton {
+  #   name = "disable-suspend";
+  #   patch = null;
+  #   extraStructuredConfig = with lib.kernel; {
+  #     SUSPEND = lib.mkForce no;
+  #   };
+  # };
+
+  systemd.services."systemd-suspend" = {
+    serviceConfig = {
+      Environment = ''"SYSTEMD_SLEEP_FREEZE_USER_SESSIONS=false"'';
+    };
+  };
+
   hardware.nvidia = {
     # Modesetting is required.
     modesetting.enable = true;
@@ -199,9 +366,19 @@ in {
     # of just the bare essentials.
     powerManagement.enable = true;
 
+    prime = {
+      offload = {
+        enable = true;
+        enableOffloadCmd = false;
+      };
+      # Make sure to use the correct Bus ID values for your system!
+      # intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:1:0:0";
+      amdgpuBusId = "PCI:7:0:0"; # For AMD GPU
+    };
     # # Fine-grained power management. Turns off GPU when not in use.
     # # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    # powerManagement.finegrained = true;
+    powerManagement.finegrained = true;
     open = true;
 
     # Enable the Nvidia settings menu,

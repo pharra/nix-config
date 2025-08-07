@@ -67,33 +67,20 @@ in {
       kernelModules = ["nvme-rdma" "nvme-tcp"];
 
       systemd = {
-        initrdBin = [pkgs.iputils pkgs.nvme-cli pkgs.iputils pkgs.coreutils];
-
-        services.ensure-network = {
-          enable = true;
-          before = ["network-online.target"];
-          after = ["nss-lookup.target"];
-          unitConfig = {
-            DefaultDependencies = "no";
-          };
-          serviceConfig = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.bashInteractive}/bin/sh -c 'until ${pkgs.iputils}/bin/ping -c 1 ${cfg.address}; do ${pkgs.coreutils}/bin/sleep 1; done'";
-          };
-        };
+        initrdBin = [pkgs.nvme-cli];
 
         services.nixos-nvmf = {
           requiredBy = ["initrd.target"];
-          after = ["ensure-network.service"];
-          wants = ["ensure-network.service"];
+          after = ["network-online.target"];
+          wants = ["network-online.target"];
           serviceConfig = {
             Type = "oneshot";
             ExecStartPre = "${pkgs.nvme-cli}/bin/nvme discover -t ${cfg.type} -a ${cfg.address} -s ${toString cfg.port}";
             ExecStart =
-              ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.address} -s ${toString cfg.port} --reconnect-delay=1 --ctrl-loss-tmo=-1 --fast_io_fail_tmo=0 --keep-alive-tmo=1"]
+              ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.address} -s ${toString cfg.port} --reconnect-delay=1 --ctrl-loss-tmo=-1 --fast_io_fail_tmo=0 --keep-alive-tmo=0 --nr-io-queues=16"]
               ++ (
                 if cfg.multipath
-                then ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.multiAddress} -s ${toString cfg.port} --reconnect-delay=1 --ctrl-loss-tmo=-1 --fast_io_fail_tmo=0 --keep-alive-tmo=1"]
+                then ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.multiAddress} -s ${toString cfg.port} --reconnect-delay=1 --ctrl-loss-tmo=-1 --fast_io_fail_tmo=0 --keep-alive-tmo=0 --nr-io-queues=16"]
                 else []
               );
           };

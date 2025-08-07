@@ -44,15 +44,15 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   i18n.extraLocaleSettings = {
-    LC_ADDRESS = "zh_CN.UTF-8";
-    LC_IDENTIFICATION = "zh_CN.UTF-8";
-    LC_MEASUREMENT = "zh_CN.UTF-8";
-    LC_MONETARY = "zh_CN.UTF-8";
-    LC_NAME = "zh_CN.UTF-8";
-    LC_NUMERIC = "zh_CN.UTF-8";
-    LC_PAPER = "zh_CN.UTF-8";
-    LC_TELEPHONE = "zh_CN.UTF-8";
-    LC_TIME = "zh_CN.UTF-8";
+    LC_ADDRESS = "en_US.UTF-8";
+    LC_IDENTIFICATION = "en_US.UTF-8";
+    LC_MEASUREMENT = "en_US.UTF-8";
+    LC_MONETARY = "en_US.UTF-8";
+    LC_NAME = "en_US.UTF-8";
+    LC_NUMERIC = "en_US.UTF-8";
+    LC_PAPER = "en_US.UTF-8";
+    LC_TELEPHONE = "en_US.UTF-8";
+    LC_TIME = "en_US.UTF-8";
   };
 
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -68,15 +68,10 @@
     settings = {
       X11Forwarding = true;
       PermitRootLogin = "no"; # disable root login
-      PasswordAuthentication = false; # disable password login
+      PasswordAuthentication = true; # disable password login
     };
     openFirewall = true;
   };
-
-  services.logind.extraConfig = ''
-    # don't shutdown when power button is short-pressed
-    HandlePowerKey=ignore
-  '';
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -85,7 +80,6 @@
     nmap
     wget
     curl
-    aria2
     lshw
     git # used by nix flakes
     git-lfs # used by huggingface models
@@ -96,24 +90,20 @@
     nvme-cli # nvme tools
     rclone
     # create a fhs environment by command `fhs`, so we can run non-nixos packages in nixos!
-    (
-      let
-        base = pkgs.appimageTools.defaultFhsEnvArgs;
-      in
-        pkgs.buildFHSEnv (base
-          // {
-            name = "fhs";
-            targetPkgs = pkgs: (base.targetPkgs pkgs) ++ [pkgs.pkg-config];
-            profile = "export FHS=1";
-            runScript = "bash";
-            extraOutputsToInstall = ["dev"];
-          })
-    )
+    # (
+    #   let
+    #     base = pkgs.appimageTools.defaultFhsEnvArgs;
+    #   in
+    #     pkgs.buildFHSEnv (base
+    #       // {
+    #         name = "fhs";
+    #         targetPkgs = pkgs: (base.targetPkgs pkgs) ++ [pkgs.pkg-config];
+    #         profile = "export FHS=1";
+    #         runScript = "bash";
+    #         extraOutputsToInstall = ["dev"];
+    #       })
+    # )
   ];
-
-  virtualisation.docker = {
-    enable = true;
-  };
 
   security.pam.loginLimits = [
     {

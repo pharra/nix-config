@@ -16,6 +16,7 @@ in rec {
 
   inherit linux_mlx;
   spdk = spdk_pkgs.spdk;
+  distrobox-session = pkgs.callPackage ./pkgs/distrobox {};
   spdk-python = spdk_pkgs.spdk-python;
   xiraid = pkgs.callPackage ./pkgs/xiraid {};
   mcontrolcenter = pkgs.libsForQt5.callPackage ./pkgs/mcontrolcenter/default.nix {};

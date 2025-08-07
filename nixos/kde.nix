@@ -19,6 +19,7 @@
     #displayManager.sddm.autoLogin.relogin = true;
     displayManager.sddm.wayland.enable = true;
     displayManager.sddm.enableHidpi = true;
+    displayManager.sessionPackages = [pkgs.distrobox-session];
     desktopManager.plasma6.enable = true; # Window Manager
     # displayManager.autoLogin = {
     #   enable = true;
@@ -29,6 +30,7 @@
   environment.systemPackages = with pkgs; [
     kdePackages.kirigami
     kdePackages.wallpaper-engine-plugin
+    attic-client
   ];
 
   i18n.inputMethod = {
