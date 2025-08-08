@@ -48,10 +48,12 @@
   ];
 
   systemd.services.ntfsfix = {
-    after = ["nvme-auto-common.service"];
-    before = ["common.automount"];
-    wants = ["nvme-auto-common.service"];
+    enable = true;
     wantedBy = ["multi-user.target"];
+    after = ["nvme-auto-common.service"];
+    unitConfig = {
+      DefaultDependencies = "no";
+    };
     serviceConfig = {
       Type = "oneshot";
       ExecStart = ["${pkgs.ntfs3g}/bin/ntfsfix -d /dev/disk/by-uuid/10DAC033DAC0173E"];
@@ -64,8 +66,7 @@
       automountConfig = {
         TimeoutIdleSec = "600";
       };
-      after = ["nvme-auto-fluent.service"];
-      wants = ["nvme-auto-fluent.service"];
+      before = ["libvirtd.service"];
       where = "/fluent";
     }
     {
@@ -81,8 +82,7 @@
       automountConfig = {
         TimeoutIdleSec = "600";
       };
-      after = ["common.automount"];
-      wants = ["common.automount"];
+      after = ["ntfsfix.service"];
       where = "/common/SteamLibrary/steamapps/compatdata";
     }
   ];

@@ -67,7 +67,9 @@ in {
           value = {
             wantedBy = ["multi-user.target"];
             before = ["libvirtd.service"];
-            after = ["network-online.target"];
+            unitConfig = {
+              DefaultDependencies = "no";
+            };
             wants = ["network-online.target"];
             serviceConfig = {
               Type = "oneshot";
@@ -80,7 +82,7 @@ in {
                   then ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.multiAddress} -s ${toString cfg.port} --reconnect-delay=1 --ctrl-loss-tmo=-1 --fast_io_fail_tmo=0 --keep-alive-tmo=0 --nr-io-queues=16"]
                   else []
                 );
-              ExecStop = "${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\"";
+              # ExecStop = "${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\"";
             };
           };
         }

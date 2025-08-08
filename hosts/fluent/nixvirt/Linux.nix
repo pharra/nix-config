@@ -19,14 +19,8 @@ in {
         count = 32;
         unit = "GiB";
       };
-      storage_vol = {
-        pool = "DiskPool";
-        volume = "Linux.qcow2";
-      };
-      install_vol = {
-        pool = "ISOPool";
-        volume = "archlinux-2025.04.01-x86_64.iso";
-      };
+      storage_vol = /fluent/DiskPool/Linux.qcow2;
+      install_vol = /fluent/ISOPool/archlinux-2025.08.01-x86_64.iso;
       nvram_path = /fluent/RAMPool/Linux.fd;
       no_graphics = true;
     };
@@ -114,7 +108,7 @@ in {
                 type = "pci";
                 mode = "subsystem";
                 managed = true;
-                source = {address = pci_address 2 0 1;};
+                source = {address = pci_address 3 0 1;};
                 # MLX 5 02:00.1
                 address = pci_address 7 0 0;
               }

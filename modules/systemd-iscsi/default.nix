@@ -170,6 +170,7 @@ in {
           wants = ["network-online.target" "iscsid.service"];
           serviceConfig = {
             Type = "oneshot";
+            RemainAfterExit = "yes";
             ExecStartPre = "${pkgs.openiscsi}/bin/iscsiadm --mode discoverydb --type sendtargets --discover --portal ${escapeShellArg cfg.discoverPortal} --debug ${toString cfg.logLevel}";
             ExecStart =
               "${pkgs.openiscsi}/bin/iscsiadm --mode node --portal ${escapeShellArg cfg.discoverPortal} "

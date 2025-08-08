@@ -43,7 +43,7 @@
 
   hardware.mlx5 = {
     enable = true;
-    enableSRIOV = false;
+    enableSRIOV = true;
     interfaces = ["mlx5_0"];
   };
 
@@ -71,30 +71,6 @@
   fileSystems."/boot/efi" = {
     device = "/dev/disk/by-label/fluent_boot";
     fsType = "vfat";
-  };
-
-  boot.initrd = {
-    kernelModules = ["brd"];
-    systemd = {
-      initrdBin = [pkgs.nix pkgs.util-linuxMinimal pkgs.gnutar pkgs.gnugrep pkgs.coreutils];
-
-      services.nix-tmpfs-root = {
-        requiredBy = ["initrd.target"];
-        after = ["nixos-iscsi.service" "sysroot-system-persistent.mount"];
-        wants = ["nixos-iscsi.service" "sysroot-system-persistent.mount"];
-        before = ["initrd-find-nixos-closure.service"];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = "yes";
-          ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p /sysroot/nix";
-          ExecStart = [
-            "${pkgs.coreutils}/bin/dd if=/dev/disk/by-label/fluent_nix of=/dev/ram0 bs=4M iflag=direct oflag=direct"
-            "${pkgs.util-linuxMinimal}/bin/mount -t btrfs -o compress=zstd /dev/ram0 /sysroot/nix"
-            "${pkgs.util-linuxMinimal}/bin/mount -o bind /sysroot/system/persistent /sysroot/nix/persistent"
-          ];
-        };
-      };
-    };
   };
 
   swapDevices = [];

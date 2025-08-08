@@ -19,11 +19,44 @@
   };
 
   boot.initrd = {
-    kernelModules = ["nvme-rdma" "nvme-tcp"];
+    kernelModules = ["brd"];
     systemd = {
       enable = true;
       emergencyAccess = true;
-      initrdBin = [pkgs.iproute2 pkgs.pciutils pkgs.dnsutils pkgs.nvme-cli];
+      initrdBin = [pkgs.iproute2 pkgs.pciutils pkgs.dnsutils pkgs.util-linuxMinimal pkgs.coreutils pkgs.iputils];
+
+      services.nix-tmpfs-root = {
+        requiredBy = ["initrd.target"];
+        after = ["nixos-iscsi.service" "sysroot-system-persistent.mount"];
+        wants = ["nixos-iscsi.service" "sysroot-system-persistent.mount"];
+        before = ["initrd-find-nixos-closure.service"];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = "yes";
+          ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p /sysroot/nix";
+          ExecStart = [
+            "${pkgs.coreutils}/bin/dd if=/dev/disk/by-label/fluent_nix of=/dev/ram0 bs=4M iflag=direct oflag=direct"
+            "${pkgs.util-linuxMinimal}/bin/mount -t btrfs -o compress=zstd /dev/ram0 /sysroot/nix"
+            "${pkgs.util-linuxMinimal}/bin/mount -o bind /sysroot/system/persistent /sysroot/nix/persistent"
+          ];
+        };
+      };
+
+      services.ensure-network = {
+        enable = true;
+        before = ["network-online.target"];
+        wantedBy = ["network-online.target"];
+        after = ["nss-lookup.target"];
+        unitConfig = {
+          DefaultDependencies = "no";
+        };
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = "yes";
+          ExecStart = "${pkgs.bashInteractive}/bin/sh -c 'until ${pkgs.iputils}/bin/ping -c 1 1.1.1.1; do ${pkgs.coreutils}/bin/sleep 1; done'";
+        };
+      };
+
       dbus.enable = true;
       network = {
         enable = true;
