@@ -13,11 +13,6 @@
     ./core-server.nix
     ./fcitx5.nix
     ./flatpak.nix
-    ./zfs.nix
-    ./qemu.nix
-    ./azure-tools
-    ./desktop
-    ./waydroid.nix
   ];
 
   # to install chrome, you need to enable unfree packages

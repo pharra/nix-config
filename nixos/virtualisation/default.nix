@@ -38,6 +38,7 @@
 
     docker-compose
 
+    distrobox
     # swtpm
   ];
 

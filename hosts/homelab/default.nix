@@ -69,6 +69,9 @@ in {
     #    ../../nixos/ccache.nix
     ../../nixos/tailscale.nix
     ../../nixos/ddns-go.nix
+
+    ../../nixos/virtualisation
+
     ./nixvirt
   ];
 
