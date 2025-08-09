@@ -30,7 +30,6 @@
   environment.systemPackages = with pkgs; [
     kdePackages.kirigami
     kdePackages.wallpaper-engine-plugin
-    attic-client
   ];
 
   i18n.inputMethod = {

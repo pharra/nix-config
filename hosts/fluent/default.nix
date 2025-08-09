@@ -159,6 +159,48 @@ in {
     };
   };
 
+  services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default
+
+  hardware = {
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+    };
+  };
+
+  hardware.nvidia = {
+    # Modesetting is required.
+    modesetting.enable = true;
+
+    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
+    # Enable this if you have graphical corruption issues or application crashes after waking
+    # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead
+    # of just the bare essentials.
+    powerManagement.enable = true;
+
+    prime = {
+      offload = {
+        enable = true;
+        enableOffloadCmd = false;
+      };
+      # Make sure to use the correct Bus ID values for your system!
+      # intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:1:0:0";
+      amdgpuBusId = "PCI:7:0:0"; # For AMD GPU
+    };
+    # # Fine-grained power management. Turns off GPU when not in use.
+    # # Experimental and only works on modern Nvidia GPUs (Turing or newer).
+    powerManagement.finegrained = true;
+    open = false;
+
+    # Enable the Nvidia settings menu,
+    # accessible via `nvidia-settings`.
+    nvidiaSettings = true;
+
+    # Optionally, you may need to select the appropriate driver version for your specific GPU.
+    package = config.boot.kernelPackages.nvidiaPackages.latest;
+  };
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave

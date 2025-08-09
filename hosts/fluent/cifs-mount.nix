@@ -37,13 +37,20 @@
     {
       type = "ntfs3";
       what = "/dev/disk/by-uuid/10DAC033DAC0173E";
-      where = "/common";
-      # options = "uid=1000,gid=100";
+      where = "/.common-ro";
+      options = "ro";
     }
     {
       type = "ext4";
       what = "/dev/disk/by-label/steam_compact";
-      where = "/common/SteamLibrary/steamapps/compatdata";
+      where = "/.common-rw";
+    }
+    {
+      type = "overlay";
+      what = "overlay";
+      where = "/common";
+      requires = [".common-ro.mount" ".common-rw.mount"];
+      options = "lowerdir=/.common-ro,upperdir=/.common-rw/upper,workdir=/.common-rw/work";
     }
   ];
 
@@ -75,15 +82,21 @@
         TimeoutIdleSec = "600";
       };
       after = ["ntfsfix.service"];
-      where = "/common";
+      where = "/.common-ro";
     }
     {
       wantedBy = ["multi-user.target"];
       automountConfig = {
         TimeoutIdleSec = "600";
       };
-      after = ["ntfsfix.service"];
-      where = "/common/SteamLibrary/steamapps/compatdata";
+      where = "/.common-rw";
+    }
+    {
+      wantedBy = ["multi-user.target"];
+      automountConfig = {
+        TimeoutIdleSec = "600";
+      };
+      where = "/common";
     }
   ];
 

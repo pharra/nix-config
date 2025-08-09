@@ -68,6 +68,13 @@
     neededForBoot = true;
   };
 
+  fileSystems."/system/var" = {
+    device = "/dev/disk/by-label/fluent_system";
+    options = ["subvol=@nix-var" "compress=zstd" "noatime"];
+    fsType = "btrfs";
+    neededForBoot = true;
+  };
+
   fileSystems."/boot/efi" = {
     device = "/dev/disk/by-label/fluent_boot";
     fsType = "vfat";

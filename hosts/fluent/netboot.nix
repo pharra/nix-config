@@ -38,6 +38,7 @@
             "${pkgs.coreutils}/bin/dd if=/dev/disk/by-label/fluent_nix of=/dev/ram0 bs=4M iflag=direct oflag=direct"
             "${pkgs.util-linuxMinimal}/bin/mount -t btrfs -o compress=zstd /dev/ram0 /sysroot/nix"
             "${pkgs.util-linuxMinimal}/bin/mount -o bind /sysroot/system/persistent /sysroot/nix/persistent"
+            "${pkgs.util-linuxMinimal}/bin/mount -o bind /sysroot/system/var /sysroot/nix/var"
           ];
         };
       };

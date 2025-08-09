@@ -71,6 +71,7 @@ in {
     ../../nixos/ddns-go.nix
 
     ../../nixos/virtualisation
+    ../../nixos/scripts.nix
 
     ./nixvirt
   ];
