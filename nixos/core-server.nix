@@ -68,7 +68,7 @@
     settings = {
       X11Forwarding = true;
       PermitRootLogin = "no"; # disable root login
-      PasswordAuthentication = true; # disable password login
+      PasswordAuthentication = no; # disable password login
     };
     openFirewall = true;
   };
