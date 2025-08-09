@@ -32,7 +32,7 @@ in {
     ../../nixos/impermanence.nix
 
     ../../nixos/libvirt.nix
-    ../../nixos/core-server.nix
+    ../../nixos/core-desktop.nix
     ../../nixos/user-group.nix
 
     ../../secrets/nixos.nix
