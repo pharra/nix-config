@@ -586,7 +586,7 @@ in {
     modesetting.enable = true;
     forceFullCompositionPipeline = true;
     open = true;
-    #powerManagement.enable = true;
+    powerManagement.enable = true;
   };
   hardware.nvidia-container-toolkit.enable = true; # for nvidia-docker
 
