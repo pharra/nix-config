@@ -20,7 +20,7 @@ in {
         unit = "GiB";
       };
       storage_vol = /fluent/DiskPool/Linux.qcow2;
-      install_vol = /fluent/ISOPool/archlinux-2025.08.01-x86_64.iso;
+      install_vol = /fluent/ISOPool/installer.iso;
       nvram_path = /fluent/RAMPool/Linux.fd;
       no_graphics = true;
     };
@@ -77,6 +77,15 @@ in {
         # memoryBacking = {
         #   hugepages = {};
         # };
+        os =
+          Linux.os
+          // {
+            boot = null;
+            bootmenu = {enable = true;};
+            smbios = {
+              mode = "host";
+            };
+          };
         devices =
           Linux.devices
           // {
@@ -153,5 +162,5 @@ in {
           };
       }
     );
-  active = true;
+  active = false;
 }
