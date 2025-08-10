@@ -48,13 +48,31 @@
   };
 
   fileSystems."/system" = {
-    device = "fluent_system";
+    device = "fluent";
     fsType = "zfs";
     neededForBoot = true;
   };
 
   fileSystems."/tmp" = {
-    device = "fluent_system/.tmp";
+    device = "fluent/tmp";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/nix" = {
+    device = "fluent/nix";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/nix/var" = {
+    device = "fluent/nix/var";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/nix/persistent" = {
+    device = "fluent/nix/persistent";
     fsType = "zfs";
     neededForBoot = true;
   };

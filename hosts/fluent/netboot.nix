@@ -32,12 +32,10 @@
         before = ["initrd-find-nixos-closure.service"];
         serviceConfig = {
           Type = "oneshot";
-          ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p /sysroot/nix";
+          ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p /sysroot/nix/store";
           ExecStart = [
             "${pkgs.coreutils}/bin/dd if=/dev/disk/by-label/fluent_nix of=/dev/ram0 bs=4M iflag=direct oflag=direct"
-            "${pkgs.util-linuxMinimal}/bin/mount -t btrfs -o compress=zstd /dev/ram0 /sysroot/nix"
-            "${pkgs.util-linuxMinimal}/bin/mount -o bind /sysroot/system/.persistent /sysroot/nix/persistent"
-            "${pkgs.util-linuxMinimal}/bin/mount -o bind /sysroot/system/.nix-var /sysroot/nix/var"
+            "${pkgs.util-linuxMinimal}/bin/mount -t btrfs -o compress=zstd /dev/ram0 /sysroot/nix/store"
           ];
         };
       };

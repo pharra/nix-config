@@ -36,7 +36,13 @@ with lib; let
         requiredBy = ["systemd-suspend.service"];
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = "${pkgs.systemd}/bin/systemctl stop ${serviceName}.service";
+          ExecStart =
+            ["${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\""]
+            ++ (
+              if cfg.multipath
+              then ["${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\""]
+              else []
+            );
         };
       };
     }
@@ -47,7 +53,13 @@ with lib; let
         requiredBy = ["systemd-hibernate.service"];
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = "${pkgs.systemd}/bin/systemctl stop ${serviceName}.service";
+          ExecStart =
+            ["${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\""]
+            ++ (
+              if cfg.multipath
+              then ["${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\""]
+              else []
+            );
         };
       };
     }

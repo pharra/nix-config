@@ -179,50 +179,6 @@ in {
                 then "--loginall all"
                 else "--targetname ${escapeShellArg cfg.target} --login"
               );
-            ExecStop =
-              "${pkgs.openiscsi}/bin/iscsiadm --mode node --portal ${escapeShellArg cfg.discoverPortal} "
-              + (
-                if cfg.loginAll
-                then "--logoutall all"
-                else "--targetname ${escapeShellArg cfg.target} --logout"
-              );
-          };
-        };
-
-        services.nixos-iscsi-suspend = {
-          before = ["systemd-suspend.service"];
-          requiredBy = ["systemd-suspend.service"];
-          after = ["nvidia-suspend.service"];
-          serviceConfig = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.systemd}/bin/systemctl stop nixos-iscsi.service";
-          };
-        };
-
-        services.nixos-iscsi-hibernate = {
-          before = ["systemd-hibernate.service"];
-          requiredBy = ["systemd-hibernate.service"];
-          after = ["nvidia-hibernate.service"];
-          serviceConfig = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.systemd}/bin/systemctl stop nixos-iscsi.service";
-          };
-        };
-
-        services.nixos-iscsi-resume = {
-          after = [
-            "systemd-suspend.service"
-            "systemd-hibernate.service"
-          ];
-          requires = ["network-online.target"];
-          requiredBy = [
-            "systemd-suspend.service"
-            "systemd-hibernate.service"
-          ];
-          before = ["nvidia-resume.service"];
-          serviceConfig = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.systemd}/bin/systemctl restart nixos-iscsi.service";
           };
         };
       };
@@ -231,6 +187,64 @@ in {
     services.openiscsi = {
       enable = true;
       inherit (cfg) name;
+    };
+
+    systemd = {
+      services.nixos-iscsi-suspend = {
+        before = ["systemd-suspend.service"];
+        requiredBy = ["systemd-suspend.service"];
+        after = ["nvidia-suspend.service"];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart =
+            "${pkgs.openiscsi}/bin/iscsiadm --mode node --portal ${escapeShellArg cfg.discoverPortal} "
+            + (
+              if cfg.loginAll
+              then "--logoutall all"
+              else "--targetname ${escapeShellArg cfg.target} --logout"
+            );
+        };
+      };
+
+      services.nixos-iscsi-hibernate = {
+        before = ["systemd-hibernate.service"];
+        requiredBy = ["systemd-hibernate.service"];
+        after = ["nvidia-hibernate.service"];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart =
+            "${pkgs.openiscsi}/bin/iscsiadm --mode node --portal ${escapeShellArg cfg.discoverPortal} "
+            + (
+              if cfg.loginAll
+              then "--logoutall all"
+              else "--targetname ${escapeShellArg cfg.target} --logout"
+            );
+        };
+      };
+
+      services.nixos-iscsi-resume = {
+        after = [
+          "systemd-suspend.service"
+          "systemd-hibernate.service"
+        ];
+        requires = ["network-online.target"];
+        requiredBy = [
+          "systemd-suspend.service"
+          "systemd-hibernate.service"
+        ];
+        before = ["nvidia-resume.service"];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStartPre = "${pkgs.openiscsi}/bin/iscsiadm --mode discoverydb --type sendtargets --discover --portal ${escapeShellArg cfg.discoverPortal} --debug ${toString cfg.logLevel}";
+          ExecStart =
+            "${pkgs.openiscsi}/bin/iscsiadm --mode node --portal ${escapeShellArg cfg.discoverPortal} "
+            + (
+              if cfg.loginAll
+              then "--loginall all"
+              else "--targetname ${escapeShellArg cfg.target} --login"
+            );
+        };
+      };
     };
 
     assertions = [

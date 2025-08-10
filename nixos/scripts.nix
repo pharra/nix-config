@@ -28,48 +28,33 @@
   '';
 
   init-fluent-disk = pkgs.writeShellScriptBin "init-fluent-disk" ''
-    zpool create -f -o ashift=14 fluent_system /dev/zvol/data/fluent_system
+    zpool create -f -o ashift=14 fluent /dev/zvol/data/fluent_system
     mkfs.btrfs -L fluent_nix -f /dev/zvol/data/fluent_nix
     mkfs.vfat -n fluent_boot /dev/zvol/data/fluent_boot-part1
 
-    zfs create fluent_system/.persistent
-    zfs create fluent_system/.nix-var
-    zfs create fluent_system/.tmp
+    zfs create fluent/nix
+    zfs create fluent/nix/persistent
+    zfs create fluent/nix/var
+    zfs create fluent/tmp
 
-    zpool export fluent_system
+    zpool export fluent
   '';
 
   mount-fluent = pkgs.writeShellScriptBin "mount-fluent" ''
-    zpool import -f fluent_system
-
-    mkdir /fluent -p
-    mount -o bind /fluent_system /fluent
+    zpool import -f fluent
 
     mkdir /fluent/boot/efi -p
     mount /dev/disk/by-label/fluent_boot /fluent/boot/efi
 
-    mkdir /fluent/nix -p
-    mount -t btrfs -o compress-force=zstd:19 /dev/disk/by-label/fluent_nix /fluent/nix
-
-    mkdir /fluent/nix/persistent -p
-    mount -o bind /fluent_system/.persistent /fluent/nix/persistent
-
-    mkdir /fluent/tmp -p
-    mount -o bind /fluent_system/.tmp /fluent/tmp
-
-    mkdir /fluent/nix/var -p
-    mount -o bind /fluent_system/.nix-var /fluent/nix/var
+    mkdir /fluent/nix/store -p
+    mount -t btrfs -o compress-force=zstd:19 /dev/disk/by-label/fluent_nix /fluent/nix/store
   '';
 
   umount-fluent = pkgs.writeShellScriptBin "umount-fluent" ''
-    umount /fluent/nix/var
-    umount /fluent/nix/persistent
-    umount /fluent/nix
+    umount /fluent/nix/store
     umount /fluent/boot/efi
-    umount /fluent/tmp
-    umount /fluent
 
-    zpool export -f fluent_system
+    zpool export -f fluent
   '';
 in {
   environment.systemPackages = with pkgs; [

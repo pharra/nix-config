@@ -93,42 +93,63 @@ in {
               );
           };
         };
+      };
+    };
 
-        services.nixos-nvmf-suspend = {
-          before = ["systemd-suspend.service"];
-          requiredBy = ["systemd-suspend.service"];
-          after = ["nvidia-suspend.service"];
-          serviceConfig = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.systemd}/bin/systemctl stop nixos-nvmf.service";
-          };
+    systemd = {
+      services.nixos-nvmf-suspend = {
+        before = ["systemd-suspend.service"];
+        requiredBy = ["systemd-suspend.service"];
+        after = ["nvidia-suspend.service"];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart =
+            ["${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\""]
+            ++ (
+              if cfg.multipath
+              then ["${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\""]
+              else []
+            );
         };
+      };
 
-        services.nixos-nvmf-hibernate = {
-          before = ["systemd-hibernate.service"];
-          requiredBy = ["systemd-hibernate.service"];
-          after = ["nvidia-hibernate.service"];
-          serviceConfig = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.systemd}/bin/systemctl stop nixos-nvmf.service";
-          };
+      services.nixos-nvmf-hibernate = {
+        before = ["systemd-hibernate.service"];
+        requiredBy = ["systemd-hibernate.service"];
+        after = ["nvidia-hibernate.service"];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart =
+            ["${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\""]
+            ++ (
+              if cfg.multipath
+              then ["${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\""]
+              else []
+            );
         };
+      };
 
-        services.nixos-nvmf-resume = {
-          after = [
-            "systemd-suspend.service"
-            "systemd-hibernate.service"
-          ];
-          requires = ["network-online.target"];
-          requiredBy = [
-            "systemd-suspend.service"
-            "systemd-hibernate.service"
-          ];
-          before = ["nvidia-resume.service"];
-          serviceConfig = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.systemd}/bin/systemctl restart nixos-nvmf.service";
-          };
+      services.nixos-nvmf-resume = {
+        after = [
+          "systemd-suspend.service"
+          "systemd-hibernate.service"
+        ];
+        requires = ["network-online.target"];
+        requiredBy = [
+          "systemd-suspend.service"
+          "systemd-hibernate.service"
+        ];
+        before = ["nvidia-resume.service"];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStartPre = "${pkgs.nvme-cli}/bin/nvme discover -t ${cfg.type} -a ${cfg.address} -s ${toString cfg.port}";
+          ExecStart =
+            ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.address} -s ${toString cfg.port} --reconnect-delay=1 --ctrl-loss-tmo=-1 --fast_io_fail_tmo=0 --keep-alive-tmo=0 --nr-io-queues=16"]
+            ++ (
+              if cfg.multipath
+              then ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.multiAddress} -s ${toString cfg.port} --reconnect-delay=1 --ctrl-loss-tmo=-1 --fast_io_fail_tmo=0 --keep-alive-tmo=0 --nr-io-queues=16"]
+              else []
+            );
         };
       };
     };
