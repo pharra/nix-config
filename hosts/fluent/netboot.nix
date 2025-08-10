@@ -27,18 +27,17 @@
 
       services.nix-tmpfs-root = {
         requiredBy = ["initrd.target"];
-        after = ["nixos-iscsi.service" "sysroot-system-persistent.mount"];
-        wants = ["nixos-iscsi.service" "sysroot-system-persistent.mount"];
+        after = ["nixos-iscsi.service" "sysroot-system.mount"];
+        wants = ["nixos-iscsi.service" "sysroot-system.mount"];
         before = ["initrd-find-nixos-closure.service"];
         serviceConfig = {
           Type = "oneshot";
-          RemainAfterExit = "yes";
           ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p /sysroot/nix";
           ExecStart = [
             "${pkgs.coreutils}/bin/dd if=/dev/disk/by-label/fluent_nix of=/dev/ram0 bs=4M iflag=direct oflag=direct"
             "${pkgs.util-linuxMinimal}/bin/mount -t btrfs -o compress=zstd /dev/ram0 /sysroot/nix"
-            "${pkgs.util-linuxMinimal}/bin/mount -o bind /sysroot/system/persistent /sysroot/nix/persistent"
-            "${pkgs.util-linuxMinimal}/bin/mount -o bind /sysroot/system/var /sysroot/nix/var"
+            "${pkgs.util-linuxMinimal}/bin/mount -o bind /sysroot/system/.persistent /sysroot/nix/persistent"
+            "${pkgs.util-linuxMinimal}/bin/mount -o bind /sysroot/system/.nix-var /sysroot/nix/var"
           ];
         };
       };
@@ -53,7 +52,6 @@
         };
         serviceConfig = {
           Type = "oneshot";
-          RemainAfterExit = "yes";
           ExecStart = "${pkgs.bashInteractive}/bin/sh -c 'until ${pkgs.iputils}/bin/ping -c 1 1.1.1.1; do ${pkgs.coreutils}/bin/sleep 1; done'";
         };
       };

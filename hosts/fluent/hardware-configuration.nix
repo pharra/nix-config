@@ -48,30 +48,14 @@
   };
 
   fileSystems."/system" = {
-    device = "/dev/disk/by-label/fluent_system";
-    options = ["compress=zstd" "noatime"];
-    fsType = "btrfs";
+    device = "fluent_system";
+    fsType = "zfs";
     neededForBoot = true;
   };
 
   fileSystems."/tmp" = {
-    device = "/dev/disk/by-label/fluent_system";
-    options = ["subvol=@tmp" "compress=zstd" "noatime"];
-    fsType = "btrfs";
-    neededForBoot = true;
-  };
-
-  fileSystems."/system/persistent" = {
-    device = "/dev/disk/by-label/fluent_system";
-    options = ["subvol=@persistent" "compress=zstd" "noatime"];
-    fsType = "btrfs";
-    neededForBoot = true;
-  };
-
-  fileSystems."/system/var" = {
-    device = "/dev/disk/by-label/fluent_system";
-    options = ["subvol=@nix-var" "compress=zstd" "noatime"];
-    fsType = "btrfs";
+    device = "fluent_system/.tmp";
+    fsType = "zfs";
     neededForBoot = true;
   };
 

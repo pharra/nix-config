@@ -75,6 +75,11 @@ in {
 
       # Variables are specified in boot.ipxe.cfgnetboot_installer
 
+      # boot on fluent
+      set fluent_mac:hex 9c:52:f8:8e:dd:d8
+      set net0
+      iseq ''${net0/mac} ''${fluent_mac} && goto fluent_nixos ||
+
       # Some menu defaults
       set menu-timeout 50000
       set submenu-timeout ''${menu-timeout}

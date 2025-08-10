@@ -18,8 +18,8 @@ with lib; let
         unitConfig.DefaultDependencies = "no";
         wants = ["network-online.target"];
         serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = "yes";
+          Type = "simple";
+          RemainAfterExit = true;
           ExecStartPre = "${pkgs.nvme-cli}/bin/nvme discover -t ${cfg.type} -a ${cfg.address} -s ${toString cfg.port}";
           ExecStart =
             ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.address} -s ${toString cfg.port} --reconnect-delay=1 --ctrl-loss-tmo=-1 --fast_io_fail_tmo=0 --keep-alive-tmo=0 --nr-io-queues=16"]
@@ -36,7 +36,6 @@ with lib; let
         requiredBy = ["systemd-suspend.service"];
         serviceConfig = {
           Type = "oneshot";
-          RemainAfterExit = "yes";
           ExecStart = "${pkgs.systemd}/bin/systemctl stop ${serviceName}.service";
         };
       };
@@ -48,7 +47,6 @@ with lib; let
         requiredBy = ["systemd-hibernate.service"];
         serviceConfig = {
           Type = "oneshot";
-          RemainAfterExit = "yes";
           ExecStart = "${pkgs.systemd}/bin/systemctl stop ${serviceName}.service";
         };
       };
@@ -67,7 +65,6 @@ with lib; let
         ];
         serviceConfig = {
           Type = "oneshot";
-          RemainAfterExit = "yes";
           ExecStart = "${pkgs.systemd}/bin/systemctl restart ${serviceName}.service";
         };
       };

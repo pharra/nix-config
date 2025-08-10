@@ -169,8 +169,8 @@ in {
           after = ["network-online.target" "iscsid.service"];
           wants = ["network-online.target" "iscsid.service"];
           serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = "yes";
+            Type = "simple";
+            RemainAfterExit = true;
             ExecStartPre = "${pkgs.openiscsi}/bin/iscsiadm --mode discoverydb --type sendtargets --discover --portal ${escapeShellArg cfg.discoverPortal} --debug ${toString cfg.logLevel}";
             ExecStart =
               "${pkgs.openiscsi}/bin/iscsiadm --mode node --portal ${escapeShellArg cfg.discoverPortal} "
@@ -195,7 +195,6 @@ in {
           after = ["nvidia-suspend.service"];
           serviceConfig = {
             Type = "oneshot";
-            RemainAfterExit = "yes";
             ExecStart = "${pkgs.systemd}/bin/systemctl stop nixos-iscsi.service";
           };
         };
@@ -206,7 +205,6 @@ in {
           after = ["nvidia-hibernate.service"];
           serviceConfig = {
             Type = "oneshot";
-            RemainAfterExit = "yes";
             ExecStart = "${pkgs.systemd}/bin/systemctl stop nixos-iscsi.service";
           };
         };
@@ -224,7 +222,6 @@ in {
           before = ["nvidia-resume.service"];
           serviceConfig = {
             Type = "oneshot";
-            RemainAfterExit = "yes";
             ExecStart = "${pkgs.systemd}/bin/systemctl restart nixos-iscsi.service";
           };
         };

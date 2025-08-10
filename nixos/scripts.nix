@@ -28,30 +28,37 @@
   '';
 
   init-fluent-disk = pkgs.writeShellScriptBin "init-fluent-disk" ''
-    mkfs.btrfs -L fluent_system -f /dev/zvol/data/fluent_system
+    zpool create -f -o ashift=14 fluent_system /dev/zvol/data/fluent_system
     mkfs.btrfs -L fluent_nix -f /dev/zvol/data/fluent_nix
     mkfs.vfat -n fluent_boot /dev/zvol/data/fluent_boot-part1
 
-    mount -t btrfs -o compress=zstd /dev/zvol/data/fluent_system /fluent
-    btrfs subvolume create /fluent/@nix-var
-    btrfs subvolume create /fluent/@persistent
-    btrfs subvolume create /fluent/@tmp
-    umount /fluent
+    zfs create fluent_system/.persistent
+    zfs create fluent_system/.nix-var
+    zfs create fluent_system/.tmp
+
+    zpool export fluent_system
   '';
 
   mount-fluent = pkgs.writeShellScriptBin "mount-fluent" ''
+    zpool import -f fluent_system
+
     mkdir /fluent -p
-    mount -t btrfs -o compress=zstd /dev/disk/by-label/fluent_system /fluent
+    mount -o bind /fluent_system /fluent
+
     mkdir /fluent/boot/efi -p
     mount /dev/disk/by-label/fluent_boot /fluent/boot/efi
+
     mkdir /fluent/nix -p
-    mount -t btrfs -o compress-force=zstd:15 /dev/disk/by-label/fluent_nix /fluent/nix
+    mount -t btrfs -o compress-force=zstd:19 /dev/disk/by-label/fluent_nix /fluent/nix
+
     mkdir /fluent/nix/persistent -p
-    mount -t btrfs -o compress=zstd,subvol=@persistent /dev/disk/by-label/fluent_system /fluent/nix/persistent
+    mount -o bind /fluent_system/.persistent /fluent/nix/persistent
+
     mkdir /fluent/tmp -p
-    mount -t btrfs -o compress=zstd,subvol=@tmp /dev/disk/by-label/fluent_system /fluent/tmp
+    mount -o bind /fluent_system/.tmp /fluent/tmp
+
     mkdir /fluent/nix/var -p
-    mount -t btrfs -o compress=zstd,subvol=@nix-var /dev/disk/by-label/fluent_system /fluent/nix/var
+    mount -o bind /fluent_system/.nix-var /fluent/nix/var
   '';
 
   umount-fluent = pkgs.writeShellScriptBin "umount-fluent" ''
@@ -61,6 +68,8 @@
     umount /fluent/boot/efi
     umount /fluent/tmp
     umount /fluent
+
+    zpool export -f fluent_system
   '';
 in {
   environment.systemPackages = with pkgs; [
