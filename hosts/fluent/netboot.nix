@@ -19,7 +19,7 @@
   };
 
   boot.initrd = {
-    kernelModules = ["brd"];
+    kernelModules = ["brd" "btrfs"];
     systemd = {
       enable = true;
       emergencyAccess = true;
