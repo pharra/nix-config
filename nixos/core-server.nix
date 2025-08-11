@@ -132,6 +132,14 @@
     }
   ];
 
+  # add user's shell into /etc/shells
+  environment.shells = with pkgs; [
+    bash
+    zsh
+  ];
+  # set user's default shell system-wide
+  users.defaultUserShell = pkgs.zsh;
+
   # for power management
   # services.upower.enable = true;
   # powerManagement.enable = true;

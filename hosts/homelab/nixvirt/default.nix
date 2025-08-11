@@ -206,7 +206,7 @@ in {
       Windows
       (Kwrt
         // {
-          active = true;
+          active = false;
         })
     ];
     pools = [
