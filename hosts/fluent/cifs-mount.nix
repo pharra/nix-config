@@ -49,7 +49,7 @@
       type = "overlay";
       what = "overlay";
       where = "/common";
-      requires = [".common-ro.mount" ".common-rw.mount"];
+      requires = ["\\x2ecommon\\x2dro.mount" "\\x2ecommon\\x2drw.mount"];
       options = "lowerdir=/.common-ro,upperdir=/.common-rw/upper,workdir=/.common-rw/work";
     }
   ];

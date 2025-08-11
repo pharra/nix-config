@@ -24,13 +24,13 @@ in {
       source = pkgs.ipxe + "/undionly.kpxe";
     };
 
-    "ipxe/netboot/bzImage" = {
-      source = netboot_installer.config.system.build.kernel + "/bzImage";
-    };
+    # "ipxe/netboot/bzImage" = {
+    #   source = netboot_installer.config.system.build.kernel + "/bzImage";
+    # };
 
-    "ipxe/netboot/initrd" = {
-      source = netboot_installer.config.system.build.netbootRamdisk + "/initrd";
-    };
+    # "ipxe/netboot/initrd" = {
+    #   source = netboot_installer.config.system.build.netbootRamdisk + "/initrd";
+    # };
 
     "ipxe/boot.ipxe".text = ''
       #!ipxe
@@ -73,7 +73,7 @@ in {
     "ipxe/menu.ipxe".text = ''
       #!ipxe
 
-      # Variables are specified in boot.ipxe.cfgnetboot_installer
+      # Variables are specified in boot.ipxe.cfg
 
       # boot on fluent
       set fluent_mac:hex 9c:52:f8:8e:dd:d8
@@ -93,7 +93,7 @@ in {
       item --gap --             ------------------------- Operating systems ------------------------------
       item nixos      Boot NixOS
       item fluent_nixos      Boot NixOS on fluent
-      item nixos-installer Boot NixOS Installer
+      # item nixos-installer Boot NixOS Installer
       item win      Boot Windows
       item win-install      Boot Windows Installer
       item --gap --             ------------------------- Advanced options -------------------------------
@@ -144,11 +144,11 @@ in {
       set root-path ''${base-iscsi}:fluentnixosefi
       sanboot --drive 0x80 ''${root-path} || goto failed
 
-      :nixos-installer
-      echo Booting nixos installer
-      kernel netboot/bzImage init=${netboot_installer.config.system.build.toplevel}/init ${toString netboot_installer.config.boot.kernelParams}
-      initrd netboot/initrd
-      boot
+      # :nixos-installer
+      # echo Booting nixos installer
+      # kernel netboot/bzImage init=${netboot_installer.config.system.build.toplevel}/init ${toString netboot_installer.config.boot.kernelParams}
+      # initrd netboot/initrd
+      # boot
 
       :win
       echo Booting windows from iSCSI for ''${initiator-iqn}
@@ -180,14 +180,14 @@ in {
     # "ipxe/boot.wim" = {
     #   source = ./boot.wim;
     # };
-    # "ipxe/BCD" = {netboot_installer
+    # "ipxe/BCD" = {
     #   source = ./BCD;
     # };
     # "ipxe/boot.sdi" = {
     #   source = ./boot.sdi;
     # };
     # "ipxe/bootmgr" = {
-    #   source = ./bootmgr;netboot_installer
+    #   source = ./bootmgr;
     # };
     # "ipxe/bootmgr.efi" = {
     #   source = ./bootmgr.efi;
@@ -222,12 +222,12 @@ in {
   #   };
   # };
 
-  services.pixiecore = {
-    enable = true;
-    listen = "192.168.31.200";
-    kernel = netboot_installer.config.system.build.kernel + "/bzImage";
-    initrd = netboot_installer.config.system.build.netbootRamdisk + "/initrd";
-    dhcpNoBind = true;
-    cmdLine = "init=${netboot_installer.config.system.build.toplevel}/init ${toString netboot_installer.config.boot.kernelParams}";
-  };
+  # services.pixiecore = {
+  #   enable = true;
+  #   listen = "192.168.31.200";
+  #   kernel = netboot_installer.config.system.build.kernel + "/bzImage";
+  #   initrd = netboot_installer.config.system.build.netbootRamdisk + "/initrd";
+  #   dhcpNoBind = true;
+  #   cmdLine = "init=${netboot_installer.config.system.build.toplevel}/init ${toString netboot_installer.config.boot.kernelParams}";
+  # };
 })

@@ -101,6 +101,8 @@
       url = "github:codgician/mlnx-ofed-nixos";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -123,6 +125,7 @@
     NixVirt,
     nixos-wsl,
     nixos-hardware,
+    proxmox-nixos,
     ...
   }: let
     username = "wf";
@@ -165,6 +168,7 @@
         inputs.mlnx-ofed-nixos.nixosModules.setupCacheAndOverlays
         # Add configuration options from this repo
         inputs.mlnx-ofed-nixos.nixosModules.default
+        proxmox-nixos.nixosModules.proxmox-ve
       ]
       ++ (builtins.attrValues modules);
 
@@ -172,7 +176,7 @@
 
     commonSpecialArgs =
       {
-        inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs home-modules NixVirt;
+        inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs home-modules NixVirt proxmox-nixos;
         # use unstable branch for some packages to get the latest updates
         pkgs-unstable = import nixpkgs-unstable {
           system = x64_system; # refer the `system` parameter form outer scope recursively
@@ -276,7 +280,7 @@
       {
         name = "homelab";
         nixos-modules = [./hosts/homelab];
-        builds = ["kde" "gnome" "cosmic" "deepin"];
+        builds = ["kde" "gnome" "cosmic" "deepin" "base"];
         specialArgs = {
           netboot_args = {netboot_installer = self.nixosConfigurations."netboot_installer_base";};
         };

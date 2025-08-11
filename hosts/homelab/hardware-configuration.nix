@@ -18,7 +18,7 @@ in {
     "zfs"
   ];
   boot.blacklistedKernelModules = ["ast"];
-  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=64" "amd_pstate=active" "amd_pstate.shared_mem=1" "pci=realloc" "nvidia_drm.fbdev=1"];
+  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=64" "amd_pstate=active" "amd_pstate.shared_mem=1" "pci=realloc" "nvidia_drm.fbdev=1" "pcie_acs_override=downstream,multifunction"];
   boot.kernelModules = ["kvm-amd"];
   #boot.kernelPackages = lib.mkForce pkgs.linuxPackages_5_4;
   boot.extraModulePackages = with config.boot.kernelPackages; [
@@ -69,6 +69,13 @@ in {
         name = "eno1";
       }
     ];
+  };
+
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    capSysAdmin = true;
+    openFirewall = true;
   };
 
   hardware.mlnx-ofed = {

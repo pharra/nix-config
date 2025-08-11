@@ -19,6 +19,10 @@ let
       name = "mlx5_0";
     }
     {
+      mac = "9c:52:f8:8e:dd:10";
+      name = "mlx5_0";
+    }
+    {
       mac = "9c:52:f8:8e:dd:d9";
       name = "enp5s0";
     }

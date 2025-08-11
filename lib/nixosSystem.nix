@@ -17,6 +17,7 @@ in
           nixpkgs.overlays =
             [
               specialArgs.overlays
+              specialArgs.proxmox-nixos.overlays.${system}
             ]
             ++ (builtins.attrValues specialArgs.legacyPackages."${system}".overlays);
         }

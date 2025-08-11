@@ -45,7 +45,7 @@ in {
 
     ../../nixos/fhs-fonts.nix
     ../../nixos/libvirt.nix
-    ../../nixos/core-desktop.nix
+    ../../nixos/core-server.nix
     # ../../nixos/remote-building.nix
     ../../nixos/user-group.nix
 
@@ -67,7 +67,7 @@ in {
     ../../nixos/caddy.nix
     ../../nixos/aosp.nix
     #    ../../nixos/ccache.nix
-    ../../nixos/tailscale.nix
+    # ../../nixos/tailscale.nix
     ../../nixos/ddns-go.nix
 
     ../../nixos/virtualisation
@@ -98,6 +98,11 @@ in {
   services.zfs.trim.enable = true;
 
   networking.firewall.enable = lib.mkForce false;
+
+  services.proxmox-ve = {
+    enable = true;
+    ipAddress = "192.168.29.1";
+  };
 
   # raid
   boot.swraid.enable = true;
@@ -531,48 +536,48 @@ in {
     networkmanager.unmanaged = ["*,except:interface-name:wl*"];
   };
 
-  age.secrets."atticd" = {
-    file = "${mysecrets}/atticd.env";
-    mode = "755";
-    path = "/etc/atticd.env";
-    symlink = false;
-  };
+  # age.secrets."atticd" = {
+  #   file = "${mysecrets}/atticd.env";
+  #   mode = "755";
+  #   path = "/etc/atticd.env";
+  #   symlink = false;
+  # };
 
-  services.atticd = {
-    enable = true;
+  # services.atticd = {
+  #   enable = true;
 
-    # Replace with absolute path to your environment file
-    environmentFile = config.age.secrets.atticd.path;
+  #   # Replace with absolute path to your environment file
+  #   environmentFile = config.age.secrets.atticd.path;
 
-    settings = {
-      listen = "[::]:8000";
+  #   settings = {
+  #     listen = "[::]:8000";
 
-      jwt = {};
+  #     jwt = {};
 
-      # Data chunking
-      #
-      # Warning: If you change any of the values here, it will be
-      # difficult to reuse existing chunks for newly-uploaded NARs
-      # since the cutpoints will be different. As a result, the
-      # deduplication ratio will suffer for a while after the change.
-      chunking = {
-        # The minimum NAR size to trigger chunking
-        #
-        # If 0, chunking is disabled entirely for newly-uploaded NARs.
-        # If 1, all NARs are chunked.
-        nar-size-threshold = 64 * 1024; # 64 KiB
+  #     # Data chunking
+  #     #
+  #     # Warning: If you change any of the values here, it will be
+  #     # difficult to reuse existing chunks for newly-uploaded NARs
+  #     # since the cutpoints will be different. As a result, the
+  #     # deduplication ratio will suffer for a while after the change.
+  #     chunking = {
+  #       # The minimum NAR size to trigger chunking
+  #       #
+  #       # If 0, chunking is disabled entirely for newly-uploaded NARs.
+  #       # If 1, all NARs are chunked.
+  #       nar-size-threshold = 64 * 1024; # 64 KiB
 
-        # The preferred minimum size of a chunk, in bytes
-        min-size = 16 * 1024; # 16 KiB
+  #       # The preferred minimum size of a chunk, in bytes
+  #       min-size = 16 * 1024; # 16 KiB
 
-        # The preferred average size of a chunk, in bytes
-        avg-size = 64 * 1024; # 64 KiB
+  #       # The preferred average size of a chunk, in bytes
+  #       avg-size = 64 * 1024; # 64 KiB
 
-        # The preferred maximum size of a chunk, in bytes
-        max-size = 256 * 1024; # 256 KiB
-      };
-    };
-  };
+  #       # The preferred maximum size of a chunk, in bytes
+  #       max-size = 256 * 1024; # 256 KiB
+  #     };
+  #   };
+  # };
 
   services.logind.extraConfig = ''
     # don't shutdown when power button is short-pressed
@@ -585,7 +590,7 @@ in {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
     modesetting.enable = true;
     forceFullCompositionPipeline = true;
-    open = true;
+    open = false;
     powerManagement.enable = true;
   };
   hardware.nvidia-container-toolkit.enable = true; # for nvidia-docker
