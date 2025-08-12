@@ -79,7 +79,7 @@ in {
   };
 
   hardware.mlnx-ofed = {
-    enable = true;
+    enable = false;
     fwctl.enable = true;
     nvme.enable = true;
     nfsrdma.enable = true;

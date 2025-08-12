@@ -102,6 +102,7 @@ in {
   services.proxmox-ve = {
     enable = true;
     ipAddress = "192.168.29.1";
+    bridges = ["br0"];
   };
 
   # raid
@@ -587,11 +588,11 @@ in {
   # for Nvidia GPU
   services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default
   hardware.nvidia = {
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-    modesetting.enable = true;
-    forceFullCompositionPipeline = true;
+    package = config.boot.kernelPackages.nvidiaPackages.latest;
+    # modesetting.enable = true;
+    # forceFullCompositionPipeline = true;
     open = false;
-    powerManagement.enable = true;
+    # powerManagement.enable = true;
   };
   hardware.nvidia-container-toolkit.enable = true; # for nvidia-docker
 
