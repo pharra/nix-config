@@ -91,6 +91,14 @@ in {
     "cifs" # mount windows share
   ];
 
+  systemd.sleep.extraConfig = ''
+    [Sleep]
+    AllowSuspend=no
+    AllowHibernation=no
+    AllowHybridSleep=no
+    AllowSuspendThenHibernate=no
+  '';
+
   networking.hostId = "88fcb8e5";
   boot.zfs.package = pkgs.zfs_unstable;
   boot.zfs.extraPools = ["data"];
