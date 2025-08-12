@@ -26,6 +26,7 @@
       initrdBin = [pkgs.iproute2 pkgs.pciutils pkgs.dnsutils pkgs.util-linuxMinimal pkgs.coreutils pkgs.iputils];
 
       services.nix-tmpfs-root = {
+        enable = false;
         requiredBy = ["initrd.target"];
         after = ["nixos-iscsi.service" "sysroot-system.mount"];
         wants = ["nixos-iscsi.service" "sysroot-system.mount"];
