@@ -175,7 +175,7 @@ in {
   hardware.nvidia = {
     open = false;
     nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.latest;
+    package = config.boot.kernelPackages.nvidiaPackages.beta;
   };
 
   systemd.sleep.extraConfig = ''
