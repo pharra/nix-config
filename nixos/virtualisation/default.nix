@@ -6,13 +6,6 @@
   inputs,
   ...
 } @ args: {
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-  };
-
   environment.systemPackages = with pkgs; [
     # Need to add [File (in the menu bar) -> Add connection] after start the first time
     virt-manager
