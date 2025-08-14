@@ -14,9 +14,9 @@ with lib; let
       name = serviceName;
       value = {
         wantedBy = ["multi-user.target"];
-        before = ["libvirtd.service"];
         unitConfig.DefaultDependencies = "no";
-        wants = ["network-online.target"];
+        wants = ["modprobe@nvme-rdma.service" "network-online.target"];
+        after = ["modprobe@nvme-rdma.service" "network-online.target"];
         serviceConfig = {
           Type = "simple";
           RemainAfterExit = true;
@@ -132,9 +132,27 @@ in {
     };
 
   config = mkIf (cfgs != []) {
-    boot.initrd.kernelModules = ["nvme-rdma" "nvme-tcp"];
     environment.systemPackages = with pkgs; [nvme-cli];
 
-    systemd.services = listToAttrs (concatMap mkNvmeSet cfgs);
+    systemd.services =
+      {
+        "modprobe@nvme-rdma" = {
+          description = "Load Kernel Module nvme-rdma";
+          wantedBy = ["multi-user.target"];
+          before = ["sysinit.target"];
+          unitConfig = {
+            DefaultDependencies = "no";
+            ConditionCapability = "CAP_SYS_MODULE";
+            StartLimitIntervalSec = 0;
+            Documentation = "man:modprobe(8)";
+          };
+          serviceConfig = {
+            Type = "oneshot";
+            ExecStart = "-${pkgs.kmod}/bin/modprobe -abq nvme-rdma";
+          };
+          enable = true;
+        };
+      }
+      // listToAttrs (concatMap mkNvmeSet cfgs);
   };
 }

@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  boot_from_network ? false,
   ...
 } @ args:
 #############################################################
@@ -18,6 +19,14 @@ let
       mac = "9c:52:f8:8e:dd:d8";
       name = "mlx5_0";
     }
+    {
+      mac = "9c:52:f8:8e:dd:10";
+      name = "mlx5_0";
+    }
+    {
+      mac = "9c:52:f8:8e:dd:d9";
+      name = "enp5s0";
+    }
   ];
 in {
   imports = [
@@ -33,11 +42,13 @@ in {
 
     ../../secrets/nixos.nix
     ./nixvirt
+    (import ./netboot.nix {
+      inherit boot_from_network config pkgs lib;
+      interface = interface.mlx5_0;
+    })
     #../../nixos/ccache.nix
   ];
 
-  # Enable binfmt emulation of aarch64-linux, this is required for cross compilation.
-  boot.binfmt.emulatedSystems = ["aarch64-linux" "riscv64-linux"];
   # supported fil systems, so we can mount any removable disks with these filesystems
   boot.supportedFilesystems = [
     "ext4"
@@ -66,30 +77,10 @@ in {
     domain = "lan";
     wireless.enable = false; # Enables wireless support via wpa_supplicant.
 
-    hostId = "88fcb8e6";
-
-    # Configure network proxy if necessary
-    # proxy.default = "http://user:password@proxy:port/";
-    # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+    hostId = "88fcb8e9";
 
     networkmanager.enable = true;
     networkmanager.unmanaged = ["*,except:interface-name:wl*"];
-
-    # enableIPv6 = false; # disable ipv6
-    # interfaces.enp5s0 = {
-    #   useDHCP = false;
-    #   ipv4.addresses = [
-    #     {
-    #       address = "192.168.5.100";
-    #       prefixLength = 24;
-    #     }
-    #   ];
-    # };
-    # defaultGateway = "192.168.5.201";
-    # nameservers = [
-    #   "119.29.29.29" # DNSPod
-    #   "223.5.5.5" # AliDNS
-    # ];
   };
 
   networking.firewall.enable = lib.mkForce false;
@@ -170,224 +161,69 @@ in {
     };
   };
 
-  # for Amd GPU
-  services.xserver.videoDrivers = ["nvidia" "amdgpu"]; # will install nvidia-vaapi-driver by default
-
-  hardware = {
-    graphics = {
-      enable = true;
-      enable32Bit = true;
-
-      extraPackages = with pkgs; [
-        rocmPackages.clr.icd
-      ];
-    };
-  };
-
-  # boot.depmod.overrides = [
-  #   {
-  #     moduleName = "mlxsw_spectrum";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/net/ethernet/mellanox/mlxsw/mlxsw_spectrum.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "mlxfw";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "mlx5_dpll";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/net/ethernet/mellanox/mlx5/core/mlx5_dpll.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "mlx5_core";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "ib_mthca";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/mthca/ib_mthca.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "usnic_verbs";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/usnic/usnic_verbs.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "mana_ib";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/mana/mana_ib.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "irdma";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/irdma/irdma.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "hfi1";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/hfi1/hfi1.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "ib_qib";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/qib/ib_qib.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "bnxt_re";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/bnxt_re/bnxt_re.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "ocrdma";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/ocrdma/ocrdma.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "vmw_pvrdma";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/vmw_pvrdma/vmw_pvrdma.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "erdma";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/erdma/erdma.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "efa";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/efa/efa.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "qedr";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/qedr/qedr.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "iw_cxgb4";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/cxgb4/iw_cxgb4.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "mlx5_ib";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/hw/mlx5/mlx5_ib.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "ib_srpt";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/ulp/srpt/ib_srpt.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "ib_ipoib";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/ulp/ipoib/ib_ipoib.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "iw_cm";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/iw_cm.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "ib_umad";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/ib_umad.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "rdma_ucm";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/rdma_ucm.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "ib_uverbs";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/ib_uverbs.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "ib_ucm";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/ib_ucm.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "ib_core";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/ib_core.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "ib_cm";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/ib_cm.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "rdma_cm";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/core/rdma_cm.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "siw";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/sw/siw/siw.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "rdmavt";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/infiniband/sw/rdmavt/rdmavt.ko.xz";
-  #   }
-  #   {
-  #     moduleName = "mlx5-vfio-pci";
-  #     modulePackage = config.boot.kernelPackages.mlnx-ofed-kernel;
-  #     modulePath = "extra/mlnx-ofa_kernel/drivers/vfio/pci/mlx5/mlx5-vfio-pci.ko.xz";
-  #   }
-  # ];
-
-  # boot.kernelPatches = lib.singleton {
-  #   name = "disable-suspend";
-  #   patch = null;
-  #   extraStructuredConfig = with lib.kernel; {
-  #     SUSPEND = lib.mkForce no;
-  #   };
-  # };
-
   systemd.services."systemd-suspend" = {
     serviceConfig = {
       Environment = ''"SYSTEMD_SLEEP_FREEZE_USER_SESSIONS=false"'';
     };
   };
 
-  hardware.nvidia = {
-    # Modesetting is required.
-    modesetting.enable = true;
+  services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default
 
-    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-    # Enable this if you have graphical corruption issues or application crashes after waking
-    # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead
-    # of just the bare essentials.
-    powerManagement.enable = true;
-
-    prime = {
-      offload = {
-        enable = true;
-        enableOffloadCmd = false;
-      };
-      # Make sure to use the correct Bus ID values for your system!
-      # intelBusId = "PCI:0:2:0";
-      nvidiaBusId = "PCI:1:0:0";
-      amdgpuBusId = "PCI:7:0:0"; # For AMD GPU
+  hardware = {
+    graphics = {
+      enable = true;
+      enable32Bit = true;
     };
-    # # Fine-grained power management. Turns off GPU when not in use.
-    # # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    powerManagement.finegrained = true;
-    open = true;
-
-    # Enable the Nvidia settings menu,
-    # accessible via `nvidia-settings`.
-    nvidiaSettings = true;
-
-    # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.latest;
   };
+
+  hardware.nvidia = {
+    open = false;
+    nvidiaSettings = true;
+    package = config.boot.kernelPackages.nvidiaPackages.beta;
+  };
+
+  fileSystems."/system" = {
+    device = "system";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/tmp" = {
+    device = "system/tmp";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/nix" = {
+    device = "system/nix";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/nix/var" = {
+    device = "system/nix/var";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/nix/persistent" = {
+    device = "system/nix/persistent";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/boot/efi" = {
+    device = "/dev/disk/by-label/boot";
+    fsType = "vfat";
+  };
+
+  systemd.sleep.extraConfig = ''
+    [Sleep]
+    AllowSuspend=no
+    AllowHibernation=no
+    AllowHybridSleep=no
+    AllowSuspendThenHibernate=no
+  '';
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
@@ -395,5 +231,5 @@ in {
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "23.05"; # Did you read the comment?
+  system.stateVersion = "25.05"; # Did you read the comment?
 }

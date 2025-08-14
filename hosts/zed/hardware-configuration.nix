@@ -7,91 +7,17 @@
   pkgs,
   modulesPath,
   ...
-}: let
-  custom_edid = pkgs.runCommand "edid-custom" {} ''
-    mkdir -p "$out/lib/firmware/edid"
-
-    # this edid you can copy from your real monitor, check below
-
-    base64 -d > "$out/lib/firmware/edid/custom1.bin" <<'EOF'
-    AP///////wAx2DQSAAAAACIaAQOAYDZ4D+6Ro1RMmSYPUFQvzwAxWUVZgYCBQJBAlQCpQLMACOgAMPJwWoCwWIoAwBwyAAAeAAAA/QAYVRiHPAAKICAgICAgAAAA/AB2aXZpZAogICAgICAgAAAAEAAAAAAAAAAAAAAAAAAAAXsCAz/xUWFgX15dEB8EEyIhIAUUAhEBIwkHB4MBAABtAwwAEAAAPCEAYAECA2fYXcQBeAAA4gDK4wUAAOMGAQBN0ACg8HA+gDAgNQDAHDIAAB4aNoCgcDgfQDAgNQDAHDIAABoaHQCAUdAcIECANQDAHDIAABwAAAAAAAAAAAAAgg==
-    EOF
-  '';
-  add_monitor = pkgs.writeShellScriptBin "add_monitor" ''
-    gpu_vendor="1002:164e"
-    gpu_bus_path=`${pkgs.pciutils}/bin/lspci -mm -d $gpu_vendor | ${pkgs.gawk}/bin/awk '{ print $1 }'`
-    ${pkgs.coreutils-full}/bin/cat ${custom_edid}/lib/firmware/edid/custom1.bin > /sys/kernel/debug/dri/0000:$gpu_bus_path/DP-2/edid_override
-    ${pkgs.coreutils-full}/bin/echo -n "on" | ${pkgs.coreutils-full}/bin/tee /sys/kernel/debug/dri/0000:$gpu_bus_path/DP-2/force
-    ${pkgs.coreutils-full}/bin/echo -n "1" | ${pkgs.coreutils-full}/bin/tee /sys/kernel/debug/dri/0000:$gpu_bus_path/DP-2/trigger_hotplug
-  '';
-  remove_monitor = pkgs.writeShellScriptBin "remove_monitor" ''
-    gpu_vendor="1002:164e"
-    gpu_bus_path=`${pkgs.pciutils}/bin/lspci -mm -d $gpu_vendor | ${pkgs.gawk}/bin/awk '{ print $1 }'`
-    ${pkgs.coreutils-full}/bin/echo -n "reset" | ${pkgs.coreutils-full}/bin/tee /sys/kernel/debug/dri/0000:$gpu_bus_path/DP-2/edid_override
-    ${pkgs.coreutils-full}/bin/echo -n "off" | ${pkgs.coreutils-full}/bin/tee /sys/kernel/debug/dri/0000:$gpu_bus_path/DP-2/force
-    ${pkgs.coreutils-full}/bin/echo -n "1" | ${pkgs.coreutils-full}/bin/tee /sys/kernel/debug/dri/0000:$gpu_bus_path/DP-2/trigger_hotplug
-  '';
-in {
+}: {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  environment = {
-    systemPackages = with pkgs; [
-      add_monitor
-      remove_monitor
-    ];
-  };
-
-  hardware.mlnx-ofed = {
-    enable = true;
-    fwctl.enable = true;
-    nvme.enable = false;
-    nfsrdma.enable = true;
-    kernel-mft.enable = true;
-  };
-
-  services.sunshine = {
-    enable = true;
-    autoStart = true;
-    capSysAdmin = true;
-    openFirewall = true;
-  };
-
-  specialisation = {
-    no-nvidia.configuration = {
-      environment.variables = {
-        # KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
-        __EGL_VENDOR_LIBRARY_FILENAMES = "${pkgs.mesa.drivers}/share/glvnd/egl_vendor.d/50_mesa.json";
-        __GLX_VENDOR_LIBRARY_NAME = "mesa";
-        #VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/radeon_icd.x86_64.json";
-      };
-
-      services.displayManager.sddm.settings = {
-        General = {
-          GreeterEnvironment = "QT_WAYLAND_SHELL_INTEGRATION=layer-shell,__EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa.drivers}/share/glvnd/egl_vendor.d/50_mesa.json,__GLX_VENDOR_LIBRARY_NAME=mesa";
-        };
-      };
-
-      environment.systemPackages = [
-        (pkgs.writeShellScriptBin "nvidia-offload" ''
-          export __NV_PRIME_RENDER_OFFLOAD=1
-          export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
-          export __GLX_VENDOR_LIBRARY_NAME=nvidia
-          export __VK_LAYER_NV_optimus=NVIDIA_only
-          export __EGL_VENDOR_LIBRARY_FILENAMES=${config.hardware.nvidia.package}/share/glvnd/egl_vendor.d/10_nvidia.json
-          exec "$@"
-        '')
-      ];
-    };
-  };
-
-  boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "uas" "xhci_pci"];
+  boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "uas" "virtio_pci" "virtio_net" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "virtio_rng"];
   # boot.initrd.kernelModules = [];
-  boot.kernelModules = ["kvm-amd"];
+  boot.kernelModules = ["kvm-amd" "virtio_pci" "virtio_net" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "virtio_rng"];
   boot.extraModulePackages = [];
   # "console=ttyS0"
-  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=0" "amd_pstate=active" "amd_pstate.shared_mem=1"];
+  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=0" "amd_pstate=active" "amd_pstate.shared_mem=1" "brd.rd_nr=1" "brd.rd_size=11240000"];
   boot.extraModprobeConfig = ''
     options kvm_amd nested=1
     softdep nvme pre: vfio-pci
@@ -103,8 +29,8 @@ in {
     applyACSpatch = false;
     ignoreMSRs = true;
     devices = [
-      # "10de:2684" # Graphics
-      # "10de:22ba" # Audio
+      #   "10de:2684" # Graphics
+      #   "10de:22ba" # Audio
       # "8086:f1a6" # nvme
 
       # "10de:21c4" # GTX 1650 Super
@@ -117,47 +43,11 @@ in {
 
   hardware.mlx5 = {
     enable = true;
-    enableSRIOV = false;
+    enableSRIOV = true;
     interfaces = ["mlx5_0"];
   };
 
-  fileSystems."/system" = {
-    device = "zed";
-    fsType = "zfs";
-    neededForBoot = true;
-  };
-
-  fileSystems."/tmp" = {
-    device = "zed/tmp";
-    fsType = "zfs";
-    neededForBoot = true;
-  };
-
-  fileSystems."/nix" = {
-    device = "zed/nix";
-    fsType = "zfs";
-    neededForBoot = true;
-  };
-
-  fileSystems."/nix/persistent" = {
-    device = "zed/persistent";
-    fsType = "zfs";
-    neededForBoot = true;
-  };
-
-  fileSystems."/boot/efi" = {
-    device = "/dev/disk/by-label/zed_boot";
-    fsType = "vfat";
-  };
-
   swapDevices = [];
-
-  # systemd.sleep.extraConfig = "
-  #   AllowSuspend=no
-  #   AllowHibernation=no
-  #   AllowHybridSleep=no
-  #   AllowSuspendThenHibernate=no
-  # ";
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }

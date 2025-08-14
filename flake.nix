@@ -250,14 +250,20 @@
         builds = ["kde" "gnome" "cosmic" "deepin"];
         hostname = "zed";
         nixos-modules = [./hosts/zed];
+        specialArgs = {
+          boot_from_network = false;
+        };
       }
 
-      # fluent
+      # zed netboot
       {
-        name = "fluent";
-        builds = ["kde" "gnome" "cosmic" "deepin" "base"];
-        nixos-modules = [./hosts/fluent];
-        hostname = "fluent";
+        name = "zed_netboot";
+        builds = ["kde" "gnome" "cosmic" "deepin"];
+        hostname = "zed";
+        nixos-modules = [./hosts/zed];
+        specialArgs = {
+          boot_from_network = true;
+        };
       }
 
       # luris

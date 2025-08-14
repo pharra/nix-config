@@ -31,26 +31,36 @@
   systemd.mounts = [
     {
       type = "ext4";
-      what = "/dev/disk/by-label/zed";
-      where = "/zed";
+      what = "/dev/disk/by-label/fluent";
+      where = "/fluent";
     }
     {
       type = "ntfs3";
       what = "/dev/disk/by-uuid/10DAC033DAC0173E";
-      where = "/common";
-      # options = "uid=1000,gid=100";
+      where = "/.common-ro";
+      options = "ro";
     }
     {
       type = "ext4";
       what = "/dev/disk/by-label/steam_compact";
-      where = "/common/SteamLibrary/steamapps/compatdata";
+      where = "/.common-rw";
+    }
+    {
+      type = "overlay";
+      what = "overlay";
+      where = "/common";
+      requires = ["\\x2ecommon\\x2dro.mount" "\\x2ecommon\\x2drw.mount"];
+      options = "lowerdir=/.common-ro,upperdir=/.common-rw/upper,workdir=/.common-rw/work";
     }
   ];
 
   systemd.services.ntfsfix = {
-    after = ["nvme-auto-common.service"];
-    wants = ["nvme-auto-common.service"];
-    wantedBy = ["common.automount"];
+    enable = true;
+    bindsTo = ["dev-disk-by\\x2duuid-10DAC033DAC0173E.device"];
+    after = ["dev-disk-by\\x2duuid-10DAC033DAC0173E.device"];
+    unitConfig = {
+      DefaultDependencies = "no";
+    };
     serviceConfig = {
       Type = "oneshot";
       ExecStart = ["${pkgs.ntfs3g}/bin/ntfsfix -d /dev/disk/by-uuid/10DAC033DAC0173E"];
@@ -63,36 +73,38 @@
       automountConfig = {
         TimeoutIdleSec = "600";
       };
-      requires = ["nvme-auto-zed.service"];
-      after = ["nvme-auto-zed.service"];
-      wants = ["nvme-auto-zed.service"];
-      where = "/zed";
+      before = ["libvirtd.service"];
+      where = "/fluent";
     }
     {
       wantedBy = ["multi-user.target"];
       automountConfig = {
         TimeoutIdleSec = "600";
       };
-      requires = ["ntfsfix.service"];
+      after = ["ntfsfix.service"];
+      where = "/.common-ro";
+    }
+    {
+      wantedBy = ["multi-user.target"];
+      automountConfig = {
+        TimeoutIdleSec = "600";
+      };
+      where = "/.common-rw";
+    }
+    {
+      wantedBy = ["multi-user.target"];
+      automountConfig = {
+        TimeoutIdleSec = "600";
+      };
       where = "/common";
-    }
-    {
-      wantedBy = ["multi-user.target"];
-      automountConfig = {
-        TimeoutIdleSec = "600";
-      };
-      requires = ["common.mount"];
-      after = ["common.mount"];
-      wants = ["common.mount"];
-      where = "/common/SteamLibrary/steamapps/compatdata";
     }
   ];
 
   services.nvme-auto = [
     {
-      name = "zed";
+      name = "fluent";
       address = "192.168.29.1";
-      target = "nqn.2016-06.io.spdk:zed";
+      target = "nqn.2016-06.io.spdk:fluent";
       type = "rdma";
     }
     {

@@ -200,8 +200,8 @@ in {
   virtualisation.libvirt.verbose = true;
   virtualisation.libvirt.connections."qemu:///system" = {
     domains = [
-      Windows
-      Microsoft
+      # Windows
+      # Microsoft
       Linux
     ];
     pools = [
@@ -210,7 +210,18 @@ in {
           name = "VMPool";
           uuid = "650c5bbb-eebd-4cea-8a2f-36e1a75a8683";
           type = "dir";
-          target = {path = "/home/wf/Data/VMPool";};
+          target = {path = "/fluent/VMPool";};
+          active = true;
+        };
+      }
+
+      {
+        definition = NixVirt.lib.pool.writeXML {
+          name = "RAMPool";
+          uuid = "650c5bbb-eebd-4cea-8a2f-36e1a75a8685";
+          type = "dir";
+          target = {path = "/fluent/RAMPool";};
+          active = true;
         };
       }
 
@@ -220,15 +231,7 @@ in {
           uuid = "650c5bbb-eebd-4cea-8a2f-36e1a75a8684";
           type = "dir";
           target = {path = "/home/wf/Data/ISOPool";};
-        };
-      }
-
-      {
-        definition = NixVirt.lib.pool.writeXML {
-          name = "RAMPool";
-          uuid = "650c5bbb-eebd-4cea-8a2f-36e1a75a8685";
-          type = "dir";
-          target = {path = "/home/wf/Data/RAMPool";};
+          active = true;
         };
       }
 
@@ -237,7 +240,8 @@ in {
           name = "DiskPool";
           uuid = "650c5bbb-eebd-4cea-8a2f-36e1a75a8686";
           type = "dir";
-          target = {path = "/zed/DiskPool";};
+          target = {path = "/fluent/DiskPool";};
+          active = true;
         };
       }
     ];

@@ -3,8 +3,10 @@
   pkgs,
   lib,
   interface,
+  boot_from_network ? false,
   ...
-} @ args: {
+} @ args:
+lib.mkIf boot_from_network {
   boot.iscsi-initiatord = {
     name = "iqn.2020-08.org.linux-iscsi.initiatorhost:fluent";
     discoverPortal = "192.168.29.1";
@@ -26,7 +28,7 @@
       initrdBin = [pkgs.iproute2 pkgs.pciutils pkgs.dnsutils pkgs.util-linuxMinimal pkgs.coreutils pkgs.iputils];
 
       services.nix-tmpfs-root = {
-        enable = false;
+        enable = true;
         requiredBy = ["initrd.target"];
         after = ["nixos-iscsi.service" "sysroot-system.mount"];
         wants = ["nixos-iscsi.service" "sysroot-system.mount"];
@@ -91,6 +93,41 @@
 
   systemd.network.networks = {
     "40-${interface}" = lib.mkForce {};
+  };
+
+  fileSystems."/system" = lib.mkForce {
+    device = "fluent";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/tmp" = lib.mkForce {
+    device = "fluent/tmp";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/nix" = lib.mkForce {
+    device = "fluent/nix";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/nix/var" = lib.mkForce {
+    device = "fluent/nix/var";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/nix/persistent" = lib.mkForce {
+    device = "fluent/nix/persistent";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
+  fileSystems."/boot/efi" = lib.mkForce {
+    device = "/dev/disk/by-label/fluent_boot";
+    fsType = "vfat";
   };
 
   environment = {
