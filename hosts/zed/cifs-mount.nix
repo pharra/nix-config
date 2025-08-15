@@ -30,75 +30,48 @@
 
   systemd.mounts = [
     {
+      wantedBy = ["multi-user.target"];
+      after = ["network-online.target"];
       type = "ext4";
       what = "/dev/disk/by-label/fluent";
       where = "/fluent";
     }
     {
-      type = "ntfs3";
-      what = "/dev/disk/by-uuid/10DAC033DAC0173E";
-      where = "/.common-ro";
-      options = "ro";
-    }
-    {
-      type = "ext4";
-      what = "/dev/disk/by-label/steam_compact";
-      where = "/.common-rw";
-    }
-    {
-      type = "overlay";
-      what = "overlay";
+      wantedBy = ["multi-user.target"];
+      after = ["network-online.target"];
+      type = "udf";
+      what = "/dev/disk/by-label/udf";
       where = "/common";
-      requires = ["\\x2ecommon\\x2dro.mount" "\\x2ecommon\\x2drw.mount"];
-      options = "lowerdir=/.common-ro,upperdir=/.common-rw/upper,workdir=/.common-rw/work";
     }
   ];
 
   systemd.services.ntfsfix = {
-    enable = true;
+    enable = false;
     bindsTo = ["dev-disk-by\\x2duuid-10DAC033DAC0173E.device"];
     after = ["dev-disk-by\\x2duuid-10DAC033DAC0173E.device"];
-    unitConfig = {
-      DefaultDependencies = "no";
-    };
     serviceConfig = {
       Type = "oneshot";
       ExecStart = ["${pkgs.ntfs3g}/bin/ntfsfix -d /dev/disk/by-uuid/10DAC033DAC0173E"];
     };
   };
 
-  systemd.automounts = [
-    {
-      wantedBy = ["multi-user.target"];
-      automountConfig = {
-        TimeoutIdleSec = "600";
-      };
-      before = ["libvirtd.service"];
-      where = "/fluent";
-    }
-    {
-      wantedBy = ["multi-user.target"];
-      automountConfig = {
-        TimeoutIdleSec = "600";
-      };
-      after = ["ntfsfix.service"];
-      where = "/.common-ro";
-    }
-    {
-      wantedBy = ["multi-user.target"];
-      automountConfig = {
-        TimeoutIdleSec = "600";
-      };
-      where = "/.common-rw";
-    }
-    {
-      wantedBy = ["multi-user.target"];
-      automountConfig = {
-        TimeoutIdleSec = "600";
-      };
-      where = "/common";
-    }
-  ];
+  # systemd.automounts = [
+  #   {
+  #     wantedBy = ["multi-user.target"];
+  #     automountConfig = {
+  #       TimeoutIdleSec = "600";
+  #     };
+  #     before = ["libvirtd.service"];
+  #     where = "/fluent";
+  #   }
+  #   {
+  #     wantedBy = ["multi-user.target"];
+  #     automountConfig = {
+  #       TimeoutIdleSec = "600";
+  #     };
+  #     where = "/common";
+  #   }
+  # ];
 
   services.nvme-auto = [
     {
