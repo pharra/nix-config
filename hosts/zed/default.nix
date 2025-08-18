@@ -161,13 +161,28 @@ in {
     };
   };
 
-  systemd.services."systemd-suspend" = {
-    serviceConfig = {
-      Environment = ''"SYSTEMD_SLEEP_FREEZE_USER_SESSIONS=false"'';
+  systemd.services = {
+    ensure-network = {
+      enable = true;
+      before = ["network-online.target"];
+      wantedBy = ["network-online.target"];
+      after = ["nss-lookup.target"];
+      unitConfig = {
+        DefaultDependencies = "no";
+      };
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.bashInteractive}/bin/sh -c 'until ${pkgs.iputils}/bin/ping -c 1 1.1.1.1; do ${pkgs.coreutils}/bin/sleep 1; done'";
+      };
+    };
+    "systemd-suspend" = {
+      serviceConfig = {
+        Environment = ''"SYSTEMD_SLEEP_FREEZE_USER_SESSIONS=false"'';
+      };
     };
   };
 
-  services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default
+  services.xserver.videoDrivers = ["nvidia" "amdgpu"]; # will install nvidia-vaapi-driver by default
 
   hardware = {
     graphics = {
@@ -180,6 +195,7 @@ in {
     open = false;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.beta;
+    powerManagement.enable = true;
   };
 
   fileSystems."/system" = {

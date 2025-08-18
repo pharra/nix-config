@@ -31,17 +31,11 @@
   systemd.mounts = [
     {
       wantedBy = ["multi-user.target"];
-      after = ["network-online.target"];
+      bindsTo = ["dev-disk-by\\x2dlabel-fluent.device"];
+      after = ["dev-disk-by\\x2dlabel-fluent.device"];
       type = "ext4";
       what = "/dev/disk/by-label/fluent";
       where = "/fluent";
-    }
-    {
-      wantedBy = ["multi-user.target"];
-      after = ["network-online.target"];
-      type = "udf";
-      what = "/dev/disk/by-label/udf";
-      where = "/common";
     }
   ];
 
@@ -78,12 +72,6 @@
       name = "fluent";
       address = "192.168.29.1";
       target = "nqn.2016-06.io.spdk:fluent";
-      type = "rdma";
-    }
-    {
-      name = "common";
-      address = "192.168.29.1";
-      target = "nqn.2016-06.io.spdk:common";
       type = "rdma";
     }
   ];

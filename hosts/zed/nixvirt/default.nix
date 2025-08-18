@@ -22,6 +22,8 @@
     sound_bus_path=`${pkgs.pciutils}/bin/lspci -mm -d $sound_vendor | ${pkgs.gawk}/bin/awk '{ print $1 }'`
     ${pkgs.coreutils-full}/bin/echo -n "0000:$nvidia_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/unbind
     ${pkgs.coreutils-full}/bin/echo -n "0000:$sound_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/unbind
+    ${pkgs.coreutils-full}/bin/echo -n "nvidia" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/devices/0000:$nvidia_bus_path/driver_override
+    ${pkgs.coreutils-full}/bin/echo -n "snd_hda_intel" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/devices/0000:$sound_bus_path/driver_override
     ${pkgs.coreutils-full}/bin/echo -n "0000:$sound_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/snd_hda_intel/bind
     ${pkgs.kmod}/bin/modprobe nvidia_drm modeset=1 fbdev=1
     ${pkgs.kmod}/bin/modprobe nvidia nvidia_modeset nvidia_uvm
@@ -172,6 +174,8 @@
       exit 1
     fi
 
+    ${pkgs.coreutils-full}/bin/echo -n "vfio-pci" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/devices/0000:$nvidia_bus_path/driver_override
+    ${pkgs.coreutils-full}/bin/echo -n "vfio-pci" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/devices/0000:$sound_bus_path/driver_override
     ${pkgs.coreutils-full}/bin/echo -n "0000:$nvidia_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/bind
     ${pkgs.coreutils-full}/bin/echo -n "0000:$sound_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/bind
 
@@ -200,7 +204,7 @@ in {
   virtualisation.libvirt.verbose = true;
   virtualisation.libvirt.connections."qemu:///system" = {
     domains = [
-      # Windows
+      Windows
       # Microsoft
       Linux
     ];
