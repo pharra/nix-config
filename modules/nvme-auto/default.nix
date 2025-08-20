@@ -14,7 +14,6 @@ with lib; let
       name = serviceName;
       value = {
         wantedBy = ["multi-user.target"];
-        unitConfig.DefaultDependencies = "no";
         wants = ["modprobe@nvme-rdma.service" "network-online.target"];
         after = ["modprobe@nvme-rdma.service" "network-online.target"];
         serviceConfig = {

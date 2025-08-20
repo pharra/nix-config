@@ -13,6 +13,7 @@
 let
   interface = {
     mlx5_0 = "mlx5_0";
+    net0 = "net0";
   };
   interfaces = [
     {
@@ -25,7 +26,11 @@ let
     }
     {
       mac = "9c:52:f8:8e:dd:d9";
-      name = "enp5s0";
+      name = "net0";
+    }
+    {
+      mac = "58:47:ca:79:85:1c";
+      name = "net0";
     }
   ];
 in {
@@ -104,8 +109,8 @@ in {
     };
     networks = {
       # Connect the bridge ports to the bridge
-      "30-enp5s0" = {
-        matchConfig.Name = "enp5s0";
+      "30-${interface.net0}" = {
+        matchConfig.Name = "${interface.net0}";
         networkConfig.Bridge = "br0";
         linkConfig.RequiredForOnline = "enslaved";
       };

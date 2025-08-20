@@ -30,12 +30,14 @@
 
   systemd.mounts = [
     {
-      wantedBy = ["multi-user.target"];
-      bindsTo = ["dev-disk-by\\x2dlabel-fluent.device"];
-      after = ["dev-disk-by\\x2dlabel-fluent.device"];
       type = "ext4";
       what = "/dev/disk/by-label/fluent";
       where = "/fluent";
+      options = "x-systemd.device-timeout=20,nofail";
+      after = ["nvme-auto-fluent.service"];
+      requires = ["nvme-auto-fluent.service"];
+      wantedBy = ["multi-user.target"];
+      unitConfig.DefaultDependencies = "no";
     }
   ];
 
@@ -55,15 +57,8 @@
   #     automountConfig = {
   #       TimeoutIdleSec = "600";
   #     };
-  #     before = ["libvirtd.service"];
+  #     after = ["nvme-auto-fluent.service"];
   #     where = "/fluent";
-  #   }
-  #   {
-  #     wantedBy = ["multi-user.target"];
-  #     automountConfig = {
-  #       TimeoutIdleSec = "600";
-  #     };
-  #     where = "/common";
   #   }
   # ];
 
