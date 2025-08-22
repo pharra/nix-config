@@ -60,5 +60,9 @@
       appId = "org.telegram.desktop";
       origin = "flathub";
     }
+    {
+      appId = "org.videolan.VLC";
+      origin = "flathub";
+    }
   ];
 }
