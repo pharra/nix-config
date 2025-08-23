@@ -67,7 +67,7 @@ in {
     ../../nixos/caddy.nix
     ../../nixos/aosp.nix
     #    ../../nixos/ccache.nix
-    # ../../nixos/tailscale.nix
+    ../../nixos/tailscale.nix
     ../../nixos/ddns-go.nix
 
     ../../nixos/virtualisation
@@ -107,11 +107,11 @@ in {
 
   networking.firewall.enable = lib.mkForce false;
 
-  services.proxmox-ve = {
-    enable = true;
-    ipAddress = "192.168.29.1";
-    bridges = ["br0"];
-  };
+  # services.proxmox-ve = {
+  #   enable = true;
+  #   ipAddress = "192.168.29.1";
+  #   bridges = ["br0"];
+  # };
 
   # raid
   boot.swraid.enable = true;
