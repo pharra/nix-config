@@ -6,7 +6,6 @@
   vfio-module = import ./vfio;
   mlx4-module = import ./mlx4;
   mlx5-module = import ./mlx5;
-  tailscale-module = import ./tailscale;
   ddns-go-module = import ./ddns-go;
   kea-module = import ./kea;
   systemd-iscsi-module = import ./systemd-iscsi;
