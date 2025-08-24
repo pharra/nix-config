@@ -140,6 +140,8 @@
   # set user's default shell system-wide
   users.defaultUserShell = pkgs.zsh;
 
+  networking.timeServers = ["ntp.aliyun.com"];
+
   # for power management
   # services.upower.enable = true;
   # powerManagement.enable = true;
