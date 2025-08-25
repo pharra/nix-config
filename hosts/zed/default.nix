@@ -52,6 +52,8 @@ in {
       interface = interface.mlx5_0;
     })
     #../../nixos/ccache.nix
+
+    ../../nixos/virtualisation
   ];
 
   # supported fil systems, so we can mount any removable disks with these filesystems
