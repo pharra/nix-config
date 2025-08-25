@@ -33,7 +33,7 @@
 
   services.flatpak.packages = [
     {
-      appId = "io.github.hypengw.Qcm";
+      appId = "io.github.qier222.YesPlayMusic";
       origin = "flathub";
     }
     {
