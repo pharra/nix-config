@@ -7,17 +7,11 @@
   # Enable the OpenSSH daemon.
   services.openssh = {
     extraConfig = ''
-      Match Group sftp
+      Match User sftp
         ChrootDirectory /share
         ForceCommand internal-sftp # only sftp
         PasswordAuthentication no
     '';
-  };
-
-  users.groups = {
-    sftp = {
-      gid = 985;
-    };
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -25,7 +19,7 @@
     isSystemUser = true;
     uid = 989;
     initialHashedPassword = lib.mkForce "$y$j9T$.E302ulZwh842trRJ9vVK1$VWgxXPL1csOBZopSN.7aah.Ia4cSifk8NOr4xSRV1D4";
-    group = "sftp";
+    group = "users";
     useDefaultShell = true;
     openssh.authorizedKeys.keys = [
       # sftp public key
