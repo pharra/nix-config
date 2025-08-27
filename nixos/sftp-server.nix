@@ -5,6 +5,7 @@
   ...
 }: {
   # Enable the OpenSSH daemon.
+  # The owner of the SFTP directory must be root, and the maximum allowed permission is 755; otherwise, even if the directory is owned by the SFTP user, an error will occur.
   services.openssh = {
     extraConfig = ''
       Match User sftp

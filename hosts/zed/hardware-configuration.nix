@@ -23,45 +23,6 @@
     softdep nvme pre: vfio-pci
   ''; # for amd cpu
 
-  specialisation = {
-    no-nvidia.configuration = {
-      hardware.nvidia.prime = {
-        offload = {
-          enable = true;
-          enableOffloadCmd = false;
-        };
-        # Make sure to use the correct Bus ID values for your system!
-        # intelBusId = "PCI:0:2:0";
-        nvidiaBusId = "PCI:1:0:0";
-        amdgpuBusId = "PCI:6:0:0"; # For AMD GPU
-      };
-
-      environment.variables = {
-        # KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
-        __EGL_VENDOR_LIBRARY_FILENAMES = "${pkgs.mesa.drivers}/share/glvnd/egl_vendor.d/50_mesa.json";
-        __GLX_VENDOR_LIBRARY_NAME = "mesa";
-        #VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/radeon_icd.x86_64.json";
-      };
-
-      services.displayManager.sddm.settings = {
-        General = {
-          GreeterEnvironment = "QT_WAYLAND_SHELL_INTEGRATION=layer-shell,__EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa.drivers}/share/glvnd/egl_vendor.d/50_mesa.json,__GLX_VENDOR_LIBRARY_NAME=mesa";
-        };
-      };
-
-      environment.systemPackages = [
-        (pkgs.writeShellScriptBin "nvidia-offload" ''
-          export __NV_PRIME_RENDER_OFFLOAD=1
-          export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
-          export __GLX_VENDOR_LIBRARY_NAME=nvidia
-          export __VK_LAYER_NV_optimus=NVIDIA_only
-          export __EGL_VENDOR_LIBRARY_FILENAMES=${config.hardware.nvidia.package}/share/glvnd/egl_vendor.d/10_nvidia.json
-          exec "$@"
-        '')
-      ];
-    };
-  };
-
   virtualisation.vfio = {
     enable = true;
     IOMMUType = "amd";

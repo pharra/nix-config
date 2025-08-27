@@ -31,7 +31,8 @@
           "/dev/null", "/dev/full", "/dev/zero",
           "/dev/random", "/dev/urandom",
           "/dev/ptmx", "/dev/kvm",
-          "/dev/kvmfr0"
+          "/dev/kvmfr0",
+          "/dev/nvidiactl", "/dev/nvidia0", "/dev/nvidia-modeset", "/dev/dri/renderD128"
         ]
       '';
     };
