@@ -95,7 +95,7 @@
   services.nfs = {
     server.enable = true;
     settings = {
-      nfsd.udp = false;
+      nfsd.udp = true;
       nfsd.rdma = true;
       nfsd.vers2 = false;
       nfsd.vers3 = false;
@@ -103,7 +103,6 @@
       nfsd."vers4.0" = false;
       nfsd."vers4.1" = false;
       nfsd."vers4.2" = true;
-      nfsd.threads = 16;
     };
   };
 }
