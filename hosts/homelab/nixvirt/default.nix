@@ -204,10 +204,7 @@ in {
       ArchLinux
       NixOS
       Windows
-      (Kwrt
-        // {
-          active = true;
-        })
+      Kwrt
     ];
     pools = [
       {

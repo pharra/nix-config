@@ -82,7 +82,7 @@
       	path = /share
         read only = no
         force user = sftp
-        force group = sftp
+        force group = users
 
       [nix-persistent]
       	path = /nix/persistent
