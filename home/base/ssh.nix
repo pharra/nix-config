@@ -15,7 +15,7 @@
       Host homelab
         # allow to securely use local SSH agent to authenticate on the remote machine.
         # It has the same effect as adding cli option `ssh -A user@host`
-        HostName work.int4byte.com
+        HostName work.int4byte.org
         Port 23268
         ForwardAgent yes
         # romantic holds my homelab~

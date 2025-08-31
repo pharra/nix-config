@@ -199,12 +199,12 @@
     hosts = let
       mkAzureHost = region: {
         name = "azure_${region}";
-        hostname = "${region}.azure.int4byte.com";
+        hostname = "${region}.azure.int4byte.org";
         builds = ["base"];
         nixos-modules = [./hosts/azure];
         specialArgs = {
           inherit is_azure;
-          domain = "${region}.azure.int4byte.com";
+          domain = "${region}.azure.int4byte.org";
         };
       };
     in [
