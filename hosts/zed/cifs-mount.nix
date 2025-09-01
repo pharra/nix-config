@@ -53,6 +53,6 @@
   fileSystems."/nfs" = {
     device = "192.168.29.1:/share";
     fsType = "nfs";
-    options = ["x-systemd.automount" "noauto" "nfsvers=4.2" "proto=rdma" "port=20049" "sync"];
+    options = ["x-systemd.automount" "noauto" "nfsvers=4.2" "proto=rdma" "port=20049" "async"];
   };
 }
