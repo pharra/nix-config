@@ -247,7 +247,7 @@
       {
         name = "zed";
         builds = ["kde" "gnome" "cosmic" "deepin"];
-        hostname = "zed";
+        hostname = "zed.lan";
         nixos-modules = [./hosts/zed];
         specialArgs = {
           boot_from_network = false;

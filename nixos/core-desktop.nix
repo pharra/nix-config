@@ -88,21 +88,6 @@
   # networking.nftables.enable = true;
   systemd.services.NetworkManager-wait-online.enable = false;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    # python, some times I may need to use python with root permission.
-    # (python310.withPackages (ps:
-    #   with ps; [
-    #     ipython
-    #     pandas
-    #     requests
-    #     pyquery
-    #     pyyaml
-    #   ]))
-    nekoray
-  ];
-
   programs.nekoray = {
     enable = true;
     tunMode.enable = true; # enable tun mode
@@ -171,5 +156,31 @@
       pkgs.kdePackages.xdg-desktop-portal-kde
       pkgs.xdg-desktop-portal-gtk
     ];
+  };
+
+  # YubiKey
+  environment.systemPackages = with pkgs; [
+    yubikey-personalization # CLI tools for configuring YubiKey
+    yubikey-manager # Manage YubiKey settings
+    yubioath-flutter # GUI for managing YubiKey
+    yubikey-agent
+    libfido2 # Support for FIDO2/WebAuthn
+    opensc # Smart card support
+    gnupg # If using GPG with YubiKey
+    pcsclite
+  ];
+
+  hardware.gpgSmartcards.enable = true;
+
+  services = {
+    udev.packages = with pkgs; [yubikey-personalization];
+    pcscd.enable = true;
+    yubikey-agent.enable = true;
+  };
+
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+    pinentryPackage = pkgs.pinentry-curses;
   };
 }
