@@ -48,9 +48,5 @@
     wl-clipboard # Command-line copy/paste utilities for Wayland
   ];
 
-  i18n.inputMethod = {
-    fcitx5.plasma6Support = true;
-  };
-
   services.pulseaudio.enable = false;
 }

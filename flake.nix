@@ -164,7 +164,7 @@
         nix-flatpak.nixosModules.nix-flatpak
         NixVirt.nixosModules.default
         # Add packages from this repo and set up binary cache
-        inputs.mlnx-ofed-nixos.nixosModules.setupCacheAndOverlays
+        # inputs.mlnx-ofed-nixos.nixosModules.setupCacheAndOverlays
         # Add configuration options from this repo
         inputs.mlnx-ofed-nixos.nixosModules.default
         proxmox-nixos.nixosModules.proxmox-ve
@@ -344,41 +344,6 @@
       magicRollback = false;
       nodes = deployConfigurations;
     };
-
-    devShells."${x64_system}".default = let
-      pkgs = import nixpkgs {
-        inherit x64_system;
-        overlays = [
-          (self: super: rec {
-            nodejs = super.nodejs-18_x;
-            pnpm = super.nodePackages.pnpm;
-            yarn = super.yarn.override {inherit nodejs;};
-          })
-        ];
-      };
-    in
-      pkgs.mkShell {
-        # create an environment with nodejs-18_x, pnpm, and yarn
-        packages = with pkgs; [
-          cmake
-          zsh
-          gcc
-          pkgsCross.mingwW64.buildPackages.gcc
-          haskellPackages.nsis
-          zlib
-          binutils
-          perl
-          xz
-          mtools
-          cdrkit
-          syslinux
-        ];
-
-        shellHook = ''
-          # echo "node `${pkgs.nodejs}/bin/node --version`"
-          exec zsh
-        '';
-      };
 
     inherit legacyPackages;
 

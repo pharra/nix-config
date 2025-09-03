@@ -19,10 +19,7 @@ in {
         count = 1;
         unit = "GiB";
       };
-      storage_vol = {
-        pool = "VMPool";
-        volume = "Kwrt.qcow2";
-      };
+      storage_vol = /home/wf/Data/openwrt/Kwrt.qcow2;
       # install_vol = {
       #   pool = "ISOPool";
       #   volume = "archlinux-2024.04.01-x86_64.iso";
