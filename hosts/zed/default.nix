@@ -126,7 +126,7 @@ in {
           # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
           IPv6AcceptRA = true;
           MulticastDNS = true;
-          Domains = ["local"];
+          Domains = ["lan"];
         };
         dhcpV4Config = {
           UseDomains = true;

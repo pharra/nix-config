@@ -8,15 +8,8 @@
   ...
 } @ args: let
   interface = {
-    #ib = "enp66s0";
-    #ib = "ibp66s0";
     eth-to-bridge = "eno2";
-    #eth = "enp66s0d1";
-    #ib = "mlx4_0";
     ib = "ib";
-    #eth = "eth";
-    #eth = "enp1s0";
-    #eth = "enp1s0d1";
     eth = "mlx5_0";
     intern = "br1";
   };
@@ -475,16 +468,6 @@ in {
         networkConfig.Bridge = "br1";
         linkConfig.RequiredForOnline = "enslaved";
       };
-      # "30-enp129s0" = {
-      #   matchConfig.Name = "enp129s0";
-      #   networkConfig.Bridge = "br1";
-      #   linkConfig.RequiredForOnline = "enslaved";
-      # };
-      # "30-${interface.eth-to-bridge}" = {
-      #   matchConfig.Name = "${interface.eth-to-bridge}";
-      #   networkConfig.Bridge = "br1";
-      #   linkConfig.RequiredForOnline = "enslaved";
-      # };
 
       # Configure the bridge for its desired function
       "40-br0" = {
@@ -495,8 +478,7 @@ in {
           DHCP = "ipv4";
           # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
           IPv6AcceptRA = true;
-          MulticastDNS = true;
-          Domains = ["local"];
+          Domains = ["lan"];
         };
         dhcpV4Config = {
           UseDomains = true;
@@ -508,27 +490,8 @@ in {
         linkConfig = {
           # or "routable" with IP addresses configured
           RequiredForOnline = "routable";
-          Multicast = true;
         };
       };
-
-      # "50-${interface.eth-dual}" = {
-      #   matchConfig.Name = "${interface.eth-dual}";
-      #   bridgeConfig = {};
-      #   networkConfig = {
-      #     Address = ["192.168.29.2/24" "fd00:0:29::2/64"];
-      #     ConfigureWithoutCarrier = true;
-      #     IPv6AcceptRA = false;
-      #     IPv6PrivacyExtensions = "no";
-      #     MulticastDNS = true;
-      #   };
-      #   linkConfig = {
-      #     # or "routable" with IP addresses configured
-      #     ActivationPolicy = "always-up";
-      #     RequiredForOnline = "no";
-      #     Multicast = true;
-      #   };
-      # };
     };
   };
 
@@ -544,49 +507,6 @@ in {
     networkmanager.enable = true;
     networkmanager.unmanaged = ["*,except:interface-name:wl*"];
   };
-
-  # age.secrets."atticd" = {
-  #   file = "${mysecrets}/atticd.env";
-  #   mode = "755";
-  #   path = "/etc/atticd.env";
-  #   symlink = false;
-  # };
-
-  # services.atticd = {
-  #   enable = true;
-
-  #   # Replace with absolute path to your environment file
-  #   environmentFile = config.age.secrets.atticd.path;
-
-  #   settings = {
-  #     listen = "[::]:8000";
-
-  #     jwt = {};
-
-  #     # Data chunking
-  #     #
-  #     # Warning: If you change any of the values here, it will be
-  #     # difficult to reuse existing chunks for newly-uploaded NARs
-  #     # since the cutpoints will be different. As a result, the
-  #     # deduplication ratio will suffer for a while after the change.
-  #     chunking = {
-  #       # The minimum NAR size to trigger chunking
-  #       #
-  #       # If 0, chunking is disabled entirely for newly-uploaded NARs.
-  #       # If 1, all NARs are chunked.
-  #       nar-size-threshold = 64 * 1024; # 64 KiB
-
-  #       # The preferred minimum size of a chunk, in bytes
-  #       min-size = 16 * 1024; # 16 KiB
-
-  #       # The preferred average size of a chunk, in bytes
-  #       avg-size = 64 * 1024; # 64 KiB
-
-  #       # The preferred maximum size of a chunk, in bytes
-  #       max-size = 256 * 1024; # 256 KiB
-  #     };
-  #   };
-  # };
 
   # for Nvidia GPU
   services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default

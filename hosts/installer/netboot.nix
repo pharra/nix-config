@@ -49,7 +49,7 @@
               DHCP = "ipv4";
               # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
               IPv6AcceptRA = true;
-              Domains = ["local"];
+              Domains = ["lan"];
               MulticastDNS = true;
             };
             dhcpV4Config = {
