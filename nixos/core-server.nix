@@ -59,7 +59,7 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   networking.firewall.enable = lib.mkDefault false;
-  # networking.nftables.enable = true;
+  networking.nftables.enable = true;
 
   # Enable the OpenSSH daemon.
   services.openssh = {
