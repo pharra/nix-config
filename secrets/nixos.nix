@@ -4,6 +4,7 @@
   agenix,
   mysecrets,
   username,
+  lib,
   ...
 }: {
   imports = [
@@ -18,4 +19,19 @@
   age.identityPaths = [
     "/home/${username}/.ssh/id_ed25519" # Linux
   ];
+
+  sops = {
+    defaultSopsFile = ./default.yaml;
+
+    age = {
+      sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
+      generateKey = true;
+    };
+
+    secrets = lib.mkIf config.services.mihomo.enable (lib.genAttrs [
+      "mihomo/providers/yiyuan"
+      "mihomo/providers/llg"
+      "mihomo/providers/l666"
+    ] (name: {restartUnits = ["mihomo.service"];}));
+  };
 }

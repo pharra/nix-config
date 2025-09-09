@@ -1,0 +1,9 @@
+keys:
+  - &homelab age14ckewpst7ua5acm0hndfps0mjfl3yd0gwhxn7pn379hgyvhs8urse7xt5h
+  - &zed age1j66ujjkvpy7cffu5q83cucnweqk78k5z5sch3cyz8hgqhzsu4d8sj4086c
+creation_rules:
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *homelab
+      - *zed

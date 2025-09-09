@@ -102,6 +102,11 @@
     };
 
     proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -125,6 +130,7 @@
     nixos-wsl,
     nixos-hardware,
     proxmox-nixos,
+    sops-nix,
     ...
   }: let
     username = "wf";
@@ -154,7 +160,7 @@
     _home-modules = import ./home-modules;
     home-modules =
       [
-        plasma-manager.homeManagerModules.plasma-manager
+        plasma-manager.homeModules.plasma-manager
       ]
       ++ (builtins.attrValues _home-modules);
 
@@ -168,6 +174,7 @@
         # Add configuration options from this repo
         inputs.mlnx-ofed-nixos.nixosModules.default
         proxmox-nixos.nixosModules.proxmox-ve
+        sops-nix.nixosModules.sops
       ]
       ++ (builtins.attrValues modules);
 

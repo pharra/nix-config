@@ -66,6 +66,8 @@ in {
     ../../nixos/virtualisation
     ../../nixos/scripts.nix
 
+    ../../nixos/mihomo
+
     ./nixvirt
   ];
 
