@@ -15,4 +15,5 @@
   nvme-auto-module = import ./nvme-auto;
   net-sriov-module = import ./net-sriov;
   mihomo-module = import ./mihomo;
+  mdns-module = import ./mdns;
 }
