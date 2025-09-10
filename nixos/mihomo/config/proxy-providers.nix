@@ -8,7 +8,7 @@
     interval = 86400;
     health-check = {
       enable = true;
-      url = "http://cp.cloudflare.com";
+      url = "https://www.gstatic.com/generate_204";
       interval = 300;
     };
   };
