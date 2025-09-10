@@ -32,6 +32,8 @@ in {
     ../../secrets/nixos.nix
 
     ./nixvirt
+
+    ../../nixos/mihomo
   ];
 
   net-name = {

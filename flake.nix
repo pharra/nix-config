@@ -232,7 +232,7 @@
       {
         name = "dot";
         builds = ["kde" "gnome" "cosmic" "deepin"];
-        hostname = "dot.lan";
+        hostname = "192.168.31.240";
         nixos-modules = [./hosts/dot nixos-hardware.nixosModules.microsoft-surface-common];
       }
 
@@ -254,7 +254,7 @@
       {
         name = "zed";
         builds = ["kde" "gnome" "cosmic" "deepin"];
-        hostname = "zed.lan";
+        hostname = "zed.local";
         nixos-modules = [./hosts/zed];
         specialArgs = {
           boot_from_network = false;

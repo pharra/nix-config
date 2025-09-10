@@ -17,10 +17,7 @@ in {
   virtualisation.libvirt.verbose = true;
   virtualisation.libvirt.connections."qemu:///system" = {
     domains = [
-      (Kwrt
-        // {
-          active = true;
-        })
+      Kwrt
     ];
     pools = [
       {

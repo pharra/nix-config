@@ -54,6 +54,8 @@ in {
     #../../nixos/ccache.nix
 
     ../../nixos/virtualisation
+
+    ../../nixos/mihomo
   ];
 
   # supported fil systems, so we can mount any removable disks with these filesystems

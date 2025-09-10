@@ -36,17 +36,10 @@
       "https://doh.pub/dns-query"
       "https://dns.alidns.com/dns-query"
     ];
-    nameserver-policy = {
-      "rule-set:google_domain" = [
-        "https://8.8.8.8/dns-query"
-      ];
-      # "rule-set:cn_domain" = [
-      #   "223.5.5.5"
-      # ];
-      # "rule-set:custom-direct-domain" = [
-      #   "119.29.29.29"
-      #   "223.5.5.5"
-      # ];
-    };
+    # nameserver-policy = {
+    #   "rule-set:google_domain" = [
+    #     "https://8.8.8.8/dns-query"
+    #   ];
+    # };
   };
 }
