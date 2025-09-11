@@ -188,4 +188,12 @@
     enableSSHSupport = true;
     pinentryPackage = pkgs.pinentry-curses;
   };
+
+  nix.settings = {
+    substituters = [
+      # replace official cache with a mirror located in China
+      "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
+      "https://mirrors.ustc.edu.cn/nix-channels/store"
+    ];
+  };
 }
