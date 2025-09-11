@@ -13,7 +13,13 @@
     fcitx5.addons = with pkgs; [
       fcitx5-mozc
       fcitx5-gtk
-      fcitx5-rime
+      (fcitx5-rime.override {
+        rimeDataPkgs = [];
+        # rimeDataPkgs = with pkgs.nur.repos.linyinfeng.rimePackages;
+        #   withRimeDeps [
+        #     rime-ice
+        #   ];
+      })
       fcitx5-chinese-addons
       fcitx5-with-addons
     ];
@@ -28,11 +34,5 @@
     QT_IM_MODULE = "fcitx";
     XMODIFIERS = "@im=fcitx";
     # IMSETTINGS_MODULE = "fcitx";
-
-    # GTK_IM_MODULE = "wayland";
-    # QT_IM_MODULE = "fcitx";
-    # XMODIFIERS = "@im=fcitx";
-    # SDL_IM_MODULE = "fcitx";
-    # GLFW_IM_MODULE = "ibus";
   };
 }

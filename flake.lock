@@ -149,6 +149,27 @@
         "type": "github"
       }
     },
+    "flake-parts": {
+      "inputs": {
+        "nixpkgs-lib": [
+          "nur",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1733312601,
+        "narHash": "sha256-4pDvzqnegAfRkPwO3wmwBhVi/Sye1mzps0zHWYnP88c=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "205b12d8b7cd4802fbcb8e8ef6a0f1408781a4f9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -408,6 +429,27 @@
         "type": "github"
       }
     },
+    "nur": {
+      "inputs": {
+        "flake-parts": "flake-parts",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1757608909,
+        "narHash": "sha256-hzu+scqwBXiGlRcoRPpOCufJDCyLatC9UPPXrvfhWtA=",
+        "owner": "nix-community",
+        "repo": "NUR",
+        "rev": "c41e23488a8ba793ad982cf7aa271cf5b4f2e15f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "NUR",
+        "type": "github"
+      }
+    },
     "plasma-manager": {
       "inputs": {
         "home-manager": [
@@ -452,6 +494,22 @@
         "type": "github"
       }
     },
+    "rime-config": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1756872834,
+        "narHash": "sha256-ylCsXSIE3QDs5xQ/pfNtrneB4VhnFzgYm3bVAEWDceA=",
+        "owner": "Mintimate",
+        "repo": "oh-my-rime",
+        "rev": "6f503bcb3dbebee53461db67917f764639c1e407",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Mintimate",
+        "repo": "oh-my-rime",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "NixVirt": "NixVirt",
@@ -468,8 +526,10 @@
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-2305": "nixpkgs-2305",
         "nixpkgs-unstable": "nixpkgs-unstable",
+        "nur": "nur",
         "plasma-manager": "plasma-manager",
         "proxmox-nixos": "proxmox-nixos",
+        "rime-config": "rime-config",
         "sops-nix": "sops-nix"
       }
     },

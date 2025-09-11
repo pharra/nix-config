@@ -11,7 +11,7 @@
 
   imports = [
     ./core-server.nix
-    ./fcitx5.nix
+    ./input-method
     ./flatpak.nix
   ];
 

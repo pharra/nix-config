@@ -107,6 +107,16 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    rime-config = {
+      url = "github:Mintimate/oh-my-rime";
+      flake = false;
+    };
+
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -131,6 +141,8 @@
     nixos-hardware,
     proxmox-nixos,
     sops-nix,
+    rime-config,
+    nur,
     ...
   }: let
     username = "wf";
@@ -182,7 +194,7 @@
 
     commonSpecialArgs =
       {
-        inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs home-modules NixVirt proxmox-nixos;
+        inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs home-modules NixVirt proxmox-nixos rime-config nur;
         # use unstable branch for some packages to get the latest updates
         pkgs-unstable = import nixpkgs-unstable {
           system = x64_system; # refer the `system` parameter form outer scope recursively

@@ -1,7 +1,7 @@
 {username, ...}: {
   imports = [
     ./base
-    ./fcitx5
+    ./input-method
     ./desktop
 
     ./cosmic

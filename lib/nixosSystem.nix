@@ -18,6 +18,7 @@ in
             [
               specialArgs.overlays
               specialArgs.proxmox-nixos.overlays.${system}
+              specialArgs.nur.overlays.default
             ]
             ++ (builtins.attrValues specialArgs.legacyPackages."${system}".overlays);
         }
