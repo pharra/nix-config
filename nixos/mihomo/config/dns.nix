@@ -26,16 +26,16 @@
     #   "*.sslip.io"
     #   "*.nip.io"
     # ];
-    respect-rules = true;
     nameserver = [
       "system"
-      "https://8.8.8.8/dns-query"
-      "https://223.5.5.5/dns-query"
+      # "https://8.8.8.8/dns-query"
+      # "https://223.5.5.5/dns-query"
     ];
-    proxy-server-nameserver = [
-      "https://doh.pub/dns-query"
-      "https://dns.alidns.com/dns-query"
-    ];
+    # respect-rules = true;
+    # proxy-server-nameserver = [
+    #   "https://doh.pub/dns-query"
+    #   "https://dns.alidns.com/dns-query"
+    # ];
     # nameserver-policy = {
     #   "rule-set:google_domain" = [
     #     "https://8.8.8.8/dns-query"

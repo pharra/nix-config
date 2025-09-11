@@ -66,13 +66,13 @@ in {
     systemd-boot.enable = true;
   };
 
-  systemd.sleep.extraConfig = ''
-    [Sleep]
-    AllowSuspend=no
-    AllowHibernation=no
-    AllowHybridSleep=no
-    AllowSuspendThenHibernate=no
-  '';
+  # systemd.sleep.extraConfig = ''
+  #   [Sleep]
+  #   AllowSuspend=no
+  #   AllowHibernation=no
+  #   AllowHybridSleep=no
+  #   AllowSuspendThenHibernate=no
+  # '';
 
   systemd.network = {
     enable = true;
