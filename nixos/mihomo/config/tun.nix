@@ -1,7 +1,7 @@
 {...}: {
   services.mihomo.config.tun = {
     enable = true;
-    stack = "mixed";
+    stack = "system";
     device = "mihomo";
     auto-route = true;
     auto-detect-interface = true;
