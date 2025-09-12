@@ -22,6 +22,8 @@
       })
       fcitx5-chinese-addons
       fcitx5-with-addons
+      fcitx5-fluent
+      fcitx5-mellow-themes
     ];
   };
 
