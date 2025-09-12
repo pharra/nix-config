@@ -9,6 +9,7 @@
 }: {
   imports = [
     agenix.nixosModules.default
+    ./github.nix
   ];
 
   environment.systemPackages = [
