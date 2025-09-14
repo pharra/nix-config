@@ -26,9 +26,8 @@ in {
   };
 
   programs.plasma = {
-    enable = true;
-    configFile = {
-      "kwinrc"."Wayland"."InputMethod[$e]" = "/run/current-system/sw/share/applications/org.fcitx.Fcitx5.desktop";
+    configFile.kwinrc = {
+      Wayland.InputMethod.value = "/run/current-system/sw/share/applications/fcitx5-wayland-launcher.desktop";
     };
   };
 
