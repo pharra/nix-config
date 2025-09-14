@@ -85,7 +85,6 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   networking.firewall.enable = true;
-  # networking.nftables.enable = true;
   systemd.services.NetworkManager-wait-online.enable = false;
 
   programs.nekoray = {

@@ -221,6 +221,12 @@ in {
     neededForBoot = true;
   };
 
+  fileSystems."/var" = {
+    device = "system/var";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+
   fileSystems."/nix/var" = {
     device = "system/nix/var";
     fsType = "zfs";
