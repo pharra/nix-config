@@ -202,6 +202,20 @@ in {
       };
     };
 
+    pan123_android = {
+      user = "sftp";
+      repository = "rclone:pan123_chunk:restic";
+      initialize = true; # initializes the repo, don't set if you want manual control
+      passwordFile = config.age.secrets.restic_password.path;
+      paths = ["/share/sftp/Android"];
+      rcloneConfigFile = config.age.secrets.rclone_config.path;
+      timerConfig = {
+        OnCalendar = "03:00";
+        Persistent = true;
+        RandomizedDelaySec = "1h";
+      };
+    };
+
     quark_android = {
       user = "sftp";
       repository = "rclone:quark:restic";

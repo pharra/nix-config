@@ -15,7 +15,6 @@ in {
   services.mihomo.config = {
     rules = [
       # 按照你的顺序和策略
-      "RULE-SET,private_ip,DIRECT,no-resolve"
       "RULE-SET,github_domain,Github"
       "RULE-SET,twitter_domain,Twitter"
       "RULE-SET,youtube_domain,YouTube"
@@ -28,6 +27,7 @@ in {
       "RULE-SET,cn_domain,DIRECT"
       "RULE-SET,geolocation-!cn,其他"
 
+      "RULE-SET,private_ip,DIRECT,no-resolve"
       "RULE-SET,google_ip,Google"
       "RULE-SET,netflix_ip,NETFLIX"
       "RULE-SET,telegram_ip,Telegram"
