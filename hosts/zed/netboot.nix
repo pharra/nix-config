@@ -69,8 +69,7 @@ lib.mkIf boot_from_network {
               DHCP = "ipv4";
               # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
               IPv6AcceptRA = true;
-              Domains = ["local"];
-              MulticastDNS = true;
+              Domains = ["mlx"];
             };
             dhcpV4Config = {
               UseDomains = true;
@@ -83,7 +82,6 @@ lib.mkIf boot_from_network {
             linkConfig = {
               # or "routable" with IP addresses configured
               RequiredForOnline = "routable";
-              Multicast = true;
             };
           };
         };

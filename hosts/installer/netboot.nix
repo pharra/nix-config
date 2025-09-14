@@ -50,7 +50,6 @@
               # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
               IPv6AcceptRA = true;
               Domains = ["lan"];
-              MulticastDNS = true;
             };
             dhcpV4Config = {
               UseDomains = true;
@@ -60,7 +59,6 @@
               UseDomains = true;
             };
             linkConfig = {
-              Multicast = true;
               MTUBytes = "9000";
             };
           };
@@ -71,9 +69,6 @@
   };
 
   services.resolved = {
-    extraConfig = ''
-      MulticastDNS=yes
-    '';
     enable = true;
   };
 

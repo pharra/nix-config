@@ -96,7 +96,6 @@ in {
           DHCP = "ipv4";
           # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
           IPv6AcceptRA = true;
-          MulticastDNS = true;
           Domains = ["lan"];
         };
         dhcpV4Config = {
@@ -109,16 +108,12 @@ in {
         linkConfig = {
           # or "routable" with IP addresses configured
           RequiredForOnline = "routable";
-          Multicast = true;
         };
       };
     };
   };
 
   services.resolved = {
-    extraConfig = ''
-      MulticastDNS=yes
-    '';
     enable = true;
   };
 }
