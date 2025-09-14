@@ -83,7 +83,6 @@ in {
 
   networking = {
     hostName = "zed";
-    domain = "lan";
     wireless.enable = false; # Enables wireless support via wpa_supplicant.
 
     hostId = "88fcb8e9";
@@ -152,7 +151,7 @@ in {
           # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
           IPv6AcceptRA = true;
           MulticastDNS = true;
-          Domains = ["local"];
+          Domains = ["mlx"];
         };
         dhcpV4Config = {
           UseDomains = true;

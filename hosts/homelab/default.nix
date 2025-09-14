@@ -9,7 +9,6 @@
 } @ args: let
   interface = {
     eth-to-bridge = "eno2";
-    ib = "ib";
     eth = "mlx5_0";
     intern = "br1";
   };
@@ -243,100 +242,27 @@ in {
     };
   };
 
-  services.duplicati = {
-    enable = false;
-    interface = "192.168.29.1";
-  };
-
   net-name = {
     enable = true;
     inherit interfaces;
   };
 
-  services.keaWithDDNS = {
+  services.dhcpServer = {
     enable = true;
-    IPMasquerade = true;
-    onlySLAAC = false;
     networks = {
-      ib = {
-        name = "ib";
-        interface = interface.ib;
-        domain = "ib";
-        ipv4 = {
-          subnet = "192.168.30.0/24";
-          address = "192.168.30.1";
-          netmask = "24";
-          pool = "192.168.30.50,192.168.30.150";
-          pools = [
-            "192.168.30.50 - 192.168.30.150"
-          ];
-          reservations = [
-            {
-              hw-address = "50:65:f3:8a:c7:71";
-              ip-address = "192.168.30.1";
-              hostname = "homelab";
-            }
-          ];
-        };
-        ipv6 = {
-          subnet = "fd00:0:30::/64";
-          address = "fd00:0:30::1";
-          netmask = "64";
-          pool = "::";
-          prefix = "fd00:0:30::";
-          delegated-len = "64";
-          id = 443;
-          pools = [
-            "fd00:0:30::/64"
-          ];
-          reservations = [
-            {
-              hw-address = "50:65:f3:8a:c7:71";
-              ip-addresses = ["fd00:0:30::1"];
-              hostname = "homelab";
-            }
-          ];
-        };
-      };
-
       eth = {
         name = "eth";
         interface = interface.eth;
-        domain = "eth";
+        domain = "mlx";
         ipv4 = {
-          subnet = "192.168.29.0/24";
           address = "192.168.29.1";
           netmask = "24";
           pool = "192.168.29.50,192.168.29.150";
-          pools = [
-            "192.168.29.50 - 192.168.29.150"
-          ];
-          reservations = [
-            {
-              hw-address = "50:65:f3:8a:c7:72";
-              ip-address = "192.168.29.1";
-              hostname = "homelab";
-            }
-          ];
         };
         ipv6 = {
-          subnet = "fd00:0:29::/64";
           address = "fd00:0:29::1";
           netmask = "64";
           pool = "::";
-          prefix = "fd00:0:29::";
-          delegated-len = "64";
-          id = 444;
-          pools = [
-            "fd00:0:29::/64"
-          ];
-          reservations = [
-            {
-              hw-address = "50:65:f3:8a:c7:72";
-              ip-addresses = ["fd00:0:29::1"];
-              hostname = "homelab";
-            }
-          ];
         };
       };
 
@@ -345,71 +271,23 @@ in {
         interface = interface.intern;
         domain = "intern";
         ipv4 = {
-          subnet = "192.168.28.0/24";
           address = "192.168.28.1";
           netmask = "24";
           pool = "192.168.28.50,192.168.28.150";
-          pools = [
-            "192.168.28.50 - 192.168.28.150"
-          ];
-          reservations = [
-            {
-              hw-address = "7a:a6:c9:f3:65:a9";
-              ip-address = "192.168.28.1";
-              hostname = "homelab";
-            }
-          ];
         };
         ipv6 = {
-          subnet = "fd00:0:28::/64";
           address = "fd00:0:28::1";
-          prefix = "fd00:0:28::";
           pool = "::";
-          delegated-len = "64";
           netmask = "64";
-          id = 445;
-          pools = [
-            "fd00:0:28::/64"
-          ];
-          reservations = [
-            {
-              hw-address = "7a:a6:c9:f3:65:a9";
-              ip-addresses = ["fd00:0:28::1"];
-              hostname = "homelab";
-            }
-          ];
         };
       };
     };
-    DNSForward = [
-      {
-        zone = ".";
-        method = "udp";
-        udp = {
-          ip = "192.168.31.1";
-        };
-      }
-    ];
   };
 
   boot.kernel.sysctl."net.ipv4.ip_forward" = "1";
   boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = "1";
   networking.firewall.interfaces = {
     "${interface.intern}" = {
-      allowedTCPPortRanges = [
-        {
-          from = 0;
-          to = 65535;
-        }
-      ];
-      allowedUDPPortRanges = [
-        {
-          from = 0;
-          to = 65535;
-        }
-      ];
-    };
-    "${interface.ib}" = {
       allowedTCPPortRanges = [
         {
           from = 0;
@@ -513,7 +391,6 @@ in {
 
   networking = {
     hostName = "homelab";
-    domain = "lan";
     wireless.enable = false; # Enables wireless support via wpa_supplicant.
 
     # Configure network proxy if necessary

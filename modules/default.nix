@@ -7,7 +7,6 @@
   mlx4-module = import ./mlx4;
   mlx5-module = import ./mlx5;
   ddns-go-module = import ./ddns-go;
-  kea-module = import ./kea;
   systemd-iscsi-module = import ./systemd-iscsi;
   nvmf-module = import ./nvmf;
   net-name-module = import ./net-name;
@@ -16,4 +15,5 @@
   net-sriov-module = import ./net-sriov;
   mihomo-module = import ./mihomo;
   mdns-module = import ./mdns;
+  dhcp-server-module = import ./dhcp-server;
 }

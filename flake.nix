@@ -244,7 +244,7 @@
       {
         name = "dot";
         builds = ["kde" "gnome" "cosmic" "deepin"];
-        hostname = "dot.local";
+        hostname = "dot";
         nixos-modules = [./hosts/dot nixos-hardware.nixosModules.microsoft-surface-common];
       }
 
@@ -266,7 +266,7 @@
       {
         name = "zed";
         builds = ["kde" "gnome" "cosmic" "deepin"];
-        hostname = "zed.local";
+        hostname = "zed";
         nixos-modules = [./hosts/zed];
         specialArgs = {
           boot_from_network = false;
@@ -277,7 +277,7 @@
       {
         name = "zed_netboot";
         builds = ["kde" "gnome" "cosmic" "deepin"];
-        hostname = "zed.local";
+        hostname = "zed";
         nixos-modules = [./hosts/zed];
         specialArgs = {
           boot_from_network = true;
@@ -289,7 +289,7 @@
         name = "luris";
         builds = ["kde" "gnome" "cosmic" "deepin"];
         nixos-modules = [./hosts/luris];
-        hostname = "luris.local";
+        hostname = "luris";
       }
 
       # dat
@@ -297,7 +297,7 @@
         name = "dat";
         builds = ["kde" "gnome" "cosmic" "deepin"];
         nixos-modules = [./hosts/dat nixos-wsl.nixosModules.default];
-        hostname = "dat.local";
+        hostname = "dat";
       }
 
       # homelab
@@ -346,7 +346,7 @@
             hostname =
               if builtins.hasAttr "hostname" machine
               then machine.hostname
-              else "${machine.name}.local";
+              else "${machine.name}";
             profiles.system = {
               path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."${machine.name}_${build}";
             };

@@ -69,7 +69,7 @@
       	; global section parameters
       	bind interfaces only = yes
       	guest account = nobody
-      	interfaces = ${interface.ib} ${interface.eth} br0 ${interface.intern}
+      	interfaces = ${interface.eth} br0 ${interface.intern}
       	netbios name = ksmbd
       	server max protocol = SMB3_11
       	server min protocol = SMB3_11

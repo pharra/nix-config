@@ -39,7 +39,6 @@
 
   networking = {
     hostName = "dat";
-    domain = "lan";
 
     networkmanager.enable = true;
     networkmanager.unmanaged = ["*,except:interface-name:wl*"];
