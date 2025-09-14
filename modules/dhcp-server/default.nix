@@ -132,7 +132,7 @@ in {
           domain = network.domain;
           expand-hosts = true;
           no-hosts = true;
-          address = "/#/114.114.114.114";
+          server = "114.114.114.114";
           host-record = ["homelab,homelab.${network.domain},${network.ipv4.address},${network.ipv6.address}"];
         };
       in {
