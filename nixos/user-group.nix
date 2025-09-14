@@ -28,6 +28,7 @@
       "adbusers"
       "libvirtd"
       "video"
+      "docker"
     ];
     openssh.authorizedKeys.keys = [
       # win desktop

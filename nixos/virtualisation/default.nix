@@ -15,15 +15,12 @@
 
   virtualisation.docker = {
     enable = true;
-    rootless = {
-      enable = true;
-      setSocketVariable = true;
-      # daemon.settings = {
-      #   "userns-remap" = "${username}";
-      # };
-    };
     daemon.settings.features.cdi = true;
-    rootless.daemon.settings.features.cdi = true;
+    rootless = {
+      enable = false;
+      daemon.settings.features.cdi = true;
+      setSocketVariable = true;
+    };
   };
   virtualisation.containers.enable = true;
   virtualisation = {
