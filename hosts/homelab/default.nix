@@ -45,8 +45,6 @@ in {
 
     ../../nixos/spdk.nix
 
-    ../../nixos/iscsi-server
-
     (import ../../nixos/samba.nix {inherit config lib interface pkgs libs;})
 
     (import ../../nixos/ipxe {inherit config lib interface pkgs libs netboot_args;})
@@ -100,12 +98,6 @@ in {
   services.zfs.trim.enable = true;
 
   networking.firewall.enable = lib.mkForce false;
-
-  # services.proxmox-ve = {
-  #   enable = true;
-  #   ipAddress = "192.168.29.1";
-  #   bridges = ["br0"];
-  # };
 
   # raid
   boot.swraid.enable = true;
