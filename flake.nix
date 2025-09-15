@@ -244,7 +244,7 @@
       {
         name = "dot";
         builds = ["kde" "gnome" "cosmic" "deepin"];
-        hostname = "dot";
+        hostname = "192.168.31.240";
         nixos-modules = [./hosts/dot nixos-hardware.nixosModules.microsoft-surface-common];
       }
 
