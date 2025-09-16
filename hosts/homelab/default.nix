@@ -195,7 +195,7 @@ in {
 
     pan123_android = {
       user = "sftp";
-      repository = "rclone:pan123_chunk:restic";
+      repository = "rclone:pan123:restic";
       initialize = true; # initializes the repo, don't set if you want manual control
       passwordFile = config.age.secrets.restic_password.path;
       paths = ["/share/sftp/Android"];
