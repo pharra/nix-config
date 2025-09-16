@@ -162,8 +162,8 @@
     ];
   };
 
-  # YubiKey
   environment.systemPackages = with pkgs; [
+    # YubiKey
     yubikey-personalization # CLI tools for configuring YubiKey
     yubikey-manager # Manage YubiKey settings
     yubioath-flutter # GUI for managing YubiKey

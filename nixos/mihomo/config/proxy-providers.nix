@@ -35,5 +35,12 @@ in {
         path = "./proxy_provider/providers-666.yaml";
         override.additional-prefix = "[666]";
       };
+    "Node-paofu" =
+      NodeParam
+      // {
+        url = config.sops.placeholder."mihomo/providers/paofu";
+        path = "./proxy_provider/providers-paofu.yaml";
+        override.additional-prefix = "[泡芙]";
+      };
   };
 }

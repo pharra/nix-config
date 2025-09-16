@@ -33,6 +33,7 @@
       "mihomo/providers/yiyuan"
       "mihomo/providers/llg"
       "mihomo/providers/l666"
+      "mihomo/providers/paofu"
     ] (name: {restartUnits = ["mihomo.service"];}));
   };
 }
