@@ -128,7 +128,7 @@ in {
       what = "aliyundrive:/movies";
       where = "/share/media/aliyundrive/movies";
       mountConfig = {
-        Options = "rw,gid=sftp,uid=sftp,allow_other,args2env,vfs-cache-mode=writes,config=${config.age.secrets.rclone_config.path}";
+        Options = "rw,gid=users,uid=sftp,allow_other,args2env,vfs-cache-mode=writes,config=${config.age.secrets.rclone_config.path}";
       };
     }
     {
@@ -136,7 +136,7 @@ in {
       what = "aliyundrive:/tv";
       where = "/share/media/aliyundrive/tv";
       mountConfig = {
-        Options = "rw,gid=sftp,uid=sftp,allow_other,args2env,vfs-cache-mode=writes,config=${config.age.secrets.rclone_config.path}";
+        Options = "rw,gid=users,uid=sftp,allow_other,args2env,vfs-cache-mode=writes,config=${config.age.secrets.rclone_config.path}";
       };
     }
     {
@@ -144,7 +144,7 @@ in {
       what = "quark:/";
       where = "/share/media/quark";
       mountConfig = {
-        Options = "rw,gid=sftp,uid=sftp,allow_other,args2env,vfs-cache-mode=writes,config=${config.age.secrets.rclone_config.path}";
+        Options = "rw,gid=users,uid=sftp,allow_other,args2env,vfs-cache-mode=writes,config=${config.age.secrets.rclone_config.path}";
       };
     }
   ];
