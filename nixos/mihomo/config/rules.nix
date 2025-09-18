@@ -15,6 +15,7 @@ in {
   services.mihomo.config = {
     rules = [
       # 按照你的顺序和策略
+      "DOMAIN-SUFFIX,int4byte.org,DIRECT"
       "RULE-SET,github_domain,Github"
       "RULE-SET,twitter_domain,Twitter"
       "RULE-SET,youtube_domain,YouTube"

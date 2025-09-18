@@ -27,19 +27,23 @@
     #   "*.nip.io"
     # ];
     nameserver = [
-      "system"
-      # "https://8.8.8.8/dns-query"
+      "https://8.8.8.8/dns-query"
       # "https://223.5.5.5/dns-query"
     ];
-    # respect-rules = true;
-    # proxy-server-nameserver = [
-    #   "https://doh.pub/dns-query"
-    #   "https://dns.alidns.com/dns-query"
-    # ];
-    # nameserver-policy = {
-    #   "rule-set:google_domain" = [
-    #     "https://8.8.8.8/dns-query"
-    #   ];
-    # };
+    respect-rules = true;
+    proxy-server-nameserver = [
+      "system"
+    ];
+    direct-nameserver = [
+      "system"
+    ];
+    nameserver-policy = {
+      "rule-set:google_domain" = [
+        "https://8.8.8.8/dns-query"
+      ];
+      "rule-set:cn_domain" = [
+        "system"
+      ];
+    };
   };
 }
