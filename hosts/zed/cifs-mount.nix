@@ -12,7 +12,7 @@
       type = "ext4";
       what = "/dev/disk/by-label/fluent";
       where = "/fluent";
-      options = "x-systemd.device-timeout=20,nofail";
+      options = "x-systemd.automount,x-systemd.idle-timeout=1min,x-systemd.device-timeout=20,nofail";
       after = ["nvme-auto-fluent.service"];
       requires = ["nvme-auto-fluent.service"];
       wantedBy = ["multi-user.target"];
@@ -53,6 +53,6 @@
   fileSystems."/nfs" = {
     device = "192.168.29.1:/share";
     fsType = "nfs";
-    options = ["x-systemd.automount" "noauto" "nfsvers=4.2" "proto=rdma" "port=20049" "async"];
+    options = ["x-systemd.automount" "x-systemd.idle-timeout=1min" "x-systemd.device-timeout=20" "nofail" "nfsvers=4.2" "proto=rdma" "port=20049" "async"];
   };
 }
