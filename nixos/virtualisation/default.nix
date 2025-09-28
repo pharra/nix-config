@@ -16,9 +16,11 @@
   virtualisation.docker = {
     enable = true;
     daemon.settings.features.cdi = true;
+    daemon.settings.ipv6 = true;
     rootless = {
       enable = false;
       daemon.settings.features.cdi = true;
+      daemon.settings.ipv6 = true;
       setSocketVariable = true;
     };
   };
