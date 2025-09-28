@@ -17,10 +17,12 @@
     enable = true;
     daemon.settings.features.cdi = true;
     daemon.settings.ipv6 = true;
+    daemon.settings.fixed-cidr-v6 = "fd00::/80";
     rootless = {
       enable = false;
       daemon.settings.features.cdi = true;
       daemon.settings.ipv6 = true;
+      daemon.settings.fixed-cidr-v6 = "fd00::/80";
       setSocketVariable = true;
     };
   };
