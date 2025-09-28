@@ -9,6 +9,7 @@
   ArchLinux = import ./ArchLinux.nix args;
   Windows = import ./Windows.nix args;
   Kwrt = import ./Kwrt.nix args;
+  FnOS = import ./FnOS.nix args;
 
   attach_gpu = pkgs.writeShellScriptBin "attach_gpu" ''
     nvidia_vendor="$1"
@@ -205,6 +206,7 @@ in {
       NixOS
       Windows
       Kwrt
+      FnOS
     ];
     pools = [
       {
