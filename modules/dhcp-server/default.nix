@@ -172,7 +172,7 @@ in {
         networkConfig = {
           Address = ["${network.ipv4.address}/${network.ipv4.netmask}" "${network.ipv6.address}/${network.ipv6.netmask}"];
           DNS = ["${network.ipv4.address}" "${network.ipv6.address}"];
-          # IPMasquerade = "both";
+          IPMasquerade = "both";
           ConfigureWithoutCarrier = true;
           IPv6AcceptRA = false;
           IPv6PrivacyExtensions = "no";
@@ -180,7 +180,7 @@ in {
         };
         linkConfig = {
           # or "routable" with IP addresses configured
-          ActivationPolicy = "always-up";
+          # ActivationPolicy = "always-up";
           RequiredForOnline = "no";
           # MTUBytes = "9000";
         };
