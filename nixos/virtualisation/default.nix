@@ -9,6 +9,7 @@
   environment.systemPackages = with pkgs; [
     cloud-hypervisor
     docker-compose
+    podman-compose
     distrobox
     # swtpm
   ];
