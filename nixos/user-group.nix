@@ -29,6 +29,8 @@
       "libvirtd"
       "video"
       "docker"
+      "input"
+      "uinput"
     ];
     openssh.authorizedKeys.keys = [
       # win desktop
