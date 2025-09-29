@@ -98,6 +98,9 @@ in {
 
     networking.firewall.allowPing = true;
 
+    boot.kernel.sysctl."net.ipv4.ip_forward" = "1";
+    boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = "1";
+
     # Dnsmasq is used as the DHCP server.
     users.users.dnsmasq = {
       isSystemUser = true;

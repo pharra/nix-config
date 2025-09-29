@@ -97,8 +97,6 @@ in {
   services.zfs.autoScrub.enable = true;
   services.zfs.trim.enable = true;
 
-  networking.firewall.enable = lib.mkForce false;
-
   # raid
   boot.swraid.enable = true;
   boot.swraid.mdadmConf = "ARRAY /dev/md0 metadata=1.2 spares=1 name=homelab:0 UUID=c8e5fbbe:edd3c686:a1e53f13:e3922146";
@@ -273,39 +271,6 @@ in {
           netmask = "64";
         };
       };
-    };
-  };
-
-  boot.kernel.sysctl."net.ipv4.ip_forward" = "1";
-  boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = "1";
-  networking.firewall.interfaces = {
-    "${interface.intern}" = {
-      allowedTCPPortRanges = [
-        {
-          from = 0;
-          to = 65535;
-        }
-      ];
-      allowedUDPPortRanges = [
-        {
-          from = 0;
-          to = 65535;
-        }
-      ];
-    };
-    "${interface.eth}" = {
-      allowedTCPPortRanges = [
-        {
-          from = 0;
-          to = 65535;
-        }
-      ];
-      allowedUDPPortRanges = [
-        {
-          from = 0;
-          to = 65535;
-        }
-      ];
     };
   };
 

@@ -5,31 +5,6 @@
   ...
 }: {
   services = {
-    # samba = {
-    #   enable = true;
-    #   package = pkgs.sambaFull;
-    #   extraConfig = ''
-    #     workgroup = WORKGROUP
-    #     server string = homelab
-    #     netbios name = homelab
-    #     security = user
-    #     #use sendfile = yes
-    #     #max protocol = smb2
-    #     # note: localhost is the ipv6 localhost ::1
-    #   '';
-    #   shares = {
-    #     public = {
-    #       path = "/smb/public";
-    #       browseable = "yes";
-    #       "read only" = "no";
-    #       "guest ok" = "yes";
-    #       "create mask" = "0644";
-    #       "directory mask" = "0755";
-    #       "force user" = "wf";
-    #       "force group" = "users";
-    #     };
-    #   };
-    # };
     samba-wsdd = {
       enable = true;
       extraOptions = ["--ipv4only"];
@@ -41,11 +16,6 @@
     systemPackages = with pkgs; [
       ksmbd-tools
     ];
-  };
-
-  networking.firewall = {
-    allowedTCPPorts = [445];
-    # allowedUDPPorts = [cfg.stunPort];
   };
 
   systemd.services.ksmbd = {

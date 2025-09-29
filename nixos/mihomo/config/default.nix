@@ -14,7 +14,7 @@
     allow-lan = true;
     mode = "rule";
     log-level = "warning";
-    ipv6 = false;
+    ipv6 = true;
     find-process-mode = "strict";
     external-controller = "0.0.0.0:9096";
     unified-delay = true;

@@ -2,7 +2,7 @@
   services.mihomo.config.dns = {
     enable = true;
     prefer-h3 = false;
-    ipv6 = false;
+    ipv6 = true;
     enhanced-mode = "redir-host";
     # fake-ip-range = "198.18.0.1/16";
     # fake-ip-filter = [

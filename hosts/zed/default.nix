@@ -91,8 +91,6 @@ in {
     networkmanager.unmanaged = ["*,except:interface-name:wl*"];
   };
 
-  networking.firewall.enable = lib.mkForce false;
-
   net-name = {
     enable = true;
     inherit interfaces;

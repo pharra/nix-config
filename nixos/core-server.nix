@@ -58,7 +58,7 @@
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
-  networking.firewall.enable = lib.mkDefault false;
+  networking.firewall.enable = lib.mkDefault true;
   # networking.nftables.enable = true;
 
   # Enable the OpenSSH daemon.
