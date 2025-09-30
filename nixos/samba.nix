@@ -8,6 +8,7 @@
     samba-wsdd = {
       enable = true;
       extraOptions = ["--ipv4only"];
+      # openFirewall = true;
       #hostname = "ksmbd";
     };
   };
@@ -18,6 +19,7 @@
     ];
   };
 
+  # networking.firewall.allowedTCPPorts = [ 445 ];
   systemd.services.ksmbd = {
     enable = true;
     description = "ksmbd userspace daemon";
@@ -53,26 +55,25 @@
         read only = no
         force user = sftp
         force group = users
-
-      [nix-persistent]
-      	path = /nix/persistent
-        read only = no
-        force user = wf
-        force group = wf
     '';
   };
 
   services.nfs = {
-    server.enable = true;
+    server = {
+      enable = true;
+      lockdPort = 4001;
+      mountdPort = 4002;
+      statdPort = 4000;
+    };
     settings = {
       nfsd.udp = true;
       nfsd.rdma = true;
-      nfsd.vers2 = false;
-      nfsd.vers3 = false;
-      nfsd.vers4 = true;
-      nfsd."vers4.0" = false;
-      nfsd."vers4.1" = false;
-      nfsd."vers4.2" = true;
+      # nfsd.vers2 = false;
+      # nfsd.vers3 = false;
+      # nfsd.vers4 = true;
+      # nfsd."vers4.0" = false;
+      # nfsd."vers4.1" = false;
+      # nfsd."vers4.2" = true;
     };
   };
 }

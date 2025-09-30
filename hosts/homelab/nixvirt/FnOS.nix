@@ -77,11 +77,18 @@ in {
                     };
                   }
                 ];
-            interface = {
-              type = "bridge";
-              model = {type = "virtio";};
-              source = {bridge = "br0";};
-            };
+            interface = [
+              {
+                type = "bridge";
+                model = {type = "virtio";};
+                source = {bridge = "br0";};
+              }
+              {
+                type = "bridge";
+                model = {type = "virtio";};
+                source = {bridge = "br1";};
+              }
+            ];
           };
       }
     );

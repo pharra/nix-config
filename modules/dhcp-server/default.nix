@@ -90,8 +90,20 @@ in {
       mapAttrs' (_: network: {
         name = network.interface;
         value = {
-          allowedUDPPorts = [53 67 69 547 5353];
-          allowedTCPPorts = [80];
+          # allowedTCPPorts = [80];
+          # allowedUDPPorts = [53 67 69 547 5353];
+          allowedUDPPortRanges = [
+            {
+              from = 0;
+              to = 65535;
+            }
+          ];
+          allowedTCPPortRanges = [
+            {
+              from = 0;
+              to = 65535;
+            }
+          ];
         };
       })
       cfg.networks;
@@ -175,7 +187,7 @@ in {
         networkConfig = {
           Address = ["${network.ipv4.address}/${network.ipv4.netmask}" "${network.ipv6.address}/${network.ipv6.netmask}"];
           DNS = ["${network.ipv4.address}" "${network.ipv6.address}"];
-          IPMasquerade = "both";
+          # IPMasquerade = "both";
           ConfigureWithoutCarrier = true;
           IPv6AcceptRA = false;
           IPv6PrivacyExtensions = "no";
