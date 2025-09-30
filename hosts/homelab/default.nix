@@ -364,7 +364,7 @@ in {
     package = config.boot.kernelPackages.nvidiaPackages.beta;
     # modesetting.enable = true;
     # forceFullCompositionPipeline = true;
-    open = false;
+    open = true;
     # powerManagement.enable = true;
   };
   hardware.nvidia-container-toolkit.enable = true; # for nvidia-docker
