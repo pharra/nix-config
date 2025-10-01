@@ -31,6 +31,15 @@
     }
   ];
 
+  services.flatpak.overrides = {
+    global = {
+      Context.filesystems = [
+        "xdg-config/fontconfig:ro" # fix fontconfig not working in flatpak apps
+      ];
+    };
+    "com.qq.QQ".Context.sockets = ["x11"]; # No Wayland support
+  };
+
   services.flatpak.packages = [
     {
       appId = "io.github.qier222.YesPlayMusic";
