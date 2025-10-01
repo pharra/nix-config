@@ -232,7 +232,8 @@ in {
     };
   };
 
-  networking.firewall.extraCommands = "iptables -A INPUT -i br0 -j ACCEPT";
+  # allow all incoming ipv4 traffic, since this is a homelab behind a router firewall
+  networking.firewall.extraCommands = "iptables -A INPUT -j ACCEPT";
 
   systemd.network = {
     enable = true;
