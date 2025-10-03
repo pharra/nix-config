@@ -1,21 +1,33 @@
 {...}: {
   services.mihomo.config.sniffer = {
     enable = true;
+    force-dns-mapping = true;
+    parse-pure-ip = true;
+    override-destination = true;
     sniff = {
-      HTTP = {
-        ports = [80 "8080-8880"];
-        override-destination = true;
-      };
       TLS = {
         ports = [443 8443];
+      };
+      HTTP = {
+        ports = [80 "8080-8880"];
       };
       QUIC = {
         ports = [443 8443];
       };
     };
+    force-domain = [
+      "+.netflix.com"
+      "+.nflxvideo.net"
+      "+.amazonaws.com"
+      "+.media.dssott.com"
+    ];
     skip-domain = [
+      "+.apple.com"
       "Mijia Cloud"
-      "+.push.apple.com"
+      "dlg.io.mi.com"
+      "+.oray.com"
+      "+.sunlogin.net"
+      "geosite:cn"
     ];
   };
 }

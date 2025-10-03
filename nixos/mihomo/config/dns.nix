@@ -48,6 +48,9 @@
       "rule-set:cn_domain" = [
         "https://223.5.5.5/dns-query"
       ];
+      "geosite:cn,apple,private" = [
+        "https://223.5.5.5/dns-query"
+      ];
     };
   };
 }

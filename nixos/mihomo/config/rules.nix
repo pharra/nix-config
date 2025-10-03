@@ -14,7 +14,16 @@
 in {
   services.mihomo.config = {
     rules = [
-      # 按照你的顺序和策略
+      "GEOSITE,private,DIRECT"
+      "GEOSITE,tailscale,DIRECT"
+      "GEOSITE,tracker,DIRECT"
+      "GEOSITE,category-pt,DIRECT"
+      "GEOSITE,cn,DIRECT"
+      "GEOSITE,tmdb,节点选择"
+      "GEOSITE,category-container,节点选择"
+      "GEOSITE,python,节点选择"
+      "GEOSITE,category-porn,节点选择"
+      "GEOSITE,gfw,节点选择"
       "DOMAIN-SUFFIX,int4byte.org,DIRECT"
       "RULE-SET,github_domain,Github"
       "RULE-SET,twitter_domain,Twitter"
@@ -28,6 +37,7 @@ in {
       "RULE-SET,cn_domain,DIRECT"
       "RULE-SET,geolocation-!cn,其他"
 
+      "GEOIP,cn,DIRECT,no-resolve"
       "RULE-SET,private_ip,DIRECT,no-resolve"
       "RULE-SET,google_ip,Google"
       "RULE-SET,netflix_ip,NETFLIX"
