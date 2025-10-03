@@ -332,6 +332,9 @@ in {
 
   hardware.graphics = {
     enable = true;
+    extraPackages = with pkgs; [
+      nvidia-vaapi-driver
+    ];
   };
 
   # This value determines the NixOS release from which the default

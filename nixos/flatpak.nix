@@ -37,7 +37,11 @@
         "xdg-config/fontconfig:ro" # fix fontconfig not working in flatpak apps
       ];
     };
-    "com.qq.QQ".Context.sockets = ["x11"]; # No Wayland support
+    "com.qq.QQ".Context.sockets = [
+      "x11"
+      "!wayland"
+      "!fallback-x11"
+    ]; # No Wayland support
   };
 
   services.flatpak.packages = [
@@ -45,10 +49,10 @@
       appId = "io.github.qier222.YesPlayMusic";
       origin = "flathub";
     }
-    {
-      appId = "com.microsoft.Edge";
-      origin = "flathub";
-    }
+    # {
+    #   appId = "com.microsoft.Edge";
+    #   origin = "flathub";
+    # }
     {
       appId = "org.localsend.localsend_app";
       origin = "flathub";
