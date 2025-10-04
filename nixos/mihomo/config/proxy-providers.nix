@@ -20,6 +20,8 @@ in {
         url = config.sops.placeholder."mihomo/providers/yiyuan";
         path = "./proxy_provider/providers-yiyuan.yaml";
         override.additional-prefix = "[YY]";
+        override.tfo = false;
+        override.mptcp = false;
       };
     "Node-LJL" =
       NodeParam
@@ -27,6 +29,8 @@ in {
         url = config.sops.placeholder."mihomo/providers/llg";
         path = "./proxy_provider/providers-llg.yaml";
         override.additional-prefix = "[Lite]";
+        override.tfo = false;
+        override.mptcp = false;
       };
     "Node-LJC" =
       NodeParam
@@ -34,6 +38,8 @@ in {
         url = config.sops.placeholder."mihomo/providers/l666";
         path = "./proxy_provider/providers-666.yaml";
         override.additional-prefix = "[垃圾场]";
+        override.tfo = false;
+        override.mptcp = false;
       };
     "Node-paofu" =
       NodeParam
@@ -41,6 +47,8 @@ in {
         url = config.sops.placeholder."mihomo/providers/paofu";
         path = "./proxy_provider/providers-paofu.yaml";
         override.additional-prefix = "[泡芙]";
+        override.tfo = false;
+        override.mptcp = false;
       };
   };
 }
