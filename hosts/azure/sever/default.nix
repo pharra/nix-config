@@ -51,13 +51,13 @@
       settingsFile = config.age.secrets.xray_server_conf.path;
     };
     hysteria = {
-      enable = true;
+      enable = false;
       settingsFile = config.age.secrets.hysteria_server_conf.path;
       user = "caddy";
       group = "caddy";
     };
     singbox = {
-      enable = true;
+      enable = false;
       settingsFile = config.age.secrets.singbox_server_conf.path;
       user = "caddy";
       group = "caddy";

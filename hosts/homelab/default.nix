@@ -65,6 +65,8 @@ in {
 
     ../../nixos/mihomo
 
+    ../../nixos/azure-tools
+
     ./nixvirt
   ];
 

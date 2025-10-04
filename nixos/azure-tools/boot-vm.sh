@@ -45,15 +45,11 @@ usage() {
   echo '-s --vm-size        See https://azure.microsoft.com/pricing/details/virtual-machines/ for size info.'
   echo '                    Default value: "Standard_DS1_v2"'
   echo ''
-  echo '-d --os-size        OS disk size in GB to create.'
+  echo '-d --os-size-gb     OS disk size in GB to create.'
   echo '                    Default value: "42"'
   echo ''
   echo '-l --location       Values from `az account list-locations`.'
-  echo '                    Default value: "westus2".'
-  echo ''
-  echo 'NOTE: Brand new SSH  keypair is going to  be generated. To'
-  echo '      provide  your own,  edit  the very  last command  in'
-  echo '      `./boot-vm.sh`.'
+  echo '                    Default value: "westeurope".'
   echo ''
 };
 
@@ -88,7 +84,7 @@ while [ $# -gt 0 ]; do
     -s|--vm-size)
       vm_size="$2"
       ;;
-    -d|--os-disk-size-gb)
+    -d|--os-size-gb)
       os_size="$2"
       ;;
     *)
@@ -115,14 +111,13 @@ fi
 # DEFAULTS                                         #
 ####################################################
 
-location_d="${location:-"westus2"}"
+location_d="${location:-"westeurope"}"
 os_size_d="${os_size:-"42"}"
 vm_size_d="${vm_size:-"Standard_DS1_v2"}"
 
 # https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
 set -euxo pipefail
 
-# Make resource group exists
 if ! az group show --resource-group "${resource_group}" &>/dev/null
 then
   az group create              \
@@ -130,7 +125,6 @@ then
     --location "${location_d}"
 fi
 
-# (optional) identity
 if ! az identity show --name "${resource_group}-identity" --resource-group "${resource_group}" &>/dev/stderr
 then
   az identity create                    \
@@ -138,8 +132,6 @@ then
     --resource-group "${resource_group}"
 fi
 
-# (optional) role assignment, to the resource group;
-# bad but not really great alternatives
 principal_id="$(
   az identity show                       \
     --name "${resource_group}-identity"  \
@@ -154,11 +146,6 @@ group_id="$(
     --query "[id]"
 )"
 
-# As long as the `az role assignment` command fails,
-# the loop will continue
-# https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_09_03.html
-# https://linuxize.com/post/bash-until-loop/
-# TODO Is the loop really needed?
 until assign_role;
 do
   echo "Retrying role assignment..."
@@ -182,10 +169,7 @@ az vm create                           \
   --size "${vm_size_d}"                \
   --os-disk-size-gb "${os_size_d}"     \
   --image "${img_id}"                  \
-  --admin-username "${USER}"           \
   --location "${location_d}"           \
   --storage-sku "Premium_LRS"          \
-  --generate-ssh-keys
-  # This only works if `ssh-agent` is running
-  # --ssh-key-values "$(ssh-add -L)"
-  # TODO Add key options to script
+  --public-ip-sku Standard             \
+  --ssh-key-values @~/.ssh/id_ed25519.pub

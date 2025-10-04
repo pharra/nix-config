@@ -149,9 +149,6 @@
     userfullname = "Feng Wang";
     useremail = "typechasing@gmail.com";
 
-    # azure vm config
-    is_azure = true;
-
     x64_system = "x86_64-linux";
     allSystems = [x64_system];
 
@@ -222,7 +219,6 @@
         builds = ["base"];
         nixos-modules = [./hosts/azure];
         specialArgs = {
-          inherit is_azure;
           domain = "${region}.azure.int4byte.org";
         };
       };
@@ -365,6 +361,10 @@
     };
 
     inherit legacyPackages;
+
+    packages = nixpkgs.lib.genAttrs allSystems (
+      system: {azure-image = machinesNixosConfigurations.azure_jp_base.config.system.build.azureImage;}
+    );
 
     # format the nix code in this flake
     # alejandra is a nix formatter with a beautiful output
