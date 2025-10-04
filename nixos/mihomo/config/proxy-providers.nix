@@ -21,19 +21,19 @@ in {
         path = "./proxy_provider/providers-yiyuan.yaml";
         override.additional-prefix = "[YY]";
       };
-    "Node-LLG" =
+    "Node-LJL" =
       NodeParam
       // {
         url = config.sops.placeholder."mihomo/providers/llg";
         path = "./proxy_provider/providers-llg.yaml";
-        override.additional-prefix = "[LLG]";
+        override.additional-prefix = "[Lite]";
       };
-    "Node-666" =
+    "Node-LJC" =
       NodeParam
       // {
         url = config.sops.placeholder."mihomo/providers/l666";
         path = "./proxy_provider/providers-666.yaml";
-        override.additional-prefix = "[666]";
+        override.additional-prefix = "[垃圾场]";
       };
     "Node-paofu" =
       NodeParam
