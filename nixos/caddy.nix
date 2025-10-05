@@ -6,18 +6,7 @@
   inputs,
   mysecrets,
   ...
-} @ args: let
-  caddy-custom = pkgs.caddy.override {
-    externalPlugins = [
-      {
-        name = "cloudflare";
-        repo = "github.com/caddy-dns/cloudflare";
-        version = "737bf003fe8af81814013a01e981dc8faea44c07";
-      }
-    ];
-    vendorHash = "sha256-uyEjAktinJhV3u5xFWAHbBPAX5NZ5utLiCwUVgZVjGw=";
-  };
-in {
+} @ args: {
   age.secrets."caddy_homelab_conf" = {
     file = "${mysecrets}/caddy_homelab_conf.age";
     mode = "777";
@@ -25,13 +14,12 @@ in {
     symlink = false;
   };
 
-  environment.systemPackages = with pkgs; [
-    sub-store-cli
-  ];
-
   services.caddy = {
     enable = true;
-    package = caddy-custom;
+    package = pkgs.caddy.withPlugins {
+      plugins = ["github.com/caddy-dns/cloudflare@v0.2.1"];
+      hash = "sha256-j+xUy8OAjEo+bdMOkQ1kVqDnEkzKGTBIbMDVL7YDwDY=";
+    };
     configFile = config.age.secrets.caddy_homelab_conf.path;
   };
 

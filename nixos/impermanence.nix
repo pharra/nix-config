@@ -15,6 +15,7 @@
       "/etc/NetworkManager/system-connections"
       "/etc/ksmbd"
       "/etc/caddy"
+      "/etc/v2raya"
       #"/smb"
     ];
     files = [

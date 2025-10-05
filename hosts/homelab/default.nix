@@ -235,7 +235,7 @@ in {
   };
 
   # allow all incoming ipv4 traffic, since this is a homelab behind a router firewall
-  networking.firewall.extraCommands = "iptables -A INPUT -j ACCEPT";
+  networking.firewall.extraCommands = lib.mkIf (config.networking.nftables.enable != true) "iptables -A INPUT -j ACCEPT";
 
   systemd.network = {
     enable = true;
@@ -249,23 +249,17 @@ in {
         };
       };
 
-      "30-br1" = {
+      "20-br1" = {
         netdevConfig = {
           Kind = "bridge";
           Name = "br1";
         };
       };
 
-      "30-ib" = {
+      "20-br2" = {
         netdevConfig = {
           Kind = "bridge";
-          Name = "ib";
-        };
-      };
-      "30-eth" = {
-        netdevConfig = {
-          Kind = "bridge";
-          Name = "eth";
+          Name = "br2";
         };
       };
     };
@@ -283,9 +277,22 @@ in {
         linkConfig.RequiredForOnline = "enslaved";
       };
 
-      # Configure the bridge for its desired function
       "40-br0" = {
+        # Configure the bridge for its desired function
         matchConfig.Name = "br0";
+        bridgeConfig = {};
+        networkConfig = {
+          # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
+          IPv6AcceptRA = false;
+        };
+        linkConfig = {
+          ActivationPolicy = "always-up";
+        };
+      };
+
+      # Configure the bridge for its desired function
+      "40-br2" = {
+        matchConfig.Name = "br2";
         bridgeConfig = {};
         networkConfig = {
           # start a DHCP Client for IPv4 Addressing/Routing
@@ -318,7 +325,7 @@ in {
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
     networkmanager.enable = true;
-    networkmanager.unmanaged = ["*,except:interface-name:wl*"];
+    networkmanager.unmanaged = ["interface-name:*,except:interface-name:wl*"];
   };
 
   # for Nvidia GPU

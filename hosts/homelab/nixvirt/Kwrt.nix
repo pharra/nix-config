@@ -48,13 +48,20 @@ in {
         devices =
           Kwrt.devices
           // {
-            interface = {
-              type = "bridge";
-              model = {type = "virtio";};
-              source = {bridge = "br0";};
-            };
+            interface = [
+              {
+                type = "bridge";
+                model = {type = "virtio";};
+                source = {bridge = "br0";};
+              }
+              {
+                type = "bridge";
+                model = {type = "virtio";};
+                source = {bridge = "br2";};
+              }
+            ];
           };
       }
     );
-  active = false;
+  active = true;
 }

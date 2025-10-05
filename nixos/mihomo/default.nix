@@ -11,9 +11,10 @@
   #     webui = pkgs.metacubexd;
   #   };
   # };
-
+  services.v2raya.enable = true;
+  services.v2raya.cliPackage = pkgs.xray;
   services.mihomo = {
-    enable = true;
+    enable = false;
     tunMode = true;
     webui = pkgs.metacubexd;
   };

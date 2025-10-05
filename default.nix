@@ -20,8 +20,6 @@ in rec {
   spdk-python = spdk_pkgs.spdk-python;
   xiraid = pkgs.callPackage ./pkgs/xiraid {};
   mcontrolcenter = pkgs.libsForQt5.callPackage ./pkgs/mcontrolcenter/default.nix {};
-  caddy = pkgs.callPackage ./pkgs/caddy {};
-  sub-store-cli = pkgs.callPackage ./pkgs/sub-store-cli {};
   aosp = pkgs.callPackage ./pkgs/aosp {};
   mlnx_ofed = pkgs.callPackage ./pkgs/mlnx_ofed {kernel = pkgs.linuxPackages_latest.kernel;};
   mlnx4_ofed = pkgs.callPackage ./pkgs/mlnx4_ofed {kernel = pkgs.linuxPackages_5_15.kernel;};
