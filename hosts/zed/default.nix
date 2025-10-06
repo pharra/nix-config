@@ -55,7 +55,7 @@ in {
 
     ../../nixos/virtualisation
 
-    ../../nixos/mihomo
+    ../../nixos/proxy
   ];
 
   # supported fil systems, so we can mount any removable disks with these filesystems

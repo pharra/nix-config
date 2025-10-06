@@ -1,6 +1,10 @@
-{...}: {
-  networking.nameservers = ["114.114.114.114"];
-  services.resolved = {
+{
+  lib,
+  config,
+  ...
+}: {
+  networking.nameservers = lib.mkIf config.services.mihomo.enable ["114.114.114.114"];
+  services.resolved = lib.mkIf config.services.mihomo.enable {
     domains = ["~."];
   };
   services.mihomo.config.dns = {

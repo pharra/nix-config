@@ -63,7 +63,7 @@ in {
     ../../nixos/virtualisation
     ../../nixos/scripts.nix
 
-    ../../nixos/mihomo
+    ../../nixos/proxy
 
     ../../nixos/azure-tools
 

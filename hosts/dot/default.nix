@@ -33,7 +33,7 @@ in {
 
     ./nixvirt
 
-    ../../nixos/mihomo
+    ../../nixos/proxy
   ];
 
   net-name = {
