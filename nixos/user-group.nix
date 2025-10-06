@@ -9,6 +9,9 @@
     "${username}" = {
       gid = 1000;
     };
+    users = {
+      gid = 100;
+    };
     docker = {};
     wireshark = {};
   };

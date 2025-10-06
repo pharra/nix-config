@@ -53,7 +53,7 @@
       [share]
       	path = /share
         read only = no
-        force user = sftp
+        force user = wf
         force group = users
     '';
   };

@@ -8,14 +8,10 @@
 } @ args: {
   services.sonarr = {
     enable = false;
-    user = "sftp";
-    group = "sftp";
   };
 
   services.radarr = {
     enable = false;
-    user = "sftp";
-    group = "sftp";
   };
 
   services.prowlarr = {
@@ -24,8 +20,6 @@
 
   services.jellyfin = {
     enable = false;
-    user = "sftp";
-    group = "sftp";
   };
 
   services.jellyseerr = {

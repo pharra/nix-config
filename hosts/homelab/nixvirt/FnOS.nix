@@ -82,11 +82,13 @@ in {
                 type = "bridge";
                 model = {type = "virtio";};
                 source = {bridge = "br0";};
+                mac = {address = "52:54:00:ef:50:0c";};
               }
               {
                 type = "bridge";
                 model = {type = "virtio";};
                 source = {bridge = "br1";};
+                mac = {address = "52:54:00:3f:35:2c";};
               }
             ];
           };
