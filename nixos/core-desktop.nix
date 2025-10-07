@@ -65,6 +65,7 @@
       nerd-fonts.iosevka
 
       sarasa-gothic
+      vista-fonts-chs # Microsoft YaHei
     ];
 
     # user defined fonts

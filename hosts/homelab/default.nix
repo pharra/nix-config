@@ -136,48 +136,6 @@ in {
         RandomizedDelaySec = "1h";
       };
     };
-
-    aliyundrive_android = {
-      user = "wf";
-      repository = "rclone:aliyundrive:restic";
-      initialize = true; # initializes the repo, don't set if you want manual control
-      passwordFile = config.age.secrets.restic_password.path;
-      paths = ["/share/sftp/Android"];
-      rcloneConfigFile = config.age.secrets.rclone_config.path;
-      timerConfig = {
-        OnCalendar = "04:00";
-        Persistent = true;
-        RandomizedDelaySec = "1h";
-      };
-    };
-
-    pan123_android = {
-      user = "wf";
-      repository = "rclone:pan123:restic";
-      initialize = true; # initializes the repo, don't set if you want manual control
-      passwordFile = config.age.secrets.restic_password.path;
-      paths = ["/share/sftp/Android"];
-      rcloneConfigFile = config.age.secrets.rclone_config.path;
-      timerConfig = {
-        OnCalendar = "04:00";
-        Persistent = true;
-        RandomizedDelaySec = "1h";
-      };
-    };
-
-    quark_android = {
-      user = "wf";
-      repository = "rclone:quark:restic";
-      initialize = true; # initializes the repo, don't set if you want manual control
-      passwordFile = config.age.secrets.restic_password.path;
-      paths = ["/share/sftp/Android"];
-      rcloneConfigFile = config.age.secrets.rclone_config.path;
-      timerConfig = {
-        OnCalendar = "04:00";
-        Persistent = true;
-        RandomizedDelaySec = "1h";
-      };
-    };
   };
 
   systemd.services = {
