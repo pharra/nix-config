@@ -362,6 +362,8 @@
 
     inherit legacyPackages;
 
+    checks = machinesNixosConfigurations;
+
     packages = nixpkgs.lib.genAttrs allSystems (
       system: {azure-image = machinesNixosConfigurations.azure_jp_base.config.system.build.azureImage;}
     );

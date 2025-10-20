@@ -117,6 +117,7 @@ in {
       };
 
       "40-br0" = {
+        enable = true;
         matchConfig.Name = "br0";
         bridgeConfig = {};
         networkConfig = {
@@ -145,7 +146,7 @@ in {
           # start a DHCP Client for IPv4 Addressing/Routing
           DHCP = "ipv4";
           # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
-          IPv6AcceptRA = true;
+          IPv6AcceptRA = false;
           Domains = ["mlx"];
         };
         dhcpV4Config = {

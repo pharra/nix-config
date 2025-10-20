@@ -22,10 +22,10 @@
     displayManager.sddm.enableHidpi = true;
     displayManager.sessionPackages = [pkgs.distrobox-session];
     desktopManager.plasma6.enable = true; # Window Manager
-    # displayManager.autoLogin = {
-    #   enable = true;
-    #   user = "${username}";
-    # };
+    displayManager.autoLogin = {
+      enable = true;
+      user = "${username}";
+    };
   };
 
   environment.systemPackages = with pkgs; [

@@ -24,4 +24,5 @@ in rec {
   mlnx_ofed = pkgs.callPackage ./pkgs/mlnx_ofed {kernel = pkgs.linuxPackages_latest.kernel;};
   mlnx4_ofed = pkgs.callPackage ./pkgs/mlnx4_ofed {kernel = pkgs.linuxPackages_5_15.kernel;};
   surface-dtx-daemon = pkgs.callPackage ./pkgs/surface-dtx-daemon {};
+  audio-relay = pkgs.callPackage ./pkgs/audiorelay {};
 }

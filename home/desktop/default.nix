@@ -21,7 +21,7 @@
 
     (microsoft-edge.overrideAttrs (oldAttrs: rec {
       buildInputs = oldAttrs.buildInputs ++ [makeWrapper];
-      postInstall = (oldAttrs.postInstall or "") + "wrapProgram $out/bin/microsoft-edge --add-flags \"--enable-features=AcceleratedVideoDecodeLinuxGL\"";
+      postInstall = (oldAttrs.postInstall or "") + "wrapProgram $out/bin/microsoft-edge --add-flags \"--enable-features=AcceleratedVideoDecodeLinuxGL,VaapiOnNvidiaGPUs\"";
     }))
   ];
 

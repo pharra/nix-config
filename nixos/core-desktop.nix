@@ -85,18 +85,8 @@
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
-  networking.firewall.enable = true;
+  networking.firewall.enable = false;
   systemd.services.NetworkManager-wait-online.enable = false;
-
-  programs.nekoray = {
-    enable = true;
-    tunMode.enable = true; # enable tun mode
-  };
-
-  programs.clash-verge = {
-    enable = true;
-    serviceMode = true;
-  };
 
   # PipeWire is a new low-level multimedia framework.
   # It aims to offer capture and playback for both audio and video with minimal latency.
@@ -115,6 +105,7 @@
     # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
+  services.audio-relay.enable = true;
   # rtkit is optional but recommended
   security.rtkit.enable = true;
   # Disable pulseaudio, it conflicts with pipewire too.

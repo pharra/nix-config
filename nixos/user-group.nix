@@ -22,6 +22,10 @@
     initialHashedPassword = lib.mkForce "$6$569jdPP15dvw4JDf$enDHnDIKO3UUo3bFdOow5ugnzsksJmAeUpcrKIUKjFh5gB5fZWvknDdVsuYG/n/fPdReo5d3Iw2vKMMXtTq1u.";
     description = username;
     uid = 1000;
+    # required for auto start before user login
+    linger = true;
+    # required for rootless container with multiple users
+    autoSubUidGidRange = true;
     extraGroups = [
       username
       "users"

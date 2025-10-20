@@ -67,6 +67,8 @@ in {
 
     ../../nixos/azure-tools
 
+    ../../nixos/archlinux
+
     ./nixvirt
   ];
 
@@ -168,6 +170,7 @@ in {
           pool = "192.168.29.50,192.168.29.150";
         };
         ipv6 = {
+          enable = false; # disable IPv6 for this network
           address = "fd00:0:29::1";
           netmask = "64";
           pool = "::";
@@ -184,6 +187,7 @@ in {
           pool = "192.168.28.50,192.168.28.150";
         };
         ipv6 = {
+          enable = false; # disable IPv6 for this network
           address = "fd00:0:28::1";
           pool = "::";
           netmask = "64";
@@ -191,9 +195,6 @@ in {
       };
     };
   };
-
-  # allow all incoming ipv4 traffic, since this is a homelab behind a router firewall
-  networking.firewall.extraCommands = lib.mkIf (config.networking.nftables.enable != true) "iptables -A INPUT -j ACCEPT";
 
   systemd.network = {
     enable = true;
@@ -231,7 +232,7 @@ in {
       };
       "30-eno2" = {
         matchConfig.Name = "eno2";
-        networkConfig.Bridge = "br1";
+        networkConfig.Bridge = "br0";
         linkConfig.RequiredForOnline = "enslaved";
       };
 
@@ -258,6 +259,7 @@ in {
           # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
           IPv6AcceptRA = true;
           Domains = ["lan"];
+          ConfigureWithoutCarrier = true;
         };
         dhcpV4Config = {
           UseDomains = true;
@@ -268,6 +270,7 @@ in {
         };
         linkConfig = {
           # or "routable" with IP addresses configured
+          ActivationPolicy = "always-up";
           RequiredForOnline = "routable";
         };
       };
@@ -299,9 +302,9 @@ in {
 
   hardware.graphics = {
     enable = true;
-    extraPackages = with pkgs; [
-      nvidia-vaapi-driver
-    ];
+    # extraPackages = with pkgs; [
+    #   nvidia-vaapi-driver
+    # ];
   };
 
   # This value determines the NixOS release from which the default

@@ -2,6 +2,7 @@
   lib,
   pkgs,
   deploy-rs,
+  config,
   ...
 }: {
   ###################################################################################
@@ -59,6 +60,8 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   networking.firewall.enable = lib.mkDefault true;
+  # allow all incoming ipv4 traffic, since this is a homelab behind a router firewall
+  networking.firewall.extraCommands = lib.mkIf (config.networking.nftables.enable != true) "iptables -A INPUT -j ACCEPT";
   networking.nftables.enable = false;
 
   # Enable the OpenSSH daemon.

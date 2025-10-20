@@ -24,6 +24,11 @@ with lib; let
 
   ipOptions = {
     options = {
+      enable = mkOption {
+        description = "Enable this IP configuration";
+        type = types.bool;
+        default = true;
+      };
       address = mkOption {
         type = types.str;
       };
@@ -43,6 +48,17 @@ with lib; let
         type = types.str;
       };
 
+      enableDnsmasq = mkOption {
+        description = "Enable Dnsmasq for this network";
+        type = types.bool;
+        default = true;
+      };
+
+      masquerade = mkOption {
+        description = "IP Masquerade";
+        type = types.str;
+        default = "no";
+      };
       interface = mkOption {
         description = "Name of the network interface to use";
         type = types.str;
@@ -120,21 +136,28 @@ in {
       description = "Dnsmasq daemon user";
     };
     users.groups.dnsmasq = {};
-    systemd.services = listToAttrs (forEach (attrValues cfg.networks) (
+    systemd.services = listToAttrs (forEach (filter (n: n.enableDnsmasq != false) (attrValues cfg.networks)) (
       network: let
         iface = network.interface;
+        hostrecord =
+          if (network.ipv6.enable == true)
+          then "${network.name},${network.domain},${network.ipv4.address},${network.ipv6.address}"
+          else "${network.name},${network.domain},${network.ipv4.address}";
         stateDir = "/var/lib/dnsmasq-${iface}";
         dnsmasqConf = settingsFormat.generate "dnsmasq-${iface}.conf" {
           interface = [iface];
           enable-tftp = true;
-          dhcp-range = [
-            "interface:${iface},${network.ipv4.pool}"
-            "${network.ipv6.pool},constructor:${iface},ra-stateless"
+          dhcp-range = lib.concatLists [
+            ["interface:${iface},${network.ipv4.pool}"]
+            (lib.optional network.ipv6.enable ["${network.ipv6.pool},constructor:${iface},ra-stateless"])
           ];
-          listen-address = "${network.ipv4.address},${network.ipv6.address}";
-          dhcp-option = [
-            "interface:${iface},6,${network.ipv4.address}"
-            "interface:${iface},option6:dns-server,[${network.ipv6.address}]"
+          listen-address = lib.concatLists [
+            ["${network.ipv4.address}"]
+            (lib.optional network.ipv6.enable ["${network.ipv6.address}"])
+          ];
+          dhcp-option = lib.concatLists [
+            ["interface:${iface},6,${network.ipv4.address}"]
+            (lib.optional network.ipv6.enable ["interface:${iface},option6:dns-server,[${network.ipv6.address}]"])
           ];
           except-interface = ["lo"];
           bind-interfaces = true;
@@ -148,7 +171,7 @@ in {
           expand-hosts = true;
           no-hosts = true;
           server = "114.114.114.114";
-          host-record = ["homelab,homelab.${network.domain},${network.ipv4.address},${network.ipv6.address}"];
+          host-record = [hostrecord];
         };
       in {
         name = "dnsmasq-${iface}";
@@ -185,9 +208,15 @@ in {
         matchConfig.Name = "${network.interface}";
         bridgeConfig = {};
         networkConfig = {
-          Address = ["${network.ipv4.address}/${network.ipv4.netmask}" "${network.ipv6.address}/${network.ipv6.netmask}"];
-          DNS = ["${network.ipv4.address}" "${network.ipv6.address}"];
-          # IPMasquerade = "both";
+          Address = lib.concatLists [
+            ["${network.ipv4.address}/${network.ipv4.netmask}"]
+            (lib.optional network.ipv6.enable ["${network.ipv6.address}/${network.ipv6.netmask}"])
+          ];
+          DNS = lib.concatLists [
+            ["${network.ipv4.address}"]
+            (lib.optional network.ipv6.enable ["${network.ipv6.address}"])
+          ];
+          IPMasquerade = network.masquerade;
           ConfigureWithoutCarrier = true;
           IPv6AcceptRA = false;
           IPv6PrivacyExtensions = "no";
@@ -195,7 +224,7 @@ in {
         };
         linkConfig = {
           # or "routable" with IP addresses configured
-          # ActivationPolicy = "always-up";
+          ActivationPolicy = "always-up";
           RequiredForOnline = "no";
           # MTUBytes = "9000";
         };
