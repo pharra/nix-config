@@ -18,4 +18,5 @@
   dhcp-server-module = import ./dhcp-server;
   audio-relay-module = import ./audio-relay;
   netns-module = import ./netns;
+  sparkle-module = import ./sparkle;
 }

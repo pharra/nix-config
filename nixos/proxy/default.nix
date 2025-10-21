@@ -13,6 +13,12 @@
     webui = pkgs.metacubexd;
   };
 
+  programs.sparkle = {
+    enable = true;
+    tunMode = true; # enable tun mode
+    autoStart = true;
+  };
+
   programs.nekoray = {
     enable = true;
     tunMode.enable = true; # enable tun mode
