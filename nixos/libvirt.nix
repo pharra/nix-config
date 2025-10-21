@@ -18,15 +18,10 @@
       # hanging this option to false may cause file permission issues for existing guests.
       # To fix these, manually change ownership of affected files in /var/lib/libvirt/qemu to qemu-libvirtd.
       qemu.runAsRoot = true;
-      qemu.ovmf.enable = true;
       qemu.swtpm.enable = true;
-      qemu.ovmf.packages = [pkgs.OVMFFull.fd];
       onShutdown = "shutdown";
       qemu.verbatimConfig = ''
         namespaces = []
-        nvram = [
-        "${pkgs.OVMFFull.fd}/FV/OVMF_CODE.ms.fd:${pkgs.OVMFFull.fd}/FV/OVMF_VARS.ms.fd"
-        ]
         cgroup_device_acl = [
           "/dev/null", "/dev/full", "/dev/zero",
           "/dev/random", "/dev/urandom",
