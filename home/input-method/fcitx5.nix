@@ -17,6 +17,7 @@
 in {
   home.file.".config/fcitx5/profile".source = ./profile;
   home.file.".config/fcitx5/profile-bak".source = ./profile; # used for backup
+  home.file.".config/fcitx5/conf/classicui.conf".source = ./classicui.conf;
 
   xdg.dataFile."fcitx5/rime" = {
     source = merged-rime-config;
@@ -36,5 +37,6 @@ in {
   # so we need to remove it before everytime we rebuild the config
   home.activation.removeExistingFcitx5Profile = lib.hm.dag.entryBefore ["checkLinkTargets"] ''
     rm -f "${config.xdg.configHome}/fcitx5/profile"
+    rm -f "${config.xdg.configHome}/fcitx5/conf/classicui.conf"
   '';
 }
