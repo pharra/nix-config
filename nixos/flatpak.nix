@@ -23,11 +23,11 @@
   services.flatpak.remotes = [
     {
       name = "flathub";
-      location = "https://mirror.sjtu.edu.cn/flathub";
+      location = "https://dl.flathub.org/repo";
     }
     {
-      name = "flathub-origin";
-      location = "https://dl.flathub.org/repo";
+      name = "flathub-sjtu";
+      location = "https://mirror.sjtu.edu.cn/flathub";
     }
   ];
 
