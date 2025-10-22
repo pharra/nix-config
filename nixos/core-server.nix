@@ -145,6 +145,29 @@
 
   networking.timeServers = ["ntp.aliyun.com"];
 
+  # zsh configuration
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestions.enable = true;
+    vteIntegration = true;
+    histSize = 1048576;
+    syntaxHighlighting.enable = true;
+
+    ohMyZsh = {
+      enable = true;
+      plugins = [
+        "docker"
+        "git"
+        "golang"
+        "systemd"
+        "git-auto-fetch"
+        "history-substring-search"
+      ];
+      theme = "candy";
+    };
+  };
+
   # for power management
   # services.upower.enable = true;
   # powerManagement.enable = true;
