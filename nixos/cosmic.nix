@@ -3,10 +3,6 @@
   username,
   ...
 }: {
-  programs = {
-    zsh.enable = true;
-  };
-
   services.blueman.enable = true;
 
   services.desktopManager.cosmic.enable = true;

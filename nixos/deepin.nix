@@ -3,11 +3,6 @@
   username,
   ...
 }: {
-  programs = {
-    zsh.enable = true;
-    # dconf.enable = true;
-  };
-
   services = {
     xserver = {
       enable = true;
