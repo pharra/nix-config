@@ -262,7 +262,7 @@
       {
         name = "zed";
         builds = ["kde" "gnome" "cosmic" "deepin"];
-        hostname = "zed";
+        hostname = "zed.mlx";
         nixos-modules = [./hosts/zed];
         specialArgs = {
           boot_from_network = false;
@@ -365,12 +365,15 @@
     checks = nixpkgs.lib.genAttrs ["x86_64-linux"] (
       system: let
         inherit (nixpkgs) lib;
-        filteredConfigs = lib.filterAttrs
+        filteredConfigs =
+          lib.filterAttrs
           (name: cfg: lib.elem name ["zed_kde" "homelab_kde"] && cfg.pkgs.system == system)
           self.nixosConfigurations;
-        nixosMachines = lib.mapAttrs' (
-          name: config: lib.nameValuePair "nixos-${name}" config.config.system.build.toplevel
-        ) filteredConfigs;
+        nixosMachines =
+          lib.mapAttrs' (
+            name: config: lib.nameValuePair "nixos-${name}" config.config.system.build.toplevel
+          )
+          filteredConfigs;
       in
         nixosMachines
     );
