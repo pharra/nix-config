@@ -7,8 +7,8 @@
 } @ args: let
   netns = "openwrt";
   openwrtImage = pkgs.fetchurl {
-    url = "https://github.com/pharra/OpenWrt-K/releases/download/v2025.10.22-0(x86-64)-(v24.10.3)-x86_64/openwrt-x86-64-generic-squashfs-combined.img.gz";
-    hash = "sha256-iSMsNsW+j7li882Z9wKLpd27iSCBf+3eNJ4OIh8ZFoc=";
+    url = "https://github.com/pharra/OpenWrt-K/releases/download/v2025.10.23-0(x86-64)-(v24.10.3)-x86_64/openwrt-x86-64-generic-squashfs-combined.img.gz";
+    hash = "sha256-SNoWBlHvgCqbNaA6SR85puUj6TsrS2OFnV0tezr5p4s=";
   };
 
   Kwrt = import ./Kwrt.nix args;
