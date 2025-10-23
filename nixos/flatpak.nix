@@ -49,10 +49,10 @@
       appId = "io.github.qier222.YesPlayMusic";
       origin = "flathub";
     }
-    # {
-    #   appId = "com.microsoft.Edge";
-    #   origin = "flathub";
-    # }
+    {
+      appId = "com.microsoft.Edge";
+      origin = "flathub";
+    }
     {
       appId = "org.localsend.localsend_app";
       origin = "flathub";
