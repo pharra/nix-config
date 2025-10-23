@@ -55,8 +55,6 @@
       # 思源系列字体是 Adobe 主导的。其中汉字部分被称为「思源黑体」和「思源宋体」，是由 Adobe + Google 共同开发的
       source-sans # 无衬线字体，不含汉字。字族名叫 Source Sans 3 和 Source Sans Pro，以及带字重的变体，加上 Source Sans 3 VF
       source-serif # 衬线字体，不含汉字。字族名叫 Source Code Pro，以及带字重的变体
-      source-han-sans # 思源黑体
-      source-han-serif # 思源宋体
 
       # nerdfonts
       nerd-fonts.symbols-only
@@ -65,15 +63,14 @@
       nerd-fonts.iosevka
 
       sarasa-gothic
-      vista-fonts-chs # Microsoft YaHei
     ];
 
     # user defined fonts
     # the reason there's Noto Color Emoji everywhere is to override DejaVu's
     # B&W emojis that would sometimes show instead of some Color emojis
     fontconfig.defaultFonts = {
-      serif = ["Sarasa UI SC" "Source Han Serif SC" "Source Han Serif TC" "Noto Color Emoji"];
-      sansSerif = ["Sarasa UI SC" "Source Han Sans SC" "Source Han Sans TC" "Noto Color Emoji"];
+      serif = ["Sarasa UI SC" "Noto Color Emoji"];
+      sansSerif = ["Sarasa UI SC" "Noto Color Emoji"];
       monospace = ["Sarasa Mono SC" "JetBrainsMono Nerd Font" "Noto Color Emoji"];
       emoji = ["Noto Color Emoji"];
     };
