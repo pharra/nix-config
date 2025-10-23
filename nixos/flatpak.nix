@@ -14,11 +14,12 @@
   # https://flatpak.org/setup/NixOS
   services.flatpak.enable = true;
 
-  systemd.services."flatpak-managed-install" = {
-    serviceConfig = {
-      ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
-    };
-  };
+  # already have a network wait online service
+  # systemd.services."flatpak-managed-install" = {
+  #   serviceConfig = {
+  #     ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
+  #   };
+  # };
 
   services.flatpak.remotes = [
     {
