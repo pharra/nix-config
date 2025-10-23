@@ -1,178 +1,277 @@
 {...}: let
-  ip = {
+  RuleSet_classical = {
     type = "http";
-    interval = 86400;
-    behavior = "ipcidr";
-    format = "mrs";
+    behavior = "classical";
+    interval = 43200;
+    format = "text";
+    proxy = "节点选择";
   };
-  domain = {
+  RuleSet_domain = {
     type = "http";
-    interval = 86400;
     behavior = "domain";
+    interval = 43200;
+    format = "text";
+    proxy = "节点选择";
+  };
+  RuleSet_ipcidr = {
+    type = "http";
+    behavior = "ipcidr";
+    interval = 43200;
+    format = "text";
+    proxy = "节点选择";
+  };
+  RuleSet_filter = {
+    type = "http";
+    behavior = "domain";
+    interval = 43200;
     format = "mrs";
+    proxy = "节点选择";
   };
 in {
   services.mihomo.config = {
     rules = [
-      "GEOSITE,private,DIRECT"
-      "GEOSITE,tailscale,DIRECT"
-      "GEOSITE,tracker,DIRECT"
-      "GEOSITE,category-pt,DIRECT"
-      "GEOSITE,cn,DIRECT"
-      "GEOSITE,tmdb,节点选择"
-      "GEOSITE,category-container,节点选择"
-      "GEOSITE,python,节点选择"
-      "GEOSITE,category-porn,节点选择"
-      "GEOSITE,gfw,节点选择"
-      "DOMAIN-SUFFIX,int4byte.org,DIRECT"
-      "RULE-SET,github_domain,Github"
-      "RULE-SET,twitter_domain,Twitter"
-      "RULE-SET,youtube_domain,YouTube"
-      "RULE-SET,google_domain,Google"
-      "RULE-SET,telegram_domain,Telegram"
-      "RULE-SET,netflix_domain,NETFLIX"
-      "RULE-SET,bilibili_domain,哔哩哔哩"
-      "RULE-SET,bahamut_domain,巴哈姆特"
-      "RULE-SET,spotify_domain,Spotify"
-      "RULE-SET,cn_domain,DIRECT"
-      "RULE-SET,geolocation-!cn,其他"
+      # 非 IP 类规则
+      "RULE-SET,reject_non_ip,REJECT"
+      "RULE-SET,reject_domainset,REJECT"
+      "RULE-SET,reject_non_ip_drop,REJECT-DROP"
+      "RULE-SET,reject_non_ip_no_drop,REJECT"
+      "RULE-SET,cdn_domainset,节点选择"
+      "RULE-SET,cdn_non_ip,节点选择"
+      "RULE-SET,stream_non_ip,国外媒体"
+      "RULE-SET,telegram_non_ip,电报信息"
+      "RULE-SET,apple_cdn,DIRECT"
+      "RULE-SET,download_domainset,省流自动"
+      "RULE-SET,download_non_ip,省流自动"
+      "RULE-SET,microsoft_cdn_non_ip,DIRECT"
+      "RULE-SET,apple_cn_non_ip,DIRECT"
+      "RULE-SET,apple_services,苹果服务"
+      "RULE-SET,microsoft_non_ip,微软服务"
+      "RULE-SET,ai_non_ip,人工智能"
+      "RULE-SET,global_non_ip,节点选择"
+      "RULE-SET,domestic_non_ip,DIRECT"
+      "RULE-SET,cn,DIRECT"
+      "RULE-SET,direct_non_ip,DIRECT"
+      "RULE-SET,lan_non_ip,DIRECT"
 
-      "GEOIP,cn,DIRECT,no-resolve"
-      "RULE-SET,private_ip,DIRECT,no-resolve"
-      "RULE-SET,google_ip,Google"
-      "RULE-SET,netflix_ip,NETFLIX"
-      "RULE-SET,telegram_ip,Telegram"
-      "RULE-SET,twitter_ip,Twitter"
-      "RULE-SET,cn_ip,DIRECT"
-      "MATCH,其他"
+      # IP 类规则
+      "RULE-SET,reject_ip,REJECT"
+      "RULE-SET,telegram_ip,电报信息,no-resolve"
+      "RULE-SET,stream_ip,国外媒体"
+      "RULE-SET,lan_ip,DIRECT,no-resolve"
+      "RULE-SET,domestic_ip,DIRECT"
+      "RULE-SET,china_ip,DIRECT"
+      "MATCH,节点选择"
     ];
+
     rule-providers = {
-      private_domain =
-        domain
+      fakeip-filter =
+        RuleSet_filter
         // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs";
-          path = "./rule_set/MetaCubeX/geo_geosite_private.mrs";
-        };
-      cn_domain =
-        domain
-        // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs";
-          path = "./rule_set/MetaCubeX/geo_geosite_cn.mrs";
-        };
-      biliintl_domain =
-        domain
-        // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/biliintl.mrs";
-          path = "./rule_set/MetaCubeX/geo_geosite_biliintl.mrs";
-        };
-      ehentai_domain =
-        domain
-        // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ehentai.mrs";
-          path = "./rule_set/MetaCubeX/geo_geosite_ehentai.mrs";
-        };
-      github_domain =
-        domain
-        // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs";
-          path = "./rule_set/MetaCubeX/geo_geosite_github.mrs";
-        };
-      twitter_domain =
-        domain
-        // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/twitter.mrs";
-          path = "./rule_set/MetaCubeX/geo_geosite_twitter.mrs";
-        };
-      youtube_domain =
-        domain
-        // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs";
-          path = "./rule_set/MetaCubeX/geo_geosite_youtube.mrs";
-        };
-      google_domain =
-        domain
-        // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs";
-          path = "./rule_set/MetaCubeX/geo_geosite_google.mrs";
-        };
-      telegram_domain =
-        domain
-        // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs";
-          path = "./rule_set/MetaCubeX/geo_geosite_telegram.mrs";
-        };
-      netflix_domain =
-        domain
-        // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs";
-          path = "./rule_set/MetaCubeX/geo_geosite_netflix.mrs";
-        };
-      bilibili_domain =
-        domain
-        // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili.mrs";
-          path = "./rule_set/MetaCubeX/geo_geosite_bilibili.mrs";
-        };
-      bahamut_domain =
-        domain
-        // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bahamut.mrs";
-          path = "./rule_set/MetaCubeX/geo_geosite_bahamut.mrs";
-        };
-      spotify_domain =
-        domain
-        // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/spotify.mrs";
-          path = "./rule_set/MetaCubeX/geo_geosite_spotify.mrs";
-        };
-      pixiv_domain =
-        domain
-        // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/pixiv.mrs";
-          path = "./rule_set/MetaCubeX/geo_geosite_pixiv.mrs";
-        };
-      "geolocation-!cn" =
-        domain
-        // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs";
-          path = "./rule_set/MetaCubeX/geo_geosite_geolocation-!cn.mrs";
+          url = "https://testingcf.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-ruleset/fakeip-filter.mrs";
+          path = "./rule_set/other_ruleset/fakeip-filter.mrs";
         };
 
-      private_ip =
-        ip
+      cn =
+        RuleSet_filter
         // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs";
-          path = "./rule_set/MetaCubeX/geo_geoip_private.mrs";
+          url = "https://testingcf.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-ruleset/cn.mrs";
+          path = "./rule_set/other_ruleset/cn.mrs";
         };
-      cn_ip =
-        ip
+
+      private =
+        RuleSet_filter
         // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs";
-          path = "./rule_set/MetaCubeX/geo_geoip_cn.mrs";
+          url = "https://testingcf.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-ruleset/private.mrs";
+          path = "./rule_set/other_ruleset/private.mrs";
         };
-      google_ip =
-        ip
+
+      trackerslist =
+        RuleSet_filter
         // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs";
-          path = "./rule_set/MetaCubeX/geo_geoip_google.mrs";
+          url = "https://testingcf.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-ruleset/trackerslist.mrs";
+          path = "./rule_set/other_ruleset/trackerslist.mrs";
         };
-      netflix_ip =
-        ip
+
+      reject_non_ip_no_drop =
+        RuleSet_classical
         // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs";
-          path = "./rule_set/MetaCubeX/geo_geoip_netflix.mrs";
+          url = "https://ruleset.skk.moe/Clash/non_ip/reject-no-drop.txt";
+          path = "./rule_set/sukkaw_ruleset/reject_non_ip_no_drop.txt";
         };
-      twitter_ip =
-        ip
+
+      reject_non_ip_drop =
+        RuleSet_classical
         // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/twitter.mrs";
-          path = "./rule_set/MetaCubeX/geo_geoip_twitter.mrs";
+          url = "https://ruleset.skk.moe/Clash/non_ip/reject-drop.txt";
+          path = "./rule_set/sukkaw_ruleset/reject_non_ip_drop.txt";
         };
+
+      reject_non_ip =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/non_ip/reject.txt";
+          path = "./rule_set/sukkaw_ruleset/reject_non_ip.txt";
+        };
+
+      reject_domainset =
+        RuleSet_domain
+        // {
+          url = "https://ruleset.skk.moe/Clash/domainset/reject.txt";
+          path = "./rule_set/sukkaw_ruleset/reject_domainset.txt";
+        };
+
+      reject_ip =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/ip/reject.txt";
+          path = "./rule_set/sukkaw_ruleset/reject_ip.txt";
+        };
+
+      cdn_domainset =
+        RuleSet_domain
+        // {
+          url = "https://ruleset.skk.moe/Clash/domainset/cdn.txt";
+          path = "./rule_set/sukkaw_ruleset/cdn_domainset.txt";
+        };
+
+      cdn_non_ip =
+        RuleSet_domain
+        // {
+          url = "https://ruleset.skk.moe/Clash/non_ip/cdn.txt";
+          path = "./rule_set/sukkaw_ruleset/cdn_non_ip.txt";
+        };
+
+      stream_non_ip =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/non_ip/stream.txt";
+          path = "./rule_set/sukkaw_ruleset/stream_non_ip.txt";
+        };
+
+      stream_ip =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/ip/stream.txt";
+          path = "./rule_set/sukkaw_ruleset/stream_ip.txt";
+        };
+
+      ai_non_ip =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/non_ip/ai.txt";
+          path = "./rule_set/sukkaw_ruleset/ai_non_ip.txt";
+        };
+
+      telegram_non_ip =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/non_ip/telegram.txt";
+          path = "./rule_set/sukkaw_ruleset/telegram_non_ip.txt";
+        };
+
       telegram_ip =
-        ip
+        RuleSet_classical
         // {
-          url = "https://cdn.gh-proxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs";
-          path = "./rule_set/MetaCubeX/geo_geoip_telegram.mrs";
+          url = "https://ruleset.skk.moe/Clash/ip/telegram.txt";
+          path = "./rule_set/sukkaw_ruleset/telegram_ip.txt";
+        };
+
+      apple_cdn =
+        RuleSet_domain
+        // {
+          url = "https://ruleset.skk.moe/Clash/domainset/apple_cdn.txt";
+          path = "./rule_set/sukkaw_ruleset/apple_cdn.txt";
+        };
+
+      apple_services =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt";
+          path = "./rule_set/sukkaw_ruleset/apple_services.txt";
+        };
+
+      apple_cn_non_ip =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/non_ip/apple_cn.txt";
+          path = "./rule_set/sukkaw_ruleset/apple_cn_non_ip.txt";
+        };
+
+      microsoft_cdn_non_ip =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/non_ip/microsoft_cdn.txt";
+          path = "./rule_set/sukkaw_ruleset/microsoft_cdn_non_ip.txt";
+        };
+
+      microsoft_non_ip =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/non_ip/microsoft.txt";
+          path = "./rule_set/sukkaw_ruleset/microsoft_non_ip.txt";
+        };
+
+      download_domainset =
+        RuleSet_domain
+        // {
+          url = "https://ruleset.skk.moe/Clash/domainset/download.txt";
+          path = "./rule_set/sukkaw_ruleset/download_domainset.txt";
+        };
+
+      download_non_ip =
+        RuleSet_domain
+        // {
+          url = "https://ruleset.skk.moe/Clash/non_ip/download.txt";
+          path = "./rule_set/sukkaw_ruleset/download_non_ip.txt";
+        };
+
+      lan_non_ip =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/non_ip/lan.txt";
+          path = "./rule_set/sukkaw_ruleset/lan_non_ip.txt";
+        };
+
+      lan_ip =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/ip/lan.txt";
+          path = "./rule_set/sukkaw_ruleset/lan_ip.txt";
+        };
+
+      domestic_non_ip =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/non_ip/domestic.txt";
+          path = "./rule_set/sukkaw_ruleset/domestic_non_ip.txt";
+        };
+
+      direct_non_ip =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/non_ip/direct.txt";
+          path = "./rule_set/sukkaw_ruleset/direct_non_ip.txt";
+        };
+
+      global_non_ip =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/non_ip/global.txt";
+          path = "./rule_set/sukkaw_ruleset/global_non_ip.txt";
+        };
+
+      domestic_ip =
+        RuleSet_classical
+        // {
+          url = "https://ruleset.skk.moe/Clash/ip/domestic.txt";
+          path = "./rule_set/sukkaw_ruleset/domestic_ip.txt";
+        };
+
+      china_ip =
+        RuleSet_ipcidr
+        // {
+          url = "https://testingcf.jsdelivr.net/gh/Seameee/override-hub@refs/heads/main/mergecnip/china_ip.txt";
+          path = "./rule_set/other_ruleset/china_ip.txt";
         };
     };
   };

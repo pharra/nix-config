@@ -28,12 +28,5 @@
       sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
       generateKey = true;
     };
-
-    secrets = lib.mkIf config.services.mihomo.enable (lib.genAttrs [
-      "mihomo/providers/yiyuan"
-      "mihomo/providers/llg"
-      "mihomo/providers/l666"
-      "mihomo/providers/paofu"
-    ] (name: {restartUnits = ["mihomo.service"];}));
   };
 }

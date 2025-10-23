@@ -14,41 +14,17 @@
   };
 in {
   services.mihomo.config.proxy-providers = lib.mkIf config.services.mihomo.enable {
-    "Node-YiYuan" =
+    "Node" =
       NodeParam
       // {
-        url = config.sops.placeholder."mihomo/providers/yiyuan";
-        path = "./proxy_provider/providers-yiyuan.yaml";
-        override.additional-prefix = "[YY]";
-        override.tfo = false;
-        override.mptcp = false;
+        url = config.sops.placeholder."mihomo/providers/substore";
+        path = "./proxy_provider/providers-substore.yaml";
       };
-    "Node-LJL" =
-      NodeParam
-      // {
-        url = config.sops.placeholder."mihomo/providers/llg";
-        path = "./proxy_provider/providers-llg.yaml";
-        override.additional-prefix = "[Lite]";
-        override.tfo = false;
-        override.mptcp = false;
-      };
-    "Node-LJC" =
-      NodeParam
-      // {
-        url = config.sops.placeholder."mihomo/providers/l666";
-        path = "./proxy_provider/providers-666.yaml";
-        override.additional-prefix = "[垃圾场]";
-        override.tfo = false;
-        override.mptcp = false;
-      };
-    "Node-paofu" =
-      NodeParam
-      // {
-        url = config.sops.placeholder."mihomo/providers/paofu";
-        path = "./proxy_provider/providers-paofu.yaml";
-        override.additional-prefix = "[泡芙]";
-        override.tfo = false;
-        override.mptcp = false;
-      };
+  };
+
+  sops = {
+    secrets = lib.mkIf config.services.mihomo.enable (lib.genAttrs [
+      "mihomo/providers/substore"
+    ] (name: {restartUnits = ["mihomo.service"];}));
   };
 }

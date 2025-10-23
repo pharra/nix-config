@@ -46,13 +46,7 @@
       "https://223.5.5.5/dns-query"
     ];
     nameserver-policy = {
-      "rule-set:google_domain" = [
-        "https://8.8.8.8/dns-query"
-      ];
-      "rule-set:cn_domain" = [
-        "https://223.5.5.5/dns-query"
-      ];
-      "geosite:cn,apple,private" = [
+      "rule-set:cn" = [
         "https://223.5.5.5/dns-query"
       ];
     };
