@@ -26,10 +26,6 @@
       name = "flathub";
       location = "https://dl.flathub.org/repo";
     }
-    {
-      name = "flathub-sjtu";
-      location = "https://mirror.sjtu.edu.cn/flathub";
-    }
   ];
 
   services.flatpak.overrides = {
