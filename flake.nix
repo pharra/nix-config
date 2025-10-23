@@ -393,7 +393,15 @@
     );
 
     packages = nixpkgs.lib.genAttrs allSystems (
-      system: {azure-image = machinesNixosConfigurations.azure_jp_base.config.system.build.azureImage;}
+      # system: {azure-image = machinesNixosConfigurations.azure_jp_base.config.system.build.azureImage;}
+      system: let
+        inherit (nixpkgs) lib;
+        nixosMachines =
+          lib.filterAttrs
+          (name: cfg: cfg.pkgs.system == system)
+          self.nixosConfigurations;
+      in
+        nixosMachines
     );
 
     # format the nix code in this flake
