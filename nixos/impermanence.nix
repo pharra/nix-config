@@ -24,6 +24,7 @@
       "/etc/ssh/ssh_host_ed25519_key"
       "/etc/ssh/ssh_host_rsa_key.pub"
       "/etc/ssh/ssh_host_rsa_key"
+      "/root/.zsh_history"
     ];
 
     users.${username} = {
@@ -72,6 +73,7 @@
       files = [
         ".zsh_history"
         ".gitconfig"
+        ".zshrc"
       ];
     };
   };
