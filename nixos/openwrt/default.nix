@@ -16,7 +16,12 @@
   mac-generator = import ./mac-generator.nix {inherit lib;};
 in {
   system.activationScripts."init_openwrt" = ''
-    mkdir -p /var/lib/openwrt/overlay
+    mkdir -p /var/lib/openwrt
+    if [ ! -f /var/lib/openwrt/overlay.img ]; then
+      echo "Creating overlay..."
+      ${pkgs.qemu-utils}/bin/qemu-img create -f raw /var/lib/openwrt/overlay.img 1G
+      ${pkgs.btrfs-progs}/bin/mkfs.btrfs -L extroot -f /var/lib/openwrt/overlay.img
+    fi
     if [ ! -f /var/lib/openwrt/openwrt.qcow2 ]; then
       echo "Decompressing OpenWRT image..."
       ${pkgs.gzip}/bin/gzip -cdq ${openwrtImage} > /var/lib/openwrt/openwrt.img || true

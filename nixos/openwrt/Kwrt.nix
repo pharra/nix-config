@@ -52,42 +52,42 @@ in {
         devices =
           Kwrt.devices
           // {
-            # disk =
-            #   if builtins.isNull Kwrt.devices.disk
-            #   then []
-            #   else
-            #     Kwrt.devices.disk
-            #     ++ [
-            #       {
-            #         type = "block";
-            #         device = "disk";
-            #         driver = {
-            #           name = "qemu";
-            #           type = "raw";
-            #           cache = "none";
-            #         };
-            #         source = {
-            #           file = "/var/lib/openwrt/openwrt.img";
-            #         };
-            #         target = {
-            #           dev = "vdd";
-            #           bus = "virtio";
-            #         };
-            #       }
-            #     ];
-            filesystem = [
-              {
-                type = "mount";
-                accessmode = "passthrough";
-                binary = {
-                  path = "${pkgs.virtiofsd}/bin/virtiofsd";
-                  xattr = true;
-                };
-                driver = {type = "virtiofs";};
-                source = {dir = "/var/lib/openwrt/overlay";};
-                target = {dir = "overlay";};
-              }
-            ];
+            disk =
+              if builtins.isNull Kwrt.devices.disk
+              then []
+              else
+                Kwrt.devices.disk
+                ++ [
+                  {
+                    type = "file";
+                    device = "disk";
+                    driver = {
+                      name = "qemu";
+                      type = "raw";
+                      cache = "none";
+                    };
+                    source = {
+                      file = "/var/lib/openwrt/overlay.img";
+                    };
+                    target = {
+                      dev = "vdd";
+                      bus = "virtio";
+                    };
+                  }
+                ];
+            # filesystem = [
+            #   {
+            #     type = "mount";
+            #     accessmode = "passthrough";
+            #     binary = {
+            #       path = "${pkgs.virtiofsd}/bin/virtiofsd";
+            #       xattr = true;
+            #     };
+            #     driver = {type = "virtiofs";};
+            #     source = {dir = "/var/lib/openwrt/overlay";};
+            #     target = {dir = "overlay";};
+            #   }
+            # ];
             interface = [
               {
                 type = "bridge";
