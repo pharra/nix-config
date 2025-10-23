@@ -4,9 +4,31 @@
   config,
   utils,
   ...
-}: let
+} @ args: let
   netns = "openwrt";
+  openwrtImage = pkgs.fetchurl {
+    url = "https://github.com/pharra/OpenWrt-K/releases/download/v2025.10.22-0(x86-64)-(v24.10.3)-x86_64/openwrt-x86-64-generic-squashfs-combined.img.gz";
+    hash = "sha256-iSMsNsW+j7li882Z9wKLpd27iSCBf+3eNJ4OIh8ZFoc=";
+  };
+
+  Kwrt = import ./Kwrt.nix args;
+
+  mac-generator = import ./mac-generator.nix {inherit lib;};
 in {
+  system.activationScripts."init_openwrt" = ''
+    mkdir -p /var/lib/openwrt/overlay
+    if [ ! -f /var/lib/openwrt/openwrt.qcow2 ]; then
+      echo "Decompressing OpenWRT image..."
+      ${pkgs.gzip}/bin/gzip -cdq ${openwrtImage} > /var/lib/openwrt/openwrt.img || true
+      ${pkgs.qemu-utils}/bin/qemu-img convert -f raw /var/lib/openwrt/openwrt.img -O qcow2 /var/lib/openwrt/openwrt.qcow2
+    fi
+  '';
+
+  virtualisation.libvirt.connections."qemu:///system" = {
+    domains = [
+      Kwrt
+    ];
+  };
   # services.netns = {
   #   enable = true;
   #   names = [netns];
@@ -100,20 +122,6 @@ in {
   #   wantedBy = ["multi-user.target"];
   # };
 
-  # systemd.nspawn = {
-  #   openwrt = {
-  #     networkConfig = {
-  #       Bridge = ["br2" "br0"];
-  #     };
-  #     filesConfig = {};
-  #     execConfig = {
-  #       # Boot = true;
-  #       PrivateUsers = false;
-  #       Hostname = "openwrt";
-  #     };
-  #   };
-  # };
-
   systemd.network = {
     links = {
       "10-bridge" = {
@@ -126,10 +134,26 @@ in {
         netdevConfig = {
           Kind = "bridge";
           Name = "br2";
+          MACAddress = mac-generator.unicast "${config.networking.hostName}-br2";
         };
       };
     };
     networks = {
+      "40-br0" = {
+        enable = false;
+      };
+      "50-br0" = {
+        matchConfig.Name = "br0";
+        bridgeConfig = {};
+        networkConfig = {
+          IPv6AcceptRA = false;
+          ConfigureWithoutCarrier = true;
+        };
+        linkConfig = {
+          # or "routable" with IP addresses configured
+          ActivationPolicy = "always-up";
+        };
+      };
       "40-br2" = {
         matchConfig.Name = "br2";
         bridgeConfig = {};
@@ -143,7 +167,7 @@ in {
         };
         dhcpV4Config = {
           UseDomains = true;
-          UseRoutes = false;
+          UseRoutes = true;
         };
         ipv6AcceptRAConfig = {
           UseDNS = true;

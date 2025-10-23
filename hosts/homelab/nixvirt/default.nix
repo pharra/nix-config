@@ -8,7 +8,6 @@
   NixOS = import ./NixOS.nix args;
   ArchLinux = import ./ArchLinux.nix args;
   Windows = import ./Windows.nix args;
-  Kwrt = import ./Kwrt.nix args;
   FnOS = import ./FnOS.nix args;
 in {
   environment = {
@@ -24,7 +23,6 @@ in {
       ArchLinux
       NixOS
       Windows
-      Kwrt
       FnOS
     ];
     pools = [

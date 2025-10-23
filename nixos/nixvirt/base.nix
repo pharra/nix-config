@@ -29,12 +29,12 @@
     name,
     uuid,
     memory,
-    storage_vol,
+    storage_vol ? null,
     install_vol ? null,
     virtio_drive ? true,
     virtio_video ? true,
     no_graphics ? false,
-    nvram_path,
+    nvram_path ? null,
     ...
   }: let
     base =
@@ -55,6 +55,20 @@
             bus = "usb";
           }
         ];
+        serial = {
+          type = "pty";
+          target = {
+            port = 0;
+          };
+        };
+        console = {
+          type = "pty";
+          target = {
+            type = "serial";
+            port = 0;
+          };
+        };
+
         tpm = {
           model = "tpm-crb";
           backend = {
@@ -87,18 +101,22 @@
       };
       os =
         base.os
-        // {
-          loader = {
-            readonly = true;
-            type = "pflash";
-            path = "${pkgs.OVMFFull.fd}/FV/OVMF_CODE.ms.fd";
-          };
-          nvram = {
-            template = "${pkgs.OVMFFull.fd}/FV/OVMF_VARS.ms.fd";
-            path = nvram_path;
-          };
-          bootmenu = {enable = true;};
-        };
+        // (
+          if nvram_path == null
+          then {}
+          else {
+            loader = {
+              readonly = true;
+              type = "pflash";
+              path = "${pkgs.OVMFFull.fd}/FV/OVMF_CODE.ms.fd";
+            };
+            nvram = {
+              template = "${pkgs.OVMFFull.fd}/FV/OVMF_VARS.ms.fd";
+              path = nvram_path;
+            };
+            bootmenu = {enable = true;};
+          }
+        );
       devices = base.devices // devices_override;
     };
 

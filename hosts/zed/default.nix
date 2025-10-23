@@ -117,7 +117,6 @@ in {
       };
 
       "40-br0" = {
-        enable = true;
         matchConfig.Name = "br0";
         bridgeConfig = {};
         networkConfig = {

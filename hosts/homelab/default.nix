@@ -70,6 +70,8 @@ in {
     ../../nixos/archlinux
 
     ./nixvirt
+
+    ../../nixos/openwrt
   ];
 
   # Enable binfmt emulation of aarch64-linux, this is required for cross compilation.
@@ -214,13 +216,6 @@ in {
           Name = "br1";
         };
       };
-
-      "20-br2" = {
-        netdevConfig = {
-          Kind = "bridge";
-          Name = "br2";
-        };
-      };
     };
 
     networks = {
@@ -237,21 +232,7 @@ in {
       };
 
       "40-br0" = {
-        # Configure the bridge for its desired function
         matchConfig.Name = "br0";
-        bridgeConfig = {};
-        networkConfig = {
-          # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
-          IPv6AcceptRA = false;
-        };
-        linkConfig = {
-          ActivationPolicy = "always-up";
-        };
-      };
-
-      # Configure the bridge for its desired function
-      "40-br2" = {
-        matchConfig.Name = "br2";
         bridgeConfig = {};
         networkConfig = {
           # start a DHCP Client for IPv4 Addressing/Routing
@@ -259,7 +240,6 @@ in {
           # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
           IPv6AcceptRA = true;
           Domains = ["lan"];
-          ConfigureWithoutCarrier = true;
         };
         dhcpV4Config = {
           UseDomains = true;
@@ -270,7 +250,6 @@ in {
         };
         linkConfig = {
           # or "routable" with IP addresses configured
-          ActivationPolicy = "always-up";
           RequiredForOnline = "routable";
         };
       };
