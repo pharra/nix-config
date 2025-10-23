@@ -117,6 +117,16 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    quickshell = {
+      url = "github:outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.quickshell.follows = "quickshell";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -143,6 +153,8 @@
     sops-nix,
     rime-config,
     nur,
+    quickshell,
+    noctalia,
     ...
   }: let
     username = "wf";
@@ -170,6 +182,7 @@
     home-modules =
       [
         plasma-manager.homeModules.plasma-manager
+        noctalia.homeModules.default
       ]
       ++ (builtins.attrValues _home-modules);
 
@@ -184,6 +197,7 @@
         inputs.mlnx-ofed-nixos.nixosModules.default
         proxmox-nixos.nixosModules.proxmox-ve
         sops-nix.nixosModules.sops
+        noctalia.nixosModules.default
       ]
       ++ (builtins.attrValues modules);
 
@@ -261,7 +275,7 @@
       # zed
       {
         name = "zed";
-        builds = ["kde" "gnome" "cosmic" "deepin"];
+        builds = ["kde" "gnome" "cosmic" "deepin" "niri"];
         hostname = "zed.mlx";
         nixos-modules = [./hosts/zed];
         specialArgs = {
