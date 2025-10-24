@@ -253,16 +253,15 @@
       "locked": {
         "lastModified": 1760973408,
         "narHash": "sha256-J1TD9VYUPCAL6Ln2jQ3VIhYZQrrwF7pjxfEtCnxdmVw=",
-        "ref": "refs/heads/main",
+        "owner": "pharra",
+        "repo": "agenix-secrets",
         "rev": "c871ad92342e564434635ab2b4e515ecf8daf951",
-        "shallow": true,
-        "type": "git",
-        "url": "ssh://git@github.com/pharra/agenix-secrets.git"
+        "type": "github"
       },
       "original": {
-        "shallow": true,
-        "type": "git",
-        "url": "ssh://git@github.com/pharra/agenix-secrets.git"
+        "owner": "pharra",
+        "repo": "agenix-secrets",
+        "type": "github"
       }
     },
     "nix-darwin": {

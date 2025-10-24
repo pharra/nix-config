@@ -68,7 +68,7 @@
     };
 
     mysecrets = {
-      url = "github.com:pharra/agenix-secrets.git?shallow=1";
+      url = "github:pharra/agenix-secrets";
       flake = false;
     };
 
