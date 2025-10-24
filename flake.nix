@@ -253,7 +253,7 @@
       # dot
       {
         name = "dot";
-        builds = ["kde" "gnome" "cosmic" "deepin"];
+        builds = ["kde" "gnome" "cosmic"];
         hostname = "192.168.31.240";
         nixos-modules = [./hosts/dot nixos-hardware.nixosModules.microsoft-surface-common];
       }
@@ -261,21 +261,21 @@
       # gs65
       {
         name = "gs65";
-        builds = ["kde" "gnome" "cosmic" "deepin"];
+        builds = ["kde" "gnome" "cosmic"];
         nixos-modules = [./hosts/gs65];
       }
 
       # minimal
       {
         name = "minimal";
-        builds = ["kde" "gnome" "cosmic" "deepin" "base"];
+        builds = ["base"];
         nixos-modules = [./hosts/minimal];
       }
 
       # zed
       {
         name = "zed";
-        builds = ["kde" "gnome" "cosmic" "deepin" "niri"];
+        builds = ["kde" "gnome" "cosmic" "niri"];
         hostname = "zed.mlx";
         nixos-modules = [./hosts/zed];
         specialArgs = {
@@ -286,7 +286,7 @@
       # zed netboot
       {
         name = "zed_netboot";
-        builds = ["kde" "gnome" "cosmic" "deepin"];
+        builds = ["kde" "gnome" "cosmic"];
         hostname = "zed";
         nixos-modules = [./hosts/zed];
         specialArgs = {
@@ -297,7 +297,7 @@
       # luris
       {
         name = "luris";
-        builds = ["kde" "gnome" "cosmic" "deepin"];
+        builds = ["kde" "gnome" "cosmic"];
         nixos-modules = [./hosts/luris];
         hostname = "luris";
       }
@@ -305,7 +305,7 @@
       # dat
       {
         name = "dat";
-        builds = ["kde" "gnome" "cosmic" "deepin"];
+        builds = ["kde" "gnome" "cosmic"];
         nixos-modules = [./hosts/dat nixos-wsl.nixosModules.default];
         hostname = "dat";
       }
@@ -314,7 +314,7 @@
       {
         name = "homelab";
         nixos-modules = [./hosts/homelab];
-        builds = ["kde" "gnome" "cosmic" "deepin" "base"];
+        builds = ["kde" "gnome" "cosmic" "base"];
         specialArgs = {
           netboot_args = {netboot_installer = self.nixosConfigurations."netboot_installer_base";};
         };
@@ -396,10 +396,15 @@
       # system: {azure-image = machinesNixosConfigurations.azure_jp_base.config.system.build.azureImage;}
       system: let
         inherit (nixpkgs) lib;
-        nixosMachines =
+        filteredConfigs =
           lib.filterAttrs
           (name: cfg: cfg.pkgs.system == system)
           self.nixosConfigurations;
+        nixosMachines =
+          lib.mapAttrs' (
+            name: config: lib.nameValuePair name config.config.system.build.toplevel
+          )
+          filteredConfigs;
       in
         nixosMachines
     );

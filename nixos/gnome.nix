@@ -17,22 +17,10 @@
   services = {
     libinput.enable = true;
 
-    xserver = {
-      enable = true;
-
-      xkb.layout = "us"; # Keyboard layout & €-sign
-
-      displayManager.gdm.enable = true; # Display Manager
-      desktopManager.gnome.enable = true; # Window Manager
-
-      # displayManager.defaultSession = "gnome";
-      # displayManager.autoLogin = {
-      #   enable = true;
-      #   user = "${username}";
-      # };
-    };
+    displayManager.gdm.enable = true; # Display Manager
+    desktopManager.gnome.enable = true; # Window Manager
     udev.packages = with pkgs; [
-      gnome.gnome-settings-daemon
+      gnome-settings-daemon
     ];
   };
 
@@ -52,8 +40,6 @@
       gnome-tour
     ];
   };
-
-  services.xserver.displayManager.gdm.autoSuspend = false;
 
   # For gnome autologin issue, see https://github.com/NixOS/nixpkgs/issues/103746
   systemd.services."getty@tty1".enable = false;
