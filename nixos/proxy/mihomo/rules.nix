@@ -35,6 +35,7 @@ in {
       "RULE-SET,reject_domainset,REJECT"
       "RULE-SET,reject_non_ip_drop,REJECT-DROP"
       "RULE-SET,reject_non_ip_no_drop,REJECT"
+      "GEOSITE,steam@cn,DIRECT"
       "RULE-SET,cdn_domainset,节点选择"
       "RULE-SET,cdn_non_ip,节点选择"
       "RULE-SET,stream_non_ip,国外媒体"
