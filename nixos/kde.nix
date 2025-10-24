@@ -9,17 +9,9 @@
   };
 
   services = {
-    # xserver = {
-    #   enable = true;
-
-    #   xkb.layout = "us"; # Keyboard layout & €-sign
-    #   libinput.enable = true;
-    # };
     displayManager.sddm.enable = true; # Display Manager
-    #displayManager.sddm.autoLogin.relogin = true;
     displayManager.sddm.wayland.enable = true;
     displayManager.sddm.enableHidpi = true;
-    displayManager.sessionPackages = [pkgs.distrobox-session];
     desktopManager.plasma6.enable = true; # Window Manager
     displayManager.autoLogin = {
       enable = true;
