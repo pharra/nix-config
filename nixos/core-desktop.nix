@@ -180,8 +180,13 @@
   nix.settings = {
     substituters = [
       # replace official cache with a mirror located in China
+      "https://attic.int4byte.org:8443/nix"
       "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
       "https://mirrors.ustc.edu.cn/nix-channels/store"
+    ];
+
+    trusted-public-keys = [
+      "nix:TIuZSOR7smXF/Jz1UKnvY5TW+NvklDypmDEg57QYU08="
     ];
   };
 }

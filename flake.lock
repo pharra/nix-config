@@ -251,11 +251,11 @@
     "mysecrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1760973408,
-        "narHash": "sha256-J1TD9VYUPCAL6Ln2jQ3VIhYZQrrwF7pjxfEtCnxdmVw=",
+        "lastModified": 1761397724,
+        "narHash": "sha256-aZcJSEzJ1IXnrvUY2g3wOX65TeriAlXd6Yk76EABmtI=",
         "owner": "pharra",
         "repo": "agenix-secrets",
-        "rev": "c871ad92342e564434635ab2b4e515ecf8daf951",
+        "rev": "9595adde7c9e047c5f1400ff65e2f1b19f9f07b6",
         "type": "github"
       },
       "original": {
