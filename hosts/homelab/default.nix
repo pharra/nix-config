@@ -271,7 +271,7 @@ in {
   # for Nvidia GPU
   services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default
   hardware.nvidia = {
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
+    package = config.boot.kernelPackages.nvidiaPackages.production;
     # modesetting.enable = true;
     # forceFullCompositionPipeline = true;
     open = true;
