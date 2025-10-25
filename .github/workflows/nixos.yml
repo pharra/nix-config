@@ -16,10 +16,7 @@ jobs:
       matrix:
         hostname:
           - homelab_kde
-          - zed_gnome
           - zed_kde
-          - zed_cosmic
-          - zed_niri
 
     steps:
       - uses: actions/checkout@v2.3.2
