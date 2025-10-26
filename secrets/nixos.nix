@@ -17,9 +17,12 @@
   ];
 
   # # if you changed this key, you need to regenerate all encrypt files from the decrypt contents!
-  age.identityPaths = [
-    "/home/${username}/.ssh/id_ed25519" # Linux
-  ];
+  age.identityPaths =
+    if (config.environment.persistence != {})
+    then [
+      "/home/${username}/.ssh/id_ed25519"
+    ]
+    else ["/nix/persistent/home/${username}/.ssh/id_ed25519"];
 
   sops = {
     defaultSopsFile = ./default.yaml;
