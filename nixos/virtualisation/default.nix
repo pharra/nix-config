@@ -7,10 +7,6 @@
   username,
   ...
 } @ args: {
-  imports = [
-    ./docker-netns.nix
-  ];
-
   environment.systemPackages = with pkgs; [
     docker-compose
     podman-compose
@@ -20,6 +16,7 @@
   virtualisation.docker = {
     enable = true;
     daemon.settings.features.cdi = true;
+    daemon.settings.live-restore = false;
   };
   virtualisation.containers.enable = true;
   virtualisation.oci-containers.backend = "podman";

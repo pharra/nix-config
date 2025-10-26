@@ -159,6 +159,14 @@ in {
     inherit interfaces;
   };
 
+  services.docker-netns = {
+    enable = true;
+    autoConfigureBridge = false;
+    dockerBridge = "br2";
+    dockerGateway = "192.168.31.254";
+    dockerHostIP = "192.168.31.2/24";
+  };
+
   services.dhcpServer = {
     enable = true;
     networks = {

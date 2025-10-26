@@ -96,6 +96,12 @@ in {
     inherit interfaces;
   };
 
+  services.docker-netns = {
+    enable = true;
+    autoConfigureBridge = true;
+    dockerBridge = "br-docker";
+  };
+
   systemd.network = {
     enable = true;
     wait-online.anyInterface = true;
