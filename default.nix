@@ -6,7 +6,6 @@
 # commands such as:
 #     nix-build -A mypackage
 {pkgs ? import <nixpkgs> {}}: let
-  linux_mlx = pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor (pkgs.callPackage ./pkgs/linux {}));
   spdk_pkgs = pkgs.callPackage ./pkgs/spdk {};
 in rec {
   # The `lib`, `modules`, and `overlay` names are special
@@ -14,15 +13,12 @@ in rec {
   # modules = import ./modules; # NixOS modules
   overlays = import ./overlays; # nixpkgs overlays
 
-  inherit linux_mlx;
   spdk = spdk_pkgs.spdk;
   distrobox-session = pkgs.callPackage ./pkgs/distrobox {};
   spdk-python = spdk_pkgs.spdk-python;
   xiraid = pkgs.callPackage ./pkgs/xiraid {};
   mcontrolcenter = pkgs.libsForQt5.callPackage ./pkgs/mcontrolcenter/default.nix {};
   aosp = pkgs.callPackage ./pkgs/aosp {};
-  mlnx_ofed = pkgs.callPackage ./pkgs/mlnx_ofed {kernel = pkgs.linuxPackages_latest.kernel;};
-  mlnx4_ofed = pkgs.callPackage ./pkgs/mlnx4_ofed {kernel = pkgs.linuxPackages_5_15.kernel;};
   surface-dtx-daemon = pkgs.callPackage ./pkgs/surface-dtx-daemon {};
   audio-relay = pkgs.callPackage ./pkgs/audiorelay {};
 }
