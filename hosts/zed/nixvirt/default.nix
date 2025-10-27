@@ -8,7 +8,6 @@
   Windows = import ./Windows.nix args;
   Microsoft = import ./Microsoft.nix args;
   Linux = import ./Linux.nix args;
-  Kwrt = import ./Kwrt.nix args;
 
   attach_gpu = pkgs.writeShellScriptBin "attach_gpu" ''
     nvidia_vendor="$1"
@@ -208,7 +207,6 @@ in {
       Windows
       # Microsoft
       Linux
-      Kwrt
     ];
     pools = [
       {

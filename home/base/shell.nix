@@ -18,15 +18,5 @@ in rec {
     MANPAGER = "sh -c 'col -bx | bat -l man -p'";
   };
 
-  programs.bash = {
-    # load the alias file for work
-  };
-
-  programs.direnv = {
-    enable = true;
-    enableZshIntegration = true;
-    nix-direnv = {enable = true;};
-  };
-
   home.sessionVariables = systemd.user.sessionVariables;
 }

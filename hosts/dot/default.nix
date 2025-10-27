@@ -31,8 +31,6 @@ in {
 
     ../../secrets/nixos.nix
 
-    ./nixvirt
-
     ../../nixos/proxy
   ];
 

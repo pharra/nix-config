@@ -35,10 +35,8 @@ in {
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
 
-    ../../nixos/fhs-fonts.nix
     ../../nixos/libvirt.nix
     ../../nixos/core-desktop.nix
-    # ../../nixos/remote-building.nix
     ../../nixos/user-group.nix
 
     ../../nixos/impermanence.nix
@@ -53,9 +51,7 @@ in {
 
     ../../nixos/sftp-server.nix
     ../../nixos/caddy.nix
-    ../../nixos/aosp.nix
     ../../nixos/tailscale.nix
-    ../../nixos/ddns-go.nix
 
     ../../nixos/virtualisation
     ../../nixos/scripts.nix

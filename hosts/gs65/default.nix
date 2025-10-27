@@ -14,11 +14,8 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
 
-    ../../nixos/fhs-fonts.nix
     ../../nixos/libvirt.nix
     ../../nixos/core-desktop.nix
-    ../../nixos/laptop.nix
-    # ../../nixos/remote-building.nix
     ../../nixos/user-group.nix
 
     ../../secrets/nixos.nix
@@ -57,6 +54,29 @@
 
     networkmanager.enable = true;
   };
+
+  # Laptop can't correctly suspend if wlan is active
+  powerManagement = {
+    powerDownCommands = ''
+      ${pkgs.util-linux}/bin/rfkill block wlan
+    '';
+    resumeCommands = ''
+      ${pkgs.util-linux}/bin/rfkill unblock wlan
+    '';
+  };
+
+  services.thermald.enable = true;
+
+  boot.extraModulePackages = with config.boot.kernelPackages; [
+    cpupower
+  ];
+
+  programs.mcontrolcenter = {
+    enable = true;
+  };
+
+  powerManagement.powertop.enable = true;
+  powerManagement.cpuFreqGovernor = "performance";
 
   systemd.network = {
     networks = {
