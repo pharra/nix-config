@@ -19,7 +19,7 @@ in {
     };
 
     dockerBridge = mkOption {
-      default = "docker-br";
+      default = "docker";
       type = types.str;
     };
 
@@ -95,8 +95,8 @@ in {
     };
 
     systemd.services."${netns}-netns" = {
-      bindsTo = ["netns@${netns}.service"];
-      after = ["netns@${netns}.service"];
+      bindsTo = ["netns@${netns}.service" "sys-devices-virtual-net-${dockerBridge}.device"];
+      after = ["netns@${netns}.service" "sys-devices-virtual-net-${dockerBridge}.device"];
       serviceConfig.NetworkNamespacePath = "/var/run/netns/${netns}";
       path = with pkgs; [
         iproute2

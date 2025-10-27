@@ -98,7 +98,6 @@ in {
   services.docker-netns = {
     enable = true;
     autoConfigureBridge = true;
-    dockerBridge = "docker-br";
   };
 
   systemd.network = {
