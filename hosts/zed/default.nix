@@ -51,7 +51,6 @@ in {
       inherit boot_from_network config pkgs lib;
       interface = interface.mlx5_0;
     })
-    #../../nixos/ccache.nix
 
     ../../nixos/virtualisation
 

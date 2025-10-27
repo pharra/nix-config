@@ -48,15 +48,12 @@ in {
     (import ../../nixos/samba.nix {inherit config lib interface pkgs libs;})
 
     (import ../../nixos/ipxe {inherit config lib interface pkgs libs netboot_args;})
-    ../../nixos/mlx-sriov.nix
 
     ../../secrets/nixos.nix
 
     ../../nixos/sftp-server.nix
-    ../../nixos/media-server.nix
     ../../nixos/caddy.nix
     ../../nixos/aosp.nix
-    #    ../../nixos/ccache.nix
     ../../nixos/tailscale.nix
     ../../nixos/ddns-go.nix
 

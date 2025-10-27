@@ -32,42 +32,10 @@
       '';
     };
   };
-  programs.dconf.enable = true;
-
-  # systemd.tmpfiles.rules = [
-  #   "f /dev/shm/looking-glass 0660 ${username} libvirtd -"
-  # ];
-
-  environment.etc = {
-    "ovmf/edk2-x86_64-secure-code.fd" = {
-      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-secure-code.fd";
-    };
-
-    "ovmf/edk2-i386-vars.fd" = {
-      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
-    };
-
-    "ovmf/OVMF_CODE.ms.fd" = {
-      source = "${pkgs.OVMFFull.fd}/FV/OVMF_CODE.ms.fd";
-    };
-
-    "ovmf/OVMF_VARS.ms.fd" = {
-      source = "${pkgs.OVMFFull.fd}/FV/OVMF_VARS.ms.fd";
-    };
-  };
 
   boot.kernelModules = ["kvmfr"];
   boot.extraModulePackages = with config.boot.kernelPackages; [
-    (kvmfr.overrideAttrs (_: {
-      patches = [
-        # # fix build for linux-6_10
-        # (pkgs.fetchpatch {
-        #   url = "https://github.com/gnif/LookingGlass/commit/7305ce36af211220419eeab302ff28793d515df2.patch";
-        #   hash = "sha256-97nZsIH+jKCvSIPf1XPf3i8Wbr24almFZzMOhjhLOYk=";
-        #   stripLen = 1;
-        # })
-      ];
-    }))
+    kvmfr
   ];
   boot.extraModprobeConfig = ''
     # 这里的内存大小计算方法和虚拟机的 shmem 一项相同。
@@ -78,32 +46,8 @@
   '';
 
   environment.systemPackages = with pkgs; [
-    # Need to add [File (in the menu bar) -> Add connection] after start the first time
     virt-manager
 
-    # QEMU/KVM, provides:
-    #   qemu-storage-daemon qemu-edid qemu-ga
-    #   qemu-pr-helper qemu-nbd elf2dmp qemu-img qemu-io
-    #   qemu-kvm qemu-system-x86_64 qemu-system-aarch64 qemu-system-i386
-    # qemu_kvm
-
-    # Install all packages about QEMU, provides:
-    #   ......
-    #   qemu-loongarch64 qemu-system-loongarch64
-    #   qemu-riscv64 qemu-system-riscv64 qemu-riscv32  qemu-system-riscv32
-    #   qemu-system-arm qemu-arm qemu-armeb qemu-system-aarch64 qemu-aarch64 qemu-aarch64_be
-    #   qemu-system-xtensa qemu-xtensa qemu-system-xtensaeb qemu-xtensaeb
-    #   ......
-    # qemu_full
-
     looking-glass-client
-
-    # swtpm
   ];
-
-  # NixOS VM should enable this:
-  # services.qemuGuest = {
-  #   enable = true;
-  #   package = pkgs.qemu_kvm.ga;
-  # };
 }
