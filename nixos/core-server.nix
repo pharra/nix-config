@@ -62,7 +62,7 @@
   networking.firewall.enable = lib.mkDefault true;
   # allow all incoming ipv4 traffic, since this is a homelab behind a router firewall
   networking.firewall.extraCommands = lib.mkIf (config.networking.nftables.enable != true) "iptables -A INPUT -j ACCEPT";
-  networking.nftables.enable = false;
+  networking.nftables.enable = true;
 
   # Enable the OpenSSH daemon.
   services.openssh = {

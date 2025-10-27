@@ -98,8 +98,10 @@ in {
 
   services.docker-netns = {
     enable = true;
-    autoConfigureBridge = true;
-    dockerBridge = "br-docker";
+    autoConfigureBridge = false;
+    dockerBridge = "br0";
+    dockerHostIP = "192.168.254.2/24";
+    dockerGateway = "192.168.254.113";
   };
 
   systemd.network = {

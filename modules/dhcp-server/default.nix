@@ -212,10 +212,14 @@ in {
             ["${network.ipv4.address}/${network.ipv4.netmask}"]
             (lib.optional network.ipv6.enable ["${network.ipv6.address}/${network.ipv6.netmask}"])
           ];
-          DNS = lib.concatLists [
-            ["${network.ipv4.address}"]
-            (lib.optional network.ipv6.enable ["${network.ipv6.address}"])
-          ];
+          DNS =
+            if (network.enableDnsmasq)
+            then
+              lib.concatLists [
+                ["${network.ipv4.address}"]
+                (lib.optional network.ipv6.enable ["${network.ipv6.address}"])
+              ]
+            else ["114.114.114.114"];
           IPMasquerade = network.masquerade;
           ConfigureWithoutCarrier = true;
           IPv6AcceptRA = false;

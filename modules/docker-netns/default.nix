@@ -50,6 +50,10 @@ in {
       names = [netns];
     };
 
+    environment.systemPackages = with pkgs; [
+      iptables
+    ];
+
     systemd.services.docker = {
       bindsTo = ["${netns}-netns.service"];
       after = ["${netns}-netns.service"];
@@ -78,7 +82,7 @@ in {
           interface = "${dockerBridge}";
           domain = "${netns}";
           enableDnsmasq = false;
-          masquerade = "yes";
+          masquerade = "ipv4";
           ipv4 = {
             address = "${dockerGateway}";
             netmask = "24";
