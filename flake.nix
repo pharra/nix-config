@@ -291,14 +291,6 @@
         };
       }
 
-      # luris
-      {
-        name = "luris";
-        builds = ["kde" "gnome" "cosmic"];
-        nixos-modules = [./hosts/luris];
-        hostname = "luris";
-      }
-
       # homelab
       {
         name = "homelab";
