@@ -21,7 +21,7 @@
 
   environment.systemPackages = with pkgs; [
     kdePackages.kirigami
-    kdePackages.wallpaper-engine-plugin
+    # kdePackages.wallpaper-engine-plugin
 
     kdePackages.discover # Optional: Install if you use Flatpak or fwupd firmware update sevice
     kdePackages.kcalc # Calculator
