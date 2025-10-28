@@ -18,7 +18,19 @@
     };
   };
 
+  qt = {
+    enable = true;
+    style = "breeze";
+    platformTheme = "qt5ct";
+  };
+
   services.noctalia-shell.enable = true;
+
+  fonts.packages = with pkgs; [
+    # Niri fonts
+    inter
+    roboto
+  ];
 
   environment.systemPackages = with pkgs; [
     fuzzel
@@ -27,5 +39,15 @@
     kitty
     fastfetch
     alacritty
+
+    gpu-screen-recorder
+    brightnessctl
+    ddcutil
+    cliphist
+    matugen
+    cava
+    wlsunset
+    kdePackages.polkit-kde-agent-1
+    evolution-data-server
   ];
 }

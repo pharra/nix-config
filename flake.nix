@@ -250,8 +250,8 @@
       # dot
       {
         name = "dot";
-        builds = ["kde" "gnome" "cosmic"];
-        hostname = "192.168.31.240";
+        builds = ["kde" "gnome" "cosmic" "niri"];
+        hostname = "192.168.254.240";
         nixos-modules = [./hosts/dot nixos-hardware.nixosModules.microsoft-surface-common];
       }
 
