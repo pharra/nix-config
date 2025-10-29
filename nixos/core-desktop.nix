@@ -161,6 +161,9 @@
     opensc # Smart card support
     gnupg # If using GPG with YubiKey
     pcsclite
+
+    # bilibili
+    bilibili
   ];
 
   hardware.gpgSmartcards.enable = true;
