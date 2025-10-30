@@ -20,9 +20,9 @@
   age.identityPaths =
     if (config.environment.persistence != {})
     then [
-      "/home/${username}/.ssh/id_ed25519"
+      "/nix/persistent/home/${username}/.ssh/id_ed25519"
     ]
-    else ["/nix/persistent/home/${username}/.ssh/id_ed25519"];
+    else ["/home/${username}/.ssh/id_ed25519"];
 
   sops = {
     defaultSopsFile = ./default.yaml;
