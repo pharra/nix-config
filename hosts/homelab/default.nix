@@ -4,7 +4,6 @@
   pkgs,
   libs,
   mysecrets,
-  netboot_args,
   ...
 } @ args: let
   interface = {
@@ -45,7 +44,7 @@ in {
 
     (import ../../nixos/samba.nix {inherit config lib interface pkgs libs;})
 
-    (import ../../nixos/ipxe {inherit config lib interface pkgs libs netboot_args;})
+    (import ../../nixos/ipxe {inherit config lib interface pkgs libs;})
 
     ../../secrets/nixos.nix
 

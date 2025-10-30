@@ -47,8 +47,6 @@
     # nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     # nixpkgs.url = "github:FriedrichAltheide/nixpkgs/add-depmod-overrides";
-    nixpkgs-2305.url = "github:nixos/nixpkgs/nixos-23.05";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # home-manager, used for managing user configuration
     home-manager = {
@@ -65,6 +63,7 @@
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
     };
 
     mysecrets = {
@@ -94,13 +93,6 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
-    mlnx-ofed-nixos = {
-      url = "github:codgician/mlnx-ofed-nixos";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
-
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -109,21 +101,6 @@
     rime-config = {
       url = "github:Mintimate/oh-my-rime";
       flake = false;
-    };
-
-    nur = {
-      url = "github:nix-community/NUR";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    quickshell = {
-      url = "github:outfoxxed/quickshell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.quickshell.follows = "quickshell";
     };
   };
 
@@ -135,9 +112,6 @@
   outputs = inputs @ {
     self,
     nixpkgs,
-    nixpkgs-unstable,
-    nixpkgs-2305,
-    nix-darwin,
     home-manager,
     impermanence,
     deploy-rs,
@@ -146,12 +120,9 @@
     plasma-manager,
     NixVirt,
     nixos-hardware,
-    proxmox-nixos,
     sops-nix,
     rime-config,
-    nur,
-    quickshell,
-    noctalia,
+    agenix,
     ...
   }: let
     username = "wf";
@@ -179,7 +150,6 @@
     home-modules =
       [
         plasma-manager.homeModules.plasma-manager
-        noctalia.homeModules.default
       ]
       ++ (builtins.attrValues _home-modules);
 
@@ -188,40 +158,26 @@
         impermanence.nixosModules.impermanence
         nix-flatpak.nixosModules.nix-flatpak
         NixVirt.nixosModules.default
-        # Add packages from this repo and set up binary cache
-        # inputs.mlnx-ofed-nixos.nixosModules.setupCacheAndOverlays
-        # Add configuration options from this repo
-        inputs.mlnx-ofed-nixos.nixosModules.default
-        proxmox-nixos.nixosModules.proxmox-ve
         sops-nix.nixosModules.sops
-        noctalia.nixosModules.default
       ]
-      ++ (builtins.attrValues modules);
+      ++ (builtins.attrValues modules)
+      ++ [
+        {
+          nixpkgs.overlays = [
+            overlays
+          ];
+        }
+      ];
 
     system = x64_system;
 
-    commonSpecialArgs =
-      {
-        inherit username userfullname useremail legacyPackages overlays mysecrets deploy-rs home-modules NixVirt proxmox-nixos rime-config nur;
-        # use unstable branch for some packages to get the latest updates
-        pkgs-unstable = import nixpkgs-unstable {
-          system = x64_system; # refer the `system` parameter form outer scope recursively
-          # To use chrome, we need to allow the installation of non-free software
-          config.allowUnfree = true;
-        };
-
-        pkgs-2305 = import nixpkgs-2305 {
-          system = x64_system; # refer the `system` parameter form outer scope recursively
-          # To use chrome, we need to allow the installation of non-free software
-          config.allowUnfree = true;
-        };
-      }
-      // inputs;
+    commonSpecialArgs = {
+      inherit username userfullname useremail mysecrets deploy-rs home-modules NixVirt rime-config agenix;
+    };
     base_args = {
       inherit home-manager system;
     };
     stable_args = base_args // {inherit nixpkgs;};
-    unstable_args = base_args // {nixpkgs = nixpkgs-unstable;};
 
     hosts = let
       mkAzureHost = region: {
@@ -250,7 +206,7 @@
       # dot
       {
         name = "dot";
-        builds = ["kde" "gnome" "cosmic" "niri"];
+        builds = ["kde" "gnome" "cosmic"];
         hostname = "192.168.254.240";
         nixos-modules = [./hosts/dot nixos-hardware.nixosModules.microsoft-surface-common];
       }
@@ -272,7 +228,7 @@
       # zed
       {
         name = "zed";
-        builds = ["kde" "gnome" "cosmic" "niri"];
+        builds = ["kde" "gnome" "cosmic"];
         hostname = "zed.mlx";
         nixos-modules = [./hosts/zed];
         specialArgs = {
@@ -296,9 +252,6 @@
         name = "homelab";
         nixos-modules = [./hosts/homelab];
         builds = ["kde" "gnome" "cosmic" "base"];
-        specialArgs = {
-          netboot_args = {netboot_installer = self.nixosConfigurations."netboot_installer_base";};
-        };
       }
     ];
 

@@ -3,7 +3,6 @@
   lib,
   config,
   utils,
-  inputs,
   ...
 } @ args: {
   i18n.inputMethod = {
@@ -15,10 +14,6 @@
       fcitx5-gtk
       (fcitx5-rime.override {
         rimeDataPkgs = [];
-        # rimeDataPkgs = with pkgs.nur.repos.linyinfeng.rimePackages;
-        #   withRimeDeps [
-        #     rime-ice
-        #   ];
       })
       fcitx5-chinese-addons
       fcitx5-with-addons

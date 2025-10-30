@@ -13,16 +13,6 @@ in
     modules =
       nixos-modules
       ++ [
-        {
-          nixpkgs.overlays =
-            [
-              specialArgs.overlays
-              specialArgs.proxmox-nixos.overlays.${system}
-              specialArgs.nur.overlays.default
-            ]
-            ++ (builtins.attrValues specialArgs.legacyPackages."${system}".overlays);
-        }
-
         home-manager.nixosModules.home-manager
         {
           home-manager.useGlobalPkgs = true;

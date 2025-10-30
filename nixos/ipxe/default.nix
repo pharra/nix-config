@@ -6,11 +6,7 @@
   interface,
   netboot_args ? false,
   ...
-}:
-lib.mkIf (netboot_args != false)
-(let
-  netboot_installer = netboot_args.netboot_installer;
-in {
+}: {
   environment.systemPackages = with pkgs; [
     ipxe
   ];
@@ -24,13 +20,13 @@ in {
       source = pkgs.ipxe + "/undionly.kpxe";
     };
 
-    # "ipxe/netboot/bzImage" = {
-    #   source = netboot_installer.config.system.build.kernel + "/bzImage";
-    # };
+    "ipxe/netboot/bzImage" = lib.mkIf (netboot_args != false) {
+      source = netboot_args.netboot_installer.config.system.build.kernel + "/bzImage";
+    };
 
-    # "ipxe/netboot/initrd" = {
-    #   source = netboot_installer.config.system.build.netbootRamdisk + "/initrd";
-    # };
+    "ipxe/netboot/initrd" = lib.mkIf (netboot_args != false) {
+      source = netboot_args.netboot_installer.config.system.build.netbootRamdisk + "/initrd";
+    };
 
     "ipxe/boot.ipxe".text = ''
       #!ipxe
@@ -146,7 +142,7 @@ in {
 
       # :nixos-installer
       # echo Booting nixos installer
-      # kernel netboot/bzImage init=${netboot_installer.config.system.build.toplevel}/init ${toString netboot_installer.config.boot.kernelParams}
+      # kernel netboot/bzImage init=$\{netboot_installer.config.system.build.toplevel}/init $\{toString netboot_installer.config.boot.kernelParams}
       # initrd netboot/initrd
       # boot
 
@@ -173,28 +169,6 @@ in {
       initrd bootx64.efi  bootx64.efi
       initrd BCD          BCD$
     '';
-
-    # "ipxe/wimboot" = {
-    #   source = ./wimboot;
-    # };
-    # "ipxe/boot.wim" = {
-    #   source = ./boot.wim;
-    # };
-    # "ipxe/BCD" = {
-    #   source = ./BCD;
-    # };
-    # "ipxe/boot.sdi" = {
-    #   source = ./boot.sdi;
-    # };
-    # "ipxe/bootmgr" = {
-    #   source = ./bootmgr;
-    # };
-    # "ipxe/bootmgr.efi" = {
-    #   source = ./bootmgr.efi;
-    # };
-    # "ipxe/bootx64.efi" = {
-    #   source = ./bootx64.efi;
-    # };
   };
 
   services.static-web-server = {
@@ -210,4 +184,4 @@ in {
   #   dhcpNoBind = true;
   #   cmdLine = "init=${netboot_installer.config.system.build.toplevel}/init ${toString netboot_installer.config.boot.kernelParams}";
   # };
-})
+}

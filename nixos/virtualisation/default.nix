@@ -3,7 +3,6 @@
   lib,
   config,
   utils,
-  inputs,
   username,
   ...
 } @ args: {

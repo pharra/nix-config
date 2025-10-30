@@ -22,15 +22,8 @@
   #boot.kernelPackages = lib.mkForce pkgs.linuxPackages_5_4;
   boot.extraModulePackages = with config.boot.kernelPackages; [
     cpupower
-    #    (pkgs.mlnx_ofed.override {kernel = kernel;})
   ];
-  # boot.kernelPatches = lib.singleton {
-  #   name = "disbale_mlx5";
-  #   patch = null;
-  #   extraConfig = ''
-  #     MLX5_CORE n
-  #   '';
-  # };
+
   # Enable nested virsualization, required by security containers and nested vm.
   # boot.extraModprobeConfig = "options kvm_intel nested=1"; # for intel cpu
   boot.extraModprobeConfig = ''
@@ -76,13 +69,6 @@
     capSysAdmin = true;
     openFirewall = true;
     package = pkgs.sunshine.override {cudaSupport = true;};
-  };
-
-  hardware.mlnx-ofed = {
-    enable = false;
-    nvme.enable = true;
-    nfsrdma.enable = true;
-    kernel-mft.enable = true;
   };
 
   specialisation = {

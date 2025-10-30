@@ -2,7 +2,6 @@
   lib,
   pkgs,
   config,
-  pkgs-2305,
   ...
 }:
 with lib; let
@@ -29,9 +28,9 @@ in {
 
   config = lib.mkIf cfg.enable {
     boot.initrd = {
-      services.udev.rules = concatMapStringsSep "\n" (interface: "ACTION==\"add\", SUBSYSTEM==\"net\", ATTR{address}==\"${interface.mac}\", NAME=\"${interface.name}\" ATTR{power/control}=\"on\"") cfg.interfaces;
+      services.udev.rules = concatMapStringsSep "\n" (interface: "ACTION==\"add\", SUBSYSTEM==\"net\", ATTR{address}==\"${interface.mac}\", NAME=\"${interface.name}\", ATTR{power/control}=\"on\"") cfg.interfaces;
     };
 
-    services.udev.extraRules = concatMapStringsSep "\n" (interface: "ACTION==\"add\", SUBSYSTEM==\"net\", ATTR{address}==\"${interface.mac}\", NAME=\"${interface.name}\" ATTR{power/control}=\"on\"") cfg.interfaces;
+    services.udev.extraRules = concatMapStringsSep "\n" (interface: "ACTION==\"add\", SUBSYSTEM==\"net\", ATTR{address}==\"${interface.mac}\", NAME=\"${interface.name}\", ATTR{power/control}=\"on\"") cfg.interfaces;
   };
 }
