@@ -16,7 +16,68 @@
     XDG_SESSION_TYPE = "wayland";
     XDG_CURRENT_DESKTOP = "niri";
     DISPLAY = ":0";
+
+    QML2_IMPORT_PATH = lib.concatStringsSep ":" [
+      (lib.makeSearchPath "lib/qt-6/qml" [
+        quickshell
+        pkgs.kdePackages.qtdeclarative
+        pkgs.kdePackages.kirigami.unwrapped
+        pkgs.kdePackages.qt5compat
+      ])
+    ];
+
+    XDG_ICON_DIR = "${pkgs.whitesur-icon-theme}/share/icons/WhiteSur";
   };
+
+home.pointerCursor = {
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Original-Ice";
+    size = 20;
+    gtk.enable = true;
+    x11.enable = true;
+  };
+
+  gtk = {
+    enable = true;
+
+    gtk2.configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";
+
+    iconTheme = {
+      name = "WhiteSur";
+      package = pkgs.whitesur-icon-theme.override {
+        boldPanelIcons = true;
+        alternativeIcons = true;
+      };
+    };
+  };
+  xdg.configFile."gtk-4.0/gtk.css".enable = lib.mkForce false;
+
+  programs.firefox.enable = true;
+
+  home.packages = with pkgs; [
+    fuzzel
+    vesktop
+    webcord
+    kitty
+    fastfetch
+    alacritty
+
+    # quick shell
+    matugen
+    kdePackages.qt5compat
+    kdePackages.qtbase
+    kdePackages.qtdeclarative
+
+    gpu-screen-recorder
+    brightnessctl
+    ddcutil
+    cliphist
+    matugen
+    cava
+    wlsunset
+    kdePackages.polkit-kde-agent-1
+    evolution-data-server
+  ];
 
   programs.noctalia-shell = {
     enable = true;
