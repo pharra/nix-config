@@ -189,7 +189,7 @@ in {
     };
   };
 
-  services.xserver.videoDrivers = ["nvidia" "amdgpu"]; # will install nvidia-vaapi-driver by default
+  services.xserver.videoDrivers = ["amdgpu" "nvidia"]; # will install nvidia-vaapi-driver by default
 
   hardware = {
     graphics = {

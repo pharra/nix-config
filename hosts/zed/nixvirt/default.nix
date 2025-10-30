@@ -114,6 +114,8 @@
 
     # Notify system about GPU removal
     echo "[$(date)] Notifying system about GPU removal"
+    # send udev to remove the GPU
+    ${pkgs.systemd}/bin/udevadm trigger -c remove /dev/dri/by-path/0000:$nvidia_bus_path-card
     ${pkgs.coreutils-full}/bin/echo -n "remove" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/devices/0000:$nvidia_bus_path/drm/card*/uevent
 
     # First try: graceful shutdown
