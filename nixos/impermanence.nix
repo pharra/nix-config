@@ -52,6 +52,9 @@
         ".config"
         ".local"
 
+        # firefox
+        ".mozilla"
+
         # Important config
         ".gnupg"
         ".ssh"
