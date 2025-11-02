@@ -61,7 +61,7 @@ in {
   config = mkIf cfg.enable {
     systemd.services.surface-dtx-daemon = {
       wantedBy = ["multi-user.target"];
-      path = [pkgs.surface-dtx-daemon pkgs.utillinux pkgs.bash];
+      path = [pkgs.surface-dtx-daemon pkgs.util-linux pkgs.bash];
       script = "RUST_BACKTRACE=full exec ${pkgs.surface-dtx-daemon}/bin/surface-dtx-daemon";
     };
     environment.systemPackages = [pkgs.surface-control];

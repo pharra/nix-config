@@ -49,7 +49,7 @@ in {
 
     nativeBuildInputs = [
       python3
-      python3.pkgs.configshell
+      python3.pkgs.configshell-fb
       python3.pkgs.sphinx
       python3.pkgs.pyelftools
       python3.pkgs.setuptools
@@ -93,7 +93,7 @@ in {
     '';
 
     propagatedBuildInputs = [
-      python3.pkgs.configshell
+      python3.pkgs.configshell-fb
     ];
 
     patches = [
@@ -157,7 +157,7 @@ in {
     ];
 
     dependencies = with python3.pkgs; [
-      configshell
+      configshell-fb
       sphinx
       pyelftools
       setuptools
