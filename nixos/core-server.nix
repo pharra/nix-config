@@ -30,6 +30,9 @@
     "cifs" # mount windows share
   ];
 
+  # The primary use case is to ensure when using ZFS that a pool isn’t imported accidentally on a wrong machine.
+  networking.hostId = lib.mkDefault (lib.toLower (lib.substring 0 8 (builtins.hashString "sha256" "${config.networking.hostName}")));
+
   hardware.enableRedistributableFirmware = true;
   # do garbage collection weekly to keep disk usage low
   nix.gc = {
