@@ -59,20 +59,6 @@ in {
     ../../nixos/scripts.nix
   ];
 
-  # supported fil systems, so we can mount any removable disks with these filesystems
-  boot.supportedFilesystems = [
-    "ext4"
-    "btrfs"
-    "xfs"
-    "zfs"
-    "ntfs"
-    "fat"
-    "vfat"
-    "exfat"
-    "cifs" # mount windows share
-    "nfs"
-  ];
-
   # Bootloader.
   boot.loader = {
     efi = {
@@ -211,36 +197,42 @@ in {
     device = "system";
     fsType = "zfs";
     neededForBoot = true;
+    options = ["zfsutil"];
   };
 
   fileSystems."/tmp" = {
     device = "system/tmp";
     fsType = "zfs";
     neededForBoot = true;
+    options = ["zfsutil"];
   };
 
   fileSystems."/nix" = {
     device = "system/nix";
     fsType = "zfs";
     neededForBoot = true;
+    options = ["zfsutil"];
   };
 
   fileSystems."/var" = {
     device = "system/var";
     fsType = "zfs";
     neededForBoot = true;
+    options = ["zfsutil"];
   };
 
   fileSystems."/nix/var" = {
     device = "system/nix/var";
     fsType = "zfs";
     neededForBoot = true;
+    options = ["zfsutil"];
   };
 
   fileSystems."/nix/persistent" = {
     device = "system/nix/persistent";
     fsType = "zfs";
     neededForBoot = true;
+    options = ["zfsutil"];
   };
 
   fileSystems."/boot/efi" = {

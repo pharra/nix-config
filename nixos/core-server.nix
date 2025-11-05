@@ -17,6 +17,19 @@
 
   boot.kernelPackages = lib.mkOverride 1400 pkgs.linuxPackages_6_12;
 
+  # supported fil systems, so we can mount any removable disks with these filesystems
+  boot.supportedFilesystems = [
+    "ext4"
+    "btrfs"
+    "xfs"
+    "zfs"
+    "ntfs"
+    "fat"
+    "vfat"
+    "exfat"
+    "cifs" # mount windows share
+  ];
+
   hardware.enableRedistributableFirmware = true;
   # do garbage collection weekly to keep disk usage low
   nix.gc = {

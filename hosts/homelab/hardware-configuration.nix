@@ -108,18 +108,21 @@
     device = "system";
     fsType = "zfs";
     neededForBoot = true;
+    options = ["zfsutil"];
   };
 
   fileSystems."/tmp" = {
     device = "system/tmp";
     fsType = "zfs";
     neededForBoot = true;
+    options = ["zfsutil"];
   };
 
   #  fileSystems."/" = {
   #    device = "system/blank";
   #    fsType = "zfs";
   #    neededForBoot = true;
+  #    options = ["zfsutil"];
   #  };
 
   #  boot.initrd.systemd.services.rollback = {
@@ -147,12 +150,14 @@
     device = "system/nix";
     fsType = "zfs";
     neededForBoot = true;
+    options = ["zfsutil"];
   };
 
   fileSystems."/nix/persistent" = {
     device = "system/persistent";
     fsType = "zfs";
     neededForBoot = true;
+    options = ["zfsutil"];
   };
 
   fileSystems."/boot/efi" = {

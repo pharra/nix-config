@@ -98,30 +98,35 @@ lib.mkIf boot_from_network {
     device = "fluent";
     fsType = "zfs";
     neededForBoot = true;
+    options = ["zfsutil"];
   };
 
   fileSystems."/tmp" = lib.mkForce {
     device = "fluent/tmp";
     fsType = "zfs";
     neededForBoot = true;
+    options = ["zfsutil"];
   };
 
   fileSystems."/nix" = lib.mkForce {
     device = "fluent/nix";
     fsType = "zfs";
     neededForBoot = true;
+    options = ["zfsutil"];
   };
 
   fileSystems."/nix/var" = lib.mkForce {
     device = "fluent/nix/var";
     fsType = "zfs";
     neededForBoot = true;
+    options = ["zfsutil"];
   };
 
   fileSystems."/nix/persistent" = lib.mkForce {
     device = "fluent/nix/persistent";
     fsType = "zfs";
     neededForBoot = true;
+    options = ["zfsutil"];
   };
 
   fileSystems."/boot/efi" = lib.mkForce {
