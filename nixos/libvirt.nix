@@ -48,6 +48,8 @@
   environment.systemPackages = with pkgs; [
     virt-manager
 
+    swtpm
+
     looking-glass-client
   ];
 }
