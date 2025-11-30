@@ -89,6 +89,15 @@
     openFirewall = true;
   };
 
+  programs.ssh = {
+    extraConfig = "
+      Host github.com
+        Hostname ssh.github.com
+        Port 443
+        User git
+    ";
+  };
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
