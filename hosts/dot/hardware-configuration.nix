@@ -15,7 +15,7 @@ in {
 
   services.iptsd.enable = lib.mkDefault true;
   environment.systemPackages = [pkgs.surface-control];
-  hardware.microsoft-surface.kernelVersion = "stable";
+  hardware.microsoft-surface.kernelVersion = "longterm";
   services.surface-dtx-daemon.enable = true;
   services.pipewire.enable = lib.mkForce false;
   services.pulseaudio.enable = lib.mkForce true;
