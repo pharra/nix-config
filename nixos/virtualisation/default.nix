@@ -15,7 +15,7 @@
   virtualisation.docker = {
     enable = true;
     daemon.settings.features.cdi = true;
-    daemon.settings.live-restore = false;
+    # daemon.settings.live-restore = false;
     daemon.settings.dns = ["114.114.114.114"]; # if not set, docker compose will fail to resolve hostnames
   };
   virtualisation.containers.enable = true;
