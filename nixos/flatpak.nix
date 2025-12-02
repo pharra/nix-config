@@ -36,7 +36,7 @@
     };
     "com.qq.QQ".Context.sockets = [
       "x11"
-      "!wayland"
+      "wayland"
       "!fallback-x11"
     ]; # No Wayland support
   };
