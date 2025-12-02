@@ -95,8 +95,8 @@ in {
     };
 
     systemd.services."${netns}-netns" = {
-      bindsTo = ["netns@${netns}.service" "sys-devices-virtual-net-${dockerBridge}.device"];
-      after = ["netns@${netns}.service" "sys-devices-virtual-net-${dockerBridge}.device"];
+      bindsTo = ["netns@${netns}.service"];
+      after = ["netns@${netns}.service" "systemd-networkd.service"];
       serviceConfig.NetworkNamespacePath = "/var/run/netns/${netns}";
       path = with pkgs; [
         iproute2
