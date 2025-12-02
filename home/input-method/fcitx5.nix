@@ -16,7 +16,6 @@
   };
 in {
   home.file.".config/fcitx5/profile".source = ./profile;
-  home.file.".config/fcitx5/profile-bak".source = ./profile; # used for backup
   home.file.".config/fcitx5/conf/classicui.conf".source = ./classicui.conf;
 
   xdg.dataFile."fcitx5/rime" = {
