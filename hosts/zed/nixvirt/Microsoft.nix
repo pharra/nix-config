@@ -19,10 +19,7 @@ in {
         count = 16;
         unit = "GiB";
       };
-      storage_vol = {
-        pool = "VMPool";
-        volume = "Microsoft.qcow2";
-      };
+      storage_vol = /fluent/DiskPool/Microsoft.qcow2;
       nvram_path = /home/wf/Data/RAMPool/Microsoft.fd;
       no_graphics = false;
       virtio_net = true;
