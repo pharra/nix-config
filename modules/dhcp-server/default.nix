@@ -149,15 +149,15 @@ in {
           enable-tftp = true;
           dhcp-range = lib.concatLists [
             ["interface:${iface},${network.ipv4.pool}"]
-            (lib.optional network.ipv6.enable ["${network.ipv6.pool},constructor:${iface},ra-stateless"])
+            (lib.optional network.ipv6.enable "${network.ipv6.pool},constructor:${iface},ra-stateless")
           ];
           listen-address = lib.concatLists [
             ["${network.ipv4.address}"]
-            (lib.optional network.ipv6.enable ["${network.ipv6.address}"])
+            (lib.optional network.ipv6.enable "${network.ipv6.address}")
           ];
           dhcp-option = lib.concatLists [
             ["interface:${iface},6,${network.ipv4.address}"]
-            (lib.optional network.ipv6.enable ["interface:${iface},option6:dns-server,[${network.ipv6.address}]"])
+            (lib.optional network.ipv6.enable "interface:${iface},option6:dns-server,[${network.ipv6.address}]")
           ];
           except-interface = ["lo"];
           bind-interfaces = true;
@@ -210,14 +210,14 @@ in {
         networkConfig = {
           Address = lib.concatLists [
             ["${network.ipv4.address}/${network.ipv4.netmask}"]
-            (lib.optional network.ipv6.enable ["${network.ipv6.address}/${network.ipv6.netmask}"])
+            (lib.optional network.ipv6.enable "${network.ipv6.address}/${network.ipv6.netmask}")
           ];
           DNS =
             if (network.enableDnsmasq)
             then
               lib.concatLists [
                 ["${network.ipv4.address}"]
-                (lib.optional network.ipv6.enable ["${network.ipv6.address}"])
+                (lib.optional network.ipv6.enable "${network.ipv6.address}")
               ]
             else ["114.114.114.114"];
           IPMasquerade = network.masquerade;
