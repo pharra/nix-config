@@ -33,9 +33,6 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # windows dual boot
-  time.hardwareClockInLocalTime = true;
-
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
