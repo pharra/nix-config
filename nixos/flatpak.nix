@@ -74,5 +74,9 @@
       appId = "org.videolan.VLC";
       origin = "flathub";
     }
+    {
+      appId = "net.lutris.Lutris";
+      origin = "flathub";
+    }
   ];
 }
