@@ -38,6 +38,7 @@
       "docker"
       "input"
       "uinput"
+      "render"
     ];
     openssh.authorizedKeys.keys = [
       # win desktop

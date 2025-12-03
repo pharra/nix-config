@@ -16,6 +16,7 @@
       "/etc/ksmbd"
       "/etc/caddy"
       "/etc/v2raya"
+      "/etc/cdi"
       #"/smb"
     ];
     files = [

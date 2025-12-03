@@ -18,6 +18,11 @@
     # daemon.settings.live-restore = false;
     daemon.settings.dns = ["114.114.114.114"]; # if not set, docker compose will fail to resolve hostnames
   };
+
+  systemd.services.docker = {
+    serviceConfig.MountFlags = "shared";
+  };
+
   virtualisation.containers.enable = true;
   virtualisation.oci-containers.backend = "podman";
   virtualisation = {
