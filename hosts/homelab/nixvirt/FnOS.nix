@@ -19,10 +19,7 @@ in {
         count = 8;
         unit = "GiB";
       };
-      storage_vol = {
-        pool = "VMPool";
-        volume = "FnOS.qcow2";
-      };
+      storage_vol = /home/wf/Data/VMPool/FnOS.qcow2;
       # install_vol = {
       #   pool = "ISOPool";
       #   volume = "fnos-0.9.29-1142.iso";

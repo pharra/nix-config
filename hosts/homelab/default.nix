@@ -121,6 +121,7 @@ in {
 
   systemd.services = {
     tune-usb-autosuspend = {
+      enable = false;
       description = "Disable USB autosuspend";
       wantedBy = ["multi-user.target"];
       serviceConfig = {Type = "oneshot";};
@@ -267,9 +268,6 @@ in {
 
   hardware.graphics = {
     enable = true;
-    # extraPackages = with pkgs; [
-    #   nvidia-vaapi-driver
-    # ];
   };
 
   # This value determines the NixOS release from which the default
