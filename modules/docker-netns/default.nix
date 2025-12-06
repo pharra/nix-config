@@ -28,7 +28,7 @@ in {
       type = types.str;
     };
     dockerHostIP = mkOption {
-      default = "172.17.254.2/24";
+      default = "172.17.254.2";
       type = types.str;
     };
     netns = mkOption {
@@ -115,7 +115,7 @@ in {
           ip link set ${hostVeth} up
           nsenter -t 1 -n -- ip link set ${dockerNsVeth} up
 
-          ip addr add ${dockerHostIP} dev ${hostVeth}
+          ip addr add ${dockerHostIP}/24 dev ${hostVeth}
           ip route add default via ${dockerGateway} dev ${hostVeth}
         '';
         ExecStop = pkgs.writeShellScript "stop-${netns}-netns" ''

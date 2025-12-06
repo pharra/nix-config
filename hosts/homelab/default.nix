@@ -51,7 +51,7 @@ in {
 
     ../../nixos/sftp-server.nix
     ../../nixos/caddy.nix
-    ../../nixos/tailscale.nix
+    # ../../nixos/tailscale.nix
 
     ../../nixos/virtualisation
     ../../nixos/scripts.nix
@@ -63,8 +63,6 @@ in {
     ../../nixos/archlinux
 
     ./nixvirt
-
-    ../../nixos/openwrt
   ];
 
   systemd.sleep.extraConfig = ''
@@ -159,13 +157,23 @@ in {
     inherit interfaces;
   };
 
-  services.docker-netns = {
-    enable = true;
-    autoConfigureBridge = false;
-    dockerBridge = "br2";
-    dockerGateway = "192.168.31.254";
-    dockerHostIP = "192.168.31.2/24";
-  };
+  services.openwrt.enable = false;
+
+  services.docker-netns =
+    if config.services.openwrt.enable
+    then {
+      enable = true;
+      autoConfigureBridge = false;
+      dockerBridge = "br2";
+      dockerGateway = "192.168.31.254";
+      dockerHostIP = "192.168.31.2";
+    }
+    else {
+      enable = true;
+      autoConfigureBridge = true;
+      dockerGateway = "192.168.31.254";
+      dockerHostIP = "192.168.31.2";
+    };
 
   services.dhcpServer = {
     enable = true;
@@ -174,14 +182,14 @@ in {
         name = "eth";
         interface = interface.eth;
         domain = "mlx";
-        masquerade = "both";
+        # masquerade = "both";
         ipv4 = {
           address = "192.168.29.1";
           netmask = "24";
           pool = "192.168.29.50,192.168.29.150";
         };
         ipv6 = {
-          enable = true; # disable IPv6 for this network
+          enable = false; # disable IPv6 for this network
           address = "fd00:0:29::1";
           netmask = "64";
           pool = "::";
