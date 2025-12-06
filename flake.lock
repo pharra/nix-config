@@ -141,22 +141,6 @@
         "type": "github"
       }
     },
-    "mysecrets": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1764755161,
-        "narHash": "sha256-Pz3Nvdsv1rdC00vxferEr3SL2aKlnh22fRjH6NUattY=",
-        "owner": "pharra",
-        "repo": "agenix-secrets",
-        "rev": "8b96eab7c2c140498824f01583d822aa17adc288",
-        "type": "github"
-      },
-      "original": {
-        "owner": "pharra",
-        "repo": "agenix-secrets",
-        "type": "github"
-      }
-    },
     "nix-flatpak": {
       "locked": {
         "lastModified": 1754777568,
@@ -250,7 +234,6 @@
         "deploy-rs": "deploy-rs",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
-        "mysecrets": "mysecrets",
         "nix-flatpak": "nix-flatpak",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",

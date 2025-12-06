@@ -67,11 +67,6 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    mysecrets = {
-      url = "github:pharra/agenix-secrets";
-      flake = false;
-    };
-
     deploy-rs = {
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -116,7 +111,6 @@
     home-manager,
     impermanence,
     deploy-rs,
-    mysecrets,
     nix-flatpak,
     plasma-manager,
     NixVirt,
@@ -171,6 +165,8 @@
       ];
 
     system = x64_system;
+
+    mysecrets = ./secrets/agenix;
 
     commonSpecialArgs = {
       inherit username userfullname useremail mysecrets deploy-rs home-modules NixVirt rime-config agenix;
