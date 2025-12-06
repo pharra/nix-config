@@ -133,7 +133,7 @@ in {
     script = ''
       set -eu
       ${pkgs.rclone}/bin/rclone --max-size 1G delete 115:/115open/云下载/share/media --config ${config.age.secrets.rclone_config.path}
-      ${pkgs.rclone}/bin/rclone copy -Pv 115:/115open/云下载/share/media /share/media --config ${config.age.secrets.rclone_config.path}
+      ${pkgs.rclone}/bin/rclone copy -Pv --min-size 1G 115:/115open/云下载/share/media /share/media --config ${config.age.secrets.rclone_config.path}
     '';
     serviceConfig = {
       Type = "oneshot";
