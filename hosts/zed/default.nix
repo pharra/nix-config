@@ -142,7 +142,6 @@ in {
         };
         dhcpV4Config = {
           UseDomains = true;
-          UseRoutes = false;
         };
         ipv6AcceptRAConfig = {
           UseDNS = true;
