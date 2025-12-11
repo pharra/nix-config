@@ -190,7 +190,7 @@ in {
         };
         ipv6 = {
           enable = true; # disable IPv6 for this network
-          address = "fd00:0:29::1";
+          address = "fdd4:c514:7378:0::1";
           netmask = "64";
           pool = "::";
         };
