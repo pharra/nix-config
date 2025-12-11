@@ -137,7 +137,7 @@ in {
           # start a DHCP Client for IPv4 Addressing/Routing
           DHCP = "ipv4";
           # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
-          IPv6AcceptRA = false;
+          IPv6AcceptRA = true;
           Domains = ["mlx"];
         };
         dhcpV4Config = {

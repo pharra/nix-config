@@ -182,14 +182,14 @@ in {
         name = "eth";
         interface = interface.eth;
         domain = "mlx";
-        # masquerade = "both";
+        masquerade = "both";
         ipv4 = {
           address = "192.168.29.1";
           netmask = "24";
           pool = "192.168.29.50,192.168.29.150";
         };
         ipv6 = {
-          enable = false; # disable IPv6 for this network
+          enable = true; # disable IPv6 for this network
           address = "fd00:0:29::1";
           netmask = "64";
           pool = "::";
