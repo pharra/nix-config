@@ -69,6 +69,14 @@
           };
         };
 
+        channel = {
+          type = "unix";
+          target = {
+            type = "virtio";
+            name = "org.qemu.guest_agent.0";
+          };
+        };
+
         tpm = {
           model = "tpm-crb";
           backend = {
@@ -80,9 +88,6 @@
       // (
         if no_graphics
         then {
-          channel = null;
-          graphics = null;
-          audio = null;
           video = {
             model = {
               type = "none";
@@ -155,9 +160,6 @@
       // (
         if no_graphics
         then {
-          channel = null;
-          graphics = null;
-          audio = null;
           video = {
             model = {
               type = "none";

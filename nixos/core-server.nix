@@ -77,6 +77,8 @@
   networking.firewall.extraCommands = lib.mkIf (config.networking.nftables.enable != true) "iptables -A INPUT -j ACCEPT";
   networking.nftables.enable = true;
 
+  systemd.services.systemd-udev-settle.enable = false;
+
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
