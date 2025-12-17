@@ -57,23 +57,4 @@
         force group = users
     '';
   };
-
-  services.nfs = {
-    server = {
-      enable = true;
-      lockdPort = 4001;
-      mountdPort = 4002;
-      statdPort = 4000;
-    };
-    settings = {
-      nfsd.udp = true;
-      nfsd.rdma = true;
-      # nfsd.vers2 = false;
-      # nfsd.vers3 = false;
-      # nfsd.vers4 = true;
-      # nfsd."vers4.0" = false;
-      # nfsd."vers4.1" = false;
-      # nfsd."vers4.2" = true;
-    };
-  };
 }

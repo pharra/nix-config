@@ -226,7 +226,7 @@
       {
         name = "zed";
         builds = ["kde" "gnome" "cosmic"];
-        hostname = "zed.mlx";
+        # hostname = "zed.local";
         nixos-modules = [./hosts/zed];
         specialArgs = {
           boot_from_network = false;

@@ -168,12 +168,12 @@ in {
           dhcp-match = "set:ipxe,175";
           dhcp-boot = ["tag:!ipxe,ipxe.efi" "tag:ipxe,boot.ipxe"];
           dhcp-leasefile = "${stateDir}/dnsmasq-${iface}.leases";
-          local = "/${network.domain}/";
-          domain = network.domain;
+          # local = "/${network.domain}/";
+          # domain = network.domain;
           expand-hosts = true;
           no-hosts = true;
           server = "114.114.114.114";
-          host-record = [hostrecord];
+          # host-record = [hostrecord];
         };
       in {
         name = "dnsmasq-${iface}";
@@ -226,7 +226,7 @@ in {
           ConfigureWithoutCarrier = true;
           IPv6AcceptRA = false;
           IPv6PrivacyExtensions = "no";
-          Domains = ["${network.domain}"];
+          # Domains = ["${network.domain}"];
         };
         linkConfig = {
           # or "routable" with IP addresses configured

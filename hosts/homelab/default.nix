@@ -43,7 +43,7 @@ in {
 
     ../../nixos/spdk.nix
 
-    (import ../../nixos/samba.nix {inherit config lib interface pkgs libs;})
+    # (import ../../nixos/samba.nix {inherit config lib interface pkgs libs;})
 
     (import ../../nixos/ipxe {inherit config lib interface pkgs libs;})
 
@@ -158,6 +158,25 @@ in {
   };
 
   services.openwrt.enable = false;
+
+  services.nfs = {
+    server = {
+      enable = true;
+      lockdPort = 4001;
+      mountdPort = 4002;
+      statdPort = 4000;
+    };
+    settings = {
+      nfsd.udp = true;
+      nfsd.rdma = true;
+      # nfsd.vers2 = false;
+      # nfsd.vers3 = false;
+      # nfsd.vers4 = true;
+      # nfsd."vers4.0" = false;
+      # nfsd."vers4.1" = false;
+      # nfsd."vers4.2" = true;
+    };
+  };
 
   services.docker-netns =
     if config.services.openwrt.enable
