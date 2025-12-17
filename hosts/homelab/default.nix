@@ -139,6 +139,27 @@ in {
     };
   };
 
+  systemd.timers."sync-short" = {
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnBootSec = "5m";
+      OnUnitActiveSec = "2h";
+      Unit = "sync-short.service";
+    };
+  };
+
+  systemd.services."sync-short" = {
+    script = ''
+      set -eu
+      ${pkgs.rclone}/bin/rclone --max-size 100M delete 115:/115open/云下载/share/telegram --config ${config.age.secrets.rclone_config.path}
+      ${pkgs.rclone}/bin/rclone copy -Pv --min-size 100M 115:/115open/云下载/share/telegram /share/telegram --config ${config.age.secrets.rclone_config.path}
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = username;
+    };
+  };
+
   systemd.services = {
     tune-usb-autosuspend = {
       enable = false;
