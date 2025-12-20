@@ -155,12 +155,20 @@ in {
             ["${network.ipv4.address}"]
             (lib.optional network.ipv6.enable "${network.ipv6.address}")
           ];
-          dhcp-option = lib.concatLists [
-            ["interface:${iface},6,${network.ipv4.address}"]
-            (lib.optional network.ipv6.enable "interface:${iface},option6:dns-server,[${network.ipv6.address}]")
-            (lib.optional (network.masquerade == "no") "interface:${iface},3")
-            (lib.optional (network.masquerade == "no" && network.ipv6.enable) "interface:${iface},option6:3")
-          ];
+          dhcp-option =
+            if network.masquerade == "no"
+            then
+              lib.concatLists [
+                ["interface:${iface},3"]
+                ["interface:${iface},6"]
+                ["interface:${iface},option6:3"]
+                ["interface:${iface},option6:dns-server"]
+              ]
+            else
+              lib.concatLists [
+                ["interface:${iface},6,${network.ipv4.address}"]
+                (lib.optional network.ipv6.enable "interface:${iface},option6:dns-server,[${network.ipv6.address}]")
+              ];
           except-interface = ["lo"];
           bind-interfaces = true;
           log-dhcp = true;
