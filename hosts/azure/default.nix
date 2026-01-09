@@ -62,8 +62,29 @@ in {
     ];
   };
 
-  programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
+
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestions.enable = true;
+    vteIntegration = true;
+    histSize = 1048576;
+    syntaxHighlighting.enable = true;
+
+    ohMyZsh = {
+      enable = true;
+      plugins = [
+        "docker"
+        "git"
+        "golang"
+        "systemd"
+        "git-auto-fetch"
+        "history-substring-search"
+      ];
+      theme = "candy";
+    };
+  };
 
   networking.firewall.enable = lib.mkForce false;
 
