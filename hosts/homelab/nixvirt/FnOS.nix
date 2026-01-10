@@ -55,21 +55,21 @@ in {
               else
                 FnOS.devices.disk
                 ++ [
-                  # Games.qcow2
+                  # Data.qcow2
                   {
-                    type = "block";
+                    type = "file";
                     device = "disk";
                     driver = {
                       name = "qemu";
-                      type = "raw";
+                      type = "qcow2";
                       cache = "none";
                       discard = "unmap";
                     };
                     source = {
-                      dev = "/dev/zvol/data/fnos";
+                      file = "/home/wf/Data/VMPool/FnOS-Data.qcow2";
                     };
                     target = {
-                      dev = "vdd";
+                      dev = "vde";
                       bus = "virtio";
                     };
                   }

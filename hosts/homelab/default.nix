@@ -51,7 +51,7 @@ in {
 
     ../../nixos/sftp-server.nix
     ../../nixos/caddy.nix
-    # ../../nixos/tailscale.nix
+    ../../nixos/easytier.nix
 
     ../../nixos/virtualisation
     ../../nixos/scripts.nix
