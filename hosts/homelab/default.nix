@@ -118,47 +118,47 @@ in {
     };
   };
 
-  systemd.timers."sync-115" = {
-    wantedBy = ["timers.target"];
-    timerConfig = {
-      OnBootSec = "5m";
-      OnUnitActiveSec = "6h";
-      Unit = "sync-115.service";
-    };
-  };
+  # systemd.timers."sync-115" = {
+  #   wantedBy = ["timers.target"];
+  #   timerConfig = {
+  #     OnBootSec = "5m";
+  #     OnUnitActiveSec = "6h";
+  #     Unit = "sync-115.service";
+  #   };
+  # };
 
-  systemd.services."sync-115" = {
-    script = ''
-      set -eu
-      ${pkgs.rclone}/bin/rclone --max-size 1G delete 115:/115open/云下载/share/media --config ${config.age.secrets.rclone_config.path}
-      ${pkgs.rclone}/bin/rclone copy -Pv --min-size 1G 115:/115open/云下载/share/media /share/media --config ${config.age.secrets.rclone_config.path}
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = username;
-    };
-  };
+  # systemd.services."sync-115" = {
+  #   script = ''
+  #     set -eu
+  #     ${pkgs.rclone}/bin/rclone --max-size 1G delete 115:/115open/云下载/share/media --config ${config.age.secrets.rclone_config.path}
+  #     ${pkgs.rclone}/bin/rclone copy -Pv --min-size 1G 115:/115open/云下载/share/media /share/media --config ${config.age.secrets.rclone_config.path}
+  #   '';
+  #   serviceConfig = {
+  #     Type = "oneshot";
+  #     User = username;
+  #   };
+  # };
 
-  systemd.timers."sync-short" = {
-    wantedBy = ["timers.target"];
-    timerConfig = {
-      OnBootSec = "5m";
-      OnUnitActiveSec = "2h";
-      Unit = "sync-short.service";
-    };
-  };
+  # systemd.timers."sync-short" = {
+  #   wantedBy = ["timers.target"];
+  #   timerConfig = {
+  #     OnBootSec = "5m";
+  #     OnUnitActiveSec = "2h";
+  #     Unit = "sync-short.service";
+  #   };
+  # };
 
-  systemd.services."sync-short" = {
-    script = ''
-      set -eu
-      ${pkgs.rclone}/bin/rclone --max-size 100M delete 115:/115open/云下载/share/telegram --config ${config.age.secrets.rclone_config.path}
-      ${pkgs.rclone}/bin/rclone copy -Pv --min-size 100M 115:/115open/云下载/share/telegram /share/telegram --config ${config.age.secrets.rclone_config.path}
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = username;
-    };
-  };
+  # systemd.services."sync-short" = {
+  #   script = ''
+  #     set -eu
+  #     ${pkgs.rclone}/bin/rclone --max-size 100M delete 115:/115open/云下载/share/telegram --config ${config.age.secrets.rclone_config.path}
+  #     ${pkgs.rclone}/bin/rclone copy -Pv --min-size 100M 115:/115open/云下载/share/telegram /share/telegram --config ${config.age.secrets.rclone_config.path}
+  #   '';
+  #   serviceConfig = {
+  #     Type = "oneshot";
+  #     User = username;
+  #   };
+  # };
 
   systemd.services = {
     tune-usb-autosuspend = {
