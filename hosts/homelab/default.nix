@@ -79,10 +79,6 @@ in {
   services.zfs.autoScrub.enable = true;
   services.zfs.trim.enable = true;
 
-  # raid
-  boot.swraid.enable = true;
-  boot.swraid.mdadmConf = "ARRAY /dev/md0 metadata=1.2 spares=1 name=homelab:0 UUID=c8e5fbbe:edd3c686:a1e53f13:e3922146";
-
   # Bootloader.
   boot.loader = {
     efi = {
