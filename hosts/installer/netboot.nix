@@ -6,8 +6,9 @@
 } @ args: {
   imports = [
     ./hardware-configuration.nix
-    ../../nixos/user-group.nix
   ];
+
+  services.pharra.user-group.enable = true;
 
   boot.iscsi-initiatord = {
     name = "iqn.2020-08.org.linux-iscsi.initiatorhost:installer";

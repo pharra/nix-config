@@ -1,9 +1,12 @@
 {config, ...} @ args: {
   imports = [
     ./hardware-configuration.nix
-    ../../nixos/core-server.nix
-    ../../nixos/user-group.nix
   ];
+
+  services.pharra = {
+    core-server.enable = true;
+    user-group.enable = true;
+  };
 
   # Bootloader.
   boot.loader = {

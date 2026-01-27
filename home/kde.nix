@@ -1,11 +1,10 @@
 {username, ...}: {
-  imports = [
-    ./base
-    ./input-method
-    ./desktop
-
-    ./kde
-  ];
+  home.pharra = {
+    base.enable = true;
+    desktop.enable = true;
+    input-method.enable = true;
+    kde.enable = true;
+  };
 
   # Home Manager needs a bit of information about you and the
   # paths it should manage.

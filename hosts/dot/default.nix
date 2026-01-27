@@ -25,14 +25,14 @@ in {
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
 
-    ../../nixos/libvirt.nix
-    ../../nixos/core-desktop.nix
-    ../../nixos/user-group.nix
-
     ../../secrets/nixos.nix
-
-    ../../nixos/proxy
   ];
+
+  services.pharra = {
+    libvirt.enable = true;
+    core-desktop.enable = true;
+    user-group.enable = true;
+  };
 
   net-name = {
     enable = true;

@@ -35,35 +35,29 @@ in {
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
 
-    ../../nixos/libvirt.nix
-    ../../nixos/core-desktop.nix
-    ../../nixos/user-group.nix
-
-    ../../nixos/impermanence.nix
-
-    ../../nixos/spdk.nix
-
     # (import ../../nixos/samba.nix {inherit config lib interface pkgs libs;})
 
     (import ../../nixos/ipxe {inherit config lib interface pkgs libs;})
 
     ../../secrets/nixos.nix
 
-    ../../nixos/sftp-server.nix
-    ../../nixos/caddy.nix
-    ../../nixos/easytier.nix
-
-    ../../nixos/virtualisation
-    ../../nixos/scripts.nix
-
-    ../../nixos/proxy
-
-    ../../nixos/azure-tools
-
-    ../../nixos/archlinux
-
     ./nixvirt
   ];
+
+  services.pharra = {
+    libvirt.enable = true;
+    core-desktop.enable = true;
+    user-group.enable = true;
+    impermanence.enable = true;
+    spdk.enable = true;
+    sftp-server.enable = true;
+    caddy.enable = true;
+    easytier.enable = true;
+    scripts.enable = true;
+    virtualisation.enable = true;
+    azure-tools.enable = true;
+    archlinux.enable = true;
+  };
 
   systemd.sleep.extraConfig = ''
     [Sleep]

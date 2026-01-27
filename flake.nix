@@ -154,6 +154,7 @@
         nix-flatpak.nixosModules.nix-flatpak
         NixVirt.nixosModules.default
         sops-nix.nixosModules.sops
+        agenix.nixosModules.default
       ]
       ++ (builtins.attrValues modules)
       ++ [
@@ -228,20 +229,6 @@
         builds = ["kde" "gnome" "cosmic"];
         # hostname = "zed.local";
         nixos-modules = [./hosts/zed];
-        specialArgs = {
-          boot_from_network = false;
-        };
-      }
-
-      # zed netboot
-      {
-        name = "zed_netboot";
-        builds = ["kde" "gnome" "cosmic"];
-        hostname = "zed";
-        nixos-modules = [./hosts/zed];
-        specialArgs = {
-          boot_from_network = true;
-        };
       }
 
       # homelab
@@ -254,12 +241,29 @@
 
     generateNixosConfigurations = f: (machines: builtins.map (machine: f machine) machines);
 
+    # Generate desktop environment module configuration based on build type
+    desktopModuleConfig = build: {
+      services.pharra =
+        if build == "kde"
+        then {kde.enable = true;}
+        else if build == "gnome"
+        then {gnome.enable = true;}
+        else if build == "cosmic"
+        then {cosmic.enable = true;}
+        else {}; # base build - no desktop environment
+    };
+
     machinesNixosConfigurations = builtins.listToAttrs (builtins.concatLists (generateNixosConfigurations (machine: let
     in
       builtins.map (build: {
         name = "${machine.name}_${build}";
         value = nixosSystem ({
-            nixos-modules = machine.nixos-modules ++ common-nixos-modules ++ [./nixos/${build}.nix];
+            nixos-modules =
+              machine.nixos-modules
+              ++ common-nixos-modules
+              ++ [
+                (desktopModuleConfig build)
+              ];
             home-module = import ./home/${build}.nix;
           }
           // stable_args

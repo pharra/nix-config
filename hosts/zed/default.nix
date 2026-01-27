@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  boot_from_network ? false,
   ...
 } @ args:
 #############################################################
@@ -39,25 +38,68 @@ in {
     ./hardware-configuration.nix
     ./cifs-mount.nix
 
-    ../../nixos/impermanence.nix
-
-    ../../nixos/libvirt.nix
-    ../../nixos/core-desktop.nix
-    ../../nixos/user-group.nix
-
     ../../secrets/nixos.nix
     ./nixvirt
-    (import ./netboot.nix {
-      inherit boot_from_network config pkgs lib;
-      interface = interface.mlx5_0;
-    })
-
-    ../../nixos/virtualisation
-
-    ../../nixos/proxy
-
-    ../../nixos/scripts.nix
   ];
+
+  services.pharra = {
+    impermanence.enable = true;
+    libvirt.enable = true;
+    core-desktop.enable = true;
+    user-group.enable = true;
+    scripts.enable = true;
+    virtualisation.enable = true;
+  };
+
+  # 使用 boot-over-nvmf 模块配置 ZFS
+  services.nvmf-root = {
+    enable = false;
+    interface = interface.mlx5_0;
+
+    # 禁用网络引导相关功能
+    iscsi.enable = false;
+    nvmf.enable = false;
+    tmpfsRoot.enable = false;
+
+    # ZFS 配置
+    zfs = {
+      poolName = "system";
+      datasets = {
+        root = {
+          mountPoint = "/system";
+          dataset = "";
+          neededForBoot = true;
+        };
+        tmp = {
+          mountPoint = "/tmp";
+          dataset = "tmp";
+          neededForBoot = true;
+        };
+        nix = {
+          mountPoint = "/nix";
+          dataset = "nix";
+          neededForBoot = true;
+        };
+        var = {
+          mountPoint = "/var";
+          dataset = "var";
+          neededForBoot = true;
+        };
+        "nix-var" = {
+          mountPoint = "/nix/var";
+          dataset = "nix/var";
+          neededForBoot = true;
+        };
+        "nix-persistent" = {
+          mountPoint = "/nix/persistent";
+          dataset = "nix/persistent";
+          neededForBoot = true;
+        };
+      };
+    };
+
+    boot.efiLabel = "boot";
+  };
 
   # Bootloader.
   boot.loader = {
@@ -192,52 +234,7 @@ in {
     powerManagement.enable = true;
   };
 
-  fileSystems."/system" = {
-    device = "system";
-    fsType = "zfs";
-    neededForBoot = true;
-    options = ["zfsutil"];
-  };
-
-  fileSystems."/tmp" = {
-    device = "system/tmp";
-    fsType = "zfs";
-    neededForBoot = true;
-    options = ["zfsutil"];
-  };
-
-  fileSystems."/nix" = {
-    device = "system/nix";
-    fsType = "zfs";
-    neededForBoot = true;
-    options = ["zfsutil"];
-  };
-
-  fileSystems."/var" = {
-    device = "system/var";
-    fsType = "zfs";
-    neededForBoot = true;
-    options = ["zfsutil"];
-  };
-
-  fileSystems."/nix/var" = {
-    device = "system/nix/var";
-    fsType = "zfs";
-    neededForBoot = true;
-    options = ["zfsutil"];
-  };
-
-  fileSystems."/nix/persistent" = {
-    device = "system/nix/persistent";
-    fsType = "zfs";
-    neededForBoot = true;
-    options = ["zfsutil"];
-  };
-
-  fileSystems."/boot/efi" = {
-    device = "/dev/disk/by-label/boot";
-    fsType = "vfat";
-  };
+  # ZFS 文件系统现在由 services.nvmf-root 模块管理
 
   systemd.sleep.extraConfig = ''
     [Sleep]

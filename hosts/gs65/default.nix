@@ -14,12 +14,14 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
 
-    ../../nixos/libvirt.nix
-    ../../nixos/core-desktop.nix
-    ../../nixos/user-group.nix
-
     ../../secrets/nixos.nix
   ];
+
+  services.pharra = {
+    libvirt.enable = true;
+    core-desktop.enable = true;
+    user-group.enable = true;
+  };
 
   # Bootloader.
   boot.loader = {

@@ -21,4 +21,28 @@
   sparkle-module = import ./sparkle;
   docker-netns-module = import ./docker-netns;
   openwrt-module = import ./openwrt;
+  boot-over-nvmf-module = import ./boot-over-nvmf;
+
+  # NixOS config modules (from nixos folder)
+  core-server-module = import ./core-server;
+  core-desktop-module = import ./core-desktop;
+  user-group-module = import ./user-group;
+  libvirt-module = import ./libvirt;
+  flatpak-module = import ./flatpak;
+  impermanence-module = import ./impermanence;
+  samba-module = import ./samba;
+  scripts-module = import ./scripts;
+  sftp-server-module = import ./sftp-server;
+  spdk-service-module = import ./spdk-service;
+  tailscale-module = import ./tailscale;
+  easytier-module = import ./easytier;
+  waydroid-module = import ./waydroid;
+  caddy-module = import ./caddy;
+  input-method-module = import ./input-method;
+  gnome-module = import ./gnome;
+  kde-module = import ./kde;
+  cosmic-module = import ./cosmic;
+  virtualisation-module = import ./virtualisation;
+  archlinux-module = import ./archlinux;
+  azure-tools-module = import ./azure-tools;
 }
