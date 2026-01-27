@@ -5,6 +5,9 @@
   libs,
   mysecrets,
   username,
+  mkZedGuest,
+  nixpkgs,
+  home-manager,
   ...
 } @ args: let
   interface = {
@@ -30,14 +33,13 @@
       name = "mlx5_1";
     }
   ];
+
+  # Build zed guest system using function from flake
+  zedGuestSystem = mkZedGuest {inherit nixpkgs home-manager;};
 in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-
-    # (import ../../nixos/samba.nix {inherit config lib interface pkgs libs;})
-
-    (import ../../nixos/ipxe {inherit config lib interface pkgs libs;})
 
     ../../secrets/nixos.nix
 
@@ -57,6 +59,15 @@ in {
     virtualisation.enable = true;
     azure-tools.enable = true;
     archlinux.enable = true;
+  };
+
+  # Enable iPXE NFS host to serve zed guest system
+  services.ipxe-nfs-host = {
+    enable = true;
+    guests.zed = {
+      system = zedGuestSystem;
+      macAddress = "9c:52:f8:8e:dd:d8";  # zed's MAC address
+    };
   };
 
   systemd.sleep.extraConfig = ''
