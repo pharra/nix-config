@@ -51,54 +51,11 @@ in {
     virtualisation.enable = true;
   };
 
-  # 使用 boot-over-nvmf 模块配置 ZFS
-  services.nvmf-root = {
-    enable = false;
-    interface = interface.mlx5_0;
-
-    # 禁用网络引导相关功能
-    iscsi.enable = false;
-    nvmf.enable = false;
-    tmpfsRoot.enable = false;
-
-    # ZFS 配置
-    zfs = {
-      poolName = "system";
-      datasets = {
-        root = {
-          mountPoint = "/system";
-          dataset = "";
-          neededForBoot = true;
-        };
-        tmp = {
-          mountPoint = "/tmp";
-          dataset = "tmp";
-          neededForBoot = true;
-        };
-        nix = {
-          mountPoint = "/nix";
-          dataset = "nix";
-          neededForBoot = true;
-        };
-        var = {
-          mountPoint = "/var";
-          dataset = "var";
-          neededForBoot = true;
-        };
-        "nix-var" = {
-          mountPoint = "/nix/var";
-          dataset = "nix/var";
-          neededForBoot = true;
-        };
-        "nix-persistent" = {
-          mountPoint = "/nix/persistent";
-          dataset = "nix/persistent";
-          neededForBoot = true;
-        };
-      };
-    };
-
-    boot.efiLabel = "boot";
+  # 使用 ZFS 模块配置基础支持
+  services.zfs-config = {
+    enable = true;
+    hostId = "88fcb8e9";
+    poolName = "system";
   };
 
   # Bootloader.
@@ -113,8 +70,6 @@ in {
   networking = {
     hostName = "zed";
     wireless.enable = false; # Enables wireless support via wpa_supplicant.
-
-    hostId = "88fcb8e9";
 
     networkmanager.enable = true;
     networkmanager.unmanaged = ["*,except:interface-name:wl*"];

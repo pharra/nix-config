@@ -10,25 +10,27 @@ with lib; let
   cfg = config.services.ipxe-nfs-host;
 
   # Build each guest's iPXE script and kernel params
-  guestConfigs = mapAttrs (
-    name: guestCfg: let
-      guestSystem = guestCfg.system;
-      kernelParams = [
-        "init=${guestSystem.config.system.build.toplevel}/init"
-        "ip=dhcp"
-      ];
-      
-      baseUrl = "http://\${http-server}:8080/ipxe";
-      kernelUrl = "${baseUrl}/${name}/bzImage";
-      initrdUrl = "${baseUrl}/${name}/initrd";
-    in {
-      inherit guestSystem kernelParams;
-      inherit kernelUrl initrdUrl;
-      nfsExportPath = "${guestSystem.config.system.build.toplevel}/nix/store";
-      kernelPath = guestSystem.config.system.build.kernel + "/bzImage";
-      initrdPath = guestSystem.config.system.build.initialRamdisk + "/initrd";
-    }
-  ) cfg.guests;
+  guestConfigs =
+    mapAttrs (
+      name: guestCfg: let
+        guestSystem = guestCfg.system;
+        kernelParams = [
+          "init=${guestSystem.config.system.build.toplevel}/init"
+          "ip=dhcp"
+        ];
+
+        baseUrl = "http://\${http-server}:8080/ipxe";
+        kernelUrl = "${baseUrl}/${name}/bzImage";
+        initrdUrl = "${baseUrl}/${name}/initrd";
+      in {
+        inherit guestSystem kernelParams;
+        inherit kernelUrl initrdUrl;
+        nfsExportPath = "${guestSystem.config.system.build.toplevel}/nix/store";
+        kernelPath = guestSystem.config.system.build.kernel + "/bzImage";
+        initrdPath = guestSystem.config.system.build.initialRamdisk + "/initrd";
+      }
+    )
+    cfg.guests;
 in {
   options = {
     services.ipxe-nfs-host = {
@@ -65,8 +67,7 @@ in {
       '';
       exports = concatStringsSep "\n" (
         mapAttrsToList (
-          name: guestInfo:
-            "${guestInfo.nfsExportPath} *(ro,sync,no_subtree_check,no_root_squash)"
+          name: guestInfo: "${guestInfo.nfsExportPath} *(ro,sync,no_subtree_check,no_root_squash)"
         )
         guestConfigs
       );
@@ -114,7 +115,7 @@ in {
               mapAttrsToList (
                 name: guestCfg:
                   optionalString (guestCfg.macAddress != null)
-                    "iseq \${net0/mac} ${guestCfg.macAddress} && goto ${name} ||"
+                  "iseq \${net0/mac} ${guestCfg.macAddress} && goto ${name} ||"
               )
               cfg.guests
             )

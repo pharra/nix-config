@@ -24,6 +24,7 @@
   boot-over-nvmf-module = import ./boot-over-nvmf;
   boot-over-nfs-module = import ./boot-over-nfs;
   ipxe-nfs-host-module = import ./ipxe-nfs-host;
+  zfs-module = import ./zfs;
 
   # NixOS config modules (from nixos folder)
   core-server-module = import ./core-server;

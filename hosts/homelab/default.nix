@@ -63,10 +63,10 @@ in {
 
   # Enable iPXE NFS host to serve zed guest system
   services.ipxe-nfs-host = {
-    enable = true;
+    enable = false;
     guests.zed = {
       system = zedGuestSystem;
-      macAddress = "9c:52:f8:8e:dd:d8";  # zed's MAC address
+      macAddress = "9c:52:f8:8e:dd:d8"; # zed's MAC address
     };
   };
 
@@ -78,7 +78,13 @@ in {
     AllowSuspendThenHibernate=no
   '';
 
-  networking.hostId = "88fcb8e5";
+  # 使用 ZFS 模块配置基础支持
+  services.zfs-config = {
+    enable = true;
+    hostId = "88fcb8e5";
+    poolName = "system";
+  };
+
   boot.zfs.package = pkgs.zfs_unstable;
   boot.zfs.extraPools = ["data"];
   services.zfs.autoScrub.enable = true;

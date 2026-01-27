@@ -97,39 +97,6 @@
     applyACSpatch = false;
   };
 
-  fileSystems."/system" = {
-    device = "system";
-    fsType = "zfs";
-    neededForBoot = true;
-    options = ["zfsutil"];
-  };
-
-  fileSystems."/tmp" = {
-    device = "system/tmp";
-    fsType = "zfs";
-    neededForBoot = true;
-    options = ["zfsutil"];
-  };
-
-  fileSystems."/nix" = {
-    device = "system/nix";
-    fsType = "zfs";
-    neededForBoot = true;
-    options = ["zfsutil"];
-  };
-
-  fileSystems."/nix/persistent" = {
-    device = "system/persistent";
-    fsType = "zfs";
-    neededForBoot = true;
-    options = ["zfsutil"];
-  };
-
-  fileSystems."/boot/efi" = {
-    device = "/dev/disk/by-label/zfs_boot";
-    fsType = "vfat";
-  };
-
   swapDevices = [];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

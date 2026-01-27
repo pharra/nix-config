@@ -228,37 +228,48 @@
         name = "zed";
         builds = ["kde" "gnome" "cosmic"];
         # hostname = "zed.local";
-        nixos-modules = [./hosts/zed];
+        nixos-modules = [
+          ./hosts/zed
+        ];
       }
 
       # homelab
       {
         name = "homelab";
-        nixos-modules = [./hosts/homelab];
+        nixos-modules = [
+          ./hosts/homelab
+        ];
         builds = ["kde" "gnome" "cosmic" "base"];
         specialArgs = {
           # Pass a function to build zed guest system with NFS boot
-          mkZedGuest = {nixpkgs, home-manager, ...}: nixosSystem {
-            inherit nixpkgs home-manager system;
-            specialArgs = commonSpecialArgs;
-            nixos-modules = 
-              [./hosts/zed]
-              ++ common-nixos-modules
-              ++ [
-                (desktopModuleConfig "kde")
-                {
-                  services.nfs-root = {
-                    enable = true;
-                    interface = "mlx5_0";
-                    nfs = {
-                      server = "192.168.29.1";
-                      rootPath = "/nix/store";
+          mkZedGuest = {
+            nixpkgs,
+            home-manager,
+            ...
+          }:
+            nixosSystem {
+              inherit nixpkgs home-manager system;
+              specialArgs = commonSpecialArgs;
+              nixos-modules =
+                [./hosts/zed]
+                ++ common-nixos-modules
+                ++ [
+                  (desktopModuleConfig "kde")
+                  {
+                    services.nfs-root = {
+                      enable = true;
+                      interface = "mlx5_0";
+                      nfs = {
+                        server = "192.168.29.1";
+                        rootPath = "/nix/store";
+                      };
                     };
-                  };
-                }
-              ];
-            home-module = import ./home/kde.nix;
-          };
+
+                    services.zfs-config.enable = nixpkgs.lib.mkForce false;
+                  }
+                ];
+              home-module = import ./home/kde.nix;
+            };
         };
       }
     ];
