@@ -17,6 +17,7 @@ with lib; let
       "vers=4.2"
       "ro"
       "noatime"
+      "noresvport"
     ]
     ++ lib.optional (cfg.nfs.transport == "rdma") "proto=rdma"
     ++ lib.optional (cfg.nfs.transport == "rdma") "port=${toString nfsPort}";

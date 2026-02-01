@@ -103,18 +103,6 @@ in {
     };
   };
 
-  systemd.services = {
-    tune-usb-autosuspend = {
-      description = "Disable USB autosuspend";
-      wantedBy = ["multi-user.target"];
-      serviceConfig = {Type = "oneshot";};
-      unitConfig.RequiresMountsFor = "/sys";
-      script = ''
-        echo -1 > /sys/module/usbcore/parameters/autosuspend
-      '';
-    };
-  };
-
   networking = {
     hostName = "dot";
     wireless.enable = false; # Enables wireless support via wpa_supplicant.
