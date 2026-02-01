@@ -16,16 +16,12 @@ with lib; let
         guestSystem = guestCfg.system;
         kernelParams = [
           "init=${guestSystem.config.system.build.toplevel}/init"
-          "ip=dhcp"
+          "${toString guestSystem.config.boot.kernelParams}"
         ];
-
-        baseUrl = "http://\${http-server}:8080/ipxe";
-        kernelUrl = "${baseUrl}/${name}/bzImage";
-        initrdUrl = "${baseUrl}/${name}/initrd";
       in {
         inherit guestSystem kernelParams;
-        inherit kernelUrl initrdUrl;
-        nfsExportPath = "${guestSystem.config.system.build.toplevel}/nix/store";
+        kernelUrl = "${name}/bzImage";
+        initrdUrl = "${name}/initrd";
         kernelPath = guestSystem.config.system.build.kernel + "/bzImage";
         initrdPath = guestSystem.config.system.build.initialRamdisk + "/initrd";
       }
@@ -43,12 +39,6 @@ in {
               type = types.unspecified;
               description = "The guest NixOS system configuration (built system).";
             };
-
-            macAddress = mkOption {
-              type = types.nullOr types.str;
-              default = null;
-              description = "Optional MAC address for auto-boot.";
-            };
           };
         });
         default = {};
@@ -58,19 +48,21 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # Setup NFS server to export guest stores with RDMA support
-    services.nfs.server = {
-      enable = true;
-      extraNfsdConfig = ''
-        rdma=y
-        rdma-port=20049
-      '';
-      exports = concatStringsSep "\n" (
-        mapAttrsToList (
-          name: guestInfo: "${guestInfo.nfsExportPath} *(ro,sync,no_subtree_check,no_root_squash)"
-        )
-        guestConfigs
-      );
+    services.nfs = {
+      server = {
+        enable = true;
+        lockdPort = 4001;
+        mountdPort = 4002;
+        statdPort = 4000;
+        exports = "/nix/store *(ro,sync,no_subtree_check,no_root_squash,nohide,insecure)";
+      };
+      settings = {
+        nfsd.tcp = true;
+        nfsd.rdma = true;
+        nfsd.vers2 = false;
+        nfsd.vers3 = false;
+        nfsd.vers4 = true;
+      };
     };
 
     # Setup static web server for iPXE assets
@@ -78,6 +70,12 @@ in {
       enable = true;
       listen = "[::]:8080";
       root = "/etc/ipxe";
+      configuration = {
+        general = {
+          directory-listing = true;
+          log-level = "error";
+        };
+      };
     };
 
     environment.systemPackages = with pkgs; [
@@ -94,8 +92,8 @@ in {
 
         "ipxe/boot.ipxe".text = ''
           #!ipxe
-          dhcp
-          chain --autofree boot.ipxe.cfg || chain --replace --autofree menu.ipxe ||
+          chain --autofree boot.ipxe.cfg ||
+          chain --replace --autofree ''${menu-url} ||
         '';
 
         "ipxe/boot.ipxe.cfg".text = ''
@@ -110,23 +108,12 @@ in {
             mapAttrsToList (name: _: "item ${name}      Boot ${name}") cfg.guests
           );
 
-          macChecks = concatStringsSep "\n" (
-            filter (x: x != "") (
-              mapAttrsToList (
-                name: guestCfg:
-                  optionalString (guestCfg.macAddress != null)
-                  "iseq \${net0/mac} ${guestCfg.macAddress} && goto ${name} ||"
-              )
-              cfg.guests
-            )
-          );
-
           guestBootSections = concatStringsSep "\n\n" (
             mapAttrsToList (
               name: guestInfo: ''
                 :${name}
-                kernel ${guestInfo.kernelUrl} ${concatStringsSep " " guestInfo.kernelParams}
-                initrd ${guestInfo.initrdUrl}
+                kernel http://''${http-server}:8080/${guestInfo.kernelUrl} ${concatStringsSep " " guestInfo.kernelParams}
+                initrd http://''${http-server}:8080/${guestInfo.initrdUrl}
                 boot || goto failed
               ''
             )
@@ -134,16 +121,38 @@ in {
           );
         in ''
           #!ipxe
-          ${macChecks}
-          menu iPXE NFS Boot
+
+          # Some menu defaults
+          set menu-timeout 50000
+          set submenu-timeout ''${menu-timeout}
+
+          :start
+          menu iPXE NFS Boot Menu
+          item --gap --             ------------------------- Operating systems ------------------------------
           ${guestMenuItems}
-          item shell Shell
-          choose target && goto ''${target}
+          item --gap --             ------------------------- Advanced options -------------------------------
+          item shell                Drop to iPXE shell
+          item reboot               Reboot computer
+          item
+          item --key x exit         Exit iPXE and continue BIOS boot
+          choose --default exit --timeout ''${menu-timeout} target && goto ''${target}
+
+          :cancel
+          echo You cancelled the menu, dropping you to a shell
 
           :failed
           :shell
+          echo Type 'exit' to get back to the menu
           shell
-          goto menu
+          set menu-timeout 0
+          set submenu-timeout 0
+          goto start
+
+          :reboot
+          reboot
+
+          :exit
+          exit
 
           ${guestBootSections}
         '';
@@ -170,8 +179,8 @@ in {
       );
 
     # Open firewall for NFS and HTTP
-    networking.firewall.allowedTCPPorts = [8080 2049 20049 111];
-    networking.firewall.allowedUDPPorts = [2049 111];
+    networking.firewall.allowedTCPPorts = [8080 2049 111 4000 4001 4002 20049];
+    networking.firewall.allowedUDPPorts = [2049 111 4000 4001 4002];
 
     # Load kernel modules for NFS over RDMA
     boot.kernelModules = ["svcrdma" "xprtrdma"];

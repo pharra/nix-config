@@ -41,6 +41,29 @@ with lib; let
     };
   };
 
+  staticHostOptions = {
+    options = {
+      mac = mkOption {
+        description = "MAC address";
+        type = types.str;
+        example = "aa:bb:cc:dd:ee:ff";
+      };
+
+      ip = mkOption {
+        description = "Static IP address to assign";
+        type = types.str;
+        example = "192.168.1.100";
+      };
+
+      hostname = mkOption {
+        description = "Hostname for the static host";
+        type = types.nullOr types.str;
+        default = null;
+        example = "my-device";
+      };
+    };
+  };
+
   networkOptions = {
     options = {
       name = mkOption {
@@ -67,6 +90,19 @@ with lib; let
       domain = mkOption {
         description = "Name of the domain";
         type = types.str;
+      };
+
+      staticHosts = mkOption {
+        description = "Static DHCP host assignments based on MAC address";
+        default = [];
+        type = types.listOf (types.submodule staticHostOptions);
+        example = [
+          {
+            mac = "aa:bb:cc:dd:ee:ff";
+            ip = "192.168.1.100";
+            hostname = "my-device";
+          }
+        ];
       };
 
       ipv4 = mkOption {
@@ -144,6 +180,16 @@ in {
           then "${network.name},${network.domain},${network.ipv4.address},${network.ipv6.address}"
           else "${network.name},${network.domain},${network.ipv4.address}";
         stateDir = "/var/lib/dnsmasq-${iface}";
+        # Format static host entries for dnsmasq dhcp-host option
+        # Format: dhcp-host=MAC,IP[,hostname]
+        staticHostEntries =
+          map (
+            host:
+              if host.hostname != null
+              then "${host.mac},${host.ip},${host.hostname}"
+              else "${host.mac},${host.ip}"
+          )
+          network.staticHosts;
         dnsmasqConf = settingsFormat.generate "dnsmasq-${iface}.conf" {
           interface = [iface];
           enable-tftp = true;
@@ -151,6 +197,8 @@ in {
             ["interface:${iface},${network.ipv4.pool}"]
             (lib.optional network.ipv6.enable "${network.ipv6.pool},constructor:${iface},ra-stateless")
           ];
+          # Add static host assignments
+          dhcp-host = staticHostEntries;
           listen-address = lib.concatLists [
             ["${network.ipv4.address}"]
             (lib.optional network.ipv6.enable "${network.ipv6.address}")

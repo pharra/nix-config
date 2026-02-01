@@ -241,6 +241,7 @@
         ];
         builds = ["kde" "gnome" "cosmic" "base"];
         specialArgs = {
+          inherit nixpkgs home-manager;
           # Pass a function to build zed guest system with NFS boot
           mkZedGuest = {
             nixpkgs,
@@ -262,10 +263,32 @@
                       nfs = {
                         server = "192.168.29.1";
                         rootPath = "/nix/store";
+                        transport = "rdma";
                       };
                     };
 
                     services.zfs-config.enable = nixpkgs.lib.mkForce false;
+
+                    fileSystems."/var" = {
+                      device = "system/var";
+                      fsType = "zfs";
+                      neededForBoot = true;
+                      options = ["zfsutil"];
+                    };
+
+                    fileSystems."/nix/var" = {
+                      device = "system/nix/var";
+                      fsType = "zfs";
+                      neededForBoot = true;
+                      options = ["zfsutil"];
+                    };
+
+                    fileSystems."/nix/persistent" = {
+                      device = "system/nix/persistent";
+                      fsType = "zfs";
+                      neededForBoot = true;
+                      options = ["zfsutil"];
+                    };
                   }
                 ];
               home-module = import ./home/kde.nix;

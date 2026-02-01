@@ -48,7 +48,7 @@ in {
             interface = {
               type = "bridge";
               model = {type = "virtio";};
-              source = {bridge = "br0";};
+              source = {bridge = "br1";};
             };
           };
       }

@@ -63,10 +63,10 @@ in {
 
   # Enable iPXE NFS host to serve zed guest system
   services.ipxe-nfs-host = {
-    enable = false;
+    enable = true;
     guests.zed = {
       system = zedGuestSystem;
-      macAddress = "9c:52:f8:8e:dd:d8"; # zed's MAC address
+      # macAddress = "9c:52:f8:8e:dd:d8"; # zed's MAC address
     };
   };
 
@@ -197,12 +197,6 @@ in {
     settings = {
       nfsd.udp = true;
       nfsd.rdma = true;
-      # nfsd.vers2 = false;
-      # nfsd.vers3 = false;
-      # nfsd.vers4 = true;
-      # nfsd."vers4.0" = false;
-      # nfsd."vers4.1" = false;
-      # nfsd."vers4.2" = true;
     };
   };
 
@@ -229,7 +223,14 @@ in {
         name = "eth";
         interface = interface.eth;
         domain = "mlx";
-        # masquerade = "both";
+        staticHosts = [
+          {
+            mac = "9c:52:f8:8e:dd:d8";
+            ip = "192.168.29.2";
+            hostname = "zed";
+          }
+        ];
+        masquerade = "ipv4";
         ipv4 = {
           address = "192.168.29.1";
           netmask = "24";
@@ -247,6 +248,7 @@ in {
         name = "intern";
         interface = interface.intern;
         domain = "intern";
+        masquerade = "ipv4";
         ipv4 = {
           address = "192.168.28.1";
           netmask = "24";
