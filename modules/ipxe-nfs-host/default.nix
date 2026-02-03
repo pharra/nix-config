@@ -54,7 +54,7 @@ in {
         lockdPort = 4001;
         mountdPort = 4002;
         statdPort = 4000;
-        exports = "/nix/store *(ro,sync,no_subtree_check,no_root_squash,nohide,insecure)";
+        exports = "/nix/store *(rw,sync,no_subtree_check,no_root_squash,nohide,insecure)";
       };
       settings = {
         nfsd.tcp = true;

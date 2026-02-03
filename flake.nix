@@ -259,11 +259,20 @@
                   {
                     services.nfs-root = {
                       enable = true;
-                      interface = "mlx5_0";
+                      interface = ["mlx5_0" "net0"];
                       nfs = {
-                        server = "192.168.29.1";
                         rootPath = "/nix/store";
-                        transport = "rdma";
+                        transport = "tcp";
+                        multipathPeers = [
+                          # {
+                          #   clientIp = "192.168.29.1";
+                          #   serverIp = "192.168.29.2";
+                          # }
+                          {
+                            clientIp = "192.168.254.2";
+                            serverIp = "192.168.254.5";
+                          }
+                        ];
                       };
                     };
 

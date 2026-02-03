@@ -81,7 +81,7 @@ in {
   };
 
   services.docker-netns = {
-    enable = true;
+    enable = false;
     autoConfigureBridge = true;
   };
 
@@ -173,7 +173,7 @@ in {
     };
   };
 
-  services.xserver.videoDrivers = ["amdgpu" "nvidia"]; # will install nvidia-vaapi-driver by default
+  services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default
 
   hardware = {
     graphics = {
