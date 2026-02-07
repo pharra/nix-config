@@ -13,9 +13,8 @@
   ];
 
   boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "uas" "virtio_pci" "virtio_net" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "virtio_rng"];
-  # boot.initrd.kernelModules = [];
+  boot.initrd.kernelModules = ["r8169"];
   boot.kernelModules = ["kvm-amd" "virtio_pci" "virtio_net" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "virtio_rng"];
-  boot.extraModulePackages = [];
   # "console=ttyS0"
   boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=0" "amd_pstate=active" "amd_pstate.shared_mem=1" "brd.rd_nr=1" "brd.rd_size=11240000"];
   boot.extraModprobeConfig = ''
@@ -43,7 +42,7 @@
 
   hardware.mlx5 = {
     enable = true;
-    enableSRIOV = true;
+    enableSRIOV = false;
     interfaces = ["mlx5_0"];
   };
 

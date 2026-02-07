@@ -20,6 +20,7 @@ with lib; let
         ];
       in {
         inherit guestSystem kernelParams;
+        macs = guestCfg.macs;
         kernelUrl = "${name}/bzImage";
         initrdUrl = "${name}/initrd";
         kernelPath = guestSystem.config.system.build.kernel + "/bzImage";
@@ -38,6 +39,11 @@ in {
             system = mkOption {
               type = types.unspecified;
               description = "The guest NixOS system configuration (built system).";
+            };
+            macs = mkOption {
+              type = types.listOf types.str;
+              default = [];
+              description = "MAC addresses that should auto-boot this guest (e.g. 52:54:00:12:34:56).";
             };
           };
         });
@@ -108,6 +114,19 @@ in {
             mapAttrsToList (name: _: "item ${name}      Boot ${name}") cfg.guests
           );
 
+          macAutobootChecks = concatStringsSep "\n" (
+            flatten (
+              mapAttrsToList (
+                name: guestInfo:
+                  map (
+                    mac: ''iseq ''${net0/mac} ${mac} && goto ${name}''
+                  )
+                  guestInfo.macs
+              )
+              guestConfigs
+            )
+          );
+
           guestBootSections = concatStringsSep "\n\n" (
             mapAttrsToList (
               name: guestInfo: ''
@@ -121,6 +140,9 @@ in {
           );
         in ''
           #!ipxe
+
+          # Auto-boot by MAC address (net0)
+          ${macAutobootChecks}
 
           # Some menu defaults
           set menu-timeout 50000

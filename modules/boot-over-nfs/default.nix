@@ -13,11 +13,10 @@ with lib; let
     then 20049
     else 2049;
   primaryPeer = builtins.head cfg.nfs.multipathPeers;
-  primaryInterface = builtins.head cfg.interface;
   mountOptions =
     [
       "vers=4.2"
-      "rw"
+      "ro"
       "noatime"
       "noresvport"
       "hard"
@@ -108,7 +107,7 @@ in {
         systemd-boot.graceful = true;
       };
       supportedFilesystems = ["nfs"];
-      kernelParams = cfg.boot.extraKernelParams ++ ["nohibernate" "mem_sleep_default=shallow"];
+      kernelParams = cfg.boot.extraKernelParams;
 
       initrd = {
         supportedFilesystems = ["nfs"];
@@ -129,6 +128,7 @@ in {
               unitConfig.DefaultDependencies = "no";
               serviceConfig = {
                 Type = "oneshot";
+                TimeoutStartSec = 60;
                 ExecStart = "${pkgs.bashInteractive}/bin/sh -c 'until ${pkgs.iputils}/bin/ping -c 1 ${primaryPeer.serverIp}; do ${pkgs.coreutils}/bin/sleep 1; done'";
               };
             };
@@ -136,6 +136,10 @@ in {
 
           network = {
             enable = true;
+            wait-online = {
+              anyInterface = lib.mkForce false;
+              timeout = 30;
+            };
             networks = lib.listToAttrs (map (iface:
               lib.nameValuePair "40-${iface}-initrd" {
                 matchConfig.Name = iface;
@@ -152,43 +156,23 @@ in {
     systemd.network.networks = lib.listToAttrs (map (iface:
       lib.nameValuePair "40-${iface}" {
         matchConfig.Name = iface;
-        linkConfig = {
-          Unmanaged = true;
-        };
+        networkConfig.KeepConfiguration = "yes";
+        # linkConfig = {
+        #   Unmanaged = true;
+        # };
       })
     cfg.interface);
 
-    systemd.targets = {
-      sleep.enable = false;
-      suspend.enable = false;
-      hibernate.enable = false;
-      hybrid-sleep.enable = false;
-    };
-
-    systemd.tmpfiles.rules = [
-      "z /sys/power/state 0444 root root -"
-      "z /sys/power/disk 0444 root root -"
-    ];
-
     fileSystems = let
-      extraPeers = lib.drop 1 cfg.nfs.multipathPeers;
       multipathFileSystems = lib.listToAttrs (lib.imap0 (idx: peer:
-        lib.nameValuePair "/nix/store-mp-${toString (idx + 1)}" {
+        lib.nameValuePair "/nix/store" {
           device = "${peer.serverIp}:${cfg.nfs.rootPath}";
           fsType = "nfs";
           neededForBoot = true;
           options = mountOptions ++ ["clientaddr=${peer.clientIp}"];
         })
-      extraPeers);
+      cfg.nfs.multipathPeers);
     in
-      {
-        "/nix/store" = {
-          device = "${primaryPeer.serverIp}:${cfg.nfs.rootPath}";
-          fsType = "nfs";
-          neededForBoot = true;
-          options = mountOptions ++ ["clientaddr=${primaryPeer.clientIp}"];
-        };
-      }
-      // multipathFileSystems;
+      multipathFileSystems;
   };
 }

@@ -20,14 +20,6 @@ let
       name = "mlx5_0";
     }
     {
-      mac = "9c:52:f8:8e:dd:10";
-      name = "mlx5_0";
-    }
-    {
-      mac = "9c:52:f8:8e:dd:d9";
-      name = "net0";
-    }
-    {
       mac = "58:47:ca:79:85:1c";
       name = "net0";
     }
@@ -85,35 +77,34 @@ in {
     autoConfigureBridge = true;
   };
 
-  systemd.network = {
-    enable = true;
-    wait-online.anyInterface = true;
-    netdevs = {
-      # Create the bridge interface
-      "20-br0" = {
-        netdevConfig = {
-          Kind = "bridge";
-          Name = "br0";
-        };
+  services.network-bridge = {
+    enable = false;
+    bridges = {
+      br0 = {
+        name = "br0";
+        ports = [interface.net0];
+        dhcp = true;
+        ipv6AcceptRA = true;
+        domains = ["lan"];
       };
     };
-    networks = {
-      # Connect the bridge ports to the bridge
-      "30-${interface.net0}" = {
-        matchConfig.Name = "${interface.net0}";
-        networkConfig.Bridge = "br0";
-        linkConfig.RequiredForOnline = "enslaved";
-      };
+  };
 
-      "40-br0" = {
-        matchConfig.Name = "br0";
-        bridgeConfig = {};
+  systemd.network = {
+    enable = true;
+    wait-online = {
+      anyInterface = false;
+      timeout = 60;
+    };
+    networks = {
+      "40-${interface.net0}" = {
+        matchConfig.Name = "${interface.net0}";
         networkConfig = {
           # start a DHCP Client for IPv4 Addressing/Routing
           DHCP = "ipv4";
           # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
           IPv6AcceptRA = true;
-          Domains = ["lan"];
+          Domains = ["mlx"];
         };
         dhcpV4Config = {
           UseDomains = true;
@@ -127,7 +118,6 @@ in {
           RequiredForOnline = "routable";
         };
       };
-
       "40-${interface.mlx5_0}" = {
         matchConfig.Name = "${interface.mlx5_0}";
         networkConfig = {
@@ -188,16 +178,6 @@ in {
     package = config.boot.kernelPackages.nvidiaPackages.production;
     powerManagement.enable = true;
   };
-
-  # ZFS 文件系统现在由 services.nvmf-root 模块管理
-
-  systemd.sleep.extraConfig = ''
-    [Sleep]
-    AllowSuspend=no
-    AllowHibernation=no
-    AllowHybridSleep=no
-    AllowSuspendThenHibernate=no
-  '';
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

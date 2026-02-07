@@ -14,72 +14,26 @@ with lib; let
       name = serviceName;
       value = {
         wantedBy = ["multi-user.target"];
-        wants = ["modprobe@nvme-rdma.service" "network-online.target"];
-        after = ["modprobe@nvme-rdma.service" "network-online.target"];
+        requires = ["ensure-network.service"];
+        after = ["ensure-network.service"];
+        before = ["multi-user.target"];
         serviceConfig = {
           Type = "simple";
           RemainAfterExit = true;
-          ExecStartPre = [
-            "${pkgs.iputils}/bin/ping -c 1 ${cfg.address}"
-            "${pkgs.nvme-cli}/bin/nvme discover -t ${cfg.type} -a ${cfg.address} -s ${toString cfg.port}"
-          ];
+          TimeoutStartSec = 120;
+          ExecStartPre =
+            optionals (cfg.type == "rdma") [
+              "${pkgs.kmod}/bin/modprobe -abq nvme-rdma"
+            ]
+            ++ [
+              "${pkgs.bash}/bin/bash -c 'for i in {1..30}; do ${pkgs.iputils}/bin/ping -c 1 -W 2 ${cfg.address} && exit 0 || ${pkgs.coreutils}/bin/sleep 2; done; exit 1'"
+              "${pkgs.nvme-cli}/bin/nvme discover -t ${cfg.type} -a ${cfg.address} -s ${toString cfg.port}"
+            ];
           ExecStart =
             ["${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.address} -s ${toString cfg.port} --reconnect-delay=1 --ctrl-loss-tmo=-1 --fast_io_fail_tmo=0 --keep-alive-tmo=0 --nr-io-queues=16"]
             ++ optional cfg.multipath
             "${pkgs.nvme-cli}/bin/nvme connect -t ${cfg.type} -n \"${cfg.target}\" -a ${cfg.multiAddress} -s ${toString cfg.port} --reconnect-delay=1 --ctrl-loss-tmo=-1 --fast_io_fail_tmo=0 --keep-alive-tmo=0 --nr-io-queues=16";
           ExecStop = "${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\"";
-        };
-      };
-    }
-    {
-      name = "${serviceName}-suspend";
-      value = {
-        before = ["systemd-suspend.service"];
-        requiredBy = ["systemd-suspend.service"];
-        serviceConfig = {
-          Type = "oneshot";
-          ExecStart =
-            ["${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\""]
-            ++ (
-              if cfg.multipath
-              then ["${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\""]
-              else []
-            );
-        };
-      };
-    }
-    {
-      name = "${serviceName}-hibernate";
-      value = {
-        before = ["systemd-hibernate.service"];
-        requiredBy = ["systemd-hibernate.service"];
-        serviceConfig = {
-          Type = "oneshot";
-          ExecStart =
-            ["${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\""]
-            ++ (
-              if cfg.multipath
-              then ["${pkgs.nvme-cli}/bin/nvme disconnect -n \"${cfg.target}\""]
-              else []
-            );
-        };
-      };
-    }
-    {
-      name = "${serviceName}-resume";
-      value = {
-        after = [
-          "systemd-suspend.service"
-          "systemd-hibernate.service"
-        ];
-        requires = ["network-online.target"];
-        requiredBy = [
-          "systemd-suspend.service"
-          "systemd-hibernate.service"
-        ];
-        serviceConfig = {
-          Type = "oneshot";
-          ExecStart = "${pkgs.systemd}/bin/systemctl restart ${serviceName}.service";
         };
       };
     }
@@ -136,25 +90,6 @@ in {
   config = mkIf (cfgs != []) {
     environment.systemPackages = with pkgs; [nvme-cli];
 
-    systemd.services =
-      {
-        "modprobe@nvme-rdma" = {
-          description = "Load Kernel Module nvme-rdma";
-          wantedBy = ["multi-user.target"];
-          before = ["sysinit.target"];
-          unitConfig = {
-            DefaultDependencies = "no";
-            ConditionCapability = "CAP_SYS_MODULE";
-            StartLimitIntervalSec = 0;
-            Documentation = "man:modprobe(8)";
-          };
-          serviceConfig = {
-            Type = "oneshot";
-            ExecStart = "-${pkgs.kmod}/bin/modprobe -abq nvme-rdma";
-          };
-          enable = true;
-        };
-      }
-      // listToAttrs (concatMap mkNvmeSet cfgs);
+    systemd.services = listToAttrs (concatMap mkNvmeSet cfgs);
   };
 }

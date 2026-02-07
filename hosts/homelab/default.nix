@@ -66,7 +66,7 @@ in {
     enable = true;
     guests.zed = {
       system = zedGuestSystem;
-      # macAddress = "9c:52:f8:8e:dd:d8"; # zed's MAC address
+      macs = ["9c:52:f8:8e:dd:d8" "58:47:ca:79:85:1c"];
     };
   };
 
@@ -248,6 +248,13 @@ in {
         name = "intern";
         interface = interface.intern;
         domain = "intern";
+        # staticHosts = [
+        #   {
+        #     mac = "58:47:ca:79:85:1c";
+        #     ip = "192.168.28.2";
+        #     hostname = "zed";
+        #   }
+        # ];
         masquerade = "ipv4";
         ipv4 = {
           address = "192.168.28.1";
@@ -264,60 +271,20 @@ in {
     };
   };
 
-  systemd.network = {
+  services.network-bridge = {
     enable = true;
-    wait-online.anyInterface = true;
-    netdevs = {
-      # Create the bridge interface
-      "20-br0" = {
-        netdevConfig = {
-          Kind = "bridge";
-          Name = "br0";
-        };
+    bridges = {
+      br0 = {
+        name = "br0";
+        ports = ["eno1" "eno2"];
+        dhcp = true;
+        ipv6AcceptRA = true;
+        domains = ["lan"];
       };
-
-      "20-br1" = {
-        netdevConfig = {
-          Kind = "bridge";
-          Name = "br1";
-        };
-      };
-    };
-
-    networks = {
-      # Connect the bridge ports to the bridge
-      "30-eno1" = {
-        matchConfig.Name = "eno1";
-        networkConfig.Bridge = "br0";
-        linkConfig.RequiredForOnline = "enslaved";
-      };
-      "30-eno2" = {
-        matchConfig.Name = "eno2";
-        networkConfig.Bridge = "br0";
-        linkConfig.RequiredForOnline = "enslaved";
-      };
-
-      "40-br0" = {
-        matchConfig.Name = "br0";
-        bridgeConfig = {};
-        networkConfig = {
-          # start a DHCP Client for IPv4 Addressing/Routing
-          DHCP = "ipv4";
-          # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
-          IPv6AcceptRA = true;
-          Domains = ["lan"];
-        };
-        dhcpV4Config = {
-          UseDomains = true;
-        };
-        ipv6AcceptRAConfig = {
-          UseDNS = true;
-          UseDomains = true;
-        };
-        linkConfig = {
-          # or "routable" with IP addresses configured
-          RequiredForOnline = "routable";
-        };
+      br1 = {
+        name = "br1";
+        ports = [];
+        configureNetwork = false;
       };
     };
   };

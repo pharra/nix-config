@@ -11,6 +11,18 @@ in {
   options = {
     services.pharra.virtualisation = {
       enable = mkEnableOption "virtualisation (Docker, Podman, Distrobox)";
+
+      enableDocker = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable Docker service";
+      };
+
+      enablePodman = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable Podman service";
+      };
     };
   };
 
@@ -18,7 +30,6 @@ in {
     environment.systemPackages = with pkgs; [
       docker-compose
       podman-compose
-      distrobox
     ];
 
     virtualisation.docker = {

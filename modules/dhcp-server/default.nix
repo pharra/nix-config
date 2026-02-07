@@ -82,6 +82,14 @@ with lib; let
         type = types.str;
         default = "no";
       };
+
+      leaseTime = mkOption {
+        description = "DHCP lease time for this network (dnsmasq dhcp-range lease time)";
+        type = types.str;
+        default = "24h";
+        example = "12h";
+      };
+
       interface = mkOption {
         description = "Name of the network interface to use";
         type = types.str;
@@ -194,8 +202,8 @@ in {
           interface = [iface];
           enable-tftp = true;
           dhcp-range = lib.concatLists [
-            ["interface:${iface},${network.ipv4.pool}"]
-            (lib.optional network.ipv6.enable "${network.ipv6.pool},constructor:${iface},ra-stateless")
+            ["interface:${iface},${network.ipv4.pool},${network.leaseTime}"]
+            (lib.optional network.ipv6.enable "${network.ipv6.pool},constructor:${iface},ra-stateless,${network.leaseTime}")
           ];
           # Add static host assignments
           dhcp-host = staticHostEntries;
