@@ -233,6 +233,42 @@
         ];
       }
 
+      # zed_netboot
+      {
+        name = "zed_net";
+        builds = ["kde" "gnome" "cosmic"];
+        # hostname = "zed.local";
+        nixos-modules = [
+          ./hosts/zed
+          {
+            services.zfs-config.poolName = nixpkgs.lib.mkForce "zed_net";
+
+            services.nvmf-root = {
+              enable = true;
+              interface = ["mlx5_0"];
+              nvmf = {
+                enable = true;
+                transport = "rdma";
+                target = "nqn.2016-06.io.spdk:zed_net";
+                address = "192.168.29.1";
+                port = 4420;
+              };
+              iscsi = {
+                enable = true;
+                initiatorName = "iqn.2020-08.org.linux-iscsi.initiatorhost:zed_net";
+                discoveryAddress = "192.168.29.1";
+                targetName = "iqn.2016-06.io.spdk:zednetefi";
+              };
+              network = {
+                dhcp = "ipv4";
+                pingHost = "1.1.1.1";
+              };
+            };
+            fileSystems."/boot/efi".device = nixpkgs.lib.mkForce "/dev/disk/by-label/zednetefi";
+          }
+        ];
+      }
+
       # homelab
       {
         name = "homelab";
@@ -261,7 +297,7 @@
                       enable = true;
                       interface = ["mlx5_0"];
                       nfs = {
-                        rootPath = "/nix/store";
+                        rootPath = "/system/zed/nix";
                         transport = "rdma";
                         multipathPeers = [
                           {
@@ -278,26 +314,7 @@
 
                     services.zfs-config.enable = nixpkgs.lib.mkForce false;
 
-                    fileSystems."/var" = {
-                      device = "system/var";
-                      fsType = "zfs";
-                      neededForBoot = true;
-                      options = ["zfsutil"];
-                    };
-
-                    fileSystems."/nix/var" = {
-                      device = "system/nix/var";
-                      fsType = "zfs";
-                      neededForBoot = true;
-                      options = ["zfsutil"];
-                    };
-
-                    fileSystems."/nix/persistent" = {
-                      device = "system/nix/persistent";
-                      fsType = "zfs";
-                      neededForBoot = true;
-                      options = ["zfsutil"];
-                    };
+                    fileSystems."/boot/efi".enable = nixpkgs.lib.mkForce false;
                   }
                 ];
               home-module = import ./home/kde.nix;

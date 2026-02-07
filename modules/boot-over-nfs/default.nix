@@ -16,7 +16,7 @@ with lib; let
   mountOptions =
     [
       "vers=4.2"
-      "ro"
+      "rw"
       "noatime"
       "noresvport"
       "hard"
@@ -163,9 +163,17 @@ in {
       })
     cfg.interface);
 
+    systemd.sleep.extraConfig = ''
+      [Sleep]
+      AllowSuspend=no
+      AllowHibernation=no
+      AllowHybridSleep=no
+      AllowSuspendThenHibernate=no
+    '';
+
     fileSystems = let
       multipathFileSystems = lib.listToAttrs (lib.imap0 (idx: peer:
-        lib.nameValuePair "/nix/store" {
+        lib.nameValuePair "/nix" {
           device = "${peer.serverIp}:${cfg.nfs.rootPath}";
           fsType = "nfs";
           neededForBoot = true;

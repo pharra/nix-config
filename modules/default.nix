@@ -23,7 +23,7 @@
   openwrt-module = import ./openwrt;
   boot-over-nvmf-module = import ./boot-over-nvmf;
   boot-over-nfs-module = import ./boot-over-nfs;
-  ipxe-nfs-host-module = import ./ipxe-nfs-host;
+  ipxe-host-module = import ./ipxe-host;
   zfs-module = import ./zfs;
   network-bridge-module = import ./network-bridge;
 

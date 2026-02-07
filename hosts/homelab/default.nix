@@ -61,12 +61,25 @@ in {
     archlinux.enable = true;
   };
 
-  # Enable iPXE NFS host to serve zed guest system
-  services.ipxe-nfs-host = {
+  # Enable iPXE host to serve zed guest system via NFS
+  services.ipxe-host = {
     enable = true;
-    guests.zed = {
-      system = zedGuestSystem;
-      macs = ["9c:52:f8:8e:dd:d8" "58:47:ca:79:85:1c"];
+    nfs = {
+      enable = true;
+      guests.zed = {
+        system = zedGuestSystem;
+        # macs = ["9c:52:f8:8e:dd:d8" "58:47:ca:79:85:1c"];
+      };
+    };
+    iscsi = {
+      enable = true;
+      items = [
+        {
+          macs = ["9c:52:f8:8e:dd:d8" "58:47:ca:79:85:1c"];
+          name = "zed_net";
+          iscsi-target = "iqn.2016-06.io.spdk:zednetefi";
+        }
+      ];
     };
   };
 
@@ -83,6 +96,11 @@ in {
     enable = true;
     hostId = "88fcb8e5";
     poolName = "system";
+  };
+
+  fileSystems."/boot/efi" = {
+    device = "/dev/disk/by-label/boot";
+    fsType = "vfat";
   };
 
   boot.zfs.package = pkgs.zfs_unstable;

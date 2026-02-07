@@ -39,7 +39,6 @@ in {
     libvirt.enable = true;
     core-desktop.enable = true;
     user-group.enable = true;
-    scripts.enable = true;
     virtualisation.enable = true;
   };
 
@@ -48,6 +47,11 @@ in {
     enable = true;
     hostId = "88fcb8e9";
     poolName = "system";
+  };
+
+  fileSystems."/boot/efi" = {
+    device = "/dev/disk/by-label/boot";
+    fsType = "vfat";
   };
 
   # Bootloader.

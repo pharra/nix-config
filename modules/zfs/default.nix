@@ -82,10 +82,5 @@ in {
       neededForBoot = true;
       options = ["zfsutil"];
     };
-
-    fileSystems."/boot/efi" = {
-      device = "/dev/disk/by-label/boot";
-      fsType = "vfat";
-    };
   };
 }
