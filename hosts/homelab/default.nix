@@ -103,7 +103,6 @@ in {
     fsType = "vfat";
   };
 
-  boot.zfs.package = pkgs.zfs_unstable;
   boot.zfs.extraPools = ["data"];
   services.zfs.autoScrub.enable = true;
   services.zfs.trim.enable = true;
