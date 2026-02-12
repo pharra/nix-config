@@ -14,8 +14,6 @@ with lib; let
       name = serviceName;
       value = {
         wantedBy = ["multi-user.target"];
-        requires = ["ensure-network.service"];
-        after = ["ensure-network.service"];
         before = ["multi-user.target"];
         serviceConfig = {
           Type = "simple";

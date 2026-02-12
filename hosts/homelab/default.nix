@@ -247,7 +247,8 @@ in {
             hostname = "zed";
           }
         ];
-        masquerade = "ipv4";
+        masquerade = "no";
+        emitRoute = true;
         ipv4 = {
           address = "192.168.29.1";
           netmask = "24";
@@ -272,7 +273,8 @@ in {
         #     hostname = "zed";
         #   }
         # ];
-        masquerade = "ipv4";
+        masquerade = "no";
+        emitRoute = false;
         ipv4 = {
           address = "192.168.28.1";
           netmask = "24";

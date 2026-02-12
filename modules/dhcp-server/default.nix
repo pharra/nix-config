@@ -83,6 +83,12 @@ with lib; let
         default = "no";
       };
 
+      emitRoute = mkOption {
+        description = "Emit DHCP default route (dnsmasq dhcp-option 3 and option6:6)";
+        type = types.bool;
+        default = false;
+      };
+
       leaseTime = mkOption {
         description = "DHCP lease time for this network (dnsmasq dhcp-range lease time)";
         type = types.str;
@@ -212,7 +218,7 @@ in {
             (lib.optional network.ipv6.enable "${network.ipv6.address}")
           ];
           dhcp-option =
-            if network.masquerade == "no"
+            if network.emitRoute == false
             then
               lib.concatLists [
                 ["interface:${iface},3"]

@@ -143,7 +143,7 @@ in {
         initrdBin = [pkgs.iproute2 pkgs.pciutils pkgs.dnsutils pkgs.util-linux pkgs.coreutils pkgs.iputils];
 
         services = {
-          ensure-network = {
+          ensure-network-nvmf = {
             enable = true;
             before = ["network-online.target"];
             wantedBy = ["network-online.target"];

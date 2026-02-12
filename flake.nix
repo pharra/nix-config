@@ -312,7 +312,26 @@
                       };
                     };
 
-                    services.zfs-config.enable = nixpkgs.lib.mkForce false;
+                    services.nvmf-root = {
+                      enable = true;
+                      interface = ["mlx5_0"];
+                      nvmf = {
+                        enable = true;
+                        transport = "rdma";
+                        target = "nqn.2016-06.io.spdk:zed_net";
+                        address = "192.168.29.1";
+                        port = 4420;
+                      };
+                      iscsi = {
+                        enable = false;
+                      };
+                      network = {
+                        dhcp = "ipv4";
+                        pingHost = "1.1.1.1";
+                      };
+                    };
+
+                    services.zfs-config.poolName = nixpkgs.lib.mkForce "zed_net";
 
                     fileSystems."/boot/efi".enable = nixpkgs.lib.mkForce false;
                   }

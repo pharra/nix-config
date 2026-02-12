@@ -41,42 +41,42 @@ in {
     networking.hostId = mkIf (cfg.hostId != null) cfg.hostId;
 
     # ZFS 文件系统配置
-    fileSystems."/system" = {
+    fileSystems."/system" = mkDefault {
       device = "${cfg.poolName}";
       fsType = "zfs";
       neededForBoot = true;
       options = ["zfsutil"];
     };
 
-    fileSystems."/tmp" = {
+    fileSystems."/tmp" = mkDefault {
       device = "${cfg.poolName}/tmp";
       fsType = "zfs";
       neededForBoot = true;
       options = ["zfsutil"];
     };
 
-    fileSystems."/nix" = {
+    fileSystems."/nix" = mkDefault {
       device = "${cfg.poolName}/nix";
       fsType = "zfs";
       neededForBoot = true;
       options = ["zfsutil"];
     };
 
-    fileSystems."/var" = {
+    fileSystems."/var" = mkDefault {
       device = "${cfg.poolName}/var";
       fsType = "zfs";
       neededForBoot = true;
       options = ["zfsutil"];
     };
 
-    fileSystems."/nix/var" = {
+    fileSystems."/nix/var" = mkDefault {
       device = "${cfg.poolName}/nix/var";
       fsType = "zfs";
       neededForBoot = true;
       options = ["zfsutil"];
     };
 
-    fileSystems."/nix/persistent" = {
+    fileSystems."/nix/persistent" = mkDefault {
       device = "${cfg.poolName}/nix/persistent";
       fsType = "zfs";
       neededForBoot = true;
