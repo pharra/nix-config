@@ -194,13 +194,6 @@
       (mkAzureHost "us")
       (mkAzureHost "sg")
 
-      # installer
-      {
-        name = "netboot_installer";
-        builds = ["base"];
-        nixos-modules = [./hosts/installer/netboot.nix];
-      }
-
       # dot
       {
         name = "dot";
@@ -214,13 +207,6 @@
         name = "gs65";
         builds = ["kde" "gnome" "cosmic"];
         nixos-modules = [./hosts/gs65];
-      }
-
-      # minimal
-      {
-        name = "minimal";
-        builds = ["base"];
-        nixos-modules = [./hosts/minimal];
       }
 
       # zed
