@@ -220,7 +220,7 @@
       {
         name = "zed_net";
         builds = ["kde" "gnome" "cosmic"];
-        # hostname = "zed.local";
+        hostname = "zed";
         nixos-modules = [
           ./hosts/zed
           {
