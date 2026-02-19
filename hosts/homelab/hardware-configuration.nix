@@ -49,7 +49,6 @@
 
   hardware.mlx5 = {
     enable = true;
-    enableSRIOV = false;
     interfaces = ["mlx5_0"];
   };
 

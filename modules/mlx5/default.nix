@@ -15,11 +15,6 @@ in {
   options.hardware.mlx5 = {
     enable = mkEnableOption "MLX5 Configuration";
 
-    enableSRIOV = mkOption {
-      type = types.bool;
-      default = true;
-    };
-
     interfaces = lib.mkOption {
       type = types.listOf types.str;
       default = [];
@@ -53,17 +48,6 @@ in {
       rdma-core
       mstflint
     ];
-
-    systemd.services.mlx5-sriov = lib.mkIf cfg.enableSRIOV {
-      enable = true;
-      script = "set -e\n" + concatMapStringsSep "\n" (interface: "echo 8 | tee /sys/class/net/${interface}/device/sriov_numvfs") cfg.interfaces;
-      wantedBy = ["multi-user.target"];
-      before = ["libvirtd.service"];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = "yes";
-      };
-    };
 
     systemd.services.opensm = mkIf cfg.opensm {
       enable = true;

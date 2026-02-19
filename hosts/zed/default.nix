@@ -40,6 +40,7 @@ in {
     core-desktop.enable = true;
     user-group.enable = true;
     virtualisation.enable = true;
+    scripts.enable = true;
   };
 
   # 使用 ZFS 模块配置基础支持
@@ -82,7 +83,7 @@ in {
   };
 
   services.network-bridge = {
-    enable = false;
+    enable = true;
     bridges = {
       br0 = {
         name = "br0";
@@ -97,31 +98,11 @@ in {
   systemd.network = {
     enable = true;
     wait-online = {
-      anyInterface = false;
-      timeout = 60;
+      enable = false;
+      anyInterface = true;
+      timeout = 30;
     };
     networks = {
-      "40-${interface.net0}" = {
-        matchConfig.Name = "${interface.net0}";
-        networkConfig = {
-          # start a DHCP Client for IPv4 Addressing/Routing
-          DHCP = "ipv4";
-          # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
-          IPv6AcceptRA = true;
-          Domains = ["mlx"];
-        };
-        dhcpV4Config = {
-          UseDomains = true;
-        };
-        ipv6AcceptRAConfig = {
-          UseDNS = true;
-          UseDomains = true;
-        };
-        linkConfig = {
-          # or "routable" with IP addresses configured
-          RequiredForOnline = "routable";
-        };
-      };
       "40-${interface.mlx5_0}" = {
         matchConfig.Name = "${interface.mlx5_0}";
         networkConfig = {
@@ -140,15 +121,25 @@ in {
         };
         linkConfig = {
           # or "routable" with IP addresses configured
-          RequiredForOnline = "routable";
+          RequiredForOnline = "no";
         };
       };
     };
   };
 
+  hardware.net-sriov = {
+    enable = true;
+    interfaces = [
+      {
+        number = 4;
+        name = "mlx5_0";
+      }
+    ];
+  };
+
   systemd.services = {
     ensure-network = {
-      enable = true;
+      enable = false;
       before = ["network-online.target"];
       wantedBy = ["network-online.target"];
       after = ["nss-lookup.target"];

@@ -53,7 +53,7 @@ in {
     # Looking Glass configuration
     xdg.configFile."looking-glass/client.ini".text = lib.generators.toINI {} {
       app.shmFile = "/dev/kvmfr0";
-      input.escapeKey = 100; # key pause
+      input.escapeKey = 100; # right alt
       win.fullScreen = "yes";
       win.jitRender = "yes";
       win.fpsMin = 120;
