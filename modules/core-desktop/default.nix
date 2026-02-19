@@ -173,7 +173,7 @@ in {
       bilibili
     ];
 
-    programs.sparkle = {
+    programs.clash-verge = {
       enable = true;
       tunMode = true; # enable tun mode
       autoStart = true;

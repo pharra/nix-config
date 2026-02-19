@@ -18,7 +18,6 @@
   dhcp-server-module = import ./dhcp-server;
   audio-relay-module = import ./audio-relay;
   netns-module = import ./netns;
-  sparkle-module = import ./sparkle;
   docker-netns-module = import ./docker-netns;
   openwrt-module = import ./openwrt;
   boot-over-nvmf-module = import ./boot-over-nvmf;

@@ -21,9 +21,7 @@ in {
     };
 
     services = {
-      displayManager.sddm.enable = true; # Display Manager
-      displayManager.sddm.wayland.enable = true;
-      displayManager.sddm.enableHidpi = true;
+      displayManager.plasma-login-manager.enable = true; # Display Manager
       desktopManager.plasma6.enable = true; # Window Manager
       displayManager.autoLogin = {
         enable = true;

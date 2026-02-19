@@ -34,7 +34,6 @@
 
   networking = {
     hostName = "nix65";
-    wireless.enable = false; # Enables wireless support via wpa_supplicant.
 
     networkmanager.enable = true;
   };

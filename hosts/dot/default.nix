@@ -105,7 +105,6 @@ in {
 
   networking = {
     hostName = "dot";
-    wireless.enable = false; # Enables wireless support via wpa_supplicant.
 
     networkmanager.enable = true;
     networkmanager.unmanaged = ["*,except:interface-name:wl*"];
