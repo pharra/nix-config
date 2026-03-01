@@ -118,9 +118,6 @@
     ...
   }: let
     username = "wf";
-    userfullname = "Feng Wang";
-    useremail = "typechasing@gmail.com";
-
     x64_system = "x86_64-linux";
     allSystems = [x64_system];
 
@@ -167,7 +164,7 @@
     mysecrets = ./secrets/agenix;
 
     commonSpecialArgs = {
-      inherit username userfullname useremail mysecrets home-modules NixVirt rime-config agenix;
+      inherit username mysecrets home-modules NixVirt rime-config agenix;
     };
     base_args = {
       inherit home-manager system;
