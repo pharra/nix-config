@@ -64,11 +64,6 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    deploy-rs = {
-      url = "github:serokell/deploy-rs";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-flatpak = {
       url = "github:gmodena/nix-flatpak";
     };
@@ -95,6 +90,11 @@
       url = "github:Mintimate/oh-my-rime";
       flake = false;
     };
+
+    nixinate = {
+      url = "github:matthewcroughan/nixinate";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -107,7 +107,6 @@
     nixpkgs,
     home-manager,
     impermanence,
-    deploy-rs,
     nix-flatpak,
     plasma-manager,
     NixVirt,
@@ -115,6 +114,7 @@
     sops-nix,
     rime-config,
     agenix,
+    nixinate,
     ...
   }: let
     username = "wf";
@@ -167,7 +167,7 @@
     mysecrets = ./secrets/agenix;
 
     commonSpecialArgs = {
-      inherit username userfullname useremail mysecrets deploy-rs home-modules NixVirt rime-config agenix;
+      inherit username userfullname useremail mysecrets home-modules NixVirt rime-config agenix;
     };
     base_args = {
       inherit home-manager system;
@@ -349,6 +349,18 @@
               ++ common-nixos-modules
               ++ [
                 (desktopModuleConfig build)
+                {
+                  _module.args.nixinate = {
+                    host =
+                      if builtins.hasAttr "hostname" machine
+                      then machine.hostname
+                      else machine.name;
+                    sshUser = username;
+                    hermetic = true;
+                    buildOn = "local"; # valid args are "local" or "remote"
+                    substituteOnTarget = true; # if buildOn is "local" then it will substitute on the target, "-s"
+                  };
+                }
               ];
             home-module = import ./home/${build}.nix;
           }
@@ -367,33 +379,7 @@
     hosts));
   in {
     nixosConfigurations = machinesNixosConfigurations;
-
-    deploy = let
-      deployConfigurations = builtins.listToAttrs (builtins.concatLists (generateNixosConfigurations (machine: let
-      in
-        builtins.map (build: {
-          name = "${machine.name}_${build}";
-          value = {
-            hostname =
-              if builtins.hasAttr "hostname" machine
-              then machine.hostname
-              else "${machine.name}";
-            profiles.system = {
-              path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."${machine.name}_${build}";
-            };
-          };
-        })
-        machine.builds)
-      hosts));
-    in {
-      sshUser = "wf";
-      user = "root";
-      # sshOpts = ["-p" "2222"];
-      autoRollback = false;
-
-      magicRollback = false;
-      nodes = deployConfigurations;
-    };
+    apps = forAllSystems (system: nixinate.nixinate.${system} self);
 
     inherit legacyPackages;
 

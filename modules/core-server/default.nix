@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  deploy-rs,
   ...
 }:
 with lib; let
@@ -113,7 +112,6 @@ in {
     # List packages installed in system profile. To search, run:
     # $ nix search wget
     environment.systemPackages = with pkgs; [
-      deploy-rs.packages.x86_64-linux.default
       nmap
       wget
       curl

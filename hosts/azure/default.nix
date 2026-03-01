@@ -3,7 +3,6 @@
   pkgs,
   lib,
   domain ? false,
-  deploy-rs ? false,
   ...
 }: let
   username = "wf";
@@ -39,7 +38,6 @@ in {
 
   environment.systemPackages = with pkgs; [
     git
-    # deploy-rs.packages.x86_64-linux.default
   ];
 
   users.users."${username}" = {
