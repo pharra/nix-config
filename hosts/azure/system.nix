@@ -13,16 +13,10 @@
   virtualisation.diskSize = 8 * 1024;
   virtualisation.azure.acceleratedNetworking = true;
 
-  environment.systemPackages = with pkgs; [
-    docker-compose
-  ];
-
-  virtualisation.docker = {
-    enable = true;
-    daemon.settings.features.cdi = true;
-    daemon.settings.live-restore = false; # avoid docker container hanging on shutdown
-    daemon.settings.dns = ["114.114.114.114"]; # if not set, docker compose will fail to resolve hostnames
+  services.pharra = {
+    virtualisation.enable = true;
   };
+
 
   system.stateVersion = "25.05";
 }
