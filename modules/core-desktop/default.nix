@@ -177,7 +177,6 @@ in {
       enable = true;
       tunMode = true; # enable tun mode
       serviceMode = true;
-      autoStart = true;
     };
 
     programs.throne = {
