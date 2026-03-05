@@ -51,10 +51,9 @@ in {
       log-level = "warning";
       ipv6 = true;
       find-process-mode = "strict";
-      external-controller = "0.0.0.0:9096";
+      external-controller = "0.0.0.0:9090";
       unified-delay = true;
       tcp-concurrent = true;
-      global-client-fingerprint = "chrome";
       profile = {
         store-selected = true;
         store-fake-ip = true;

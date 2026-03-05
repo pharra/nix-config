@@ -6,10 +6,15 @@
   NodeParam = {
     type = "http";
     interval = 86400;
+    proxy = "DIRECT";
+    size-limit = 0;
     health-check = {
       enable = true;
       url = "https://www.gstatic.com/generate_204";
       interval = 300;
+      timeout = 5000;
+      lazy = true;
+      expected-status = 204;
     };
   };
 in {

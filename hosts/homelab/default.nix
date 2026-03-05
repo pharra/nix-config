@@ -61,6 +61,8 @@ in {
     archlinux.enable = true;
   };
 
+  services.mihomo.enable = true;
+
   # Enable iPXE host to serve zed guest system via NFS
   services.ipxe-host = {
     enable = true;
