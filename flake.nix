@@ -95,6 +95,11 @@
       url = "github:matthewcroughan/nixinate";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    dms-plugin-registry = {
+      url = "github:AvengeMedia/dms-plugin-registry";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -115,6 +120,7 @@
     rime-config,
     agenix,
     nixinate,
+    dms-plugin-registry,
     ...
   }: let
     username = "wf";
@@ -149,6 +155,7 @@
         NixVirt.nixosModules.default
         sops-nix.nixosModules.sops
         agenix.nixosModules.default
+        dms-plugin-registry.modules.default
       ]
       ++ (builtins.attrValues modules)
       ++ [
@@ -191,7 +198,7 @@
       # dot
       {
         name = "dot";
-        builds = ["kde" "gnome" "cosmic"];
+        builds = ["kde" "gnome" "cosmic" "dms"];
         hostname = "192.168.254.240";
         nixos-modules = [./hosts/dot nixos-hardware.nixosModules.microsoft-surface-common];
       }
@@ -199,14 +206,14 @@
       # gs65
       {
         name = "gs65";
-        builds = ["kde" "gnome" "cosmic"];
+        builds = ["kde" "gnome" "cosmic" "dms"];
         nixos-modules = [./hosts/gs65];
       }
 
       # zed
       {
         name = "zed";
-        builds = ["kde" "gnome" "cosmic"];
+        builds = ["kde" "gnome" "cosmic" "dms"];
         # hostname = "zed.local";
         nixos-modules = [
           ./hosts/zed
@@ -216,7 +223,7 @@
       # zed_netboot
       {
         name = "zed_net";
-        builds = ["kde" "gnome" "cosmic"];
+        builds = ["kde" "gnome" "cosmic" "dms"];
         hostname = "zed";
         nixos-modules = [
           ./hosts/zed
@@ -255,7 +262,7 @@
         nixos-modules = [
           ./hosts/homelab
         ];
-        builds = ["kde" "gnome" "cosmic" "base"];
+        builds = ["kde" "gnome" "cosmic" "dms" "base"];
         specialArgs = {
           inherit nixpkgs home-manager;
           # Pass a function to build zed guest system with NFS boot
@@ -333,6 +340,8 @@
         then {gnome.enable = true;}
         else if build == "cosmic"
         then {cosmic.enable = true;}
+        else if build == "dms"
+        then {dms.enable = true;}
         else {}; # base build - no desktop environment
     };
 
@@ -353,7 +362,6 @@
                       then machine.hostname
                       else machine.name;
                     sshUser = username;
-                    hermetic = true;
                     buildOn = "local"; # valid args are "local" or "remote"
                     substituteOnTarget = true; # if buildOn is "local" then it will substitute on the target, "-s"
                   };

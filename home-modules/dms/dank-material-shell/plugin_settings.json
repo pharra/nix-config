@@ -1,0 +1,22 @@
+{
+  "linuxWallpaperEngine": {
+    "enabled": true,
+    "monitorPlaylists": {},
+    "monitorScenes": {
+      "HDMI-A-2": "2816220722"
+    },
+    "playlistIntervalMinutes": 2,
+    "sceneSettings": {
+      "1903682034": {
+        "noAutoMute": false,
+        "noAudioProcessing": false
+      },
+      "3659949001": {
+        "fps": 144,
+        "noAutoMute": false,
+        "scaling": "fill"
+      }
+    },
+    "generateStaticWallpaper": false
+  }
+}

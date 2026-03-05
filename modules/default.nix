@@ -44,6 +44,7 @@
   input-method-module = import ./input-method;
   gnome-module = import ./gnome;
   kde-module = import ./kde;
+  dms-module = import ./dms;
   cosmic-module = import ./cosmic;
   virtualisation-module = import ./virtualisation;
   archlinux-module = import ./archlinux;
