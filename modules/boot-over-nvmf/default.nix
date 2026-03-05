@@ -182,14 +182,6 @@ in {
       })
     cfg.interface);
 
-    systemd.sleep.extraConfig = ''
-      [Sleep]
-      AllowSuspend=no
-      AllowHibernation=no
-      AllowHybridSleep=no
-      AllowSuspendThenHibernate=no
-    '';
-
     environment.systemPackages = with pkgs;
       []
       ++ lib.optionals cfg.nvmf.enable [nvme-cli]

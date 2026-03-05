@@ -85,14 +85,6 @@ in {
     };
   };
 
-  systemd.sleep.extraConfig = ''
-    [Sleep]
-    AllowSuspend=no
-    AllowHibernation=no
-    AllowHybridSleep=no
-    AllowSuspendThenHibernate=no
-  '';
-
   # 使用 ZFS 模块配置基础支持
   services.zfs-config = {
     enable = true;

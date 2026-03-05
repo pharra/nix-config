@@ -5,7 +5,7 @@
 }: {
   networking.nameservers = lib.mkIf config.services.mihomo.enable ["119.29.29.29"];
   services.resolved = lib.mkIf config.services.mihomo.enable {
-    domains = ["~."];
+    settings.Resolve.Domains = ["~."];
   };
   services.mihomo.config.dns = lib.mkIf config.services.mihomo.enable {
     enable = true;

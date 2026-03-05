@@ -163,14 +163,6 @@ in {
       })
     cfg.interface);
 
-    systemd.sleep.extraConfig = ''
-      [Sleep]
-      AllowSuspend=no
-      AllowHibernation=no
-      AllowHybridSleep=no
-      AllowSuspendThenHibernate=no
-    '';
-
     fileSystems = let
       multipathFileSystems = lib.listToAttrs (lib.imap0 (idx: peer:
         lib.nameValuePair "/nix" {
