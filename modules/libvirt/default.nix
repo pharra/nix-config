@@ -52,7 +52,7 @@ in {
       options kvmfr static_size_mb=256
     '';
     services.udev.extraRules = ''
-      SUBSYSTEM=="kvmfr", OWNER="${username}", GROUP="libvirtd", MODE="0660"
+      SUBSYSTEM=="kvmfr", GROUP="libvirtd", MODE="0660"
     '';
 
     environment.systemPackages = with pkgs; [
