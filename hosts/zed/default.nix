@@ -23,6 +23,10 @@ let
       mac = "58:47:ca:79:85:1c";
       name = "net0";
     }
+    {
+      mac = "bc:ec:43:43:3d:e2";
+      name = "wl0";
+    }
   ];
 in {
   imports = [
@@ -44,6 +48,10 @@ in {
   };
 
   services.mihomo.enable = true;
+
+  services.mihomo.config.tun = lib.mkIf config.services.mihomo.enable {
+    include-interface = ["br0" "docker" "wl0"];
+  };
 
   # 使用 ZFS 模块配置基础支持
   services.zfs-config = {
