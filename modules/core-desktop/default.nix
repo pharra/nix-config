@@ -109,7 +109,7 @@ in {
       # no need to redefine it in your config for now)
       #media-session.enable = true;
     };
-    services.audio-relay.enable = true;
+    services.audio-relay.enable = false;
     # rtkit is optional but recommended
     security.rtkit.enable = true;
     # Disable pulseaudio, it conflicts with pipewire too.
