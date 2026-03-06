@@ -5,9 +5,10 @@
     "monitorScenes": {
       "HDMI-A-2": "2816220722",
       "HDMI-A-1": "3049902368",
-      "DP-2": "3049856806"
+      "DP-2": "3049856806",
+      "DP-5": "3049856806"
     },
-    "playlistIntervalMinutes": 1,
+    "playlistIntervalMinutes": 3,
     "sceneSettings": {
       "1903682034": {
         "noAutoMute": false,

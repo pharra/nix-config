@@ -395,24 +395,15 @@
   },
   "showOnLastDisplay": {},
   "niriOutputSettings": {
-    "HDMI-A-2": {}
+    "HDMI-A-2": {},
+    "LG Electronics LG TV SSCR2 0x01010101": {}
   },
   "hyprlandOutputSettings": {},
   "displayProfiles": {
-    "niri": {
-      "profile_1772797795206_8neamf": {
-        "id": "profile_1772797795206_8neamf",
-        "name": "LG",
-        "outputSet": [
-          "LG Electronics LG TV SSCR2 0x01010101"
-        ],
-        "createdAt": 1772797795206,
-        "updatedAt": 1772797795206
-      }
-    }
+    "niri": {}
   },
   "activeDisplayProfile": {
-    "niri": "profile_1772797795206_8neamf"
+    "niri": ""
   },
   "displayProfileAutoSelect": false,
   "displayShowDisconnected": true,
@@ -461,12 +452,13 @@
       "borderOpacity": 1,
       "borderThickness": 1,
       "fontScale": 1,
-      "autoHide": false,
+      "autoHide": true,
       "autoHideDelay": 250,
       "openOnOverview": false,
       "visible": true,
       "popupGapsAuto": true,
-      "popupGapsManual": 4
+      "popupGapsManual": 4,
+      "showOnWindowsOpen": false
     }
   ],
   "desktopClockEnabled": false,

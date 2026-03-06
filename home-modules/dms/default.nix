@@ -59,6 +59,7 @@ in {
 
       copy_if_missing "${defaultDmsConfig}/settings.json" "${config.xdg.configHome}/DankMaterialShell/settings.json"
       copy_if_missing "${defaultDmsConfig}/plugin_settings.json" "${config.xdg.configHome}/DankMaterialShell/plugin_settings.json"
+      copy_if_missing "${defaultDmsConfig}/clsettings.json" "${config.xdg.configHome}/DankMaterialShell/clsettings.json"
     '';
   };
 }
