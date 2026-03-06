@@ -209,7 +209,7 @@
   "useAutoLocation": false,
   "weatherEnabled": true,
   "networkPreference": "auto",
-  "iconTheme": "System Default",
+  "iconTheme": "Papirus",
   "cursorSettings": {
     "theme": "System Default",
     "size": 24,
