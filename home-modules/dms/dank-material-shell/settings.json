@@ -398,8 +398,22 @@
     "HDMI-A-2": {}
   },
   "hyprlandOutputSettings": {},
-  "displayProfiles": {},
-  "activeDisplayProfile": {},
+  "displayProfiles": {
+    "niri": {
+      "profile_1772797795206_8neamf": {
+        "id": "profile_1772797795206_8neamf",
+        "name": "LG",
+        "outputSet": [
+          "LG Electronics LG TV SSCR2 0x01010101"
+        ],
+        "createdAt": 1772797795206,
+        "updatedAt": 1772797795206
+      }
+    }
+  },
+  "activeDisplayProfile": {
+    "niri": "profile_1772797795206_8neamf"
+  },
   "displayProfileAutoSelect": false,
   "displayShowDisconnected": true,
   "displaySnapToEdge": true,

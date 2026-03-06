@@ -3,7 +3,9 @@
     "enabled": true,
     "monitorPlaylists": {},
     "monitorScenes": {
-      "HDMI-A-2": "2816220722"
+      "HDMI-A-2": "2816220722",
+      "HDMI-A-1": "3049902368",
+      "DP-2": "3049856806"
     },
     "playlistIntervalMinutes": 1,
     "sceneSettings": {
@@ -12,6 +14,18 @@
         "noAudioProcessing": false
       },
       "2816220722": {
+        "scaling": "fill"
+      },
+      "3049856806": {
+        "scaling": "fill",
+        "fps": 30,
+        "silent": true
+      },
+      "3049902368": {
+        "scaling": "fill",
+        "fps": 144
+      },
+      "3113581033": {
         "scaling": "fill"
       },
       "3659949001": {
