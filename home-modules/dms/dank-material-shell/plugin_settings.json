@@ -5,11 +5,14 @@
     "monitorScenes": {
       "HDMI-A-2": "2816220722"
     },
-    "playlistIntervalMinutes": 2,
+    "playlistIntervalMinutes": 1,
     "sceneSettings": {
       "1903682034": {
         "noAutoMute": false,
         "noAudioProcessing": false
+      },
+      "2816220722": {
+        "scaling": "fill"
       },
       "3659949001": {
         "fps": 144,
