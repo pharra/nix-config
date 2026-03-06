@@ -49,4 +49,5 @@
   virtualisation-module = import ./virtualisation;
   archlinux-module = import ./archlinux;
   azure-tools-module = import ./azure-tools;
+  amd-gpu-edid-fix-module = import ./amd-gpu-edid-fix;
 }
