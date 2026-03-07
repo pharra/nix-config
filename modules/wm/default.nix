@@ -63,6 +63,7 @@ in {
     environment.systemPackages = with pkgs; [
       alacritty
       linux-wallpaperengine
+      papirus-icon-theme
 
       # Wayland utilities
       wayland-utils

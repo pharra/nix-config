@@ -41,6 +41,7 @@ in {
       "MOZ_ENABLE_WAYLAND" = "1"; # for firefox to run on wayland
       "MOZ_WEBRENDER" = "1";
       "QT_QPA_PLATFORM" = "wayland";
+      "QS_ICON_THEME" = "Papirus"; # default icon theme for Qt apps (overridable by user)
     };
 
     programs = {
