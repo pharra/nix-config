@@ -77,6 +77,10 @@ in {
         if [ -d "$src" ] && [ ! -e "$dst" ]; then
           cp -r "$src" "$dst"
         fi
+
+        if [ -d "$dst" ]; then
+          chmod -R u+w "$dst"
+        fi
       }
 
       relink() {

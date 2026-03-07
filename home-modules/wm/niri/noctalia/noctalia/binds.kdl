@@ -24,7 +24,7 @@ binds {
         spawn "noctalia-shell" "ipc" "call" "wallpaper" "toggle";
     }
     Mod+N hotkey-overlay-title="Notification Center" { spawn "noctalia-shell" "ipc" "call" "notifications" "toggleHistory"; }
-    Mod+Shift+N hotkey-overlay-title="Notepad" { }
+    // Mod+Shift+N hotkey-overlay-title="Notepad" { spawn "<your-command>"; }
     // Note: noctalia-shell doesn't have a notepad module, can be replaced with custom command
 
     // === Security ===
@@ -83,7 +83,7 @@ binds {
     Mod+Shift+T { toggle-window-floating; }
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
     Mod+W { toggle-column-tabbed-display; }
-    Mod+Shift+W hotkey-overlay-title="Create window rule" { }
+    // Mod+Shift+W hotkey-overlay-title="Create window rule" { spawn "<your-command>"; }
     // Note: noctalia-shell doesn't have window-rules IPC, use custom configuration
 
     // === Focus Navigation ===
@@ -143,8 +143,7 @@ binds {
     Mod+Ctrl+I         { move-column-to-workspace-up; }
 
     // === Workspace Management ===
-    Ctrl+Shift+R hotkey-overlay-title="Rename Workspace" {
-    }
+    // Ctrl+Shift+R hotkey-overlay-title="Rename Workspace" { spawn "<your-command>"; }
     // Note: noctalia-shell doesn't have workspace-rename IPC
 
     // === Move Workspaces ===
