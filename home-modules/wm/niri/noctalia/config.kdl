@@ -284,8 +284,6 @@ window-rule {
 }
 debug {
     honor-xdg-activation-with-invalid-serial
-    render-drm-device "/dev/dri/by-path/pci-0000:06:00.0-render"
-    ignore-drm-device "/dev/dri/by-path/pci-0000:01:00.0-render"
 }
 
 // Override to disable super+tab
@@ -298,13 +296,13 @@ recent-windows {
     }
 }
 
-// Include dms files
-include "dms/colors.kdl"
-include "dms/layout.kdl"
-include "dms/alttab.kdl"
-include "dms/binds.kdl"
-include "dms/wpblur.kdl"
-include "dms/outputs.kdl"
-include "dms/cursor.kdl"
+// Include noctalia files
+include "noctalia/colors.kdl"
+include "noctalia/layout.kdl"
+include "noctalia/alttab.kdl"
+include "noctalia/binds.kdl"
+include "noctalia/wpblur.kdl"
+include "noctalia/outputs.kdl"
+include "noctalia/cursor.kdl"
 
-include "dms/windowrules.kdl"
+include "noctalia/windowrules.kdl"

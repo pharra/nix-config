@@ -3,7 +3,7 @@
     base.enable = true;
     desktop.enable = true;
     input-method.enable = true;
-    dms.enable = true;
+    desktopShell.enable = true;
   };
 
   # Home Manager needs a bit of information about you and the

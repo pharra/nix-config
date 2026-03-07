@@ -100,6 +100,17 @@
       url = "github:AvengeMedia/dms-plugin-registry";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.noctalia-qs.follows = "noctalia-qs";
+    };
+
+    noctalia-qs = {
+      url = "github:noctalia-dev/noctalia-qs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -121,6 +132,7 @@
     agenix,
     nixinate,
     dms-plugin-registry,
+    noctalia,
     ...
   }: let
     username = "wf";
@@ -145,6 +157,7 @@
     home-modules =
       [
         plasma-manager.homeModules.plasma-manager
+        noctalia.homeModules.default
       ]
       ++ (builtins.attrValues _home-modules);
 
@@ -156,6 +169,7 @@
         sops-nix.nixosModules.sops
         agenix.nixosModules.default
         dms-plugin-registry.modules.default
+        noctalia.nixosModules.default
       ]
       ++ (builtins.attrValues modules)
       ++ [
@@ -171,7 +185,7 @@
     mysecrets = ./secrets/agenix;
 
     commonSpecialArgs = {
-      inherit username mysecrets home-modules NixVirt rime-config agenix;
+      inherit username mysecrets home-modules NixVirt rime-config agenix inputs;
     };
     base_args = {
       inherit home-manager system;
@@ -198,7 +212,7 @@
       # dot
       {
         name = "dot";
-        builds = ["kde" "gnome" "cosmic" "dms"];
+        builds = ["kde" "gnome" "cosmic" "wm"];
         hostname = "192.168.254.240";
         nixos-modules = [./hosts/dot nixos-hardware.nixosModules.microsoft-surface-common];
       }
@@ -206,14 +220,14 @@
       # gs65
       {
         name = "gs65";
-        builds = ["kde" "gnome" "cosmic" "dms"];
+        builds = ["kde" "gnome" "cosmic" "wm"];
         nixos-modules = [./hosts/gs65];
       }
 
       # zed
       {
         name = "zed";
-        builds = ["kde" "gnome" "cosmic" "dms"];
+        builds = ["kde" "gnome" "cosmic" "wm"];
         # hostname = "zed.local";
         nixos-modules = [
           ./hosts/zed
@@ -223,7 +237,7 @@
       # zed_netboot
       {
         name = "zed_net";
-        builds = ["kde" "gnome" "cosmic" "dms"];
+        builds = ["kde" "gnome" "cosmic" "wm"];
         hostname = "zed";
         nixos-modules = [
           ./hosts/zed
@@ -261,7 +275,7 @@
         nixos-modules = [
           ./hosts/homelab
         ];
-        builds = ["kde" "gnome" "cosmic" "dms" "base"];
+        builds = ["kde" "gnome" "cosmic" "wm" "base"];
         specialArgs = {
           inherit nixpkgs home-manager;
           # Pass a function to build zed guest system with NFS boot
@@ -338,10 +352,11 @@
         then {gnome.enable = true;}
         else if build == "cosmic"
         then {cosmic.enable = true;}
-        else if build == "dms"
+        else if build == "wm"
         then {
-          dms = {
+          desktopShell = {
             enable = true;
+            variant = "noctalia";
             compositor = "niri";
           };
         }

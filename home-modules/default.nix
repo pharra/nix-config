@@ -4,7 +4,7 @@
   desktop-module = import ./desktop;
   kde-module = import ./kde;
   gnome-module = import ./gnome;
-  dms-module = import ./dms;
+  wm-module = import ./wm;
   cosmic-module = import ./cosmic;
   input-method-module = import ./input-method;
 }

@@ -5,16 +5,22 @@
   ...
 }:
 with lib; let
-  cfg = config.services.pharra.dms;
+  cfg = config.services.pharra.desktopShell;
 in {
   options = {
-    services.pharra.dms = {
-      enable = mkEnableOption "DankMaterialShell with Niri desktop environment";
+    services.pharra.desktopShell = {
+      enable = mkEnableOption "Desktop shell integration for Wayland sessions";
+
+      variant = mkOption {
+        type = types.enum ["dms" "noctalia"];
+        default = "dms";
+        description = "Desktop shell variant to launch (dms or noctalia).";
+      };
 
       compositor = mkOption {
         type = types.enum ["niri" "hyprland"];
         default = "niri";
-        description = "The Wayland compositor to use with DMS (niri or hyprland)";
+        description = "The Wayland compositor to use with this shell profile (niri or hyprland).";
       };
     };
   };
@@ -24,7 +30,7 @@ in {
       niri.enable = cfg.compositor == "niri";
       hyprland.enable = cfg.compositor == "hyprland";
 
-      dms-shell = {
+      dms-shell = mkIf (cfg.variant == "dms") {
         enable = true;
         systemd = {
           enable = true;
@@ -45,13 +51,13 @@ in {
       };
     };
 
+    services.noctalia-shell = mkIf (cfg.variant == "noctalia") {
+      enable = true;
+    };
+
     services.displayManager.dms-greeter = {
       enable = true;
       compositor.name = cfg.compositor;
-    };
-
-    environment.sessionVariables = {
-      TERMINAL = "foot";
     };
 
     environment.systemPackages = with pkgs; [
@@ -63,7 +69,5 @@ in {
       wl-clipboard
       xwayland-satellite
     ];
-
-    services.pulseaudio.enable = false;
   };
 }
