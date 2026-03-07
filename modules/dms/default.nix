@@ -10,12 +10,19 @@ in {
   options = {
     services.pharra.dms = {
       enable = mkEnableOption "DankMaterialShell with Niri desktop environment";
+
+      compositor = mkOption {
+        type = types.enum ["niri" "hyprland"];
+        default = "niri";
+        description = "The Wayland compositor to use with DMS (niri or hyprland)";
+      };
     };
   };
 
   config = mkIf cfg.enable {
     programs = {
-      niri.enable = true;
+      niri.enable = cfg.compositor == "niri";
+      hyprland.enable = cfg.compositor == "hyprland";
 
       dms-shell = {
         enable = true;
@@ -40,7 +47,7 @@ in {
 
     services.displayManager.dms-greeter = {
       enable = true;
-      compositor.name = "niri"; # Or "hyprland" or "sway"
+      compositor.name = cfg.compositor;
     };
 
     environment.sessionVariables = {

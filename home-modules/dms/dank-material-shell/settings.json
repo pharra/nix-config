@@ -208,7 +208,7 @@
   "dankLauncherV2UnloadOnClose": false,
   "useAutoLocation": false,
   "weatherEnabled": true,
-  "networkPreference": "auto",
+  "networkPreference": "wifi",
   "iconTheme": "Papirus",
   "cursorSettings": {
     "theme": "System Default",
@@ -396,7 +396,9 @@
   "showOnLastDisplay": {},
   "niriOutputSettings": {
     "HDMI-A-2": {},
-    "LG Electronics LG TV SSCR2 0x01010101": {}
+    "LG Electronics LG TV SSCR2 0x01010101": {},
+    "LG Electronics LG TV RGB     0x01010101": {},
+    "LG Electronics LG TV SSCRRGB 0x01010101": {}
   },
   "hyprlandOutputSettings": {},
   "displayProfiles": {

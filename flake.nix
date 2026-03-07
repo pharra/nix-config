@@ -341,7 +341,12 @@
         else if build == "cosmic"
         then {cosmic.enable = true;}
         else if build == "dms"
-        then {dms.enable = true;}
+        then {
+          dms = {
+            enable = true;
+            compositor = "niri";
+          };
+        }
         else {}; # base build - no desktop environment
     };
 
