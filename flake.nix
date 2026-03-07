@@ -356,7 +356,7 @@
         then {
           desktopShell = {
             enable = true;
-            variant = "noctalia";
+            variant = "dms";
             compositor = "niri";
           };
         }
