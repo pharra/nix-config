@@ -49,10 +49,6 @@ in {
 
   services.mihomo.enable = true;
 
-  services.mihomo.config.tun = lib.mkIf config.services.mihomo.enable {
-    include-interface = ["br0" "docker" "wl0"];
-  };
-
   # 使用 ZFS 模块配置基础支持
   services.zfs-config = {
     enable = true;
@@ -130,6 +126,7 @@ in {
         };
         dhcpV4Config = {
           UseDomains = true;
+          UseRoutes = false;
         };
         ipv6AcceptRAConfig = {
           UseDNS = true;
