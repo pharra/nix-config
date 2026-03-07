@@ -97,12 +97,6 @@ in {
           default = "ipv4";
           description = "DHCP configuration (ipv4, ipv6, yes, no).";
         };
-
-        pingHost = mkOption {
-          type = types.str;
-          default = "1.1.1.1";
-          description = "Host to ping to ensure network connectivity.";
-        };
       };
     };
   };
@@ -152,7 +146,7 @@ in {
             serviceConfig = {
               Type = "oneshot";
               TimeoutStartSec = 60;
-              ExecStart = "${pkgs.bashInteractive}/bin/sh -c 'until ${pkgs.iputils}/bin/ping -c 1 ${cfg.network.pingHost}; do ${pkgs.coreutils}/bin/sleep 1; done'";
+              ExecStart = "${pkgs.bashInteractive}/bin/sh -c 'until ${pkgs.iputils}/bin/ping -c 1 ${cfg.nvmf.address}; do ${pkgs.coreutils}/bin/sleep 1; done'";
             };
           };
         };

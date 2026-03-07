@@ -248,7 +248,6 @@
               };
               network = {
                 dhcp = "ipv4";
-                pingHost = "1.1.1.1";
               };
             };
             fileSystems."/boot/efi".device = nixpkgs.lib.mkForce "/dev/disk/by-label/zednetefi";
@@ -314,7 +313,6 @@
                       };
                       network = {
                         dhcp = "ipv4";
-                        pingHost = "1.1.1.1";
                       };
                     };
 
