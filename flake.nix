@@ -45,7 +45,7 @@
 
     # Official NixOS package source, using nixos's stable branch by default
     # nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
     # nixpkgs.url = "github:FriedrichAltheide/nixpkgs/add-depmod-overrides";
 
     # home-manager, used for managing user configuration
