@@ -64,39 +64,25 @@ in {
             builtins.map (x: {
               vcpu = x;
               cpuset = toString x;
-            }) (lib.lists.range 0 5)
+            }) (lib.lists.range 0 7)
             ++ builtins.map (x: {
               vcpu = x;
               cpuset = toString (x + 8);
-            }) (lib.lists.range 8 13);
+            }) (lib.lists.range 8 15);
 
           emulatorpin = {
-            cpuset = "0,16";
+            cpuset = "8,24";
           };
           iothreadpin = {
             iothread = 1;
-            cpuset = "0,16";
+            cpuset = "8,24";
           };
         };
         memoryBacking = {
           hugepages = {};
         };
         clock =
-          Windows.clock
-          // {
-            timer =
-              lib.lists.remove {
-                name = "hpet";
-                present = false;
-              }
-              Windows.clock.timer
-              ++ [
-                {
-                  name = "hpet";
-                  present = true;
-                }
-              ];
-          };
+          Windows.clock;
         os =
           Windows.os
           // {
@@ -124,52 +110,6 @@ in {
         devices =
           Windows.devices
           // {
-            # disk =
-            #   if builtins.isNull Windows.devices.disk
-            #   then []
-            #   else
-            #     Windows.devices.disk
-            #     ++ [
-            #       # Games.qcow2
-            #       {
-            #         type = "volume";
-            #         device = "disk";
-            #         driver = {
-            #           name = "qemu";
-            #           type = "qcow2";
-            #           cache = "none";
-            #           discard = "unmap";
-            #         };
-            #         source = {
-            #           pool = "DiskPool";
-            #           volume = "Games.qcow2";
-            #         };
-            #         target = {
-            #           dev = "vdd";
-            #           bus = "virtio";
-            #         };
-            #       }
-
-            #       # Data.qcow2
-            #       {
-            #         type = "volume";
-            #         device = "disk";
-            #         driver = {
-            #           name = "qemu";
-            #           type = "qcow2";
-            #           cache = "none";
-            #           discard = "unmap";
-            #         };
-            #         source = {
-            #           pool = "DiskPool";
-            #           volume = "Data.qcow2";
-            #         };
-            #         target = {
-            #           dev = "vde";
-            #           bus = "virtio";
-            #         };
-            #       }
-            #     ];
             tpm = {
               model = "tpm-tis";
               backend = {

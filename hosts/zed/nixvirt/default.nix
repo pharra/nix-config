@@ -5,8 +5,8 @@
   NixVirt,
   ...
 } @ args: let
-  Windows = import ./Windows.nix args;
-  Microsoft = import ./Microsoft.nix args;
+  Windows = import ./Oct.nix args;
+  Pat = import ./Pat.nix args;
   Linux = import ./Linux.nix args;
 in {
   environment = {
@@ -20,7 +20,7 @@ in {
   virtualisation.libvirt.connections."qemu:///system" = {
     domains = [
       Windows
-      # Microsoft
+      Pat
       Linux
     ];
   };
@@ -28,7 +28,7 @@ in {
   virtualisation.libvirtd.hooks.qemu."10-cpu-manager" = pkgs.writeShellScript "cpu-qemu-hook" ''
     machine=$1
     command=$2
-    if [ "$machine" == "Windows" ]; then
+    if [ "$machine" == "Pat" ]; then
       if [ "$command" == "prepare" ]; then
         ${pkgs.coreutils-full}/bin/echo "preparing"
       elif [ "$command" == "started" ]; then
