@@ -33,8 +33,8 @@ in {
 
     # Extra variables not covered by NixOS fcitx module
     environment.variables = {
-      GTK_IM_MODULE = "fcitx";
-      QT_IM_MODULE = "fcitx";
+      # GTK_IM_MODULE = "fcitx";
+      # QT_IM_MODULE = "fcitx";
       XMODIFIERS = "@im=fcitx";
     };
   };
