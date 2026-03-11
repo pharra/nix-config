@@ -83,7 +83,21 @@ in {
           hugepages = {};
         };
         clock =
-          Pat.clock;
+          Pat.clock
+          // {
+            timer =
+              lib.lists.remove {
+                name = "hpet";
+                present = false;
+              }
+              Pat.clock.timer
+              ++ [
+                {
+                  name = "hpet";
+                  present = true;
+                }
+              ];
+          };
         os =
           Pat.os
           // {
@@ -181,14 +195,14 @@ in {
                 # RTX 4090 01:00.1
                 address = pci_address 5 0 1 // {multifunction = true;};
               }
-              # {
-              #   type = "pci";
-              #   mode = "subsystem";
-              #   managed = true;
-              #   source = {address = pci_address 6 0 3;};
-              #   # Backend USB Controller 06:00.3
-              #   address = pci_address 9 0 0;
-              # }
+              {
+                type = "pci";
+                mode = "subsystem";
+                managed = true;
+                source = {address = pci_address 6 0 3;};
+                # Backend USB Controller 06:00.3
+                address = pci_address 9 0 0;
+              }
             ];
             interface = [
               {
