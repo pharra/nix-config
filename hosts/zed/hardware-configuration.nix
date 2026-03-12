@@ -16,7 +16,7 @@
   boot.initrd.kernelModules = ["r8169"];
   boot.kernelModules = ["kvm-amd" "virtio_pci" "virtio_net" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "virtio_rng"];
   # "console=ttyS0"
-  boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=0" "amd_pstate=active" "amd_pstate.shared_mem=1" "brd.rd_nr=1" "brd.rd_size=11240000"];
+  boot.kernelParams = ["default_hugepagesz=2M" "hugepagesz=2M" "hugepages=0" "amd_pstate=active" "amd_pstate.shared_mem=1" "brd.rd_nr=1" "brd.rd_size=11240000"];
   boot.extraModprobeConfig = ''
     options kvm_amd nested=1
     softdep nvme pre: vfio-pci
