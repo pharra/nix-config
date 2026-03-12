@@ -50,6 +50,7 @@ in {
         "input"
         "uinput"
         "render"
+        "podman"
       ];
       openssh.authorizedKeys.keys = [
         # win desktop

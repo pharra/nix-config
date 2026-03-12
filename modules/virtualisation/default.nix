@@ -23,14 +23,26 @@ in {
         default = true;
         description = "Enable Podman service";
       };
+
+      enableDistrobox = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable Distrobox service";
+      };
     };
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [
-      docker-compose
-      podman-compose
-    ];
+    environment.systemPackages = with pkgs;
+      [
+        docker-compose
+        podman-compose
+      ]
+      ++ (
+        if cfg.enableDistrobox
+        then [pkgs.distrobox]
+        else []
+      );
 
     virtualisation.docker = {
       enable = true;
