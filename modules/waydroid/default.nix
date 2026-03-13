@@ -14,12 +14,13 @@ in {
   };
 
   config = mkIf cfg.enable {
+    # must set zfs set acltype=posixacl ...
     virtualisation.waydroid.enable = true;
 
     environment.systemPackages = with pkgs; [
       android-tools
       scrcpy
-      python3
+      genymotion
     ];
   };
 }
