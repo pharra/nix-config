@@ -47,6 +47,22 @@ in {
     scripts.enable = true;
   };
 
+  services.docker-netns =
+    if config.services.openwrt.enable
+    then {
+      enable = true;
+      autoConfigureBridge = false;
+      dockerBridge = "br2";
+      dockerGateway = "192.168.31.254";
+      dockerHostIP = "192.168.31.2";
+    }
+    else {
+      enable = true;
+      autoConfigureBridge = true;
+      dockerGateway = "192.168.31.254";
+      dockerHostIP = "192.168.31.2";
+    };
+
   services.mihomo.enable = true;
 
   # 使用 ZFS 模块配置基础支持
@@ -80,11 +96,6 @@ in {
   net-name = {
     enable = true;
     inherit interfaces;
-  };
-
-  services.docker-netns = {
-    enable = false;
-    autoConfigureBridge = true;
   };
 
   services.network-bridge = {
