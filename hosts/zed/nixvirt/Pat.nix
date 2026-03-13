@@ -64,19 +64,19 @@ in {
           vcpupin =
             builtins.map (x: {
               vcpu = x;
-              cpuset = toString x;
+              cpuset = toString (x + 4);
             }) (lib.lists.range 0 7)
             ++ builtins.map (x: {
               vcpu = x;
-              cpuset = toString (x + 8);
+              cpuset = toString (x + 12);
             }) (lib.lists.range 8 15);
 
           emulatorpin = {
-            cpuset = "8,24";
+            cpuset = "2,18";
           };
           iothreadpin = {
             iothread = 1;
-            cpuset = "8,24";
+            cpuset = "2,18";
           };
         };
         memoryBacking = {
