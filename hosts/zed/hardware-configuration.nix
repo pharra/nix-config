@@ -40,6 +40,38 @@
     blacklistNvidia = false;
   };
 
+  net-name = {
+    enable = true;
+    interfaces = [
+      {
+        mac = "9c:52:f8:8e:dd:d8";
+        name = "mlx5_0";
+      }
+      {
+        mac = "58:47:ca:79:85:1c";
+        name = "net0";
+      }
+      {
+        mac = "bc:ec:43:43:3d:e2";
+        name = "wl0";
+      }
+    ];
+  };
+
+  services.udev-symlink = {
+    enable = true;
+    rules = [
+      {
+        pciPath = "0000:06:00.0";
+        symlinkName = "amd_igpu";
+      }
+      {
+        pciPath = "0000:01:00.0";
+        symlinkName = "nvidia_gpu";
+      }
+    ];
+  };
+
   hardware.mlx5 = {
     enable = true;
     interfaces = ["mlx5_0"];

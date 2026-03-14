@@ -50,4 +50,5 @@
   archlinux-module = import ./archlinux;
   azure-tools-module = import ./azure-tools;
   amd-gpu-edid-fix-module = import ./amd-gpu-edid-fix;
+  udev-symlink-module = import ./udev-symlink;
 }

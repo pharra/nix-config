@@ -14,20 +14,6 @@ let
     mlx5_0 = "mlx5_0";
     net0 = "net0";
   };
-  interfaces = [
-    {
-      mac = "9c:52:f8:8e:dd:d8";
-      name = "mlx5_0";
-    }
-    {
-      mac = "58:47:ca:79:85:1c";
-      name = "net0";
-    }
-    {
-      mac = "bc:ec:43:43:3d:e2";
-      name = "wl0";
-    }
-  ];
 in {
   imports = [
     # Include the results of the hardware scan.
@@ -91,11 +77,6 @@ in {
 
     networkmanager.enable = true;
     networkmanager.unmanaged = ["*,except:interface-name:wl*"];
-  };
-
-  net-name = {
-    enable = true;
-    inherit interfaces;
   };
 
   services.network-bridge = {
