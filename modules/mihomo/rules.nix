@@ -11,6 +11,7 @@
     "DOMAIN-SUFFIX,cn.lgaccount.com,节点选择"
     "DOMAIN-SUFFIX,kxsw.org,节点选择"
     "DOMAIN-SUFFIX,looking-glass.io,节点选择"
+    "DOMAIN-SUFFIX,usebottles.com,节点选择"
     "GEOSITE,twitch,节点选择"
     "GEOSITE,category-finance@longbridge,长桥网站"
     "DOMAIN-SUFFIX,longbridgewhale.com,长桥网站"

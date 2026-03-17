@@ -59,7 +59,7 @@
   };
 
   services.udev-symlink = {
-    enable = true;
+    enable = false;
     rules = [
       {
         pciPath = "0000:06:00.0";
