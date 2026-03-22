@@ -79,7 +79,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixos-hardware.url = "github:8bitbuddhist/nixos-hardware?ref=surface-rust-target-spec-fix";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     sops-nix = {
       url = "github:Mic92/sops-nix";

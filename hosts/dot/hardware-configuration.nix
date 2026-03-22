@@ -15,10 +15,10 @@ in {
 
   services.iptsd.enable = lib.mkDefault true;
   environment.systemPackages = [pkgs.surface-control];
-  hardware.microsoft-surface.kernelVersion = "longterm";
+  hardware.microsoft-surface.kernelVersion = "stable";
   services.surface-dtx-daemon.enable = true;
-  services.pipewire.enable = lib.mkForce false;
-  services.pulseaudio.enable = lib.mkForce true;
+
+  services.mihomo.enable = true;
 
   boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "uas" "xhci_pci"];
   # boot.initrd.kernelModules = [];
