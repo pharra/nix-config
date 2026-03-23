@@ -92,12 +92,12 @@ in {
     };
   };
 
-  # systemd.sleep.settings.Sleep = {
-  #   AllowSuspend = false;
-  #   AllowHibernation = false;
-  #   AllowHybridSleep = false;
-  #   AllowSuspendThenHibernate = false;
-  # };
+  systemd.sleep.settings.Sleep = {
+    AllowSuspend = false;
+    AllowHibernation = false;
+    AllowHybridSleep = false;
+    AllowSuspendThenHibernate = false;
+  };
 
   systemd.network = {
     enable = true;

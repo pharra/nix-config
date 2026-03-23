@@ -14,15 +14,18 @@ in {
   };
 
   config = mkIf cfg.enable {
+    # allow fontconfig to discover fonts and configurations installed through home.packages
+    fonts.fontconfig.enable = true;
+
+    programs = {
+      firefox = {
+        enable = true;
+        enableGnomeExtensions = false;
+      };
+      vscode.enable = true;
+    };
+
     home.packages = with pkgs; [
-      # GUI apps
-      insomnia # REST client
-      wireshark # network analyzer
-
-      # remote desktop(rdp connect)
-      remmina
-      freerdp # required by remmina
-
       # misc
       flameshot
 
@@ -30,11 +33,6 @@ in {
       xdg-utils # provides cli tools such as `xdg-mime` `xdg-open`
       xdg-user-dirs
     ];
-
-    # GitHub CLI tool
-    programs.gh = {
-      enable = true;
-    };
 
     # XDG configuration
     xdg = {

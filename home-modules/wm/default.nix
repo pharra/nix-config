@@ -33,9 +33,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # allow fontconfig to discover fonts and configurations installed through home.packages
-    fonts.fontconfig.enable = true;
-
     systemd.user.sessionVariables = {
       "NIXOS_OZONE_WL" = "1"; # for any ozone-based browser & electron apps to run on wayland
       "MOZ_ENABLE_WAYLAND" = "1"; # for firefox to run on wayland
@@ -45,15 +42,6 @@ in {
     };
 
     programs = {
-      firefox = {
-        enable = true;
-        enableGnomeExtensions = false;
-      };
-
-      vscode = {
-        enable = true;
-      };
-
       noctalia-shell = mkIf (cfg.variant == "noctalia") {
         enable = true;
         # When the NixOS module owns the systemd service, HM should not provide its own package wrapper.
