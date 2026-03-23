@@ -174,7 +174,7 @@ in {
     ];
 
     programs.clash-verge = {
-      enable = true;
+      enable = false;
       tunMode = true; # enable tun mode
       serviceMode = true;
     };
