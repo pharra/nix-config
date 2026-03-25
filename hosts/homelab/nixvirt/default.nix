@@ -8,6 +8,7 @@
   ArchLinux = import ./ArchLinux.nix args;
   Windows = import ./Windows.nix args;
   FnOS = import ./FnOS.nix args;
+  IncusOS = import ./IncusOS.nix args;
 in {
   environment = {
     systemPackages = with pkgs; [
@@ -22,6 +23,7 @@ in {
       ArchLinux
       Windows
       FnOS
+      IncusOS
     ];
     pools = [
     ];
