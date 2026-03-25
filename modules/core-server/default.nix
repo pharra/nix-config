@@ -190,5 +190,22 @@ in {
     # for power management
     # services.upower.enable = true;
     # powerManagement.enable = true;
+
+    # Enable vscode server
+    programs.nix-ld.enable = true;
+
+    nix.settings = {
+      substituters = [
+        # replace official cache with a mirror located in China
+        # "https://attic.int4byte.org:8443/nix"
+        "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
+        "https://mirrors.ustc.edu.cn/nix-channels/store"
+      ];
+
+      trusted-public-keys = [
+        "nix:TIuZSOR7smXF/Jz1UKnvY5TW+NvklDypmDEg57QYU08="
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      ];
+    };
   };
 }

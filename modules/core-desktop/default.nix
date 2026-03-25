@@ -46,9 +46,6 @@ in {
     # Enable CUPS to print documents.
     services.printing.enable = true;
 
-    # Enable vscode server
-    programs.nix-ld.enable = true;
-
     fonts = {
       # use fonts specified by user rather than default ones
       enableDefaultPackages = false;
@@ -196,20 +193,6 @@ in {
       enable = true;
       enableSSHSupport = true;
       pinentryPackage = pkgs.pinentry-curses;
-    };
-
-    nix.settings = {
-      substituters = [
-        # replace official cache with a mirror located in China
-        # "https://attic.int4byte.org:8443/nix"
-        "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
-        "https://mirrors.ustc.edu.cn/nix-channels/store"
-      ];
-
-      trusted-public-keys = [
-        "nix:TIuZSOR7smXF/Jz1UKnvY5TW+NvklDypmDEg57QYU08="
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      ];
     };
   };
 }
