@@ -49,6 +49,6 @@
     "IP-CIDR,192.168.0.0/16,DIRECT,no-resolve"
     "IP-CIDR,100.64.0.0/10,DIRECT"
     "IP-CIDR,127.0.0.0/8,DIRECT"
-    "MATCH,DIRECT"
+    "MATCH,其余网站"
   ];
 }

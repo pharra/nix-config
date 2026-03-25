@@ -174,6 +174,13 @@ in {
       icon = "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Streaming.png";
     }
 
+    {
+      name = "其余网站";
+      type = "select";
+      proxies = SelectProxies;
+      icon = "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Netease.png";
+    }
+
     (Auto
       // {
         name = "香港节点";
