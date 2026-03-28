@@ -21,11 +21,23 @@ with lib; let
     sound_bus_path=`${pkgs.pciutils}/bin/lspci -mm -d $sound_vendor | ${pkgs.gawk}/bin/awk '{ print $1 }'`
     ${pkgs.coreutils-full}/bin/echo -n "0000:$nvidia_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/unbind
     ${pkgs.coreutils-full}/bin/echo -n "0000:$sound_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/vfio-pci/unbind
+
+    # PCI reset/remove + rescan for cleaner GPU/audio re-attachment
+    if [ -e "/sys/bus/pci/devices/0000:$nvidia_bus_path/reset" ]; then
+      ${pkgs.coreutils-full}/bin/echo -n "1" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/devices/0000:$nvidia_bus_path/reset
+    fi
+    ${pkgs.coreutils-full}/bin/echo -n "1" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/devices/0000:$nvidia_bus_path/remove
+    ${pkgs.coreutils-full}/bin/echo -n "1" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/devices/0000:$sound_bus_path/remove
+    ${pkgs.coreutils-full}/bin/echo -n "1" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/rescan
+
     ${pkgs.coreutils-full}/bin/echo -n "nvidia" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/devices/0000:$nvidia_bus_path/driver_override
     ${pkgs.coreutils-full}/bin/echo -n "snd_hda_intel" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/devices/0000:$sound_bus_path/driver_override
     ${pkgs.coreutils-full}/bin/echo -n "0000:$sound_bus_path" | ${pkgs.coreutils-full}/bin/tee /sys/bus/pci/drivers/snd_hda_intel/bind
     ${pkgs.kmod}/bin/modprobe nvidia_drm modeset=1 fbdev=0
     ${pkgs.kmod}/bin/modprobe nvidia nvidia_modeset nvidia_uvm
+
+    # fix the issue that can't run some games (failed to initialize vulkan driver) after attach, maybe related to udev rules or something, not sure
+    ${pkgs.systemd}/bin/systemctl restart systemd-udevd.service && ${pkgs.systemd}/bin/systemctl restart systemd-modules-load.service
   '';
 
   detach_gpu = pkgs.writeShellScriptBin "detach_gpu" ''
