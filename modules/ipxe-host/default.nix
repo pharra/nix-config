@@ -187,12 +187,6 @@ in {
       enable = true;
       listen = "[::]:8080";
       root = "/etc/ipxe";
-      configuration = {
-        general = {
-          directory-listing = true;
-          log-level = "error";
-        };
-      };
     };
 
     environment.systemPackages = with pkgs;
@@ -281,8 +275,7 @@ in {
         + (lib.optionalString cfg.iscsi.enable iscsiBootSections);
     in
       {
-        "ipxe/ipxe.efi".source = pkgs.ipxe + "/ipxe.efi";
-        "ipxe/undionly.kpxe".source = pkgs.ipxe + "/undionly.kpxe";
+        "ipxe/snponly.efi".source = ./snponly.efi;
 
         "ipxe/boot.ipxe".text = ''
           #!ipxe
@@ -292,9 +285,9 @@ in {
 
         "ipxe/boot.ipxe.cfg".text = ''
           #!ipxe
-          set http-server ''${gateway}
-          set nfs-server ''${gateway}
-          set iscsi-server ''${gateway}
+          set http-server ''${dhcp-server}
+          set nfs-server ''${dhcp-server}
+          set iscsi-server ''${dhcp-server}
           set menu-url menu.ipxe
         '';
 

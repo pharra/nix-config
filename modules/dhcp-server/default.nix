@@ -236,7 +236,7 @@ in {
           log-dhcp = true;
           tftp-root = "/etc/ipxe";
           dhcp-match = "set:ipxe,175";
-          dhcp-boot = ["tag:!ipxe,ipxe.efi" "tag:ipxe,boot.ipxe"];
+          dhcp-boot = ["tag:!ipxe,snponly.efi" "tag:ipxe,boot.ipxe"];
           dhcp-leasefile = "${stateDir}/dnsmasq-${iface}.leases";
           # local = "/${network.domain}/";
           # domain = network.domain;

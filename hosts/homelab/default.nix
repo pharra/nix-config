@@ -63,9 +63,9 @@ in {
 
   services.mihomo.enable = true;
 
-  # services.mihomo.config.tun = lib.mkIf config.services.mihomo.enable {
-  #   exclude-interface = ["mlx5_0"];
-  # };
+  services.mihomo.config.tun = lib.mkIf config.services.mihomo.enable {
+    exclude-interface = [interface.eth interface.intern];
+  };
 
   # Enable iPXE host to serve zed guest system via NFS
   services.ipxe-host = {
@@ -246,7 +246,7 @@ in {
           }
         ];
         masquerade = "no";
-        emitRoute = true;
+        emitRoute = false;
         ipv4 = {
           address = "192.168.29.1";
           netmask = "24";
