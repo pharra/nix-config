@@ -38,6 +38,11 @@ in {
       }
     ];
 
+    services.flatpak.update.auto = {
+      enable = true;
+      onCalendar = "daily"; # Default value
+    };
+
     services.flatpak.overrides = {
       global = {
         Context.filesystems = [
