@@ -69,6 +69,7 @@ in {
       canTouchEfiVariables = true;
       efiSysMountPoint = "/boot/efi"; # ← use the same mount point here.
     };
+    timeout = 1;
     systemd-boot.enable = true;
   };
 
