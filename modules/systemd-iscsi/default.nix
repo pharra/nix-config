@@ -92,18 +92,6 @@ in {
   };
 
   config = mkIf (cfg.name != null) {
-    # The "scripted" networking configuration (ie: non-networkd)
-    # doesn't properly order the start and stop of the interfaces, and the
-    # network interfaces are torn down before unmounting disks. Since this
-    # module is specifically for very-early-boot network mounts, we need
-    # the network to stay on.
-    #
-    # We could probably fix the scripted options to properly order, but I'm
-    # not inclined to invest that time today. Hopefully this gets users far
-    # enough along and they can just use networkd.
-    networking.useNetworkd = true;
-    networking.useDHCP = false; # Required to set useNetworkd = true
-
     boot.initrd = let
       mkScsidConf = ''
         (
