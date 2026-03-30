@@ -64,6 +64,8 @@ in {
       alacritty
       linux-wallpaperengine
       papirus-icon-theme
+      kdePackages.dolphin
+      kdePackages.gwenview
 
       # Wayland utilities
       wayland-utils
