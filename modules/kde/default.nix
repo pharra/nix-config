@@ -98,10 +98,10 @@ in {
     services = {
       displayManager.plasma-login-manager.enable = true; # Display Manager
       desktopManager.plasma6.enable = true; # Window Manager
-      displayManager.autoLogin = {
-        enable = true;
-        user = "${username}";
-      };
+      # displayManager.autoLogin = {
+      #   enable = true;
+      #   user = "${username}";
+      # };
     };
 
     environment.systemPackages = with pkgs; [
@@ -131,6 +131,11 @@ in {
       wl-clipboard # Command-line copy/paste utilities for Wayland
     ];
 
-    services.pulseaudio.enable = false;
+    # 尝试排除（效果有限，因为部分是必需依赖）
+    environment.plasma6.excludePackages = with pkgs.kdePackages; [
+      kwallet # provides helper service
+      kwallet-pam # provides helper service
+      kwalletmanager # provides KCMs and stuff
+    ];
   };
 }
