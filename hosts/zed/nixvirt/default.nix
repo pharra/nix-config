@@ -147,6 +147,49 @@ in {
       return 0
     }
 
+    # === 新增：cgroup v2 isolated partition（特定於 VM "Pat"）===
+    setup_isolated_partition() {
+      local vcpus="8-15,24-31"   # VM 使用 CCD0
+      local hcpus="0-7,16-23"  # 主机剩余 CCD1
+      local cgroup_path="/sys/fs/cgroup/pat-isolated"   # 特定於此 VM 的隔离路径
+
+      log "Setting up per-VM cgroup v2 isolated partition: $cgroup_path (VM=$vcpus | Host=$hcpus)"
+
+      # 启用 cpuset controller
+      ${pkgs.coreutils-full}/bin/echo "+cpuset" | ${pkgs.coreutils-full}/bin/tee /sys/fs/cgroup/cgroup.subtree_control >/dev/null 2>&1 || true
+
+      # 创建 cgroup
+      mkdir -p "$cgroup_path"
+      ${pkgs.coreutils-full}/bin/echo "+cpuset" | ${pkgs.coreutils-full}/bin/tee "$cgroup_path/cgroup.subtree_control" >/dev/null 2>&1 || true
+
+      # 设置 CPU 和内存节点
+      ${pkgs.coreutils-full}/bin/echo "$vcpus" | ${pkgs.coreutils-full}/bin/tee "$cgroup_path/cpuset.cpus" >/dev/null
+      ${pkgs.coreutils-full}/bin/echo "0" | ${pkgs.coreutils-full}/bin/tee "$cgroup_path/cpuset.mems" >/dev/null
+
+      # 关键：设置为 isolated（关闭 load balancing，最大化减少主机干扰）
+      ${pkgs.coreutils-full}/bin/echo "isolated" | ${pkgs.coreutils-full}/bin/tee "$cgroup_path/cpuset.cpus.partition" >/dev/null
+
+      # 限制主机所有 slice（包括 init/systemd）
+      ${pkgs.systemd}/bin/systemctl set-property --runtime system.slice AllowedCPUs="$hcpus"
+      ${pkgs.systemd}/bin/systemctl set-property --runtime user.slice AllowedCPUs="$hcpus"
+      ${pkgs.systemd}/bin/systemctl set-property --runtime init.scope AllowedCPUs="$hcpus"
+
+      log "Per-VM isolated partition setup completed: $cgroup_path"
+    }
+
+    restore_isolated_partition() {
+      local cgroup_path="/sys/fs/cgroup/pat-isolated"
+
+      log "Restoring full CPU access and removing per-VM isolated partition $cgroup_path"
+
+      ${pkgs.systemd}/bin/systemctl set-property --runtime system.slice AllowedCPUs=0-31
+      ${pkgs.systemd}/bin/systemctl set-property --runtime user.slice AllowedCPUs=0-31
+      ${pkgs.systemd}/bin/systemctl set-property --runtime init.scope AllowedCPUs=0-31
+
+      rmdir "$cgroup_path" 2>/dev/null || true
+      log "Per-VM isolated partition restored"
+    }
+
     log "qemu hook invoked: machine=$machine command=$command"
 
     if [ "$machine" == "Pat" ]; then
@@ -184,7 +227,10 @@ in {
           log "Hugepages allocation failed or skipped → continuing anyway"
         fi
 
-        # 3. EPP 調整
+        # 3. 新增：建立 per-VM cgroup v2 isolated partition
+        setup_isolated_partition
+
+        # 4. EPP 調整
         VM_CPUS="8-15,24-31"
         log "Pat: setting EPP=performance on pinned CPUs ($VM_CPUS)"
         set_epp "$VM_CPUS" "performance"
@@ -195,24 +241,25 @@ in {
           log "Pat: verification - cpu8 EPP now: $sample"
         fi
 
-        # 4. CPU mask
-        log "Pat: applying dedicated CPU mask"
-        ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-7,16-23
-        ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-7,16-23
-        ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-7,16-23
-        log "Pat: dedicated CPU mask applied"
-
       elif [ "$command" == "started" ]; then
-        log "Pat: started, no additional action"
+        log "Pat: started - moving QEMU PID to per-VM isolated cgroup"
+
+        local cgroup_path="/sys/fs/cgroup/pat-isolated"
+        if [ -d "$cgroup_path" ]; then
+          QEMU_PID=$(pgrep -f "qemu-system.*$machine" | head -n1)
+          if [ -n "$QEMU_PID" ]; then
+            ${pkgs.coreutils-full}/bin/echo "$QEMU_PID" | ${pkgs.coreutils-full}/bin/tee "$cgroup_path/cgroup.procs" >/dev/null 2>&1 || true
+            log "Successfully moved QEMU PID $QEMU_PID into $cgroup_path"
+          else
+            log "WARNING: QEMU PID not found"
+          fi
+        fi
 
       elif [ "$command" == "release" ]; then
         log "Pat: release - restoring environment"
 
-        log "Pat: restoring full CPU mask (0-31)"
-        ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-31
-        ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-31
-        ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-31
-        log "Pat: full CPU mask restored"Mar 13 23:41:06 zed libvirt-hook[37297]: ERROR: set_epp called with empty cpus_str
+        # 恢復 per-VM isolated partition
+        restore_isolated_partition
 
         VM_CPUS="8-15,24-31"
         log "Pat: restoring EPP=balance_performance on former pinned CPUs ($VM_CPUS)"
