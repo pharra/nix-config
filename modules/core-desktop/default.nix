@@ -20,6 +20,8 @@ in {
     #
     ###################################################################################
 
+    boot.kernelModules = ["ntsync"];
+
     # Enable core-server configuration
     services.pharra.core-server.enable = true;
     services.pharra.input-method.enable = true;
