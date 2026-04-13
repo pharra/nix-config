@@ -125,6 +125,7 @@ in {
       nvme-cli # nvme tools
       rclone
       bc
+      nh
     ];
 
     security.pam.loginLimits = [
