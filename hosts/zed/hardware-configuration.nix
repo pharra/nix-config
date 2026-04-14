@@ -22,6 +22,8 @@
     softdep nvme pre: vfio-pci
   ''; # for amd cpu
 
+  services.lianli.enable = true;
+
   virtualisation.vfio = {
     enable = true;
     IOMMUType = "amd";

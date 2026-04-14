@@ -15,4 +15,5 @@ in rec {
   aosp = pkgs.callPackage ./pkgs/aosp {};
   surface-dtx-daemon = pkgs.callPackage ./pkgs/surface-dtx-daemon {};
   audio-relay = pkgs.callPackage ./pkgs/audiorelay {};
+  lian-li-linux = pkgs.callPackage ./pkgs/lianli-linux {};
 }
