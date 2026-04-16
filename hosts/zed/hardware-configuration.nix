@@ -28,7 +28,6 @@
     enable = true;
     IOMMUType = "amd";
     applyACSpatch = false;
-    ignoreMSRs = true;
     devices = [
       #   "10de:2684" # Graphics
       #   "10de:22ba" # Audio
