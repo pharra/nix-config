@@ -24,7 +24,7 @@ in {
     boot.loader.systemd-boot.configurationLimit = lib.mkDefault 10;
     # boot.loader.grub.configurationLimit = 10;
 
-    boot.kernelPackages = lib.mkOverride 1400 pkgs.linuxPackages_6_19;
+    boot.kernelPackages = lib.mkOverride 1400 pkgs.linuxPackages_6_18;
 
     # supported fil systems, so we can mount any removable disks with these filesystems
     boot.supportedFilesystems = [
