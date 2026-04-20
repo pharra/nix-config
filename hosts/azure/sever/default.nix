@@ -46,7 +46,7 @@
       enable = true;
       package = pkgs.caddy.withPlugins {
         plugins = ["github.com/WeidiDeng/caddy-cloudflare-ip@v0.0.0-20231130002422-f53b62aa13cb"];
-        hash = "sha256-Otl88PMFNHbcNkTIPB2sNjdDCyl9UC1nEwYyxVzUsFU=";
+        hash = "sha256-G9R0EY1n91M56ZBum/oz++9Ap/nbKLa/poTN4NTLoGk=";
       };
       configFile = config.age.secrets.caddy_server_conf.path;
     };
