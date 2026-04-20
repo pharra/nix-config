@@ -82,11 +82,13 @@ rustPlatform.buildRustPackage rec {
   postInstall = ''
     mkdir -p $out/bin \
              $out/share/applications \
-             $out/share/icons/hicolor
+             $out/share/icons/hicolor \
+             $out/lib/udev/rules.d
 
     # 二进制（workspace build 后在 target/release/ 下）
     cp target/x86_64-unknown-linux-gnu/release/lianli-daemon $out/bin/lianli-daemon || true
     cp target/x86_64-unknown-linux-gnu/release/lianli-gui    $out/bin/lianli-gui    || true
+    cp udev/99-lianli.rules $out/lib/udev/rules.d/99-lianli.rules
 
     # desktop 文件
     if [ -f "${src}/com.sgtaziz.lianlilinux.desktop" ]; then
