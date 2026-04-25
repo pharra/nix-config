@@ -8,6 +8,7 @@
   imports = [
     ./Oct.nix
     ./Pat.nix
+    ./Bazzite.nix
   ];
 
   environment = {
