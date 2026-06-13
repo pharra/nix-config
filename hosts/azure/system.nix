@@ -15,6 +15,7 @@
 
   services.pharra = {
     virtualisation.enable = true;
+    azure-tools.enable = true;
   };
 
   system.stateVersion = "25.05";
