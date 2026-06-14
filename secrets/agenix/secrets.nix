@@ -6,8 +6,6 @@ let
 in {
   "caddy_server_conf.age".publicKeys = systems;
   "xray_server_conf.age".publicKeys = systems;
-  "hysteria_server_conf.age".publicKeys = systems;
-  "singbox_server_conf.age".publicKeys = systems;
 
   "caddy_homelab_conf.age".publicKeys = [homelab];
   "wireguard_homelab_private_key.age".publicKeys = [homelab];

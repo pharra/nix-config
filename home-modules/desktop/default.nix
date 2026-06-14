@@ -32,6 +32,8 @@ in {
       # XDG utils
       xdg-utils # provides cli tools such as `xdg-mime` `xdg-open`
       xdg-user-dirs
+
+      appimage-run
     ];
 
     # XDG configuration

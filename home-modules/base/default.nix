@@ -53,7 +53,6 @@ in {
 
       dnsutils
       screen
-      appimage-run
     ];
   };
 }

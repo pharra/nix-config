@@ -136,8 +136,7 @@
     ...
   }: let
     username = "wf";
-    x64_system = "x86_64-linux";
-    allSystems = [x64_system];
+    allSystems = ["x86_64-linux" "aarch64-linux"];
 
     nixosSystem = import ./lib/nixosSystem.nix;
 
@@ -180,34 +179,31 @@
         }
       ];
 
-    system = x64_system;
-
     mysecrets = ./secrets/agenix;
 
     commonSpecialArgs = {
       inherit username mysecrets home-modules NixVirt rime-config agenix inputs;
     };
     base_args = {
-      inherit home-manager system;
+      inherit home-manager;
     };
     stable_args = base_args // {inherit nixpkgs;};
 
-    hosts = let
-      mkAzureHost = region: {
-        name = "azure_${region}";
-        hostname = "${region}.azure.int4byte.org";
+    hosts = [
+      # azure
+      {
+        name = "azure_arm";
         builds = ["base"];
         nixos-modules = [./hosts/azure];
-        specialArgs = {
-          domain = "${region}.azure.int4byte.org";
-        };
-      };
-    in [
-      # azure
-      # (mkAzureHost "hk")
-      (mkAzureHost "jp")
-      # (mkAzureHost "us")
-      # (mkAzureHost "sg")
+        system = "aarch64-linux";
+      }
+
+      {
+        name = "azure";
+        builds = ["base"];
+        nixos-modules = [./hosts/azure];
+        system = "x86_64-linux";
+      }
 
       # dot
       {
@@ -215,6 +211,7 @@
         builds = ["kde" "gnome" "cosmic" "wm"];
         hostname = "192.168.254.240";
         nixos-modules = [./hosts/dot nixos-hardware.nixosModules.microsoft-surface-common];
+        system = "x86_64-linux";
       }
 
       # gs65
@@ -222,6 +219,7 @@
         name = "gs65";
         builds = ["kde" "gnome" "cosmic" "wm"];
         nixos-modules = [./hosts/gs65];
+        system = "x86_64-linux";
       }
 
       # zed
@@ -232,6 +230,7 @@
         nixos-modules = [
           ./hosts/zed
         ];
+        system = "x86_64-linux";
       }
 
       # zed_netboot
@@ -239,6 +238,7 @@
         name = "zed_net";
         builds = ["kde" "gnome" "cosmic" "wm"];
         hostname = "zed";
+        system = "x86_64-linux";
         nixos-modules = [
           ./hosts/zed
           {
@@ -276,6 +276,7 @@
           ./hosts/homelab
         ];
         builds = ["kde" "gnome" "cosmic" "wm" "base"];
+        system = "x86_64-linux";
         specialArgs = {
           inherit nixpkgs home-manager;
           # Pass a function to build zed guest system with NFS boot
@@ -285,7 +286,8 @@
             ...
           }:
             nixosSystem {
-              inherit nixpkgs home-manager system;
+              inherit nixpkgs home-manager;
+              system = "x86_64-linux";
               specialArgs = commonSpecialArgs;
               nixos-modules =
                 [./hosts/zed]
@@ -386,6 +388,7 @@
                 }
               ];
             home-module = import ./home/${build}.nix;
+            system = machine.system;
           }
           // stable_args
           // {
@@ -406,22 +409,14 @@
 
     inherit legacyPackages;
 
-    # packages = nixpkgs.lib.genAttrs allSystems (
-    #   # system: {azure-image = machinesNixosConfigurations.azure_jp_base.config.system.build.azureImage;}
-    #   system: let
-    #     inherit (nixpkgs) lib;
-    #     filteredConfigs =
-    #       lib.filterAttrs
-    #       (name: cfg: cfg.pkgs.stdenv.hostPlatform.system == system)
-    #       self.nixosConfigurations;
-    #     nixosMachines =
-    #       lib.mapAttrs' (
-    #         name: config: lib.nameValuePair name config.config.system.build.toplevel
-    #       )
-    #       filteredConfigs;
-    #   in
-    #     nixosMachines
-    # );
+    packages = {
+      "aarch64-linux" = {
+        azure-arm = machinesNixosConfigurations.azure_arm_base.config.system.build.azureImage;
+      };
+      "x86_64-linux" = {
+        azure-x64 = machinesNixosConfigurations.azure_base.config.system.build.azureImage;
+      };
+    };
 
     # format the nix code in this flake
     # alejandra is a nix formatter with a beautiful output

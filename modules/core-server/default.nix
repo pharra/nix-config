@@ -24,6 +24,8 @@ in {
     boot.loader.systemd-boot.configurationLimit = lib.mkDefault 10;
     # boot.loader.grub.configurationLimit = 10;
 
+    boot.binfmt.emulatedSystems = builtins.filter (p: p != pkgs.stdenv.hostPlatform.system) ["aarch64-linux" "x86_64-linux"];
+
     boot.kernelPackages = lib.mkOverride 1400 pkgs.linuxPackages_7_0;
 
     # supported fil systems, so we can mount any removable disks with these filesystems

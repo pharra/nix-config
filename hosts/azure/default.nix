@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  domain ? false,
   ...
 }: let
   username = "wf";
@@ -13,7 +12,7 @@ in {
 
     ./sever
 
-    ../../secrets/nixos.nix
+    ../../secrets/agenix.nix
   ];
 
   # enable flakes globally
@@ -25,6 +24,8 @@ in {
     dates = lib.mkDefault "weekly";
     options = lib.mkDefault "--delete-older-than 1d";
   };
+
+  boot.binfmt.emulatedSystems = builtins.filter (p: p != pkgs.stdenv.hostPlatform.system) ["aarch64-linux" "x86_64-linux"];
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelModules = ["tcp_bbr"];
