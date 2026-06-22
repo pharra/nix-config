@@ -41,14 +41,6 @@ in {
       "AQ_DRM_DEVICES" = "/dev/dri/amd-igpu"; # Set the environment variable for AMD iGPU access in Hyprland
     };
 
-    programs = {
-      noctalia-shell = mkIf (cfg.variant == "noctalia") {
-        enable = true;
-        # When the NixOS module owns the systemd service, HM should not provide its own package wrapper.
-        package = null;
-      };
-    };
-
     home.activation.installDmsAndCompositorDefaults = lib.hm.dag.entryAfter ["writeBoundary"] ''
       copy_if_missing_file() {
         src="$1"

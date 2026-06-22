@@ -104,12 +104,6 @@
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.noctalia-qs.follows = "noctalia-qs";
-    };
-
-    noctalia-qs = {
-      url = "github:noctalia-dev/noctalia-qs";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -167,7 +161,7 @@
         NixVirt.nixosModules.default
         sops-nix.nixosModules.sops
         agenix.nixosModules.default
-        dms-plugin-registry.modules.default
+        dms-plugin-registry.nixosModules.default
         noctalia.nixosModules.default
       ]
       ++ (builtins.attrValues modules)

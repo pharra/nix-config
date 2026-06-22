@@ -51,10 +51,6 @@ in {
       };
     };
 
-    services.noctalia-shell = mkIf (cfg.variant == "noctalia") {
-      enable = true;
-    };
-
     services.displayManager.dms-greeter = {
       enable = true;
       compositor.name = cfg.compositor;
