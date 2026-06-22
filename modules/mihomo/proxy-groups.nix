@@ -20,6 +20,7 @@
   FilterRate5x = "^(?=.*(?i:(\\s|\\||-)(5)(?:\\s*(?:×|x))\\b)).*$";
   FilterLJC = "^(?=.*(LJC)).*$";
   FilterHy = "^(?=.*(花云)).*$";
+  FilterAzure = "^(?=.*(Azure)).*$";
 
   Select = {
     type = "select";
@@ -90,6 +91,12 @@ in {
 
     (Select
       // {
+        name = "Azure";
+        filter = FilterAzure;
+      })
+
+    (Select
+      // {
         name = "手动选择";
         filter = FilterAll;
         icon = "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Static.png";
@@ -105,6 +112,7 @@ in {
         "五倍速率"
         "花云"
         "垃圾场"
+        "Azure"
         "香港节点"
         "日本节点"
         "韩国节点"
