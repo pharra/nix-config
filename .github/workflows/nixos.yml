@@ -16,7 +16,6 @@ jobs:
       matrix:
         config_name:
           - homelab_base
-          - dot_wm
 
     steps:
       - uses: actions/checkout@v2.3.2
