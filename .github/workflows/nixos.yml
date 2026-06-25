@@ -35,4 +35,4 @@ jobs:
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
       - name: "Build ${{ matrix.config_name }} NixOS config ❄️"
-        run: nix build .#nixosConfigurations.${{ matrix.config_name }}.config.system.build.toplevel -L
+        run: nix build .#nixosConfigurations.${{ matrix.config_name }}.config.system.build.toplevel --accept-flake-config -L
