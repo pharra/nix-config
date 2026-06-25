@@ -9,3 +9,7 @@ creation_rules:
       - *homelab
       - *zed
       - *dot
+  - path_regex: services/[^/]+/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *homelab

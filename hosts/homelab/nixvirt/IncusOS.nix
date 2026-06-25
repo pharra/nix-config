@@ -21,6 +21,7 @@ in {
       };
       # storage_vol = /home/wf/Data/VMPool/IncusOS.qcow2;
       nvram_path = /home/wf/Data/RAMPool/IncusOS.fd;
+      # install_vol = /home/wf/Data/ISOPool/proxmox-ve_9.2-1.iso;
       # no_graphics = true;
     };
   in
@@ -70,24 +71,6 @@ in {
                     bus = "sata";
                   };
                 }
-                # Data.qcow2
-                {
-                  type = "file";
-                  device = "disk";
-                  driver = {
-                    name = "qemu";
-                    type = "qcow2";
-                    cache = "none";
-                    discard = "unmap";
-                  };
-                  source = {
-                    file = "/home/wf/Data/VMPool/IncusOS-Data.qcow2";
-                  };
-                  target = {
-                    dev = "sdb";
-                    bus = "sata";
-                  };
-                }
               ];
             interface = [
               {
@@ -106,5 +89,5 @@ in {
           };
       }
     );
-  active = false;
+  active = true;
 }

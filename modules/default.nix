@@ -38,7 +38,6 @@
   tailscale-module = import ./tailscale;
   easytier-module = import ./easytier;
   waydroid-module = import ./waydroid;
-  caddy-module = import ./caddy;
   input-method-module = import ./input-method;
   gnome-module = import ./gnome;
   kde-module = import ./kde;

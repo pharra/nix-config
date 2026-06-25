@@ -44,6 +44,8 @@ in {
     ../../secrets/nixos.nix
 
     ./nixvirt
+
+    ../../services
   ];
 
   services.pharra = {
@@ -53,7 +55,6 @@ in {
     impermanence.enable = true;
     spdk.enable = true;
     sftp-server.enable = true;
-    caddy.enable = true;
     easytier.enable = true;
     scripts.enable = true;
     virtualisation.enable = true;
