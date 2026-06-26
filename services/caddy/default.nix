@@ -45,7 +45,7 @@
 
     reader.${config.sops.placeholder."domain"} {
             encode gzip
-            reverse_proxy 192.168.31.2:4396
+            reverse_proxy 127.0.0.1:4396
     }
 
     substore.${config.sops.placeholder."domain"} {
@@ -67,7 +67,7 @@
 
     magnet.${config.sops.placeholder."domain"} {
             encode gzip
-            reverse_proxy 192.168.31.2:8000
+            reverse_proxy 127.0.0.1:8000
     }
 
     mihomo.${config.sops.placeholder."domain"} {

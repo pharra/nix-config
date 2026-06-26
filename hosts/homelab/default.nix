@@ -72,7 +72,7 @@ in {
   services.ipxe-host = {
     enable = true;
     nfs = {
-      enable = true;
+      enable = false;
       guests.zed = {
         system = zedGuestSystem;
         # macs = ["9c:52:f8:8e:dd:d8" "58:47:ca:79:85:1c"];

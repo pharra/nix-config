@@ -32,7 +32,7 @@
 
   # Containers
   virtualisation.oci-containers.containers."reader" = {
-    image = "hectorqin/reader";
+    image = "pharra/reader:latest";
     environmentFiles = [
       config.sops.secrets."reader.env".path
     ];

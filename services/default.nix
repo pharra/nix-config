@@ -8,7 +8,9 @@
     ./emby
     ./mybili
     ./substore
-    # ./reader
+    ./reader
     ./clouddrive2
+    ./immich
+    ./magnet
   ];
 }

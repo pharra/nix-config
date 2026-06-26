@@ -33,6 +33,13 @@ in {
     scripts.enable = true;
   };
 
+  services.sunshine = lib.mkIf config.services.pharra.core-desktop.enable {
+    enable = true;
+    autoStart = true;
+    capSysAdmin = true;
+    openFirewall = true;
+  };
+
   services.docker-netns =
     if config.services.openwrt.enable
     then {
