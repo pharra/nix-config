@@ -10,12 +10,12 @@ with lib; let
   wallpaper-engine-kde-plugin = with pkgs;
     stdenv.mkDerivation rec {
       pname = "wallpaperEngineKde";
-      version = "5f7588fe037c83288204b50242f13f36ebd07119";
+      version = "c0c08ad73a1eb773acbcd7854d2807115bd9d5a6";
       src = fetchFromGitHub {
         owner = "rainypixel";
         repo = "wallpaper-engine-kde-plugin";
-        rev = "5f7588fe037c83288204b50242f13f36ebd07119";
-        hash = "sha256-PYaVWSD35HenHuzkm+sn4gbx4/wpneOrTZbFQ//zDRA=";
+        rev = "c0c08ad73a1eb773acbcd7854d2807115bd9d5a6";
+        hash = "sha256-516wvxhMPxMulzEWnf4LvPIRqfVPOM9OLnFZQ1gVqGU=";
         fetchSubmodules = true;
       };
 
