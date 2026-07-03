@@ -65,7 +65,7 @@ in {
   services.mihomo.enable = true;
 
   services.mihomo.config.tun = lib.mkIf config.services.mihomo.enable {
-    exclude-interface = [interface.eth interface.intern];
+    exclude-interface = [interface.eth interface.intern "docker"];
   };
 
   # Enable iPXE host to serve zed guest system via NFS
