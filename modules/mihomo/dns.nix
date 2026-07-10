@@ -16,16 +16,21 @@
     use-system-hosts = false;
     use-hosts = true;
     default-nameserver = [
-      "119.29.29.29"
+      "https://223.5.5.5/dns-query"
     ];
     proxy-server-nameserver = [
-      "119.29.29.29"
+      "https://223.5.5.5/dns-query"
     ];
     direct-nameserver = [
-      "119.29.29.29"
+      "https://223.5.5.5/dns-query"
     ];
     nameserver = [
-      "119.29.29.29"
+      "https://1.1.1.1/dns-query"
     ];
+    nameserver-policy = {
+      "geosite:cn" = [
+        "https://223.5.5.5/dns-query"
+      ];
+    };
   };
 }
