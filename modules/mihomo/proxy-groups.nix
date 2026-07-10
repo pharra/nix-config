@@ -24,7 +24,7 @@
 
   Select = {
     type = "select";
-    url = "http://1.1.1.1/generate_204";
+    url = "https://www.gstatic.com/generate_204";
     disable-udp = false;
     hidden = false;
     lazy = true;
@@ -33,7 +33,7 @@
 
   Fallback = {
     type = "fallback";
-    url = "http://1.1.1.1/generate_204";
+    url = "https://www.gstatic.com/generate_204";
     interval = 300;
     disable-udp = false;
     hidden = false;
@@ -42,7 +42,7 @@
 
   Auto = {
     type = "url-test";
-    url = "http://1.1.1.1/generate_204";
+    url = "https://www.gstatic.com/generate_204";
     interval = 300;
     tolerance = 50;
     disable-udp = false;
@@ -52,7 +52,7 @@
 
   Loadbalance = {
     type = "load-balance";
-    url = "http://1.1.1.1/generate_204";
+    url = "https://www.gstatic.com/generate_204";
     interval = 300;
     strategy = "round-robin";
     disable-udp = false;
@@ -87,7 +87,7 @@ in {
         "手动选择"
         "DIRECT"
       ];
-      url = "http://1.1.1.1/generate_204";
+      url = "https://www.gstatic.com/generate_204";
       icon = "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Global.png";
     }
 
@@ -146,7 +146,7 @@ in {
         # "德国节点"
         # "台湾节点"
       ];
-      url = "http://1.1.1.1/generate_204";
+      url = "https://www.gstatic.com/generate_204";
       icon = "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Urltest.png";
     }
 
