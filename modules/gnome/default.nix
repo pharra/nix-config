@@ -43,9 +43,7 @@ in {
     environment = {
       systemPackages = with pkgs; [
         # Packages installed
-        dconf-editor
-        gnome-tweaks
-        adwaita-icon-theme
+        refine
       ];
       gnome.excludePackages = with pkgs; [
         # Gnome ignored packages
