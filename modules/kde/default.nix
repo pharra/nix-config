@@ -7,81 +7,73 @@
 }:
 with lib; let
   cfg = config.services.pharra.kde;
-  wallpaper-engine-kde-plugin = with pkgs;
-    stdenv.mkDerivation rec {
-      pname = "wallpaperEngineKde";
-      version = "c0c08ad73a1eb773acbcd7854d2807115bd9d5a6";
-      src = fetchFromGitHub {
-        owner = "rainypixel";
-        repo = "wallpaper-engine-kde-plugin";
-        rev = "c0c08ad73a1eb773acbcd7854d2807115bd9d5a6";
-        hash = "sha256-516wvxhMPxMulzEWnf4LvPIRqfVPOM9OLnFZQ1gVqGU=";
-        fetchSubmodules = true;
-      };
-
-      nativeBuildInputs = [
-        cmake
-        kdePackages.extra-cmake-modules
-        pkg-config
-        gst_all_1.gst-libav
-        shaderc
-        ninja
-      ];
-
-      buildInputs =
-        [
-          mpv
-          libass
-          lz4
-          vulkan-headers
-          vulkan-tools
-          vulkan-loader
-          eigen
-        ]
-        ++ (with kdePackages; [
-          qtbase
-          kpackage
-          kdeclarative
-          libplasma
-          qtwebsockets
-          qtwebengine
-          qtwebchannel
-          qtmultimedia
-          qtdeclarative
-        ])
-        ++ [
-          # Add .dev output for Qt private headers
-          qt6Packages.qtbase.dev
-        ];
-
-      cmakeFlags = [
-        "-DUSE_PLASMAPKG=OFF"
-      ];
-
-      # Add Qt private headers path
-      NIX_CFLAGS_COMPILE = [
-        "-Wno-error"
-        "-Wno-sign-conversion"
-        "-Wno-deprecated-declarations"
-        "-I${pkgs.qt6Packages.qtbase.dev}/include/QtGui/${pkgs.qt6Packages.qtbase.version}/QtGui"
-      ];
-
-      dontWrapQtApps = true;
-
-      postPatch = ''
-      '';
-
-      postInstall = ''
-      '';
-
-      #Optional informations
-      meta = with lib; {
-        description = "Wallpaper Engine KDE plasma plugin";
-        homepage = "https://github.com/Jelgnum/wallpaper-engine-kde-plugin";
-        license = licenses.gpl2Plus;
-        platforms = platforms.linux;
-      };
-    };
+  # wallpaper-engine-kde-plugin = with pkgs;
+  #   stdenv.mkDerivation rec {
+  #     pname = "wallpaperEngineKde";
+  #     version = "c0c08ad73a1eb773acbcd7854d2807115bd9d5a6";
+  #     src = fetchFromGitHub {
+  #       owner = "rainypixel";
+  #       repo = "wallpaper-engine-kde-plugin";
+  #       rev = "c0c08ad73a1eb773acbcd7854d2807115bd9d5a6";
+  #       hash = "sha256-516wvxhMPxMulzEWnf4LvPIRqfVPOM9OLnFZQ1gVqGU=";
+  #       fetchSubmodules = true;
+  #     };
+  #     nativeBuildInputs = [
+  #       cmake
+  #       kdePackages.extra-cmake-modules
+  #       pkg-config
+  #       gst_all_1.gst-libav
+  #       shaderc
+  #       ninja
+  #     ];
+  #     buildInputs =
+  #       [
+  #         mpv
+  #         libass
+  #         lz4
+  #         vulkan-headers
+  #         vulkan-tools
+  #         vulkan-loader
+  #         eigen
+  #       ]
+  #       ++ (with kdePackages; [
+  #         qtbase
+  #         kpackage
+  #         kdeclarative
+  #         libplasma
+  #         qtwebsockets
+  #         qtwebengine
+  #         qtwebchannel
+  #         qtmultimedia
+  #         qtdeclarative
+  #       ])
+  #       ++ [
+  #         # Add .dev output for Qt private headers
+  #         qt6Packages.qtbase.dev
+  #       ];
+  #     cmakeFlags = [
+  #       "-DUSE_PLASMAPKG=OFF"
+  #     ];
+  #     # Add Qt private headers path
+  #     NIX_CFLAGS_COMPILE = [
+  #       "-Wno-error"
+  #       "-Wno-sign-conversion"
+  #       "-Wno-deprecated-declarations"
+  #       "-I${pkgs.qt6Packages.qtbase.dev}/include/QtGui/${pkgs.qt6Packages.qtbase.version}/QtGui"
+  #     ];
+  #     dontWrapQtApps = true;
+  #     postPatch = ''
+  #     '';
+  #     postInstall = ''
+  #     '';
+  #     #Optional informations
+  #     meta = with lib; {
+  #       description = "Wallpaper Engine KDE plasma plugin";
+  #       homepage = "https://github.com/Jelgnum/wallpaper-engine-kde-plugin";
+  #       license = licenses.gpl2Plus;
+  #       platforms = platforms.linux;
+  #     };
+  #   };
 in {
   options = {
     services.pharra.kde = {
@@ -107,7 +99,7 @@ in {
     environment.systemPackages = with pkgs; [
       kdePackages.kirigami
 
-      wallpaper-engine-kde-plugin
+      # wallpaper-engine-kde-plugin
 
       kdePackages.qtwebsockets
       kdePackages.qtwebengine
