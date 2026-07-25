@@ -14,22 +14,22 @@
 
     substituters = [
       # replace official cache with a mirror located in China
+      "https://nixpkgs-cache.cachix.org"
       "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
       "https://cache.nixos.org"
     ];
 
     trusted-public-keys = [
+      "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4="
       "nix:TIuZSOR7smXF/Jz1UKnvY5TW+NvklDypmDEg57QYU08="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
     ];
 
     # nix community's cache server
     extra-substituters = [
-      "https://nixpkgs-cache.cachix.org"
       "https://nix-community.cachix.org"
     ];
     extra-trusted-public-keys = [
-      "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
@@ -42,7 +42,8 @@
 
     # Official NixOS package source, using nixos's stable branch by default
     # nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
+    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
+    nixpkgs.url = "github:salva09/nixpkgs?ref=cd8b0289be628b1f6330f7dcca7355866a27d78e";
 
     # home-manager, used for managing user configuration
     home-manager = {
