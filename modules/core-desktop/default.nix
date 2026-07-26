@@ -131,8 +131,6 @@ in {
 
     # security with polkit
     security.polkit.enable = true;
-    # security with gnome-kering
-    services.gnome.gnome-keyring.enable = true;
 
     # A key remapping daemon for linux.
     # https://github.com/rvaiya/keyd
@@ -147,14 +145,12 @@ in {
       };
     };
 
+    # security with gnome-kering
+    # services.oo7.enable = true;
+    # services.gnome.gnome-keyring.enable = lib.mkForce true;
+
     xdg.portal = {
       enable = true;
-      wlr.enable = true;
-      extraPortals = [
-        # fix some flatpak apps not apply font config in KDE Plasma
-        pkgs.kdePackages.xdg-desktop-portal-kde
-        pkgs.xdg-desktop-portal-gtk
-      ];
     };
 
     environment.systemPackages = with pkgs; [

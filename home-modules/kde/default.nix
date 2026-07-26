@@ -21,10 +21,10 @@ in {
       "QT_QPA_PLATFORM" = "wayland";
     };
 
-    home.file.".config/kwalletrc".text = ''
-      [Wallet]
-      Enabled=false
-      First Use=false
-    '';
+    # home.file.".config/kwalletrc".text = ''
+    #   [Wallet]
+    #   Enabled=false
+    #   First Use=false
+    # '';
   };
 }

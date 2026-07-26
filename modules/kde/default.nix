@@ -96,6 +96,13 @@ in {
       # };
     };
 
+    xdg.portal = {
+      extraPortals = [
+        # fix some flatpak apps not apply font config in KDE Plasma
+        pkgs.kdePackages.xdg-desktop-portal-kde
+      ];
+    };
+
     environment.systemPackages = with pkgs; [
       kdePackages.kirigami
 
@@ -123,10 +130,10 @@ in {
     ];
 
     # 尝试排除（效果有限，因为部分是必需依赖）
-    environment.plasma6.excludePackages = with pkgs.kdePackages; [
-      kwallet # provides helper service
-      kwallet-pam # provides helper service
-      kwalletmanager # provides KCMs and stuff
-    ];
+    # environment.plasma6.excludePackages = with pkgs.kdePackages; [
+    #   kwallet # provides helper service
+    #   kwallet-pam # provides helper service
+    #   kwalletmanager # provides KCMs and stuff
+    # ];
   };
 }
