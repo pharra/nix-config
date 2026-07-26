@@ -35,6 +35,11 @@
         "scaling": "fill"
       }
     },
-    "generateStaticWallpaper": false
+    "generateStaticWallpaper": true,
+    "outputSettings": {
+      "HDMI-A-1": {
+        "fps": 36
+      }
+    }
   }
 }

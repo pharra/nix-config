@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  username,
   ...
 }:
 with lib; let
@@ -49,11 +50,38 @@ in {
         enableCalendarEvents = true; # Calendar integration (khal)
         enableClipboardPaste = true; # Pasting from the clipboard history (wtype)
       };
+
+      noctalia = mkIf (cfg.variant == "noctalia") {
+        enable = true;
+
+        systemd.enable = true;
+
+        # Enables NetworkManager, Bluetooth, UPower, and a power profile service.
+        recommendedServices.enable = true;
+      };
     };
 
-    services.displayManager.dms-greeter = {
+    services.displayManager.dms-greeter = mkIf (cfg.variant == "dms") {
       enable = true;
       compositor.name = cfg.compositor;
+      configHome = "/home/${username}";
+    };
+
+    programs.noctalia-greeter = mkIf (cfg.variant == "noctalia") {
+      enable = true;
+
+      # Optional configuration
+      greeter-args = "";
+      settings = {
+        cursor = {
+          theme = "Bibata-Modern-Ice";
+          size = 24;
+          path = "${pkgs.bibata-cursors}/share/icons";
+        };
+        keyboard = {
+          layout = "us";
+        };
+      };
     };
 
     environment.systemPackages = with pkgs; [

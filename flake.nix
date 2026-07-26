@@ -14,13 +14,11 @@
 
     substituters = [
       # replace official cache with a mirror located in China
-      "https://nixpkgs-cache.cachix.org"
       "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
       "https://cache.nixos.org"
     ];
 
     trusted-public-keys = [
-      "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4="
       "nix:TIuZSOR7smXF/Jz1UKnvY5TW+NvklDypmDEg57QYU08="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
     ];
@@ -109,6 +107,11 @@
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    noctalia-greeter = {
+      url = "github:noctalia-dev/noctalia-greeter";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -167,6 +170,7 @@
         agenix.nixosModules.default
         dms-plugin-registry.nixosModules.default
         noctalia.nixosModules.default
+        inputs.noctalia-greeter.nixosModules.default
       ]
       ++ (builtins.attrValues modules)
       ++ [
@@ -357,7 +361,7 @@
           desktopShell = {
             enable = true;
             variant = "dms";
-            compositor = "niri";
+            compositor = "hyprland";
           };
         }
         else {}; # base build - no desktop environment

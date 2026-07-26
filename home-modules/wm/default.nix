@@ -100,13 +100,13 @@ in {
         mkdir -p "$HYPR_DST"
 
         # Copy config file with variant suffix
-        copy_if_missing_file "$HYPR_SRC/hyprland.conf" "$HYPR_DST/hyprland.$VARIANT.conf"
+        copy_if_missing_file "$HYPR_SRC/hyprland.lua" "$HYPR_DST/hyprland.$VARIANT.lua"
 
         # Copy variant-specific content (files + directories)
         copy_if_missing_dir "$HYPR_SRC/$VARIANT" "$HYPR_DST/$VARIANT"
 
         # Re-create active hyprland config symlink when switching variant
-        relink "$HYPR_DST/hyprland.$VARIANT.conf" "$HYPR_DST/hyprland.conf"
+        relink "$HYPR_DST/hyprland.$VARIANT.lua" "$HYPR_DST/hyprland.lua"
       ''}
 
       ${optionalString (cfg.variant == "dms") ''
