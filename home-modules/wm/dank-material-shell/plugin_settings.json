@@ -38,7 +38,7 @@
     "generateStaticWallpaper": true,
     "outputSettings": {
       "HDMI-A-1": {
-        "fps": 36
+        "fps": 60
       }
     }
   }

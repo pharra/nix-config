@@ -47,14 +47,14 @@ hl.bind("SUPER + W", hl.dsp.group.toggle())
 hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd("dms ipc call window-rules toggle"))
 
 -- === Focus Navigation ===
-hl.bind("SUPER + left", hl.dsp.focus({ direction = "l" }))
-hl.bind("SUPER + down", hl.dsp.focus({ direction = "d" }))
-hl.bind("SUPER + up", hl.dsp.focus({ direction = "u" }))
-hl.bind("SUPER + right", hl.dsp.focus({ direction = "r" }))
-hl.bind("SUPER + H", hl.dsp.focus({ direction = "l" }))
-hl.bind("SUPER + J", hl.dsp.focus({ direction = "d" }))
-hl.bind("SUPER + K", hl.dsp.focus({ direction = "u" }))
-hl.bind("SUPER + L", hl.dsp.focus({ direction = "r" }))
+hl.bind("SUPER + left",  hl.dsp.layout("focus l"))
+hl.bind("SUPER + right", hl.dsp.layout("focus r"))
+hl.bind("SUPER + up",    hl.dsp.layout("focus u"))
+hl.bind("SUPER + down",  hl.dsp.layout("focus d"))
+hl.bind("SUPER + H", hl.dsp.layout("focus l"))
+hl.bind("SUPER + L", hl.dsp.layout("focus r"))
+hl.bind("SUPER + K", hl.dsp.layout("focus u"))
+hl.bind("SUPER + J", hl.dsp.layout("focus d"))
 
 -- === Window Movement ===
 hl.bind("SUPER + SHIFT + left", hl.dsp.window.move({ direction = "l" }))

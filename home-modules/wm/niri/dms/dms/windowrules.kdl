@@ -1,0 +1,8 @@
+// DMS Window Rules - Managed by DankMaterialShell
+// Do not edit manually - changes may be overwritten
+
+// @id=wr_1785224982325241455 @name=com.danklinux.dms
+window-rule {
+    match app-id="^com.danklinux.dms$"
+    opacity 0.89
+}

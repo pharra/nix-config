@@ -361,7 +361,7 @@
           desktopShell = {
             enable = true;
             variant = "dms";
-            compositor = "hyprland";
+            compositor = "niri";
           };
         }
         else {}; # base build - no desktop environment

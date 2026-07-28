@@ -1,0 +1,8 @@
+window-rule {
+    // match app-id="^Alacritty$"
+    // opacity 0.4
+    background-effect {
+        blur true
+        xray false
+    }
+}

@@ -15,9 +15,9 @@ binds {
     Mod+V hotkey-overlay-title="Clipboard Manager" {
         spawn "dms" "ipc" "call" "clipboard" "toggle";
     }
-    Mod+M hotkey-overlay-title="Task Manager" {
-        spawn "dms" "ipc" "call" "processlist" "focusOrToggle";
-    }
+    // Mod+M hotkey-overlay-title="Task Manager" {
+    //     spawn "dms" "ipc" "call" "processlist" "focusOrToggle";
+    // }
 
     Super+X hotkey-overlay-title="Power Menu: Toggle" { spawn "dms" "ipc" "call" "powermenu" "toggle"; }
     Mod+Comma hotkey-overlay-title="Settings" {
@@ -80,7 +80,8 @@ binds {
 
     // === Window Management ===
     Mod+Q repeat=false { close-window; }
-    Mod+F { maximize-column; }
+    Mod+M { maximize-column; }
+    Mod+F { maximize-window-to-edges; }
     Mod+Shift+F { fullscreen-window; }
     Mod+Shift+T { toggle-window-floating; }
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
