@@ -297,12 +297,9 @@ recent-windows {
 }
 
 // Include noctalia files
-include "noctalia/colors.kdl"
-include "noctalia/layout.kdl"
-include "noctalia/alttab.kdl"
-include "noctalia/binds.kdl"
-include "noctalia/wpblur.kdl"
-include "noctalia/outputs.kdl"
-include "noctalia/cursor.kdl"
-
-include "noctalia/windowrules.kdl"
+include optional=true "noctalia/colors.kdl"
+include optional=true "noctalia/layout.kdl"
+include optional=true "noctalia/custom.kdl"
+include optional=true "noctalia/binds.kdl"
+include optional=true "noctalia/outputs.kdl"
+include "noctalia.kdl"

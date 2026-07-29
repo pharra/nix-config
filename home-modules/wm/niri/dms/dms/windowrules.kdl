@@ -4,5 +4,13 @@
 // @id=wr_1785224982325241455 @name=com.danklinux.dms
 window-rule {
     match app-id="^com.danklinux.dms$"
-    opacity 0.89
+    opacity 0.80
+}
+
+// @id=wr_1785309859728630997 @name=org.telegram.desktop
+window-rule {
+    match app-id="^org.telegram.desktop$" title="^媒体查看器$"
+    open-floating true
+    default-column-width { fixed 1920; }
+    default-window-height { fixed 1080; }
 }

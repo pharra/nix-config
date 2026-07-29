@@ -85,6 +85,10 @@ in {
         # Copy config file with variant suffix
         copy_if_missing_file "$NIRI_SRC/config.kdl" "$NIRI_DST/config.$VARIANT.kdl"
 
+        ${optionalString (cfg.variant == "noctalia") ''
+          copy_if_missing_file "$NIRI_SRC/noctalia.kdl" "$NIRI_DST/noctalia.kdl"
+        ''}
+
         # Copy variant-specific content (files + directories)
         copy_if_missing_dir "$NIRI_SRC/$VARIANT" "$NIRI_DST/$VARIANT"
 

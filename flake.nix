@@ -112,6 +112,11 @@
       url = "github:noctalia-dev/noctalia-greeter";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    niri-glass = {
+      url = "github:zaroutt/Niri-glass";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -151,6 +156,7 @@
       });
 
     overlays = import ./overlay.nix;
+    overlay = import ./overlays;
 
     modules = import ./modules;
     _home-modules = import ./home-modules;
@@ -175,9 +181,12 @@
       ++ (builtins.attrValues modules)
       ++ [
         {
-          nixpkgs.overlays = [
-            overlays
-          ];
+          nixpkgs.overlays =
+            [
+              overlays
+              inputs.niri-glass.overlays.default
+            ]
+            ++ builtins.attrValues overlay;
         }
       ];
 

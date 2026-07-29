@@ -28,7 +28,10 @@ in {
 
   config = mkIf cfg.enable {
     programs = {
-      niri.enable = cfg.compositor == "niri";
+      niri = mkIf (cfg.compositor == "niri") {
+        enable = true;
+        package = pkgs.niri-glass;
+      };
       hyprland.enable = cfg.compositor == "hyprland";
 
       dms-shell = mkIf (cfg.variant == "dms") {
@@ -86,7 +89,13 @@ in {
 
     environment.systemPackages = with pkgs; [
       alacritty
-      linux-wallpaperengine
+      (pkgs.writeShellScriptBin "linux-wallpaperengine" ''
+        if [[ "$*" == *--bg* ]]; then
+          exec ${linux-wallpaperengine}/bin/linux-wallpaperengine --layer background "$@"
+        else
+          exec ${linux-wallpaperengine}/bin/linux-wallpaperengine "$@"
+        fi
+      '')
       papirus-icon-theme
       kdePackages.dolphin
       kdePackages.gwenview
@@ -95,6 +104,7 @@ in {
       wayland-utils
       wl-clipboard
       xwayland-satellite
+      i2c-tools
     ];
   };
 }
