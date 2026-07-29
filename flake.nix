@@ -364,7 +364,9 @@
             compositor = "niri";
           };
         }
-        else {}; # base build - no desktop environment
+        else {
+          base.enable = true;
+        }; # base build - no desktop environment
     };
 
     machinesNixosConfigurations = builtins.listToAttrs (builtins.concatLists (generateNixosConfigurations (machine: let

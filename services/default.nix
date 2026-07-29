@@ -12,5 +12,6 @@
     ./clouddrive2
     ./immich
     ./magnet
+    ./xray
   ];
 }

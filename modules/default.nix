@@ -27,6 +27,7 @@
   # NixOS config modules (from nixos folder)
   core-server-module = import ./core-server;
   core-desktop-module = import ./core-desktop;
+  base-module = import ./base;
   user-group-module = import ./user-group;
   libvirt-module = import ./libvirt;
   flatpak-module = import ./flatpak;
