@@ -13,4 +13,5 @@ window-rule {
     open-floating true
     default-column-width { fixed 1920; }
     default-window-height { fixed 1080; }
+    default-floating-position x=0 y=0
 }

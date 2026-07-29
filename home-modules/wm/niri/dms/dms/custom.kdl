@@ -1,6 +1,6 @@
 window-rule {
     background-effect {
-        blur true
+        blur false
         xray false
         liquid-glass {
             refraction-strength 10

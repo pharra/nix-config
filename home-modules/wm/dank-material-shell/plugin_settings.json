@@ -38,8 +38,13 @@
     "generateStaticWallpaper": true,
     "outputSettings": {
       "HDMI-A-1": {
-        "fps": 60
+        "fps": 62,
+        "screenshotDelay": 5,
+        "disableParticles": false,
+        "disableParallax": false,
+        "noFullscreenPause": true
       }
-    }
+    },
+    "activeType": "scene"
   }
 }
