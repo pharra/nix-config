@@ -99,6 +99,7 @@ in {
       papirus-icon-theme
       kdePackages.dolphin
       kdePackages.gwenview
+      kdePackages.qt6ct
 
       # Wayland utilities
       wayland-utils

@@ -34,6 +34,9 @@ in {
       xdg-user-dirs
 
       appimage-run
+
+      kdePackages.breeze
+      kdePackages.breeze-gtk
     ];
 
     # XDG configuration
