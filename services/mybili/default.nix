@@ -26,7 +26,7 @@
 
   # Containers
   virtualisation.oci-containers.containers."mybili-mybili" = {
-    image = "ellermister/mybili:1.5.0";
+    image = "pharra/mybili:latest";
     environment = {
       "DB_CONNECTION" = "sqlite";
       "DB_DATABASE" = "/data/database.sqlite";
