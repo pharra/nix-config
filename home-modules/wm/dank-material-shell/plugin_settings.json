@@ -4,9 +4,10 @@
     "monitorPlaylists": {},
     "monitorScenes": {
       "HDMI-A-2": "2816220722",
-      "HDMI-A-1": "3049902368",
+      "HDMI-A-1": "3503947833",
       "DP-2": "3049856806",
-      "DP-5": "3049856806"
+      "DP-5": "3049856806",
+      "winit": "2398915163"
     },
     "playlistIntervalMinutes": 3,
     "sceneSettings": {
@@ -46,5 +47,8 @@
       }
     },
     "activeType": "scene"
+  },
+  "displayManager": {
+    "enabled": false
   }
 }

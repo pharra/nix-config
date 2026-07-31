@@ -336,8 +336,8 @@
   "iconThemePerMode": false,
   "lastAppliedIconTheme": "Mkos-Big-Sur-Night",
   "cursorSettings": {
-    "theme": "System Default",
-    "size": 48,
+    "theme": "breeze_cursors",
+    "size": 24,
     "niri": {
       "hideWhenTyping": false,
       "hideAfterInactiveMs": 0
@@ -413,11 +413,6 @@
   "fadeToDpmsEnabled": true,
   "fadeToDpmsGracePeriod": 5,
   "launchPrefix": "",
-  "brightnessDevicePins": {},
-  "wifiNetworkPins": {},
-  "bluetoothDevicePins": {},
-  "audioInputDevicePins": {},
-  "audioOutputDevicePins": {},
   "gtkThemingEnabled": false,
   "qtThemingEnabled": false,
   "syncModeWithPortal": true,
@@ -600,11 +595,11 @@
     "niri": {}
   },
   "activeDisplayProfile": {
-    "niri": "auto_8924f730",
+    "niri": "",
     "hyprland": "auto_8486d03c"
   },
-  "displayProfileAutoSelect": true,
-  "displayShowDisconnected": true,
+  "displayProfileAutoSelect": false,
+  "displayShowDisconnected": false,
   "displaySnapToEdge": true,
   "connectedFrameBarStyleBackups": {},
   "barConfigs": [
@@ -652,7 +647,10 @@
         },
         {
           "id": "systemTray",
-          "enabled": true
+          "enabled": true,
+          "trayUseInlineExpansion": false,
+          "trayPopupSingleLine": true,
+          "trayAutoOverflow": true
         },
         {
           "id": "clipboard",
@@ -694,8 +692,8 @@
       "popupGapsManual": 4,
       "showOnWindowsOpen": false,
       "shadowIntensity": 0,
-      "clickThrough": true,
-      "useOverlayLayer": true,
+      "clickThrough": false,
+      "useOverlayLayer": false,
       "hoverPopouts": false,
       "maximizeDetection": true,
       "scrollEnabled": true,
@@ -823,5 +821,5 @@
   "barInsetPaddingShared": -1,
   "barInsetPaddingSyncAll": false,
   "frameBarInsetPadding": 16,
-  "configVersion": 12
+  "configVersion": 13
 }
