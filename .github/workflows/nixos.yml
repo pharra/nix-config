@@ -35,7 +35,7 @@ jobs:
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
       - name: "Build ${{ matrix.config_name }} NixOS config ❄️"
-        run: nix build .#nixosConfigurations.${{ matrix.config_name }}.config.system.build.toplevel --accept-flake-config --option substituters "https://nixpkgs-cache.cachix.org" --option trusted-public-keys "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4=" --max-jobs 1
+        run: nix build .#nixosConfigurations.${{ matrix.config_name }}.config.system.build.toplevel --accept-flake-config --option substituters "https://nixpkgs-cache.cachix.org" --option trusted-public-keys "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4=" --max-jobs 1 && nix-collect-garbage -d
 
       - name: "Build surface kernel"
         run: nix build .#nixosConfigurations.dot_wm.config.system.build.kernel --accept-flake-config --option substituters "https://nixpkgs-cache.cachix.org" --option trusted-public-keys "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4=" --max-jobs 1
