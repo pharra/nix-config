@@ -18,24 +18,24 @@ jobs:
           - azure_base
 
     steps:
-      - uses: actions/checkout@v2.3.2
+      - uses: actions/checkout@v7
 
       - name: "Free disk space for Nix"
         uses: wimpysworld/nothing-but-nix@main
         with:
-          hatchet-protocol: 'cleave' # holster, carve, cleave (default), rampage
+          hatchet-protocol: 'Rampage' # holster, carve, cleave (default), rampage
 
       - name: "Install Nix ❄️"
-        uses: cachix/install-nix-action@v30
+        uses: cachix/install-nix-action@v31.11.0
 
       - name: "Install Cachix ❄️"
-        uses: cachix/cachix-action@v15
+        uses: cachix/cachix-action@v17
         with:
           name: nixpkgs-cache
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
-      - name: "Build ${{ matrix.config_name }} NixOS config ❄️"
-        run: nix build .#nixosConfigurations.${{ matrix.config_name }}.config.system.build.toplevel --accept-flake-config --option substituters "https://nixpkgs-cache.cachix.org" --option trusted-public-keys "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4=" --max-jobs 1 && nix-collect-garbage -d
-
       - name: "Build surface kernel"
-        run: nix build .#nixosConfigurations.dot_wm.config.system.build.kernel --accept-flake-config --option substituters "https://nixpkgs-cache.cachix.org" --option trusted-public-keys "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4=" --max-jobs 1
+        run: nix build .#nixosConfigurations.dot_wm.config.system.build.kernel --accept-flake-config --option substituters "https://nixpkgs-cache.cachix.org" --option trusted-public-keys "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4=" --max-jobs 1 && nix-collect-garbage -d
+
+      - name: "Build ${{ matrix.config_name }} NixOS config ❄️"
+        run: nix build .#nixosConfigurations.${{ matrix.config_name }}.config.system.build.toplevel --accept-flake-config --option substituters "https://nixpkgs-cache.cachix.org" --option trusted-public-keys "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4=" --max-jobs 1
