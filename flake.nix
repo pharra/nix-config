@@ -102,11 +102,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     noctalia-greeter = {
       url = "github:noctalia-dev/noctalia-greeter";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -137,7 +132,6 @@
     agenix,
     nixinate,
     dms-plugin-registry,
-    noctalia,
     ...
   }: let
     username = "wf";
@@ -162,7 +156,6 @@
     home-modules =
       [
         plasma-manager.homeModules.plasma-manager
-        noctalia.homeModules.default
       ]
       ++ (builtins.attrValues _home-modules);
 
@@ -174,7 +167,6 @@
         sops-nix.nixosModules.sops
         agenix.nixosModules.default
         dms-plugin-registry.nixosModules.default
-        noctalia.nixosModules.default
         inputs.noctalia-greeter.nixosModules.default
       ]
       ++ (builtins.attrValues modules)
