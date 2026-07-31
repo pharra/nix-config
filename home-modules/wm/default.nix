@@ -41,6 +41,8 @@ in {
       "AQ_DRM_DEVICES" = "/dev/dri/amd-igpu"; # Set the environment variable for AMD iGPU access in Hyprland
     };
 
+    services.xembed-sni-proxy.enable = true;
+
     home.activation.installDmsAndCompositorDefaults = lib.hm.dag.entryAfter ["writeBoundary"] ''
       copy_if_missing_file() {
         src="$1"
