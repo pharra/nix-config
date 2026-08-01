@@ -200,14 +200,15 @@ in {
     nix.settings = {
       substituters = [
         # replace official cache with a mirror located in China
-        # "https://attic.int4byte.org:8443/nix"
         "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
         "https://mirrors.ustc.edu.cn/nix-channels/store"
+        "https://nixpkgs-cache.cachix.org"
       ];
 
       trusted-public-keys = [
         "nix:TIuZSOR7smXF/Jz1UKnvY5TW+NvklDypmDEg57QYU08="
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4="
       ];
     };
   };
