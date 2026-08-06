@@ -70,6 +70,31 @@ in {
       configHome = "/home/${username}";
     };
 
+    environment.etc."nvidia/nvidia-application-profiles-rc.d/50-limit-free-buffer-pool-in-wayland-compositors.json".text = mkIf (cfg.compositor == "niri") ''
+      {
+        "rules": [
+          {
+            "pattern": {
+              "feature": "procname",
+              "matches": "niri"
+            },
+            "profile": "Limit Free Buffer Pool On Wayland Compositors"
+          }
+        ],
+        "profiles": [
+          {
+            "name": "Limit Free Buffer Pool On Wayland Compositors",
+            "settings": [
+              {
+                "key": "GLVidHeapReuseRatio",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      }
+    '';
+
     programs.noctalia-greeter = mkIf (cfg.variant == "noctalia") {
       enable = true;
 
@@ -89,13 +114,7 @@ in {
 
     environment.systemPackages = with pkgs; [
       alacritty
-      (pkgs.writeShellScriptBin "linux-wallpaperengine" ''
-        if [[ "$*" == *--bg* ]]; then
-          exec ${linux-wallpaperengine}/bin/linux-wallpaperengine --layer background "$@"
-        else
-          exec ${linux-wallpaperengine}/bin/linux-wallpaperengine "$@"
-        fi
-      '')
+      linux-wallpaperengine
       papirus-icon-theme
       kdePackages.dolphin
       kdePackages.gwenview
