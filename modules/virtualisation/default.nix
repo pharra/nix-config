@@ -29,6 +29,12 @@ in {
         default = true;
         description = "Enable Distrobox service";
       };
+
+      enableIncus = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Enable Incus service";
+      };
     };
   };
 
@@ -50,6 +56,8 @@ in {
       daemon.settings.live-restore = false; # avoid docker container hanging on shutdown
       daemon.settings.dns = ["114.114.114.114"]; # if not set, docker compose will fail to resolve hostnames
     };
+
+    virtualisation.incus.enable = true;
 
     systemd.services.docker = {
       serviceConfig.MountFlags = "shared";

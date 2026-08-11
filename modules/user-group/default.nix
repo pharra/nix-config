@@ -51,6 +51,7 @@ in {
         "uinput"
         "render"
         "podman"
+        "incus-admin"
       ];
       openssh.authorizedKeys.keys = [
         # win desktop
