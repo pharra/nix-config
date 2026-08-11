@@ -74,11 +74,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1785837952,
-        "narHash": "sha256-qR1iA3vRQ7dlMOK5Eh3c3nZP8ivBTIoHJyAjoPJgiHo=",
+        "lastModified": 1786125114,
+        "narHash": "sha256-kI7YDDulG4JgLxNqBJXmzGIFcOt8PYB+9kaqNVIfmFQ=",
         "owner": "AvengeMedia",
         "repo": "dms-plugin-registry",
-        "rev": "76b6fd4eff87231228c7ae12cf0d4ef16b94d559",
+        "rev": "51dae0e39470fb74b007d265b517512bbfa0d2c2",
         "type": "github"
       },
       "original": {
@@ -94,11 +94,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1785531816,
-        "narHash": "sha256-vkMnV0JIyw+g/NmcfoajlGaAO+9a0ezia+FZohQJrik=",
+        "lastModified": 1786031233,
+        "narHash": "sha256-TIDlLTLI1/pB7IqgjzcKQjpODQsZE2oII4XGG9B6KjI=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "bf9ce9fec78f95f374e8dd3b503863a3ec128ebe",
+        "rev": "7834e82588860aaf780cec1366524456a70898d7",
         "type": "github"
       },
       "original": {
@@ -245,16 +245,16 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1785859399,
-        "narHash": "sha256-pY4X50au95QrTpAbEm08pURmeU3/Ud2oa0s2XzpDdz8=",
+        "lastModified": 1785967620,
+        "narHash": "sha256-IItrdb7Puk05RqOBWZYFC5X6Wl1sJmCfh5MWVHw5iMM=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "85f62611fa3f3eacbcfe3bc7a6d6518b443ca442",
+        "rev": "b7c2ada94fe99c15b0dbcf4d11fd7850b957a436",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixos-unstable-small",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -266,11 +266,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1785635237,
-        "narHash": "sha256-A0Wc+uUbwRWX1sD+sQ5FpEbsuKg5vqeGQazaBPfs12U=",
+        "lastModified": 1786057790,
+        "narHash": "sha256-k/qCnifAoBqpHkRPYn6nUfEoRV1HXac01+Fh4aouWIE=",
         "owner": "noctalia-dev",
         "repo": "noctalia-greeter",
-        "rev": "4aa960dcff874dddd4d3d94d931df43a416ea9cf",
+        "rev": "bf5feefee3d90922952c1850eebdf93d1c0c7f01",
         "type": "github"
       },
       "original": {
