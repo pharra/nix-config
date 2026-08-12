@@ -112,11 +112,14 @@ in {
       };
     };
 
+    # enable trash support for nautilus
+    services.gvfs.enable = true;
+
     environment.systemPackages = with pkgs; [
       alacritty
       linux-wallpaperengine
+      nautilus
       papirus-icon-theme
-      kdePackages.dolphin
       kdePackages.gwenview
       kdePackages.qt6ct
 
