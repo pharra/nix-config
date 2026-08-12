@@ -29,13 +29,6 @@ in {
     # fix amdgpu flicker issue
     boot.kernelPackages = lib.mkOverride 1400 pkgs.linuxPackages_6_18;
 
-    boot.kernelPatches = [
-      {
-        name = "amdgpu-smu-fix";
-        patch = ./amd_smu.patch;
-      }
-    ];
-
     # supported fil systems, so we can mount any removable disks with these filesystems
     boot.supportedFilesystems = [
       "ext4"

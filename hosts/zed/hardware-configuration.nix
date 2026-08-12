@@ -15,8 +15,26 @@
   boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "uas" "virtio_pci" "virtio_net" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "virtio_rng"];
   boot.initrd.kernelModules = ["r8169"];
   boot.kernelModules = ["kvm-amd" "virtio_pci" "virtio_net" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "virtio_rng"];
-  # "console=ttyS0"
-  boot.kernelParams = ["default_hugepagesz=2M" "hugepagesz=2M" "hugepages=0" "amd_pstate=active" "amd_pstate.shared_mem=1" "brd.rd_nr=1" "brd.rd_size=11240000"];
+  boot.kernelParams = [
+    "default_hugepagesz=2M"
+    "hugepagesz=2M"
+    "hugepages=0"
+    "amd_pstate=active"
+    "amd_pstate.shared_mem=1"
+    "brd.rd_nr=1"
+    "brd.rd_size=11240000"
+    # "console=ttyS0"
+    # "amdgpu.dcdebugmask=0x10"
+  ];
+
+  # fix amd smu issue, see https://gitlab.freedesktop.org/drm/amd/-/issues/2023 https://community.frame.work/t/smu-deadlock-system-freeze-on-fedora-43/81795/27
+  boot.kernelPatches = [
+    {
+      name = "amdgpu-smu-fix";
+      patch = ./amd_smu.patch;
+    }
+  ];
+
   boot.extraModprobeConfig = ''
     options kvm_amd nested=1
     softdep nvme pre: vfio-pci
@@ -60,7 +78,7 @@
   };
 
   services.udev-symlink = {
-    enable = false;
+    enable = true;
     rules = [
       {
         pciPath = "0000:06:00.0";
