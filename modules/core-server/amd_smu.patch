@@ -1,83 +1,58 @@
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-
-@@ -248,6 +248,7 @@
-
-int amdgpu_umsch_mm_fwlog;
-
-int amdgpu_rebar = -1; /* auto */
-
-int amdgpu_user_queue = -1;
-
-+int amdgpu_no_vpe_idle_pg;
-
-uint amdgpu_hdmi_hpd_debounce_delay_ms;
-
-@@ -424,6 +425,20 @@
-
-module_param_named_unsafe(ip_block_mask, amdgpu_ip_block_mask, uint, 0444);
-
-/**
-
-+ * DOC: no_vpe_idle_pg (int)
-
-+ * Disable VPE (Video Processing Engine) idle power gating (1 = VPE stays
-
-+ * powered during normal use, 0 = normal power gating). Workaround for AMD
-
-+ * Strix Halo PMFW 100.6.0 where PowerDownVpe/PowerUpVpe cycling causes an
-
-+ * SMU deadlock during browser hardware video decode. Suspend/resume is not
-
-+ * affected - hw_fini/hw_init handle that path separately. The default is 0
-
-+ * (normal power gating behavior).
-
-+ */
-
-+MODULE_PARM_DESC(no_vpe_idle_pg,
-
-+ "Disable VPE idle power gating (1 = skip, 0 = normal). "
-
-+ "Workaround for Strix Halo PMFW 100.6.0 SMU deadlock (default: 0)");
-
-+module_param_named(no_vpe_idle_pg, amdgpu_no_vpe_idle_pg, int, 0444);
-
-+
-
-+/**
-
-* DOC: bapm (int)
-
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+index 803b6fc36..98ab4c618 100644
 --- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-
 +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-
-@@ -269,6 +269,7 @@
-
-extern int amdgpu_wbrf;
-
-extern int amdgpu_user_queue;
-
+@@ -273,7 +273,7 @@ extern int amdgpu_rebar;
+ 
+ extern int amdgpu_wbrf;
+ extern int amdgpu_user_queue;
+-
 +extern int amdgpu_no_vpe_idle_pg;
-
-extern uint amdgpu_hdmi_hpd_debounce_delay_ms;
-
+ extern uint amdgpu_hdmi_hpd_debounce_delay_ms;
+ 
+ #define AMDGPU_VM_MAX_NUM_CTX			4096
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+index 99f22633a..039a8707e 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+@@ -246,6 +246,7 @@ int amdgpu_damage_clips = -1; /* auto */
+ int amdgpu_umsch_mm_fwlog;
+ int amdgpu_rebar = -1; /* auto */
+ int amdgpu_user_queue = -1;
++int amdgpu_no_vpe_idle_pg;
+ uint amdgpu_hdmi_hpd_debounce_delay_ms;
+ 
+ DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
+@@ -418,6 +419,19 @@ module_param_named(runpm, amdgpu_runtime_pm, int, 0444);
+ MODULE_PARM_DESC(ip_block_mask, "IP Block Mask (all blocks enabled (default))");
+ module_param_named_unsafe(ip_block_mask, amdgpu_ip_block_mask, uint, 0444);
+ 
++/**
++ * DOC: no_vpe_idle_pg (int)
++ * Disable VPE (Video Processing Engine) idle power gating (1 = VPE stays
++ * powered during normal use, 0 = normal power gating). Workaround for AMD
++ * Strix Halo PMFW 100.6.0 where PowerDownVpe/PowerUpVpe cycling causes an
++ * SMU deadlock during browser hardware video decode. Suspend/resume is not
++ * affected - hw_fini/hw_init handle that path separately. The default is 0
++ * (normal power gating behavior).
++ */
++
++MODULE_PARM_DESC(no_vpe_idle_pg, "Disable VPE idle power gating (1 = skip, 0 = normal). Workaround for Strix Halo PMFW 100.6.0 SMU deadlock (default: 0)");
++module_param_named(no_vpe_idle_pg, amdgpu_no_vpe_idle_pg, int, 0444);
++
+ /**
+  * DOC: bapm (int)
+  * Bidirectional Application Power Management (BAPM) used to dynamically share TDP between CPU and GPU. Set value 0 to disable it.
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vpe.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vpe.c
+index bd5eff4ba..d901c8255 100644
 --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vpe.c
-
 +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vpe.c
-
-@@ -896,7 +896,8 @@
-
-{
-
-struct amdgpu_device *adev = ring->adev;
-
-- schedule_delayed_work(&adev->vpe.idle_work, VPE_IDLE_TIMEOUT);
-
-+ if (!amdgpu_no_vpe_idle_pg)
-
-+ schedule_delayed_work(&adev->vpe.idle_work, VPE_IDLE_TIMEOUT);
-
-}
+@@ -900,7 +900,7 @@ static void vpe_ring_begin_use(struct amdgpu_ring *ring)
+ static void vpe_ring_end_use(struct amdgpu_ring *ring)
+ {
+ 	struct amdgpu_device *adev = ring->adev;
+-
++        if (!amdgpu_no_vpe_idle_pg)
+ 	schedule_delayed_work(&adev->vpe.idle_work, VPE_IDLE_TIMEOUT);
+ }
+ 
