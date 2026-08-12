@@ -31,6 +31,7 @@ in {
     user-group.enable = true;
     virtualisation.enable = true;
     scripts.enable = true;
+    waydroid.enable = true;
   };
 
   services.sunshine = lib.mkIf config.services.pharra.core-desktop.enable {
@@ -183,7 +184,7 @@ in {
   hardware.nvidia = {
     open = true;
     nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.production;
+    package = config.boot.kernelPackages.nvidiaPackages.latest;
     powerManagement.enable = true;
   };
 

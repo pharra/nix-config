@@ -20,7 +20,7 @@ in {
     environment.systemPackages = with pkgs; [
       android-tools
       scrcpy
-      genymotion
+      # genymotion
     ];
   };
 }
