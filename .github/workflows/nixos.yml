@@ -16,6 +16,8 @@ jobs:
       matrix:
         config_name:
           - azure_base
+          - homelab_base
+          - zed_net_wm
 
     steps:
       - uses: actions/checkout@v7
