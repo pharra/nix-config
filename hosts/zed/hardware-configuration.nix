@@ -35,6 +35,9 @@
     }
   ];
 
+  boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore-zen4;
+  boot.zfs.package = lib.mkForce config.boot.kernelPackages.zfs_cachyos;
+
   boot.extraModprobeConfig = ''
     options kvm_amd nested=1
     softdep nvme pre: vfio-pci

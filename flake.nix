@@ -113,6 +113,11 @@
       url = "github:zaroutt/Niri-glass";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-cachyos-kernel = {
+      url = "github:xddxdd/nix-cachyos-kernel";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -178,6 +183,7 @@
             [
               overlays
               inputs.niri-glass.overlays.default
+              inputs.nix-cachyos-kernel.overlays.default
             ]
             ++ builtins.attrValues overlay;
         }
