@@ -41,4 +41,4 @@ jobs:
         run: sudo mkdir /nix/tmp && sudo mount --bind /nix/tmp /tmp
 
       - name: "Build ${{ matrix.config_name }} NixOS config ❄️"
-        run: nix build .#nixosConfigurations.${{ matrix.config_name }} --accept-flake-config --option substituters "https://nixpkgs-cache.cachix.org" --option trusted-public-keys "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4=" --max-jobs 1
+        run: nix build .#nixosConfigurations.${{ matrix.config_name }} --accept-flake-config --option substituters "https://nixpkgs-cache.cachix.org" --option trusted-public-keys "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4="
