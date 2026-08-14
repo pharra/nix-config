@@ -88,4 +88,30 @@
     };
     wantedBy = ["multi-user.target"];
   };
+
+  # 在 magnet-crawler 启动后，把它连接到 clouddrive2 网络
+  systemd.services."podman-connect-networks" = {
+    description = "Connect containers across networks";
+    path = [pkgs.podman];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+
+    script = ''
+      sleep 3
+      podman network connect clouddrive2_default magnet-crawler 2>/dev/null || true
+    '';
+
+    after = [
+      "podman-magnet-crawler.service"
+      "podman-network-clouddrive2_default.service"
+    ];
+    requires = [
+      "podman-magnet-crawler.service"
+      "podman-network-clouddrive2_default.service"
+    ];
+    wantedBy = ["multi-user.target"];
+  };
 }
