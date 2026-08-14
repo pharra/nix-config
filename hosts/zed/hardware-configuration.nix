@@ -24,15 +24,9 @@
     "brd.rd_nr=1"
     "brd.rd_size=11240000"
     # "console=ttyS0"
-    # "amdgpu.dcdebugmask=0x10"
-  ];
-
-  # fix amd smu issue, see https://gitlab.freedesktop.org/drm/amd/-/issues/2023 https://community.frame.work/t/smu-deadlock-system-freeze-on-fedora-43/81795/27
-  boot.kernelPatches = [
-    {
-      name = "amdgpu-smu-fix";
-      patch = ./amd_smu.patch;
-    }
+    "amdgpu.dcdebugmask=0x10"
+    "amdgpu.cwsr_enable=0"
+    "amdgpu.runpm=0"
   ];
 
   boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore-zen4;
