@@ -68,12 +68,6 @@
       url = "github:gmodena/nix-flatpak";
     };
 
-    plasma-manager = {
-      url = "github:pjones/plasma-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
-    };
-
     NixVirt = {
       url = "github:AshleyYakeley/NixVirt";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -131,7 +125,6 @@
     home-manager,
     impermanence,
     nix-flatpak,
-    plasma-manager,
     NixVirt,
     nixos-hardware,
     sops-nix,
@@ -161,10 +154,7 @@
     modules = import ./modules;
     _home-modules = import ./home-modules;
     home-modules =
-      [
-        plasma-manager.homeModules.plasma-manager
-      ]
-      ++ (builtins.attrValues _home-modules);
+      [] ++ (builtins.attrValues _home-modules);
 
     common-nixos-modules =
       [

@@ -33,12 +33,6 @@ in {
       recursive = true;
     };
 
-    programs.plasma = {
-      configFile.kwinrc = {
-        Wayland.InputMethod.value = "/run/current-system/sw/share/applications/fcitx5-wayland-launcher.desktop";
-      };
-    };
-
     # every time fcitx5 switch input method, it will modify ~/.config/fcitx5/profile file,
     # which will override my config managed by home-manager
     # so we need to remove it before everytime we rebuild the config
