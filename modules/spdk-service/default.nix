@@ -30,11 +30,6 @@ in {
       cmd = ["sh" "-x" "-c" "/usr/local/bin/spdk_tgt -m 0x1 -c /home/wf/spdk/rdma_config.json -S /var/tmp"];
       log-driver = "journald";
       extraOptions = [
-        "--health-cmd=python3 /usr/libexec/spdk/scripts/rpc.py spdk_get_version || exit 1"
-        "--health-interval=6s"
-        "--health-retries=5"
-        "--health-start-period=20s"
-        "--health-timeout=10s"
         "--network=host"
         "--privileged"
       ];
