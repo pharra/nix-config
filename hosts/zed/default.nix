@@ -31,7 +31,6 @@ in {
     user-group.enable = true;
     virtualisation.enable = true;
     scripts.enable = true;
-    waydroid.enable = true;
   };
 
   services.sunshine = lib.mkIf config.services.pharra.core-desktop.enable {
