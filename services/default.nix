@@ -13,5 +13,6 @@
     ./immich
     ./magnet
     ./xray
+    ./cookiecloud
   ];
 }
