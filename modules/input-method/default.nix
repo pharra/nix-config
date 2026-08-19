@@ -22,7 +22,9 @@ in {
         fcitx5-mozc
         fcitx5-gtk
         (fcitx5-rime.override {
-          rimeDataPkgs = [];
+          rimeDataPkgs = [
+            rime-wanxiang
+          ];
         })
         qt6Packages.fcitx5-chinese-addons
         qt6Packages.fcitx5-with-addons

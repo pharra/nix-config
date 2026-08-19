@@ -39,6 +39,10 @@ in {
       kdePackages.breeze-gtk
     ];
 
+    xresources.properties = {
+      "Xft.dpi" = 192;
+    };
+
     # XDG configuration
     xdg = {
       enable = true;

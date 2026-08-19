@@ -83,11 +83,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    rime-config = {
-      url = "github:Mintimate/oh-my-rime";
-      flake = false;
-    };
-
     nixinate = {
       url = "github:matthewcroughan/nixinate";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -128,7 +123,6 @@
     NixVirt,
     nixos-hardware,
     sops-nix,
-    rime-config,
     agenix,
     nixinate,
     dms-plugin-registry,
@@ -182,7 +176,7 @@
     mysecrets = ./secrets/agenix;
 
     commonSpecialArgs = {
-      inherit username mysecrets home-modules NixVirt rime-config agenix inputs;
+      inherit username mysecrets home-modules NixVirt agenix inputs;
     };
     base_args = {
       inherit home-manager;

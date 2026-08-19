@@ -2,18 +2,14 @@
   config,
   lib,
   pkgs,
-  rime-config,
   ...
 }:
 with lib; let
   cfg = config.home.pharra.input-method;
 
-  # 合并所有 rime 配置源 (后面的会覆盖前面的同名文件)
-  merged-rime-config = pkgs.symlinkJoin {
-    name = "merged-rime-config";
-    paths = [
-      rime-config # 基础配置(https://www.mintimate.cc/zh/guide/)
-    ];
+  wanxiangModel = pkgs.fetchurl {
+    url = "https://github.com/jetcookies/RIME-LMDG-tracker/releases/download/0-unstable-2026-08-18/wanxiang-lts-zh-hans.gram";
+    sha256 = "sha256-PeIaH/WHq04YjC3cVpVdnSXxBPTQzleU8FptkQOuN8s=";
   };
 in {
   options = {
@@ -26,11 +22,13 @@ in {
     home.file.".config/fcitx5/profile".source = ./profile;
     home.file.".config/fcitx5/conf/classicui.conf".source = ./classicui.conf;
 
-    xdg.dataFile."fcitx5/rime" = {
-      source = merged-rime-config;
-      # 强制替换以确保 rime 配置始终是最新的
-      force = true;
-      recursive = true;
+    xdg.dataFile."fcitx5/rime/wanxiang-lts-zh-hans.gram".source = wanxiangModel;
+
+    xdg.dataFile."fcitx5/rime/default.custom.yaml" = {
+      text = ''
+        patch:
+          __include: wanxiang_suggested_default:/
+      '';
     };
 
     # every time fcitx5 switch input method, it will modify ~/.config/fcitx5/profile file,

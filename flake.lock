@@ -350,22 +350,6 @@
         "type": "github"
       }
     },
-    "rime-config": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1786460813,
-        "narHash": "sha256-9+T6GQDxrr695ax+zXe+0UU9sFEMhDKv3QgooB/7kHA=",
-        "owner": "Mintimate",
-        "repo": "oh-my-rime",
-        "rev": "bc6dc3f61fd66f5498e01e6fadb93245ef8d147d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Mintimate",
-        "repo": "oh-my-rime",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "NixVirt": "NixVirt",
@@ -380,7 +364,6 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2",
         "noctalia-greeter": "noctalia-greeter",
-        "rime-config": "rime-config",
         "sops-nix": "sops-nix"
       }
     },
