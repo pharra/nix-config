@@ -16,6 +16,7 @@ with lib; let
         wantedBy = ["multi-user.target"];
         before = ["multi-user.target"];
         after = ["network-online.target"];
+        wants = ["network-online.target"];
         serviceConfig = {
           Type = "simple";
           RemainAfterExit = true;
