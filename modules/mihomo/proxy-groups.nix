@@ -151,6 +151,27 @@ in {
     }
 
     {
+      name = "回家";
+      type = "select";
+      proxies = [
+        "DIRECT"
+        "Azure"
+        "AzureProxy"
+      ];
+      url = "https://www.gstatic.com/generate_204";
+      icon = "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Urltest.png";
+    }
+
+    {
+      name = "AzureProxy";
+      type = "select";
+      proxies = [
+        "DIRECT"
+        "花云"
+      ];
+    }
+
+    {
       name = "电报信息";
       type = "select";
       proxies = SelectProxies;
