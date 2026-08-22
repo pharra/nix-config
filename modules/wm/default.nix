@@ -115,6 +115,12 @@ in {
     # enable trash support for nautilus
     services.gvfs.enable = true;
 
+    services.xserver.displayManager.sessionCommands = ''
+      ${pkgs.xorg.xrdb}/bin/xrdb -merge <<EOF
+      Xft.dpi: 192
+      EOF
+    '';
+
     environment.systemPackages = with pkgs; [
       alacritty
       linux-wallpaperengine
