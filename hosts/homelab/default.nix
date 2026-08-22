@@ -50,7 +50,8 @@ in {
 
   services.pharra = {
     libvirt.enable = true;
-    core-desktop.enable = true;
+    core-desktop.enable = false;
+    core-server.enable = true;
     user-group.enable = true;
     impermanence.enable = true;
     spdk.enable = true;
