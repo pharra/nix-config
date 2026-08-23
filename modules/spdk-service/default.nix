@@ -32,6 +32,7 @@ in {
       extraOptions = [
         "--network=host"
         "--privileged"
+        "--no-healthcheck"
       ];
     };
     systemd.services."podman-spdk-spdk" = {
