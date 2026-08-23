@@ -26,7 +26,7 @@
 
   # Containers
   virtualisation.oci-containers.containers."magnet-crawler" = {
-    image = "pharra/magnet:latest";
+    image = "docker.io/pharra/magnet:latest";
     environment = {
       "PYTHONUNBUFFERED" = "1";
       "TZ" = "Asia/Shanghai";
@@ -34,6 +34,7 @@
     volumes = [
       "/home/wf/Data/magnet/data:/app/data:rw"
       "/home/wf/Data/magnet/logs:/app/logs:rw"
+      "/share/torrents:/share/torrents:rw"
     ];
     ports = [
       "8000:5000/tcp"

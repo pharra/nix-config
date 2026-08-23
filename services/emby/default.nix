@@ -26,7 +26,7 @@
 
   # Containers
   virtualisation.oci-containers.containers."emby" = {
-    image = "linuxserver/emby:4.9.1";
+    image = "docker.io/linuxserver/emby:4.9.5";
     environment = {
       "DOCKER_MODS" = "272567571/mods:emby-crack";
       "EMBY_CRACK_URL" = "https://emby-crack.int4byte.org";
@@ -36,7 +36,7 @@
     };
     volumes = [
       "/home/wf/Data/emby/config:/config:rw"
-      "/share:/media:rw"
+      "/share:/media:rw,rslave"
     ];
     ports = [
       "8096:8096/tcp"
@@ -103,7 +103,7 @@
     ];
   };
   virtualisation.oci-containers.containers."metatube" = {
-    image = "ghcr.io/metatube-community/metatube-server:latest";
+    image = "ghcr.io/metatube-community/metatube-server:dev";
     environment = {
       "HTTPS_PROXY" = "";
       "HTTP_PROXY" = "";
@@ -141,7 +141,7 @@
     ];
   };
   virtualisation.oci-containers.containers."metatube-postgres" = {
-    image = "postgres:15-alpine";
+    image = "docker.io/postgres:15-alpine";
     environment = {
       "POSTGRES_DB" = "metatube";
       "POSTGRES_PASSWORD" = "metatube";

@@ -62,7 +62,9 @@
 
     clouddrive2.${config.sops.placeholder."domain"} {
             encode gzip
-            reverse_proxy 127.0.0.1:19798
+            reverse_proxy h2c://127.0.0.1:19798 {
+                flush_interval -1
+            }
     }
 
     magnet.${config.sops.placeholder."domain"} {

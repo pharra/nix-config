@@ -26,13 +26,14 @@
 
   # Containers
   virtualisation.oci-containers.containers."clouddrive2" = {
-    image = "cloudnas/clouddrive2";
+    image = "docker.io/cloudnas/clouddrive2";
     environment = {
       "CLOUDDRIVE_HOME" = "/Config";
       "TZ" = "Asia/Shanghai";
     };
     volumes = [
       "/home/wf/Data/clouddrive2/config:/Config:rw"
+      "/share/clouddrive2/:/media/clouddrive2:shared"
     ];
     ports = [
       "19798:19798/tcp"
@@ -42,6 +43,7 @@
       "--device=/dev/fuse:/dev/fuse:rwm"
       "--network-alias=cloudnas"
       "--network=clouddrive2_default"
+      "--cap-add=SYS_ADMIN"
     ];
   };
   systemd.services."podman-clouddrive2" = {

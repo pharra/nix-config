@@ -26,7 +26,7 @@
 
   # Containers
   virtualisation.oci-containers.containers."mybili-mybili" = {
-    image = "pharra/mybili:latest";
+    image = "docker.io/pharra/mybili:latest";
     environment = {
       "DB_CONNECTION" = "sqlite";
       "DB_DATABASE" = "/data/database.sqlite";
@@ -64,7 +64,7 @@
     ];
   };
   virtualisation.oci-containers.containers."mybili-redis" = {
-    image = "redis";
+    image = "docker.io/redis";
     volumes = [
       "/share/bilibili/redis:/data:rw"
     ];

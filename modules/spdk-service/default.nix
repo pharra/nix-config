@@ -17,7 +17,7 @@ in {
     # Auto-generated using compose2nix v0.3.3-pre.
     # Containers
     virtualisation.oci-containers.containers."spdk-spdk" = {
-      image = "pharra/spdk:v25.09";
+      image = "docker.io/pharra/spdk:v25.09";
       volumes = [
         "/dev/disk:/dev/disk:rw"
         "/dev/hugepages:/dev/hugepages:rw"

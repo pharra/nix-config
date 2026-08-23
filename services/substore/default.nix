@@ -30,7 +30,7 @@
 
   # Containers
   virtualisation.oci-containers.containers."sub-store" = {
-    image = "xream/sub-store:latest";
+    image = "docker.io/xream/sub-store:latest";
     environment = {
       "SUB_STORE_BACKEND_API_HOST" = "0.0.0.0";
       "SUB_STORE_BACKEND_API_PORT" = "3001";
