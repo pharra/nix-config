@@ -50,7 +50,7 @@ in {
       dockerHostIP = "192.168.31.2";
     }
     else {
-      enable = true;
+      enable = false;
       autoConfigureBridge = true;
       dockerGateway = "192.168.31.254";
       dockerHostIP = "192.168.31.2";
