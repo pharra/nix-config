@@ -85,8 +85,6 @@ in {
     # dconf is a low-level configuration system.
     programs.dconf.enable = true;
 
-    # networking.firewall.allowedTCPPorts = [ ... ];
-    # networking.firewall.allowedUDPPorts = [ ... ];
     # Or disable the firewall altogether.
     networking.firewall.enable = false;
     systemd.services.NetworkManager-wait-online.enable = false;
