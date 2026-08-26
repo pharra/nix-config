@@ -14,25 +14,19 @@ in {
 
       enableDocker = mkOption {
         type = types.bool;
-        default = true;
+        default = false;
         description = "Enable Docker service";
-      };
-
-      enablePodman = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Enable Podman service";
       };
 
       enableDistrobox = mkOption {
         type = types.bool;
-        default = true;
+        default = false;
         description = "Enable Distrobox service";
       };
 
       enableIncus = mkOption {
         type = types.bool;
-        default = false;
+        default = true;
         description = "Enable Incus service";
       };
     };
@@ -41,25 +35,31 @@ in {
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs;
       [
-        docker-compose
         podman-compose
       ]
       ++ (
         if cfg.enableDistrobox
         then [pkgs.distrobox]
         else []
+      )
+      ++ (
+        if cfg.enableDocker
+        then [pkgs.docker-compose]
+        else []
       );
 
-    virtualisation.docker = {
+    virtualisation.docker = mkIf cfg.enableDocker {
       enable = true;
       daemon.settings.features.cdi = true;
       daemon.settings.live-restore = false; # avoid docker container hanging on shutdown
       daemon.settings.dns = ["114.114.114.114"]; # if not set, docker compose will fail to resolve hostnames
     };
 
-    virtualisation.incus.enable = true;
+    virtualisation.incus = mkIf cfg.enableIncus {
+      enable = true;
+    };
 
-    systemd.services.docker = {
+    systemd.services.docker = mkIf cfg.enableDocker {
       serviceConfig.MountFlags = "shared";
     };
 

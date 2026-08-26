@@ -220,14 +220,14 @@ in {
   services.docker-netns =
     if config.services.openwrt.enable
     then {
-      enable = true;
+      enable = config.virtualisation.docker.enable;
       autoConfigureBridge = false;
       dockerBridge = "br2";
       dockerGateway = "192.168.31.254";
       dockerHostIP = "192.168.31.2";
     }
     else {
-      enable = false;
+      enable = config.virtualisation.docker.enable;
       autoConfigureBridge = true;
       dockerGateway = "192.168.31.254";
       dockerHostIP = "192.168.31.2";
