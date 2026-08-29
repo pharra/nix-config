@@ -121,6 +121,14 @@ in {
       EOF
     '';
 
+    services.greetd = {
+      settings = {
+        terminal = {
+          vt = lib.mkForce 7;
+        };
+      };
+    };
+
     environment.systemPackages = with pkgs; [
       alacritty
       linux-wallpaperengine

@@ -77,9 +77,9 @@
             reverse_proxy 127.0.0.1:9090
     }
 
-    tradingagents.${config.sops.placeholder."domain"} {
+    openreader.${config.sops.placeholder."domain"} {
             encode gzip
-            reverse_proxy 192.168.31.2:8068
+            reverse_proxy 127.0.0.1:8068
     }
 
     cookiecloud.${config.sops.placeholder."domain"} {
