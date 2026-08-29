@@ -7,4 +7,5 @@
   wm-module = import ./wm;
   cosmic-module = import ./cosmic;
   input-method-module = import ./input-method;
+  denial-module = import ./denial;
 }

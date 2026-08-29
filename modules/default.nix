@@ -50,4 +50,5 @@
   amd-gpu-edid-fix-module = import ./amd-gpu-edid-fix;
   udev-symlink-module = import ./udev-symlink;
   lianli-linux-module = import ./lianli-linux;
+  denial-module = import ./denial;
 }

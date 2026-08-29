@@ -107,6 +107,8 @@
       url = "github:xddxdd/nix-cachyos-kernel";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    denial-nixos.url = "github:pharra/nixos-denial-compositor-flake-config";
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -159,6 +161,7 @@
         agenix.nixosModules.default
         dms-plugin-registry.nixosModules.default
         inputs.noctalia-greeter.nixosModules.default
+        inputs.denial-nixos.nixosModules.default
       ]
       ++ (builtins.attrValues modules)
       ++ [
@@ -219,7 +222,7 @@
       # zed
       {
         name = "zed";
-        builds = ["kde" "gnome" "cosmic" "wm"];
+        builds = ["kde" "gnome" "cosmic" "wm" "denial"];
         # hostname = "zed.local";
         nixos-modules = [
           ./hosts/zed
@@ -356,6 +359,8 @@
             compositor = "niri";
           };
         }
+        else if build == "denial"
+        then {denial.enable = true;}
         else {
           base.enable = true;
         }; # base build - no desktop environment
