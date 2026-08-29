@@ -185,6 +185,7 @@ in {
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.latest;
     powerManagement.enable = true;
+    nvidiaPersistenced = true;
   };
 
   # This value determines the NixOS release from which the default
