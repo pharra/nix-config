@@ -29,7 +29,7 @@
     image = "docker.io/linuxserver/emby:4.9.5";
     environment = {
       "DOCKER_MODS" = "272567571/mods:emby-crack";
-      "EMBY_CRACK_URL" = "https://emby-crack.int4byte.org";
+      "EMBY_CRACK_URL" = "https://emby-crack.int4byte.com";
       "PGID" = "1000";
       "PUID" = "1000";
       "TZ" = "Asia/Shanghai";

@@ -5,8 +5,8 @@
 }: {
   services.mihomo.config.rules = lib.mkIf config.services.mihomo.enable [
     "DOMAIN-SUFFIX,115.com,DIRECT"
-    "DOMAIN-SUFFIX,azure.int4byte.org,DIRECT"
-    "DOMAIN-SUFFIX,int4byte.org,回家"
+    "DOMAIN-SUFFIX,azure.int4byte.com,DIRECT"
+    "DOMAIN-SUFFIX,int4byte.com,回家"
     "DOMAIN-SUFFIX,openh264.org,节点选择"
     "DOMAIN-SUFFIX,three.com.hk,节点选择"
     "DOMAIN-SUFFIX,cn.lgaccount.com,节点选择"

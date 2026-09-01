@@ -32,7 +32,7 @@ in {
       extraUpFlags = ["--advertise-exit-node" "--accept-routes=true" "--accept-dns=true" "--advertise-routes=192.168.254.0/24"];
       derper = {
         enable = true;
-        domain = "tailscale.int4byte.org";
+        domain = "tailscale.int4byte.com";
         port = 22079;
         stunPort = 3478;
         configureNginx = false;

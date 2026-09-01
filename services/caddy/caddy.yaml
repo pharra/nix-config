@@ -1,4 +1,4 @@
-domain: ENC[AES256_GCM,data:0vZst8j2HuHRQJ8p,iv:QcXaUYGiQ0j9yGuz+WYrvsFDtLylyuCcSRuEnl4mij8=,tag:Lkf24TOBBHI7+U0jPBq7bw==,type:str]
+domain: ENC[AES256_GCM,data:jfoSpdTUXi6o/nJz,iv:8kefwLzIiksknoQuCEhqOH6G/bugG135ad969izkwjA=,tag:YwX7/oTgYElzX+9KvSCHCA==,type:str]
 token: ENC[AES256_GCM,data:/aez+UvrOmH+81ojFLTsOr5JLQ/TFIW35fIyus8tilrO2TIZIwsDPQ==,iv:8M7KC2WKhZx2SgjGkPd3SmrbMgkI0LcotT2RU1P0aO4=,tag:pMl/MoOVQse/Vrr7EiUgNQ==,type:str]
 email: ENC[AES256_GCM,data:ypgNMEfPBBe7ztJ9DsAsuSIRKSzR,iv:7NK72Z4WYaxXIrXmIDxH+YApf4Xk84IiO5lfAS7V3Mc=,tag:N4zUit9PooWkdbhBGgkOew==,type:str]
 sops:
@@ -12,7 +12,7 @@ sops:
             HK8i8F2voeomffG7AWnpRBgTsqK3ui4+dZBiw7M765wmSaIb3OOJeQ==
             -----END AGE ENCRYPTED FILE-----
           recipient: age14ckewpst7ua5acm0hndfps0mjfl3yd0gwhxn7pn379hgyvhs8urse7xt5h
-    lastmodified: "2026-06-25T20:23:01Z"
-    mac: ENC[AES256_GCM,data:aMgmUvkFwCXHRfoOlFF66JgsGPWnLZKQc6Elp/qEMaOuss1P0NJH1fzS841EmCHCiW/1R+jQhG7dI7zoX8gG1d6noEjgERQkfHOLIPA/Il2gRs3jstTVK4vu7A2PKENkuuMl+AzEwdT7M9AbMmoekUjntjloOTDZjaYlxntfz3g=,iv:18g7KeXJjxnkW2ksaw2erCCqcqJZ8ZMVNLf2VzpGyAQ=,tag:K3fyCLG5/LSLX2bEkg/QFQ==,type:str]
+    lastmodified: "2026-09-01T03:30:40Z"
+    mac: ENC[AES256_GCM,data:TMp9aWXu5eFrkMlyk6SEfrVho0Y8mpw1m2Iur/PI3mBklnS5Ys+wedl/8Pbjs/I2Fq9DRUwrI6tBeAmyLwo2lsSxcLmpHZZrwBWmuDyGjp5Rx87LwFc/bGksT093fDPdCs+86pVLAmwZOefNG3fA3sNRQNhAXC080sgweBJSJWI=,iv:PLLTspv5wnmUCbCERN23TTgXvU83sBeWLsxXt+e533s=,tag:AgHwigYdTfulYdZJlnuOmA==,type:str]
     unencrypted_suffix: _unencrypted
-    version: 3.13.1
+    version: 3.13.3
