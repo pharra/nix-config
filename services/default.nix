@@ -14,5 +14,6 @@
     ./magnet
     ./xray
     ./cookiecloud
+    ./bilisync
   ];
 }

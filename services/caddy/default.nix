@@ -86,6 +86,11 @@
             encode gzip
             reverse_proxy 127.0.0.1:8088
     }
+
+    bilisync.${config.sops.placeholder."domain"} {
+            encode gzip
+            reverse_proxy 127.0.0.1:12345
+    }
   '';
 
   # Runtime

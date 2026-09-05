@@ -26,7 +26,7 @@
 
   # Containers
   virtualisation.oci-containers.containers."emby" = {
-    image = "docker.io/linuxserver/emby:4.9.5";
+    image = "docker.io/linuxserver/emby:latest";
     environment = {
       "DOCKER_MODS" = "272567571/mods:emby-crack";
       "EMBY_CRACK_URL" = "https://emby-crack.int4byte.com";
