@@ -31,7 +31,7 @@
 
   # Containers
   virtualisation.oci-containers.containers."immich_machine_learning" = {
-    image = "ghcr.io/immich-app/immich-machine-learning:v2.7.5-cuda";
+    image = "ghcr.io/immich-app/immich-machine-learning:v3.1.0-cuda";
     environmentFiles = [
       config.sops.secrets."immich.env".path
     ];
@@ -125,7 +125,7 @@
     ];
   };
   virtualisation.oci-containers.containers."immich_server" = {
-    image = "ghcr.io/immich-app/immich-server:v2.7.5";
+    image = "ghcr.io/immich-app/immich-server:v3.1.0";
     environmentFiles = [
       "/home/wf/Data/immich/.env"
     ];
