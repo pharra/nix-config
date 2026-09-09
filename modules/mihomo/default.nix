@@ -37,22 +37,25 @@ in {
   };
 
   config = lib.mkIf config.services.mihomo.enable {
-    networking.firewall.trustedInterfaces = lib.mkIf config.services.mihomo.tunMode [cfg.tun.device];
+    networking.firewall.trustedInterfaces = [cfg.tun.device];
     sops.templates."mihomo-config.yaml".content = builtins.toJSON cfg;
     sops.templates."mihomo-config.yaml".restartUnits = ["mihomo.service"];
     services.mihomo.configFile = config.sops.templates."mihomo-config.yaml".path;
 
-    services.mihomo.tunMode = lib.mkIf config.services.mihomo.enable true;
+    services.mihomo.tunMode = true;
+
+    services.mihomo.processesInfo = true;
 
     # 基础 mihomo 配置
-    services.mihomo.config = lib.mkIf config.services.mihomo.enable {
+    services.mihomo.config = {
       mixed-port = 7154;
       allow-lan = true;
       mode = "rule";
       log-level = "warning";
       ipv6 = true;
-      find-process-mode = "strict";
+      find-process-mode = "always";
       external-controller = "0.0.0.0:9090";
+      process-tunnel = true;
       unified-delay = true;
       tcp-concurrent = true;
       profile = {
