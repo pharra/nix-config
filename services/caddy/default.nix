@@ -19,77 +19,77 @@
 
   sops.templates."Caddyfile".content = ''
     {
-      http_port 8001
-      https_port 8443
-      email ${config.sops.placeholder."email"}
-      acme_dns cloudflare ${config.sops.placeholder."token"}
-      servers {
-              timeouts {
-              read_body   10m
-              read_header 10m
-              write       10m
-              idle        10m
-              }
-      }
+        https_port 8443
+        auto_https disable_redirects
+        email ${config.sops.placeholder."email"}
+        acme_dns cloudflare ${config.sops.placeholder."token"}
+        servers {
+            protocols h1 h2
+            timeouts {
+                read_body   10m
+                read_header 10m
+                write       10m
+                idle        10m
+            }
+        }
     }
 
     emby.${config.sops.placeholder."domain"} {
-            encode gzip
-            reverse_proxy 127.0.0.1:8096
+        encode gzip
+        reverse_proxy 127.0.0.1:8096
     }
 
     immich.${config.sops.placeholder."domain"} {
-            encode gzip
-            reverse_proxy 127.0.0.1:2283
+        encode gzip
+        reverse_proxy 127.0.0.1:2283
     }
 
     reader.${config.sops.placeholder."domain"} {
-            encode gzip
-            reverse_proxy 127.0.0.1:4396
+        encode gzip
+        reverse_proxy 127.0.0.1:4396
     }
 
     substore.${config.sops.placeholder."domain"} {
-            encode gzip
-            reverse_proxy 127.0.0.1:3001
+        encode gzip
+        reverse_proxy 127.0.0.1:3001
     }
 
-
     mybili.${config.sops.placeholder."domain"} {
-            encode gzip
-            header Content-Security-Policy "upgrade-insecure-requests"
-            reverse_proxy 127.0.0.1:5151
+        encode gzip
+        header Content-Security-Policy "upgrade-insecure-requests"
+        reverse_proxy 127.0.0.1:5151
     }
 
     clouddrive2.${config.sops.placeholder."domain"} {
-            encode gzip
-            reverse_proxy h2c://127.0.0.1:19798 {
-                flush_interval -1
-            }
+        encode gzip
+        reverse_proxy h2c://127.0.0.1:19798 {
+            flush_interval -1
+        }
     }
 
     magnet.${config.sops.placeholder."domain"} {
-            encode gzip
-            reverse_proxy 127.0.0.1:8000
+        encode gzip
+        reverse_proxy 127.0.0.1:8000
     }
 
     mihomo.${config.sops.placeholder."domain"} {
-            encode gzip
-            reverse_proxy 127.0.0.1:9090
+        encode gzip
+        reverse_proxy 127.0.0.1:9090
     }
 
     openreader.${config.sops.placeholder."domain"} {
-            encode gzip
-            reverse_proxy 127.0.0.1:8068
+        encode gzip
+        reverse_proxy 127.0.0.1:8068
     }
 
     cookiecloud.${config.sops.placeholder."domain"} {
-            encode gzip
-            reverse_proxy 127.0.0.1:8088
+        encode gzip
+        reverse_proxy 127.0.0.1:8088
     }
 
     bilisync.${config.sops.placeholder."domain"} {
-            encode gzip
-            reverse_proxy 127.0.0.1:12345
+        encode gzip
+        reverse_proxy 127.0.0.1:12345
     }
   '';
 
