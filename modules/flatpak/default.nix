@@ -50,10 +50,15 @@ in {
         ];
       };
       "com.qq.QQ".Context.sockets = [
-        "x11"
+        "!x11"
         "wayland"
         "!fallback-x11"
-      ]; # No Wayland support
+      ];
+      "com.tencent.WeChat".Context.sockets = [
+        "!x11"
+        "wayland"
+        "!fallback-x11"
+      ];
     };
 
     services.flatpak.packages = [
