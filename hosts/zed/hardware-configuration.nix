@@ -24,9 +24,7 @@
     "brd.rd_nr=1"
     "brd.rd_size=11240000"
     # "console=ttyS0"
-    "amdgpu.dcdebugmask=0x10"
-    "amdgpu.cwsr_enable=0"
-    "amdgpu.runpm=0"
+    "psi=1"
   ];
 
   boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore-zen4;

@@ -15,7 +15,8 @@ in {
 
   config = mkIf cfg.enable {
     # must set zfs set acltype=posixacl ...
-    virtualisation.waydroid.enable = true;
+    services.waydroid-nvidia.enable = true;
+    services.waydroid-nvidia.refreshRate = 120; # 你的显示器刷新率
 
     environment.systemPackages = with pkgs; [
       android-tools

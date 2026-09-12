@@ -109,6 +109,11 @@
     };
 
     denial-nixos.url = "github:pharra/nixos-denial-compositor-flake-config";
+
+    waydroid-nvidia-nix = {
+      url = "github:yigexuanmu/waydroid-nvidia-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -162,6 +167,10 @@
         dms-plugin-registry.nixosModules.default
         inputs.noctalia-greeter.nixosModules.default
         inputs.denial-nixos.nixosModules.default
+        inputs.waydroid-nvidia-nix.nixosModules.waydroid-nvidia
+        {
+          services.waydroid-nvidia.package = inputs.waydroid-nvidia-nix.packages.x86_64-linux.waydroid-nvidia-full;
+        }
       ]
       ++ (builtins.attrValues modules)
       ++ [
