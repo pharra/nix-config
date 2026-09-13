@@ -25,7 +25,7 @@
   virtualisation.oci-containers.backend = "podman";
 
   # Containers
-  virtualisation.oci-containers.containers."mybili-mybili" = {
+  virtualisation.oci-containers.containers."mybili" = {
     image = "docker.io/pharra/mybili:latest";
     environment = {
       "DB_CONNECTION" = "sqlite";
@@ -46,7 +46,7 @@
       "--network=mybili_default"
     ];
   };
-  systemd.services."podman-mybili-mybili" = {
+  systemd.services."podman-mybili" = {
     serviceConfig = {
       Restart = lib.mkOverride 90 "always";
     };

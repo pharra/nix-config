@@ -113,7 +113,7 @@
   virtualisation.oci-containers.backend = "podman";
 
   # Containers
-  virtualisation.oci-containers.containers."caddy-caddy" = {
+  virtualisation.oci-containers.containers."caddy" = {
     image = "ghcr.io/caddybuilds/caddy-cloudflare:latest";
     volumes = [
       "${config.sops.templates."Caddyfile".path}:/etc/caddy/Caddyfile:rw"
@@ -126,7 +126,7 @@
       "--network=host"
     ];
   };
-  systemd.services."podman-caddy-caddy" = {
+  systemd.services."podman-caddy" = {
     serviceConfig = {
       Restart = lib.mkOverride 90 "always";
     };
