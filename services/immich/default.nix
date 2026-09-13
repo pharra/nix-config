@@ -31,10 +31,7 @@
 
   # Containers
   virtualisation.oci-containers.containers."immich_machine_learning" = {
-    image = "ghcr.io/immich-app/immich-machine-learning:v3.1.0-cuda";
-    environmentFiles = [
-      config.sops.secrets."immich.env".path
-    ];
+    image = "ghcr.io/immich-app/immich-machine-learning:v3-cuda";
     volumes = [
       "immich_model-cache:/cache:rw"
     ];
@@ -69,6 +66,10 @@
     environmentFiles = [
       config.sops.secrets."immich.env".path
     ];
+    environment = {
+      "DB_STORAGE_TYPE" = "SSD";
+      "POSTGRES_INITDB_ARGS" = "--data-checksums";
+    };
     volumes = [
       "/home/wf/Data/immich/postgres:/var/lib/postgresql/data:rw"
     ];
@@ -76,6 +77,7 @@
     extraOptions = [
       "--network-alias=database"
       "--network=immich_default"
+      "--shm-size=134217728"
     ];
   };
   systemd.services."podman-immich_postgres" = {
@@ -97,9 +99,6 @@
   };
   virtualisation.oci-containers.containers."immich_redis" = {
     image = "docker.io/valkey/valkey:9@sha256:4963247afc4cd33c7d3b2d2816b9f7f8eeebab148d29056c2ca4d7cbc966f2d9";
-    environmentFiles = [
-      config.sops.secrets."immich.env".path
-    ];
     log-driver = "journald";
     extraOptions = [
       "--health-cmd=redis-cli ping || exit 1"
@@ -125,15 +124,15 @@
     ];
   };
   virtualisation.oci-containers.containers."immich_server" = {
-    image = "ghcr.io/immich-app/immich-server:v3.1.0";
-    environmentFiles = [
-      "/home/wf/Data/immich/.env"
-    ];
+    image = "ghcr.io/immich-app/immich-server:v3";
+    environment = {
+      "TZ" = "Asia/Shanghai";
+    };
     volumes = [
       "/etc/localtime:/etc/localtime:ro"
       "/home/wf/Data/immich/geodata:/build/geodata:rw"
       "/home/wf/Data/immich/i18n-iso-countries/langs:/usr/src/app/node_modules/i18n-iso-countries/langs:rw"
-      "/home/wf/Data/immich/library:/usr/src/app/upload:rw"
+      "/home/wf/Data/immich/library:/data:rw"
       "/share/sftp:/sftp:ro"
     ];
     ports = [
