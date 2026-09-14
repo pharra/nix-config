@@ -46,12 +46,10 @@ in {
           # Simply enable plugins by their ID (from the registry)
           linuxWallpaperEngine.enable = true; # Wallpaper engine for Linux (linux-wallpaper-engine)
         };
-        enableSystemMonitoring = true; # System monitoring widgets (dgop)
         enableVPN = true; # VPN management widget
         enableDynamicTheming = true; # Wallpaper-based theming (matugen)
         enableAudioWavelength = true; # Audio visualizer (cava)
         enableCalendarEvents = true; # Calendar integration (khal)
-        enableClipboardPaste = true; # Pasting from the clipboard history (wtype)
       };
 
       noctalia = mkIf (cfg.variant == "noctalia") {
@@ -95,11 +93,9 @@ in {
       }
     '';
 
-    programs.noctalia-greeter = mkIf (cfg.variant == "noctalia") {
+    services.displayManager.noctalia-greeter = mkIf (cfg.variant == "noctalia") {
       enable = true;
 
-      # Optional configuration
-      greeter-args = "";
       settings = {
         cursor = {
           theme = "Bibata-Modern-Ice";

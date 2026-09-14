@@ -93,11 +93,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    noctalia-greeter = {
-      url = "github:noctalia-dev/noctalia-greeter";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     niri-glass = {
       url = "github:zaroutt/Niri-glass";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -108,7 +103,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    denial-nixos.url = "github:pharra/nixos-denial-compositor-flake-config";
+    denial-nixos.url = "github:BeyondtheApex/nixos-denial-compositor-flake-config";
 
     waydroid-nvidia-nix = {
       url = "github:yigexuanmu/waydroid-nvidia-nix";
@@ -165,7 +160,6 @@
         sops-nix.nixosModules.sops
         agenix.nixosModules.default
         dms-plugin-registry.nixosModules.default
-        inputs.noctalia-greeter.nixosModules.default
         inputs.denial-nixos.nixosModules.default
         inputs.waydroid-nvidia-nix.nixosModules.waydroid-nvidia
         {
