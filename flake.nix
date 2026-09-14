@@ -358,8 +358,7 @@
         then {
           desktopShell = {
             enable = true;
-            variant = "dms";
-            compositor = "niri";
+            variant = "noctalia";
           };
         }
         else if build == "denial"

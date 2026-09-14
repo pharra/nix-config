@@ -19,20 +19,27 @@ in {
       };
 
       compositor = mkOption {
-        type = types.enum ["niri" "hyprland"];
-        default = "niri";
-        description = "The Wayland compositor to use with this shell profile (niri or hyprland).";
+        type = types.enum ["niri" "umbriel"];
+        description = "The Wayland compositor to use with this shell profile (niri or umbriel).";
       };
     };
   };
 
   config = mkIf cfg.enable {
+    services.pharra.desktopShell.compositor =
+      if (cfg.variant == "dms")
+      then "niri"
+      else if (cfg.variant == "noctalia")
+      then "umbriel"
+      else throw "Invalid desktop shell variant: ${cfg.variant}";
     programs = {
       niri = mkIf (cfg.compositor == "niri") {
         enable = true;
         package = pkgs.niri-glass;
       };
-      hyprland.enable = cfg.compositor == "hyprland";
+      umbriel = mkIf (cfg.compositor == "umbriel") {
+        enable = true;
+      };
 
       dms-shell = mkIf (cfg.variant == "dms") {
         enable = true;
@@ -68,30 +75,32 @@ in {
       configHome = "/home/${username}";
     };
 
-    environment.etc."nvidia/nvidia-application-profiles-rc.d/50-limit-free-buffer-pool-in-wayland-compositors.json".text = mkIf (cfg.compositor == "niri") ''
-      {
-        "rules": [
-          {
-            "pattern": {
-              "feature": "procname",
-              "matches": "niri"
-            },
-            "profile": "Limit Free Buffer Pool On Wayland Compositors"
-          }
-        ],
-        "profiles": [
-          {
-            "name": "Limit Free Buffer Pool On Wayland Compositors",
-            "settings": [
-              {
-                "key": "GLVidHeapReuseRatio",
-                "value": 0
-              }
-            ]
-          }
-        ]
-      }
-    '';
+    environment.etc."nvidia/nvidia-application-profiles-rc.d/50-limit-free-buffer-pool-in-wayland-compositors.json" = mkIf (cfg.compositor == "niri") {
+      text = ''
+        {
+          "rules": [
+            {
+              "pattern": {
+                "feature": "procname",
+                "matches": "niri"
+              },
+              "profile": "Limit Free Buffer Pool On Wayland Compositors"
+            }
+          ],
+          "profiles": [
+            {
+              "name": "Limit Free Buffer Pool On Wayland Compositors",
+              "settings": [
+                {
+                  "key": "GLVidHeapReuseRatio",
+                  "value": 0
+                }
+              ]
+            }
+          ]
+        }
+      '';
+    };
 
     services.displayManager.noctalia-greeter = mkIf (cfg.variant == "noctalia") {
       enable = true;
