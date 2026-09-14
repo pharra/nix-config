@@ -58,7 +58,6 @@ in {
     };
 
   services.mihomo.enable = true;
-  networking.nftables.enable = lib.mkForce false;
 
   # 使用 ZFS 模块配置基础支持
   services.zfs-config = {
