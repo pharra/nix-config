@@ -74,6 +74,16 @@ in {
       ];
     };
 
+    users.users.root = {
+      openssh.authorizedKeys.keys = [
+        # homelab
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPsMIjAmPitKTYN83DxrN/D783BTMkknEuwMeO5s0ABw wf@homelab"
+
+        # zed
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAlUm683W8j3fmwb3akIqDSyfHbbKiqK8OdSb5RTxYYS wf@zed"
+      ];
+    };
+
     # DO NOT promote the specified user to input password for `nix-store` and `nix-copy-closure`
     security.sudo.extraRules = [
       {

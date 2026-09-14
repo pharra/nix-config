@@ -93,7 +93,7 @@ in {
       ports = [22];
       settings = {
         X11Forwarding = true;
-        PermitRootLogin = "no"; # disable root login
+        PermitRootLogin = "prohibit-password"; # disable root login
         PasswordAuthentication = true; # enable password login
       };
       openFirewall = true;
