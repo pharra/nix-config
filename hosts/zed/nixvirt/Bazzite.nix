@@ -101,7 +101,7 @@ in {
                   type = "spice";
                   autoport = true;
                   listen = {type = "address";};
-                  image = {compression = false;};
+                  image = {compression = "off";};
                   gl = {enable = false;};
                 };
                 hostdev = [
