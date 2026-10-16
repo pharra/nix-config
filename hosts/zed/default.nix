@@ -25,6 +25,7 @@ in {
   ];
 
   services.pharra = {
+    nix-access-token.enable = true;
     impermanence.enable = true;
     desktop.enable = true;
     virtualisation.enable = true;

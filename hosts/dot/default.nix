@@ -29,6 +29,7 @@ in {
   ];
 
   services.pharra = {
+    nix-access-token.enable = true;
     desktop.enable = true;
   };
 

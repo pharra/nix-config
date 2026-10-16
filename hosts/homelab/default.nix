@@ -48,6 +48,7 @@ in {
   ];
 
   services.pharra = {
+    nix-access-token.enable = true;
     desktop.enable = false;
     common.enable = true;
     impermanence.enable = true;
