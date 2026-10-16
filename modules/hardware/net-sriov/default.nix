@@ -11,13 +11,16 @@ in {
     enable = mkEnableOption "Enable Net SR-IOV";
 
     interfaces = lib.mkOption {
+      description = "要开启 SR-IOV 的网卡列表";
       type = with types;
         listOf (submodule {
           options = {
             number = mkOption {
+              description = "这个网卡上要开出的 VF 数量";
               type = int;
             };
             name = mkOption {
+              description = "网卡名，用于生成 systemd 单元";
               type = str;
             };
           };

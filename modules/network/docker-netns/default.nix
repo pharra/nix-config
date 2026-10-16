@@ -10,29 +10,35 @@ with lib; let
 in {
   options.services.pharra.docker-netns = {
     enable = mkOption {
+      description = "是否把 docker 容器放进独立 netns";
       type = types.bool;
       default = false;
     };
 
     autoConfigureBridge = mkOption {
+      description = "是否自动创建并配置 docker 网桥（用外部网关时设 false）";
       type = types.bool;
       default = true;
     };
 
     dockerBridge = mkOption {
+      description = "docker 使用的网桥名";
       default = "docker";
       type = types.str;
     };
 
     dockerGateway = mkOption {
+      description = "容器侧的默认网关地址";
       default = "172.17.254.1";
       type = types.str;
     };
     dockerHostIP = mkOption {
+      description = "宿主机在 docker 网段里的地址";
       default = "172.17.254.2";
       type = types.str;
     };
     netns = mkOption {
+      description = "netns 名字，决定 veth 与 systemd 单元名";
       default = "docker";
       type = types.str;
     };

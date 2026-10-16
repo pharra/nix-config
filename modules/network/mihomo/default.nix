@@ -18,16 +18,19 @@ in {
   ];
 
   options.services.mihomo.config = mkOption {
+    description = "mihomo(clash-meta) 的配置内容，字段直接对应它的 config.yaml";
     default = {};
     type = types.submodule {
       freeformType = format.type;
       options = {
         tun = {
           enable = mkOption {
+            description = "是否开启 tun 模式（默认跟随 services.mihomo.tunMode）";
             default = config.services.mihomo.tunMode;
             type = types.bool;
           };
           device = mkOption {
+            description = "tun 设备名";
             default = "utun0";
             type = types.str;
           };

@@ -16,6 +16,7 @@
 in {
   options.services.pharra.ddns-go = {
     enable = mkOption {
+      description = "是否启用 ddns-go";
       type = types.bool;
       default = false;
     };

@@ -32,10 +32,12 @@ in {
           description = "自建 DERP 的域名";
         };
         port = mkOption {
+          description = "DERP 服务端口";
           type = types.port;
           default = 22079;
         };
         stunPort = mkOption {
+          description = "DERP 的 STUN 端口";
           type = types.port;
           default = 3478;
         };

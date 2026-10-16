@@ -13,6 +13,7 @@ in {
     enable = mkEnableOption "MLX5 Configuration";
 
     interfaces = lib.mkOption {
+      description = "要交给 mlx5 管理的网卡名";
       type = types.listOf types.str;
       default = [];
     };
