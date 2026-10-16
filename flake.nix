@@ -1,5 +1,5 @@
 {
-  description = "NixOS & macOS configuration of Ryan Yin";
+  description = "NixOS configuration of pharra - multi-host, multi-desktop-variant flake";
 
   ##################################################################################################################
   #
