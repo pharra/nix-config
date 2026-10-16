@@ -20,6 +20,16 @@
   overlays = import ../overlay.nix;
   overlay = import ../overlays;
 
+  # 全局 NixOS 模块列表：这里的模块会在**每个**配置里求值（全有或全无）。
+  #
+  # 放什么：只放"所有机器都必须有它的选项"的基础设施（秘密、持久化、虚拟化、flatpak 这类）。
+  # 不放什么：只在部分机器上用的功能模块 —— 那种应该在 host 里写
+  #          imports = [inputs.<名字>.nixosModules.default];
+  #          （specialArgs 里已经有 inputs，见下面的 commonSpecialArgs）
+  #
+  # 加进来之前务必确认它的选项路径不与 nixpkgs 冲突：boot.iscsi-initiator 就撞过车，
+  # 本地副本只好改叫 boot.iscsi-root（见 modules/boot/iscsi-root/default.nix 的注释）。
+  # 完整流程见 docs/EXTENDING.md 的「加一个上游（GitHub）flake 模块」。
   common-nixos-modules =
     [
       impermanence.nixosModules.impermanence
