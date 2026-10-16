@@ -135,9 +135,11 @@
       });
 
     # 构建逻辑在 lib/，host 数据在 hosts/registry.nix
-    nixosConfigurations = (import ./lib {inherit inputs username;}).nixosConfigurations;
+    ctx = import ./lib {inherit inputs username;};
+    nixosConfigurations = ctx.nixosConfigurations;
+    ciMatrix = ctx.ciMatrix;
   in {
-    inherit nixosConfigurations legacyPackages;
+    inherit nixosConfigurations legacyPackages ciMatrix;
 
     apps = forAllSystems (system: (nixinate.nixinate.${system} self).nixinate);
 

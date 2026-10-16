@@ -57,19 +57,33 @@ jobs:
       - name: "deadnix"
         run: nix run nixpkgs#deadnix -- .
 
+  # 构建矩阵由 flake 输出 ciMatrix 派生（数据来自 hosts/registry.nix 的 ci 字段），
+  # 所以"加一台机器要不要进 CI"只在 registry 里标注，不用改这个 workflow。
+  matrix:
+    name: "Build matrix 🧮"
+    runs-on: ubuntu-latest
+    outputs:
+      configs: ${{ steps.set.outputs.configs }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: "Install Nix ❄️"
+        uses: cachix/install-nix-action@v31.11.0
+
+      - name: "Read ciMatrix from the flake"
+        id: set
+        run: echo "configs=$(nix eval --json .#ciMatrix --accept-flake-config)" >> "$GITHUB_OUTPUT"
+
   # 编译矩阵：只挑少量代表性配置真正构建（内核 / 服务器 / 桌面 / 网络启动各一），
   # 其余配置由上面的 eval 任务兜底。
   build:
     name: "Build ${{ matrix.config_name }} ❄️"
+    needs: matrix
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        config_name:
-          - dot_wm.config.system.build.kernel
-          - azure_base.config.system.build.toplevel
-          - homelab_base.config.system.build.toplevel
-          - zed_net_wm.config.system.build.toplevel
+        config_name: ${{ fromJSON(needs.matrix.outputs.configs) }}
 
     steps:
       - uses: actions/checkout@v7
