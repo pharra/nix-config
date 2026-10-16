@@ -178,9 +178,7 @@ nix build .#packages.x86_64-linux.azure-x64
 
 ## CI
 
-`.github/workflows/nixos.yml`：
+`.github/workflows/nixos.yml` 只有一个 `build` 任务：编译 4 个代表性配置（内核 / 服务器 / 桌面 / 网络启动各一）。
 
-- `eval`：全量 24 个配置求值（PR 阶段就能发现某个 host/build 组合被改坏）
-- `format`：`nix fmt -- --check .`
-- `lint`：statix + deadnix，目前仓库还有既存告警，故只报告不阻断
-- `build`：4 个代表性配置真正编译（内核 / 服务器 / 桌面 / 网络启动各一），其余由 `eval` 兜底
+配置名硬写在 workflow 的矩阵里 —— **加一台机器想让 CI 编译它，要改那个文件**。
+

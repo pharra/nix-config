@@ -16,8 +16,6 @@
 
   {
     name = "azure";
-    # CI 里编译 x86_64 的完整系统（azure_arm 同目录，但不重复编译）
-    ci = {builds = ["base"];};
     builds = ["base"];
     nixos-modules = [./azure];
     system = "x86_64-linux";
@@ -26,11 +24,6 @@
   # dot
   {
     name = "dot";
-    # CI 里只编译 wm 变体的内核（便宜的冒烟测试）
-    ci = {
-      builds = ["wm"];
-      target = "kernel";
-    };
     builds = ["kde" "gnome" "cosmic" "wm"];
     hostname = "192.168.254.240";
     nixos-modules = [./dot inputs.nixos-hardware.nixosModules.microsoft-surface-common];
@@ -59,7 +52,6 @@
   # zed_netboot
   {
     name = "zed_net";
-    ci = {builds = ["wm"];};
     builds = ["kde" "gnome" "cosmic" "wm"];
     hostname = "zed";
     system = "x86_64-linux";
@@ -73,7 +65,6 @@
   # homelab
   {
     name = "homelab";
-    ci = {builds = ["base"];};
     nixos-modules = [
       ./homelab
     ];

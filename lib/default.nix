@@ -78,14 +78,6 @@
   base_args = {inherit home-manager;};
   stable_args = base_args // {inherit nixpkgs;};
 
-  # CI 构建矩阵：由 hosts/registry.nix 的 ci 字段派生（加机器只需改 registry，不用动 workflow）
-  ciMatrix = builtins.concatMap (machine: let
-    ci = machine.ci or {};
-  in
-    map (build: "${machine.name}_${build}.config.system.build.${ci.target or "toplevel"}")
-    (ci.builds or []))
-  hosts;
-
   nixosConfigurations = builtins.listToAttrs (builtins.concatLists (builtins.map (machine:
     builtins.map (build: {
       name = "${machine.name}_${build}";
@@ -124,5 +116,5 @@
     machine.builds)
   hosts));
 in {
-  inherit nixosConfigurations ciMatrix;
+  inherit nixosConfigurations;
 }

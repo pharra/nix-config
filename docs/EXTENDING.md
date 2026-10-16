@@ -33,7 +33,7 @@ build 变体复用 `lib/variants.nix` 里已有的那 6 个。想知道某个设
 | 解密 sops 秘密 | `.sops.yaml` 的 `creation_rules` 里加这台机器的 age key（`ssh-to-age < /etc/ssh/ssh_host_ed25519_key.pub`） |
 | 解密 agenix 秘密 | `secrets/agenix/secrets.nix` 里加它的 ssh host key，并把要用的秘密 `publicKeys` 带上它 |
 | 用 nix 的 GitHub token | 只在自己的 host 文件里加一行 `services.pharra.nix-access-token.enable = true;` |
-| 让 CI 真正编译它 | 改 `hosts/registry.nix`（给这条加 `ci = true` 或 `ci = ["kde"]`）——不用动 workflow |
+| 让 CI 真正编译它 | 改 `.github/workflows/nixos.yml` 里 `build` 任务的矩阵（目前是硬写的 4 项） |
 | 网络启动（像 zed_net） | 见 [`netboot.md`](netboot.md)（宿主侧 homelab、guest 侧 zed 的完整链路） |
 
 ### 加完机器后建议做的两件事
