@@ -1,3 +1,4 @@
+# 休眠模块：modules/core/desktop 里显式 services.pharra.audio-relay.enable = false。
 {
   pkgs,
   config,

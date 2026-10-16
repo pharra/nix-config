@@ -1,3 +1,4 @@
+# 休眠模块：hosts/homelab 里显式 services.pharra.openwrt.enable = false。
 {
   pkgs,
   lib,

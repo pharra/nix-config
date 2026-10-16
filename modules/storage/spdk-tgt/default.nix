@@ -1,3 +1,4 @@
+# 休眠模块：当前没有任何配置启用（homelab 用的是容器版 storage/spdk-container）。
 {
   config,
   lib,

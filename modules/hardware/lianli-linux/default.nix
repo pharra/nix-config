@@ -1,3 +1,4 @@
+# 休眠模块：hosts/zed/hardware-configuration.nix 里显式 hardware.lianli-linux.enable = false。
 {
   config,
   pkgs,

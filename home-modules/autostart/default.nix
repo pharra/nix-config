@@ -1,3 +1,4 @@
+# 休眠模块：当前没有任何 home 配置启用 home.pharra.autostart。
 {
   config,
   lib,

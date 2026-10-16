@@ -1,3 +1,4 @@
+# 休眠模块：hosts/homelab/hardware-configuration.nix 配置了参数，但 hardware.mlx4.enable 从没开过（配了不生效）。
 {
   lib,
   pkgs,

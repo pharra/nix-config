@@ -1,3 +1,4 @@
+# 休眠模块：它的取值跟随 services.pharra.openwrt.enable，所以跟着 openwrt 一起关着。
 {
   pkgs,
   lib,
