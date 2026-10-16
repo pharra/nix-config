@@ -47,7 +47,13 @@
       }
     ];
 
-  mysecrets = ../secrets/agenix;
+  # 只把密文本身纳入 store：这个路径会被 ${mysecrets}/xxx.age 插值成 store 路径，
+  # 不过滤的话，secrets/agenix/ 里的文档改动也会改变 drvPath（azure/homelab 共 7 个配置）。
+  mysecrets = lib.cleanSourceWith {
+    name = "agenix-secrets";
+    src = ../secrets/agenix;
+    filter = path: type: lib.hasSuffix ".age" path || lib.hasSuffix ".env" path;
+  };
 
   commonSpecialArgs = {
     inherit username mysecrets home-modules NixVirt agenix inputs;
