@@ -3,6 +3,7 @@
 {
   lib,
   inputs,
+  netboot,
   mkZedGuest,
 }: [
   # azure
@@ -56,31 +57,8 @@
     system = "x86_64-linux";
     nixos-modules = [
       ./zed
-      {
-        services.zfs-config.poolName = lib.mkForce "zed_net";
-
-        services.nvmf-root = {
-          enable = true;
-          interface = ["mlx5_0"];
-          nvmf = {
-            enable = true;
-            transport = "rdma";
-            target = "nqn.2016-06.io.spdk:zed_net";
-            address = "192.168.29.1";
-            port = 4420;
-          };
-          iscsi = {
-            enable = true;
-            initiatorName = "iqn.2020-08.org.linux-iscsi.initiatorhost:zed_net";
-            discoveryAddress = "192.168.29.1";
-            targetName = "iqn.2016-06.io.spdk:zednetefi";
-          };
-          network = {
-            dhcp = "ipv4";
-          };
-        };
-        fileSystems."/boot/efi".device = lib.mkForce "/dev/disk/by-label/zednetefi";
-      }
+      (netboot.nvmfRoot {iscsi = netboot.iscsiBoot;})
+      netboot.efiFromIscsi
     ];
   }
 

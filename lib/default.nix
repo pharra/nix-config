@@ -9,6 +9,7 @@
   inherit (nixpkgs) lib;
 
   nixosSystem = import ./nixosSystem.nix;
+  netboot = import ./netboot.nix {inherit lib;};
   variants = import ./variants.nix {inherit lib;};
 
   modules = import ../modules;
@@ -50,10 +51,10 @@
   };
 
   mkZedGuest = import ./mkZedGuest.nix {
-    inherit nixosSystem common-nixos-modules commonSpecialArgs variants username;
+    inherit nixosSystem common-nixos-modules commonSpecialArgs netboot variants username;
   };
 
-  hosts = import ../hosts/registry.nix {inherit lib inputs mkZedGuest;};
+  hosts = import ../hosts/registry.nix {inherit lib inputs netboot mkZedGuest;};
 
   base_args = {inherit home-manager;};
   stable_args = base_args // {inherit nixpkgs;};

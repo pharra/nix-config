@@ -4,6 +4,7 @@
   nixosSystem,
   common-nixos-modules,
   commonSpecialArgs,
+  netboot,
   variants,
   username,
 }: {
@@ -20,48 +21,9 @@ nixosSystem {
     ++ common-nixos-modules
     ++ [
       (variants.nixosModule "kde")
-      {
-        services.nfs-root = {
-          enable = true;
-          interface = ["mlx5_0"];
-          nfs = {
-            rootPath = "/system/zed/nix";
-            transport = "rdma";
-            multipathPeers = [
-              {
-                clientIp = "192.168.29.2";
-                serverIp = "192.168.29.1";
-              }
-              # {
-              #   clientIp = "192.168.254.2";
-              #   serverIp = "192.168.254.5";
-              # }
-            ];
-          };
-        };
-
-        services.nvmf-root = {
-          enable = true;
-          interface = ["mlx5_0"];
-          nvmf = {
-            enable = true;
-            transport = "rdma";
-            target = "nqn.2016-06.io.spdk:zed_net";
-            address = "192.168.29.1";
-            port = 4420;
-          };
-          iscsi = {
-            enable = false;
-          };
-          network = {
-            dhcp = "ipv4";
-          };
-        };
-
-        services.zfs-config.poolName = nixpkgs.lib.mkForce "zed_net";
-
-        fileSystems."/boot/efi".enable = nixpkgs.lib.mkForce false;
-      }
+      netboot.nfsRoot
+      (netboot.nvmfRoot {})
+      netboot.disableEfi
     ];
   home-module = variants.mkHomeModule username "kde";
 }
