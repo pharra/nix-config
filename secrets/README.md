@@ -1,143 +1,49 @@
+# Secrets 管理
 
-# Secrets Management
+本仓库有两套秘密管理并存，**密文都在仓库内**（不再依赖外部私有仓库）：
 
-All my secrets are safely encrypted via agenix, and stored in a separate private GitHub repository and referenced as a flake input in this flake.
+| 系统 | 用途 | 密文位置 | CLI |
+| --- | --- | --- | --- |
+| **sops-nix** | 主力方案，新增秘密优先用它 | `secrets/*.yaml`、`services/<name>/<name>.env\|json` | `sops` |
+| **agenix** | 历史遗留（tailscale / restic / rclone / caddy / xray 等） | `secrets/agenix/*.age` | `agenix` |
 
-In this way, all secrets is still encrypted when transmitted over the network and written to `/nix/store`,
-they are decrypted only when they are finally used.
+两者都是同一原则：传输过程与 `/nix/store` 里都是密文，只在最终落地时解密。
 
-In addition, we further improve the security of secrets files by storing them in a separate private repository.
+## 为什么有两套
 
-This directory contains this README.md, and a `default.nix` that used to decrypt all my secrets via agenix, and then I can use them in this flake.
+agenix 是先用的方案。后来服务变多，`services/` 下 compose2nix 生成的 `*.env` / `*.json`
+更适合用 sops（可以只改其中一个字段，而 agenix 是整文件加密）。
+旧秘密没有迁移：迁移必须先解密（需要各机器的 age / ssh 私钥），收益不大，风险却更高。
 
-## Adding or Updating Secrets
+## sops-nix（推荐）
 
-> All the operations in this section should be performed in my private repository: `nix-secrets`.
+- 加密对象与 recipient 定义在根目录 `.sops.yaml`（homelab / zed / dot 三个 age key）
+- 编辑：`sops secrets/default.yaml`（私钥可用 `SOPS_AGE_KEY_FILE` 指定）
+- NixOS 侧用法：`sops.secrets."<name>" = { sopsFile = ./xxx.yaml; format = "dotenv"; };`，
+  再引用 `config.sops.secrets."<name>".path`；需要模板替换时用 `config.sops.placeholder."<name>"`
+  - 例子：`services/reader/default.nix`（dotenv 作为容器 environmentFiles）
+  - 例子：`services/caddy/default.nix`（用 placeholder 渲染出 Caddyfile）
+- 解密身份：`secrets/nixos.nix` 里 `sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"]`
 
-This task is accomplished using the [agenix](https://github.com/ryantm/agenix) CLI tool with the `./secrets.nix` file, so you need to have it installed first:
+## agenix
 
-To use agenix temporarily, run:
+- `secrets/agenix/*.age`：整个文件加密
+- `secrets/agenix/secrets.nix` **只给 agenix CLI 用**，不参与 NixOS 求值，里面是各机器的 ssh host 公钥
+- 新增/修改：`nix shell nixpkgs#agenix`，然后 `agenix -e secrets/agenix/xxx.age`
+- NixOS 侧用法：模块里写 `age.secrets."xxx".file = "${mysecrets}/xxx.age";`，
+  其中 `mysecrets = ./secrets/agenix`，由 `lib/default.nix` 通过 `specialArgs` 传给所有模块
+- 解密身份：`secrets/agenix.nix` 的 `age.identityPaths`
+  （有 impermanence 时用 `/nix/persistent/home/<user>/.ssh/id_ed25519`，否则用 `/home/<user>/.ssh/id_ed25519`）
 
-```bash
-nix shell nixpkgs#agenix
-```
+## 当前没有被任何模块引用的秘密
 
-Suppose you want to add a new secret file `xxx.age`. Follow these steps:
+- `secrets/agenix/atticd.env`
+- `secrets/agenix/wireguard_homelab_private_key.age`（对应的 `nixos/wireguard-server` 模块也没有被任何 host 启用）
 
-1. Navigate to your private `nix-secrets` repository.
-2. Edit `secrets.nix` and add a new entry for `xxx.age`, defining the encryption keys and the secret file path, for example:
+先保留不删：它们已在 `secrets.nix` 注册，删除容易和密钥轮换流程混淆；要清理就单独一个提交处理。
 
-```nix
-# This file is not imported into your NixOS configuration. It is only used for the agenix CLI.
-# agenix use the public keys defined in this file to encrypt the secrets.
-# and users can decrypt the secrets by any of the corresponding private keys.
+## 注意事项
 
-let
-  # get user's ssh public key by command:
-  #     cat ~/.ssh/id_ed25519.pub
-  # if you do not have one, you can generate it by command:
-  #     ssh-keygen -t ed25519
-  ryan = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJx3Sk20pLL1b2PPKZey2oTyioODrErq83xG78YpFBoj";
-  users = [ ryan ];
-
-  # get system's ssh public key by command:
-  #    cat /etc/ssh/ssh_host_ed25519_key.pub
-  ai = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICGeXNCazqiqxn8TmbCRjA+pLWrxwenn+CFhizBMP6en root@ai";
-  systems = [ ai ];
-in
-{
-  "./xxx.age".publicKeys = users ++ systems;
-}
-```
-
-3. Create and edit the secret file `xxx.age` interactively using the following command:
-
-```shell
-agenix -e ./xxx.age
-```
-
-Alternatively, you can encrypt an existing file to `xxx.age` using the following command:
-
-```shell
-cat /path/to/xxx | agenix -e ./xxx.age
-```
-
-`agenix` will encrypt the file with all the public keys we defined in `secrets.nix`, 
-so all the users and systems defined in `secrets.nix` can decrypt it with their private keys.
-
-## Deploying Secrets
-
-> All the operations in this section should be performed in this repository.
-
-First, add your own private `nix-secrets` repository and `agenix` as a flake input, and pass them to sub modules via `specialArgs`:
-
-```nix
-{
-  inputs = {
-    # ......
-
-    # secrets management, lock with git commit at 2023/5/15
-    agenix.url = "github:ryantm/agenix/db5637d10f797bb251b94ef9040b237f4702cde3";
-
-    # my private secrets, it's a private repository, you need to replace it with your own.
-    mysecrets = { url = "github:ryan4yin/nix-secrets"; flake = false; };
-  };
-  
-  outputs = inputs@{ self, nixpkgs, ... }: {
-    nixosConfigurations = {
-      nixos-test = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-
-        # Set all input parameters as specialArgs of all sub-modules
-        # so that we can use the `agenix` & `mysecrets` in sub-modules
-        specialArgs = inputs;
-        modules = [
-          # ......
-
-          # import & decrypt secrets in `mysecrets` in this module
-          ./secrets/default.nix
-        ];
-      };
-    };
-  };
-}
-}
-```
-
-Then, create `./secrets/default.nix` with the following content:
-
-```nix
-# import & decrypt secrets in `mysecrets` in this module
-{ config, pkgs, agenix, mysecrets, ... }:
-
-{
-  imports = [
-     agenix.nixosModules.default
-  ];
-
-  # if you changed this key, you need to regenerate all encrypt files from the decrypt contents!
-  age.identityPaths = [ 
-    "/home/ryan/.ssh/juliet-age"
-  ];
-
-  age.secrets."xxx" = {
-    # wether secrets are symlinked to age.secrets.<name>.path
-    symlink = true;
-    # target path for decrypted file
-    path = "/etc/xxx/";
-    # encrypted file path
-    file =  "${mysecrets}/xxx.age";  # refer to ./xxx.age located in `mysecrets` repo
-    mode = "0400";
-    owner = "root";
-    group = "root";
-  };
-}
-```
-
-From now on, every time you run `nixos-rebuild switch`, it will decrypt the secrets using the private keys defined in `age.identityPaths`. 
-It will then symlink the secrets to the path defined by the `age.secrets.<name>.path` argument, which defaults to `/etc/secrets`.
-
-NOTE: By default, `age.identityPaths` is set to `~/.ssh/id_ed25519` and `~/.ssh/id_rsa`, 
-so make sure to place your decryption keys there.
-If you're deploying to the same machine from which you encrypted the secrets, it should work out of the box.
-
+- 不要提交明文；也不要把秘密放到外部私有仓库再当 flake input 引用（上游模板的旧做法，本仓库已改为全部 in-tree）
+- 改过 `.sops.yaml` 的 recipient 后要对已有文件跑 `sops updatekeys`，否则新机器解不开
+- 每个秘密的 recipient 决定"哪些机器能解密"，改密钥前先确认目标机器的 host key 已在列

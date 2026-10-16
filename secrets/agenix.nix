@@ -7,9 +7,8 @@
   lib,
   ...
 }: {
-  imports = [
-    agenix.nixosModules.default
-  ];
+  # 注意：这里不再 imports agenix.nixosModules.default ——
+  # lib/default.nix 的 common-nixos-modules 已经对所有配置加过一次，重复 import 只是噪音。
 
   environment.systemPackages = [
     agenix.packages."${pkgs.system}".default
