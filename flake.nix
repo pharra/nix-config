@@ -119,21 +119,11 @@
   outputs = inputs @ {
     self,
     nixpkgs,
-    home-manager,
-    impermanence,
-    nix-flatpak,
-    NixVirt,
-    nixos-hardware,
-    sops-nix,
-    agenix,
     nixinate,
-    dms-plugin-registry,
     ...
   }: let
     username = "wf";
     allSystems = ["x86_64-linux" "aarch64-linux"];
-
-    nixosSystem = import ./lib/nixosSystem.nix;
 
     forAllSystems = f: nixpkgs.lib.genAttrs allSystems (system: f system);
     legacyPackages = forAllSystems (system:
@@ -144,280 +134,19 @@
         };
       });
 
-    overlays = import ./overlay.nix;
-    overlay = import ./overlays;
-
-    modules = import ./modules;
-    _home-modules = import ./home-modules;
-    home-modules =
-      [] ++ (builtins.attrValues _home-modules);
-
-    common-nixos-modules =
-      [
-        impermanence.nixosModules.impermanence
-        nix-flatpak.nixosModules.nix-flatpak
-        NixVirt.nixosModules.default
-        sops-nix.nixosModules.sops
-        agenix.nixosModules.default
-        dms-plugin-registry.nixosModules.default
-        inputs.denial-nixos.nixosModules.default
-        inputs.waydroid-nvidia-nix.nixosModules.waydroid-nvidia
-        {
-          services.waydroid-nvidia.package = inputs.waydroid-nvidia-nix.packages.x86_64-linux.waydroid-nvidia-full;
-        }
-      ]
-      ++ (builtins.attrValues modules)
-      ++ [
-        {
-          nixpkgs.overlays =
-            [
-              overlays
-              inputs.niri-glass.overlays.default
-              inputs.nix-cachyos-kernel.overlays.default
-            ]
-            ++ builtins.attrValues overlay;
-        }
-      ];
-
-    mysecrets = ./secrets/agenix;
-
-    commonSpecialArgs = {
-      inherit username mysecrets home-modules NixVirt agenix inputs;
-    };
-    base_args = {
-      inherit home-manager;
-    };
-    stable_args = base_args // {inherit nixpkgs;};
-
-    hosts = [
-      # azure
-      {
-        name = "azure_arm";
-        builds = ["base"];
-        nixos-modules = [./hosts/azure];
-        system = "aarch64-linux";
-      }
-
-      {
-        name = "azure";
-        builds = ["base"];
-        nixos-modules = [./hosts/azure];
-        system = "x86_64-linux";
-      }
-
-      # dot
-      {
-        name = "dot";
-        builds = ["kde" "gnome" "cosmic" "wm"];
-        hostname = "192.168.254.240";
-        nixos-modules = [./hosts/dot nixos-hardware.nixosModules.microsoft-surface-common];
-        system = "x86_64-linux";
-      }
-
-      # gs65
-      {
-        name = "gs65";
-        builds = ["kde" "gnome" "cosmic" "wm"];
-        nixos-modules = [./hosts/gs65];
-        system = "x86_64-linux";
-      }
-
-      # zed
-      {
-        name = "zed";
-        builds = ["kde" "gnome" "cosmic" "wm" "denial"];
-        # hostname = "zed.local";
-        nixos-modules = [
-          ./hosts/zed
-        ];
-        system = "x86_64-linux";
-      }
-
-      # zed_netboot
-      {
-        name = "zed_net";
-        builds = ["kde" "gnome" "cosmic" "wm"];
-        hostname = "zed";
-        system = "x86_64-linux";
-        nixos-modules = [
-          ./hosts/zed
-          {
-            services.zfs-config.poolName = nixpkgs.lib.mkForce "zed_net";
-
-            services.nvmf-root = {
-              enable = true;
-              interface = ["mlx5_0"];
-              nvmf = {
-                enable = true;
-                transport = "rdma";
-                target = "nqn.2016-06.io.spdk:zed_net";
-                address = "192.168.29.1";
-                port = 4420;
-              };
-              iscsi = {
-                enable = true;
-                initiatorName = "iqn.2020-08.org.linux-iscsi.initiatorhost:zed_net";
-                discoveryAddress = "192.168.29.1";
-                targetName = "iqn.2016-06.io.spdk:zednetefi";
-              };
-              network = {
-                dhcp = "ipv4";
-              };
-            };
-            fileSystems."/boot/efi".device = nixpkgs.lib.mkForce "/dev/disk/by-label/zednetefi";
-          }
-        ];
-      }
-
-      # homelab
-      {
-        name = "homelab";
-        nixos-modules = [
-          ./hosts/homelab
-        ];
-        builds = ["kde" "gnome" "cosmic" "wm" "base"];
-        system = "x86_64-linux";
-        specialArgs = {
-          inherit nixpkgs home-manager;
-          # Pass a function to build zed guest system with NFS boot
-          mkZedGuest = {
-            nixpkgs,
-            home-manager,
-            ...
-          }:
-            nixosSystem {
-              inherit nixpkgs home-manager;
-              system = "x86_64-linux";
-              specialArgs = commonSpecialArgs;
-              nixos-modules =
-                [./hosts/zed]
-                ++ common-nixos-modules
-                ++ [
-                  (desktopModuleConfig "kde")
-                  {
-                    services.nfs-root = {
-                      enable = true;
-                      interface = ["mlx5_0"];
-                      nfs = {
-                        rootPath = "/system/zed/nix";
-                        transport = "rdma";
-                        multipathPeers = [
-                          {
-                            clientIp = "192.168.29.2";
-                            serverIp = "192.168.29.1";
-                          }
-                          # {
-                          #   clientIp = "192.168.254.2";
-                          #   serverIp = "192.168.254.5";
-                          # }
-                        ];
-                      };
-                    };
-
-                    services.nvmf-root = {
-                      enable = true;
-                      interface = ["mlx5_0"];
-                      nvmf = {
-                        enable = true;
-                        transport = "rdma";
-                        target = "nqn.2016-06.io.spdk:zed_net";
-                        address = "192.168.29.1";
-                        port = 4420;
-                      };
-                      iscsi = {
-                        enable = false;
-                      };
-                      network = {
-                        dhcp = "ipv4";
-                      };
-                    };
-
-                    services.zfs-config.poolName = nixpkgs.lib.mkForce "zed_net";
-
-                    fileSystems."/boot/efi".enable = nixpkgs.lib.mkForce false;
-                  }
-                ];
-              home-module = import ./home/kde.nix;
-            };
-        };
-      }
-    ];
-
-    generateNixosConfigurations = f: (machines: builtins.map (machine: f machine) machines);
-
-    # Generate desktop environment module configuration based on build type
-    desktopModuleConfig = build: {
-      services.pharra =
-        if build == "kde"
-        then {kde.enable = true;}
-        else if build == "gnome"
-        then {gnome.enable = true;}
-        else if build == "cosmic"
-        then {cosmic.enable = true;}
-        else if build == "wm"
-        then {
-          desktopShell = {
-            enable = true;
-            variant = "noctalia";
-          };
-        }
-        else if build == "denial"
-        then {denial.enable = true;}
-        else {
-          base.enable = true;
-        }; # base build - no desktop environment
-    };
-
-    machinesNixosConfigurations = builtins.listToAttrs (builtins.concatLists (generateNixosConfigurations (machine: let
-    in
-      builtins.map (build: {
-        name = "${machine.name}_${build}";
-        value = nixosSystem ({
-            nixos-modules =
-              machine.nixos-modules
-              ++ common-nixos-modules
-              ++ [
-                (desktopModuleConfig build)
-                {
-                  _module.args.nixinate = {
-                    host =
-                      if builtins.hasAttr "hostname" machine
-                      then machine.hostname
-                      else machine.name;
-                    sshUser = username;
-                    buildOn = "local"; # valid args are "local" or "remote"
-                    substituteOnTarget = true; # if buildOn is "local" then it will substitute on the target, "-s"
-                  };
-                }
-              ];
-            home-module = import ./home/${build}.nix;
-            system = machine.system;
-          }
-          // stable_args
-          // {
-            specialArgs = let
-              machineSpecialArgs =
-                if builtins.hasAttr "specialArgs" machine
-                then machine.specialArgs
-                else {};
-            in
-              commonSpecialArgs // machineSpecialArgs;
-          });
-      })
-      machine.builds)
-    hosts));
+    # 构建逻辑在 lib/，host 数据在 hosts/registry.nix
+    nixosConfigurations = (import ./lib {inherit inputs username;}).nixosConfigurations;
   in {
-    nixosConfigurations = machinesNixosConfigurations;
-    apps = forAllSystems (system: (nixinate.nixinate.${system} self).nixinate);
+    inherit nixosConfigurations legacyPackages;
 
-    inherit legacyPackages;
+    apps = forAllSystems (system: (nixinate.nixinate.${system} self).nixinate);
 
     packages = {
       "aarch64-linux" = {
-        azure-arm = machinesNixosConfigurations.azure_arm_base.config.system.build.azureImage;
+        azure-arm = nixosConfigurations.azure_arm_base.config.system.build.azureImage;
       };
       "x86_64-linux" = {
-        azure-x64 = machinesNixosConfigurations.azure_base.config.system.build.azureImage;
+        azure-x64 = nixosConfigurations.azure_base.config.system.build.azureImage;
       };
     };
 
