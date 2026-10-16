@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  username,
   ...
 }:
 with lib; let
@@ -10,6 +11,21 @@ in {
   options = {
     services.pharra.spdk-container = {
       enable = mkEnableOption "SPDK container";
+      coreMask = mkOption {
+        type = types.str;
+        default = "0x1";
+        description = "容器里 spdk_tgt 绑定的 CPU 掩码（-m）";
+      };
+      configFile = mkOption {
+        type = types.str;
+        default = "/home/${username}/spdk/rdma_config.json";
+        description = "容器里 spdk_tgt 的配置文件（-c）";
+      };
+      hostDataDir = mkOption {
+        type = types.str;
+        default = "/home/${username}/spdk";
+        description = "宿主机上放 spdk 配置的目录（挂进容器）";
+      };
     };
   };
 
@@ -23,11 +39,11 @@ in {
         "/dev/hugepages:/dev/hugepages:rw"
         "/dev/shm:/dev/shm:rw"
         "/dev/zvol:/dev/zvol:rw"
-        "/home/wf/spdk:/home/wf/spdk:rw"
+        "${cfg.hostDataDir}:${cfg.hostDataDir}:rw"
         "/proc:/proc:rw"
         "/var/tmp:/var/tmp:rw"
       ];
-      cmd = ["sh" "-x" "-c" "/usr/local/bin/spdk_tgt -m 0x1 -c /home/wf/spdk/rdma_config.json -S /var/tmp"];
+      cmd = ["sh" "-x" "-c" "/usr/local/bin/spdk_tgt -m ${cfg.coreMask} -c ${cfg.configFile} -S /var/tmp"];
       log-driver = "journald";
       extraOptions = [
         "--network=host"

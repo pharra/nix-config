@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  username,
   mysecrets,
   ...
 }:
@@ -12,6 +11,34 @@ in {
   options = {
     services.pharra.tailscale = {
       enable = mkEnableOption "tailscale VPN";
+
+      advertiseRoutes = mkOption {
+        type = types.listOf types.str;
+        default = ["192.168.254.0/24"];
+        description = "广播到 tailnet 的子网（--advertise-routes，逗号分隔）";
+      };
+
+      advertiseExitNode = mkOption {
+        type = types.bool;
+        default = true;
+        description = "是否把本机作为 exit node 广播";
+      };
+
+      derper = {
+        domain = mkOption {
+          type = types.str;
+          default = "tailscale.int4byte.com";
+          description = "自建 DERP 的域名";
+        };
+        port = mkOption {
+          type = types.port;
+          default = 22079;
+        };
+        stunPort = mkOption {
+          type = types.port;
+          default = 3478;
+        };
+      };
     };
   };
 
@@ -29,12 +56,15 @@ in {
       enable = true;
       useRoutingFeatures = "both";
       authKeyFile = config.age.secrets.tailscale_authkey.path;
-      extraUpFlags = ["--advertise-exit-node" "--accept-routes=true" "--accept-dns=true" "--advertise-routes=192.168.254.0/24"];
+      extraUpFlags =
+        optional cfg.advertiseExitNode "--advertise-exit-node"
+        ++ ["--accept-routes=true" "--accept-dns=true"]
+        ++ optional (cfg.advertiseRoutes != []) "--advertise-routes=${concatStringsSep "," cfg.advertiseRoutes}";
       derper = {
         enable = true;
-        domain = "tailscale.int4byte.com";
-        port = 22079;
-        stunPort = 3478;
+        domain = cfg.derper.domain;
+        port = cfg.derper.port;
+        stunPort = cfg.derper.stunPort;
         configureNginx = false;
       };
     };

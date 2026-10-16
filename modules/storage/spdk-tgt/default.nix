@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  username,
   ...
 }:
 with lib; let
@@ -10,6 +11,16 @@ in {
   options = {
     services.pharra.spdk-tgt = {
       enable = mkEnableOption "spdk service";
+      coreMask = mkOption {
+        type = types.str;
+        default = "0x30003";
+        description = "spdk_tgt 绑定的 CPU 掩码（-m）";
+      };
+      configFile = mkOption {
+        type = types.str;
+        default = "/home/${username}/spdk/rdma_config.json";
+        description = "spdk_tgt 的配置文件（-c）";
+      };
     };
   };
 
@@ -30,7 +41,7 @@ in {
           "${pkgs.spdk}/scripts/setup.sh"
           #"${pkgs.kmod}/bin/modprobe ublk_drv"
         ];
-        ExecStart = ''${pkgs.spdk}/bin/spdk_tgt -m 0x30003 -c /home/wf/spdk/rdma_config.json -f /var/run/spdk.pid -S /var/run'';
+        ExecStart = ''${pkgs.spdk}/bin/spdk_tgt -m ${cfg.coreMask} -c ${cfg.configFile} -f /var/run/spdk.pid -S /var/run'';
       };
     };
   };
