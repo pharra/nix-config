@@ -5,10 +5,10 @@
   ...
 }:
 with lib; let
-  cfg = config.services.autostart;
+  cfg = config.home.pharra.autostart;
 in {
   options = {
-    services.autostart = {
+    home.pharra.autostart = {
       enable = mkOption {
         default = false;
         description = ''
