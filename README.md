@@ -88,6 +88,11 @@ flake.nix                          只装配输出（nixosConfigurations / apps 
 6. 模块里不要硬编码宿主信息（用户名、家目录、网段、CPU 掩码）：用户名走 `specialArgs` 的 `username`，
    其余做成模块选项（例如 `network/tailscale.advertiseRoutes`、`storage/spdk-*.coreMask`）。
 
+## zed 的网络启动（netboot）
+
+zed 除了本地启动还有"从网络盘启动"的两条路径，横跨 `hosts/` `lib/` `modules/boot/` 三层，
+是最难一眼看懂的部分 —— 专门的说明见 [docs/netboot.md](docs/netboot.md)。
+
 ## 常用命令
 
 ```bash
