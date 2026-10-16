@@ -10,7 +10,7 @@ in {
     # Include the results of the hardware scan.
     ./system.nix
 
-    ./sever
+    ./server
 
     ../../secrets/agenix.nix
   ];

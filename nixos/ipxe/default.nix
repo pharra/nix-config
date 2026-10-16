@@ -2,7 +2,6 @@
   lib,
   pkgs,
   config,
-  libs,
   interface,
   netboot_args ? false,
   ...
