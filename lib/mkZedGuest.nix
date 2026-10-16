@@ -4,60 +4,64 @@
   nixosSystem,
   common-nixos-modules,
   commonSpecialArgs,
-  desktopModuleConfig,
-  home-module,
-}: {nixpkgs, home-manager, ...}:
-  nixosSystem {
-    inherit nixpkgs home-manager;
-    system = "x86_64-linux";
-    specialArgs = commonSpecialArgs;
-    nixos-modules =
-      [../hosts/zed]
-      ++ common-nixos-modules
-      ++ [
-        (desktopModuleConfig "kde")
-        {
-          services.nfs-root = {
-            enable = true;
-            interface = ["mlx5_0"];
-            nfs = {
-              rootPath = "/system/zed/nix";
-              transport = "rdma";
-              multipathPeers = [
-                {
-                  clientIp = "192.168.29.2";
-                  serverIp = "192.168.29.1";
-                }
-                # {
-                #   clientIp = "192.168.254.2";
-                #   serverIp = "192.168.254.5";
-                # }
-              ];
-            };
+  variants,
+  username,
+}: {
+  nixpkgs,
+  home-manager,
+  ...
+}:
+nixosSystem {
+  inherit nixpkgs home-manager;
+  system = "x86_64-linux";
+  specialArgs = commonSpecialArgs;
+  nixos-modules =
+    [../hosts/zed]
+    ++ common-nixos-modules
+    ++ [
+      (variants.nixosModule "kde")
+      {
+        services.nfs-root = {
+          enable = true;
+          interface = ["mlx5_0"];
+          nfs = {
+            rootPath = "/system/zed/nix";
+            transport = "rdma";
+            multipathPeers = [
+              {
+                clientIp = "192.168.29.2";
+                serverIp = "192.168.29.1";
+              }
+              # {
+              #   clientIp = "192.168.254.2";
+              #   serverIp = "192.168.254.5";
+              # }
+            ];
           };
+        };
 
-          services.nvmf-root = {
+        services.nvmf-root = {
+          enable = true;
+          interface = ["mlx5_0"];
+          nvmf = {
             enable = true;
-            interface = ["mlx5_0"];
-            nvmf = {
-              enable = true;
-              transport = "rdma";
-              target = "nqn.2016-06.io.spdk:zed_net";
-              address = "192.168.29.1";
-              port = 4420;
-            };
-            iscsi = {
-              enable = false;
-            };
-            network = {
-              dhcp = "ipv4";
-            };
+            transport = "rdma";
+            target = "nqn.2016-06.io.spdk:zed_net";
+            address = "192.168.29.1";
+            port = 4420;
           };
+          iscsi = {
+            enable = false;
+          };
+          network = {
+            dhcp = "ipv4";
+          };
+        };
 
-          services.zfs-config.poolName = nixpkgs.lib.mkForce "zed_net";
+        services.zfs-config.poolName = nixpkgs.lib.mkForce "zed_net";
 
-          fileSystems."/boot/efi".enable = nixpkgs.lib.mkForce false;
-        }
-      ];
-    home-module = home-module;
-  }
+        fileSystems."/boot/efi".enable = nixpkgs.lib.mkForce false;
+      }
+    ];
+  home-module = variants.mkHomeModule username "kde";
+}

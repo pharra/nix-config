@@ -1,5 +1,6 @@
 # 仓库内部上下文：把 flake inputs 整理成生成 nixosConfigurations 所需的一切。
-# 约定：flake.nix 只放 inputs 与输出装配；构建逻辑在这里；host 数据在 hosts/registry.nix。
+# 约定：flake.nix 只放 inputs 与输出装配；构建逻辑在这里；host 数据在 hosts/registry.nix；
+#      build 变体（kde/gnome/cosmic/wm/denial/base）在 lib/variants.nix。
 {
   inputs,
   username,
@@ -8,6 +9,7 @@
   inherit (nixpkgs) lib;
 
   nixosSystem = import ./nixosSystem.nix;
+  variants = import ./variants.nix {inherit lib;};
 
   modules = import ../modules;
   home-modules = builtins.attrValues (import ../home-modules);
@@ -47,32 +49,8 @@
     inherit username mysecrets home-modules NixVirt agenix inputs;
   };
 
-  # build 变体 -> NixOS 侧桌面模块配置
-  desktopModuleConfig = build: {
-    services.pharra =
-      if build == "kde"
-      then {kde.enable = true;}
-      else if build == "gnome"
-      then {gnome.enable = true;}
-      else if build == "cosmic"
-      then {cosmic.enable = true;}
-      else if build == "wm"
-      then {
-        desktopShell = {
-          enable = true;
-          variant = "noctalia";
-        };
-      }
-      else if build == "denial"
-      then {denial.enable = true;}
-      else {
-        base.enable = true;
-      }; # base build - no desktop environment
-  };
-
   mkZedGuest = import ./mkZedGuest.nix {
-    inherit nixosSystem common-nixos-modules commonSpecialArgs desktopModuleConfig;
-    home-module = import ../home/kde.nix;
+    inherit nixosSystem common-nixos-modules commonSpecialArgs variants username;
   };
 
   hosts = import ../hosts/registry.nix {inherit lib inputs mkZedGuest;};
@@ -88,7 +66,7 @@
             machine.nixos-modules
             ++ common-nixos-modules
             ++ [
-              (desktopModuleConfig build)
+              (variants.nixosModule build)
               {
                 _module.args.nixinate = {
                   host =
@@ -101,7 +79,7 @@
                 };
               }
             ];
-          home-module = import ../home/${build}.nix;
+          home-module = variants.mkHomeModule username build;
           system = machine.system;
         }
         // stable_args
@@ -114,8 +92,9 @@
           in
             commonSpecialArgs // machineSpecialArgs;
         });
-    }) machine.builds)
-    hosts));
+    })
+    machine.builds)
+  hosts));
 in {
   inherit nixosConfigurations;
 }
