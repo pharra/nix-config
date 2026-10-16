@@ -1,5 +1,6 @@
-# mlx4 / mlx5 共用的 OpenSM（InfiniBand 子网管理器）片段。
-# 这两个模块里原本有三段逐字相同的内容（选项、启动脚本、systemd 服务），抽到这里避免以后只改一处。
+# mlx5 用的 OpenSM（InfiniBand 子网管理器）片段。
+# 它原来在 mlx4 / mlx5 两个模块里各写了一份（逐字相同），后来 mlx4 模块被删除，
+# 这里保留下来给 mlx5 用，避免以后 mlx5 自己被复制一份。
 #
 # 注意：这是普通 .nix 文件（不是含 default.nix 的目录），所以不会被 importModules 当成模块自动导入。
 {
@@ -11,7 +12,7 @@ in rec {
   option = mkOption {
     type = types.bool;
     default = false;
-    description = "启动 OpenSM 子网管理器（mlx4 / mlx5 共用）";
+    description = "启动 OpenSM 子网管理器";
   };
 
   launchScript = pkgs.writeShellScriptBin "opensm.launch" ''

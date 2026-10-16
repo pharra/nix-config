@@ -37,7 +37,7 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 | --- | --- |
 | `core/` | 全机与桌面基础：`common`、`desktop`、`no-desktop`、`user-group`、`impermanence`、`scripts`、`azure-tools` |
 | `desktop/` | 桌面与外壳：`kde`、`gnome`、`cosmic`、`denial`、`desktop-shell`、`input-method`、`flatpak`、`audio-relay` |
-| `hardware/` | 硬件驱动与固件：`mlx4`、`mlx5`、`net-sriov`、`amd-gpu-edid-fix`、`mcontrolcenter`、`lianli-linux`、`surface-dtx-daemon`、`nvme-auto`、`udev-symlink` |
+| `hardware/` | 硬件驱动与固件：`mlx5`、`net-sriov`、`amd-gpu-edid-fix`、`mcontrolcenter`、`lianli-linux`、`surface-dtx-daemon`、`nvme-auto`、`udev-symlink` |
 | `network/` | 网络与网络服务：`net-name`、`netns`、`docker-netns`、`network-bridge`、`dhcp-server`、`openwrt`、`tailscale`、`easytier`、`mihomo`、`samba`、`sftp-server`、`ddns-go` |
 | `boot/` | 引导链：`nvmf`、`boot-over-nfs`、`boot-over-nvmf`、`iscsi-root`、`ipxe-host` |
 | `vm/` | 虚拟化与客机：`libvirt`、`virtualisation`、`vfio`、`waydroid`、`archlinux` |
@@ -129,8 +129,10 @@ nix build .#packages.x86_64-linux.azure-x64
 | `network/docker-netns` | 取值跟随 `openwrt.enable`，跟着一起关着 |
 | `hardware/lianli-linux` | `hosts/zed/hardware-configuration.nix` 里显式 `enable = false` |
 | `desktop/audio-relay` | `core/desktop` 里显式 `enable = false` |
-| `hardware/mlx4` | `hosts/homelab/hardware-configuration.nix` 配了参数，但 `enable` 从没开过（配了不生效） |
 | `home-modules/autostart` | 没有任何 home 配置启用 |
+
+- `hardware/mlx4` 已删除（连同 `hosts/homelab/hardware-configuration.nix` 里那份从未生效的参数块）：
+  它从来没被启用过。注意 `mlx4_0`/`mlx4_1` 是 homelab 上的**实际网卡名**，仍保留在 `hosts/homelab/default.nix`，与内核模块无关。
 
 另外：
 

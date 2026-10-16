@@ -39,13 +39,6 @@
     };
   };
 
-  hardware.mlx4 = {
-    enable = false;
-    opensm = false;
-    portTypeArray = "2,2";
-    applyPatch = false;
-  };
-
   hardware.mlx5 = {
     enable = true;
     interfaces = ["mlx5_0"];
