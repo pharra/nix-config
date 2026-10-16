@@ -20,7 +20,8 @@
     names = builtins.attrNames entries;
     isDir = n: (entries.${n} or null) == "directory";
     isModule = n: isDir n && builtins.pathExists (path + "/${n}/default.nix");
-    dirs = builtins.filter isDir names;
+    isSkeleton = n: builtins.substring 0 1 n == "_";
+    dirs = builtins.filter (n: isDir n && !isSkeleton n) names;
     direct = map (n: {
       name = n;
       path = path + "/${n}";
