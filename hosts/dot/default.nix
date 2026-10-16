@@ -29,23 +29,12 @@ in {
   ];
 
   services.pharra = {
-    libvirt.enable = true;
     core-desktop.enable = true;
-    user-group.enable = true;
   };
 
   net-name = {
     enable = true;
     inherit interfaces;
-  };
-
-  # Bootloader.
-  boot.loader = {
-    efi = {
-      canTouchEfiVariables = true;
-      efiSysMountPoint = "/boot/efi"; # ← use the same mount point here.
-    };
-    systemd-boot.enable = true;
   };
 
   systemd.network = {
@@ -98,7 +87,6 @@ in {
   networking = {
     hostName = "dot";
 
-    networkmanager.enable = true;
     networkmanager.unmanaged = ["*,except:interface-name:wl*"];
   };
 

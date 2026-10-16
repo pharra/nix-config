@@ -48,10 +48,8 @@ in {
   ];
 
   services.pharra = {
-    libvirt.enable = true;
     core-desktop.enable = false;
     core-server.enable = true;
-    user-group.enable = true;
     impermanence.enable = true;
     spdk.enable = true;
     sftp-server.enable = true;
@@ -105,15 +103,6 @@ in {
   boot.zfs.extraPools = ["data"];
   services.zfs.autoScrub.enable = true;
   services.zfs.trim.enable = true;
-
-  # Bootloader.
-  boot.loader = {
-    efi = {
-      canTouchEfiVariables = true;
-      efiSysMountPoint = "/boot/efi"; # ← use the same mount point here.
-    };
-    systemd-boot.enable = true;
-  };
 
   age.secrets."restic_password" = {
     file = "${mysecrets}/restic_password.age";
@@ -314,7 +303,6 @@ in {
     # proxy.default = "http://user:password@proxy:port/";
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
-    networkmanager.enable = true;
     networkmanager.unmanaged = ["interface-name:*,except:interface-name:wl*"];
   };
 

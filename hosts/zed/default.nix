@@ -26,9 +26,7 @@ in {
 
   services.pharra = {
     impermanence.enable = true;
-    libvirt.enable = true;
     core-desktop.enable = true;
-    user-group.enable = true;
     virtualisation.enable = true;
     scripts.enable = true;
     waydroid.enable = true;
@@ -71,20 +69,11 @@ in {
     fsType = "vfat";
   };
 
-  # Bootloader.
-  boot.loader = {
-    efi = {
-      canTouchEfiVariables = true;
-      efiSysMountPoint = "/boot/efi"; # ← use the same mount point here.
-    };
-    timeout = 1;
-    systemd-boot.enable = true;
-  };
+  boot.loader.timeout = 1;
 
   networking = {
     hostName = "zed";
 
-    networkmanager.enable = true;
     networkmanager.unmanaged = ["*,except:interface-name:wl*"];
   };
 

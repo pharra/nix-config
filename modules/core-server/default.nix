@@ -24,6 +24,21 @@ in {
     boot.loader.systemd-boot.configurationLimit = lib.mkDefault 10;
     # boot.loader.grub.configurationLimit = 10;
 
+    # 所有实体机共用：引导 / NetworkManager / libvirt / 用户组
+    # （原来在 dot、gs65、zed、homelab 四个 host 文件里各写一遍）
+    boot.loader = {
+      efi = {
+        canTouchEfiVariables = true;
+        efiSysMountPoint = "/boot/efi"; # ← use the same mount point here.
+      };
+      systemd-boot.enable = true;
+    };
+    networking.networkmanager.enable = true;
+    services.pharra = {
+      libvirt.enable = true;
+      user-group.enable = true;
+    };
+
     boot.binfmt.emulatedSystems = builtins.filter (p: p != pkgs.stdenv.hostPlatform.system) ["aarch64-linux" "x86_64-linux"];
 
     # fix amdgpu flicker issue

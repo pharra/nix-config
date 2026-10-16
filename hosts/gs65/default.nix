@@ -18,24 +18,11 @@
   ];
 
   services.pharra = {
-    libvirt.enable = true;
     core-desktop.enable = true;
-    user-group.enable = true;
-  };
-
-  # Bootloader.
-  boot.loader = {
-    efi = {
-      canTouchEfiVariables = true;
-      efiSysMountPoint = "/boot/efi"; # ← use the same mount point here.
-    };
-    systemd-boot.enable = true;
   };
 
   networking = {
     hostName = "nix65";
-
-    networkmanager.enable = true;
   };
 
   # Laptop can't correctly suspend if wlan is active
