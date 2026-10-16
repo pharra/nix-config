@@ -20,7 +20,6 @@ in {
     programs = {
       firefox = {
         enable = true;
-        enableGnomeExtensions = false;
       };
       vscode.enable = true;
     };
