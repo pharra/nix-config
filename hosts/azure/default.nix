@@ -1,3 +1,6 @@
+# Azure 云主机：同一份配置出 x86_64（azure）与 aarch64（azure_arm）两个架构。
+# 配置名：azure_base / azure_arm_base；用户与 SSH 公钥直接写在这里，秘密走 agenix（不走 sops）。
+# 具体服务在 ./server 与 ./system.nix；启用的功能见本文件里的 enable 项。
 {
   config,
   pkgs,

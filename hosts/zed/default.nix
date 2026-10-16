@@ -1,3 +1,7 @@
+# 主力台式机：i5-13600KF + RTX 4090，日常与游戏用。
+# 配置名：zed_{kde,gnome,cosmic,wm,denial}；另有从网络盘启动的变体 zed_net_*，其宿主侧在 hosts/homelab。
+# 启用的功能：见本文件与 ./hardware-configuration.nix 里的 services.pharra / hardware.* enable 项；
+# libvirt 客机定义在 ./nixvirt，CIFS 挂载在 ./cifs-mount.nix。
 {
   config,
   pkgs,

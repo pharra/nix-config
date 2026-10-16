@@ -1,3 +1,6 @@
+# Surface Book 2（二合一笔记本，带触摸屏）。
+# 配置名：dot_{kde,gnome,cosmic,wm}（builds 定义在 hosts/registry.nix）。
+# 启用的功能：见本文件与 ./hardware-configuration.nix 里的 services.pharra / hardware.* enable 项。
 {
   config,
   pkgs,
