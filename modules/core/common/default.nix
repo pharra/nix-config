@@ -7,6 +7,7 @@
 with lib; let
   cfg = config.services.pharra.common;
 in {
+  imports = [./user.nix];
   options = {
     services.pharra.common = {
       enable = mkEnableOption "core server configuration";
@@ -169,45 +170,7 @@ in {
       }
     ];
 
-    # add user's shell into /etc/shells
-    environment.shells = with pkgs; [
-      bash
-      zsh
-    ];
-    # set user's default shell system-wide
-    users.defaultUserShell = pkgs.zsh;
-
     networking.timeServers = ["ntp.aliyun.com"];
-
-    # zsh configuration
-    programs.zsh = {
-      enable = true;
-      enableCompletion = true;
-      autosuggestions.enable = true;
-      vteIntegration = true;
-      histSize = 1048576;
-      syntaxHighlighting.enable = true;
-
-      ohMyZsh = {
-        enable = true;
-        plugins = [
-          "docker"
-          "git"
-          "golang"
-          "systemd"
-          "git-auto-fetch"
-          "history-substring-search"
-        ];
-        theme = "candy";
-      };
-    };
-
-    # for power management
-    # services.upower.enable = true;
-    # powerManagement.enable = true;
-
-    # Enable vscode server
-    programs.nix-ld.enable = true;
 
     nix.settings = {
       substituters = [

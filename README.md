@@ -112,6 +112,10 @@ nix build .#packages.x86_64-linux.azure-x64
 - 秘密有 sops-nix 与 agenix 两套：历史原因，未做迁移（迁移必须先解密，收益不大），新秘密优先用 sops。
 - `boot/iscsi-root` 是 nixpkgs `root-initiator.nix` 的本地副本，选项路径故意不叫
   `boot.iscsi-initiator`（nixpkgs 自己声明了它，同名会撞车）。
+- 大模块的拆分约定：脚本/模板正文放同目录的独立 `.nix` 文件（保持字符串字面量，Nix 插值才有效，
+  所以不要用 `builtins.readFile` 抽成 `.sh`）；选项与实现分开（例如 `network/dhcp-server/` 的
+  `options.nix` + `config.nix`，`core/common/` 的 `default.nix` 机器级 + `user.nix` 用户级）。
+  这些子文件是普通 `.nix` 文件，不会被 `importModules` 当成模块自动导入。
 
 ## 休眠与未接线的模块
 
