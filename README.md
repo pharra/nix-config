@@ -43,6 +43,30 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 | `vm/` | 虚拟化与客机：`libvirt`、`virtualisation`、`vfio`、`waydroid`、`archlinux` |
 | `storage/` | 存储：`zfs-config`、`spdk-tgt`、`spdk-container` |
 
+## 配置是怎么装配出来的
+
+```
+flake.nix                          只装配输出（nixosConfigurations / apps / packages / formatter）
+  └─ lib/default.nix               上下文：common-nixos-modules、commonSpecialArgs、variants、secrets 路径
+       ├─ hosts/registry.nix       host 清单（纯数据）：name / builds / system / nixos-modules
+       ├─ lib/variants.nix         build 变体表：NixOS 侧开关 + home 侧开关 + 生成的 home 模块
+       ├─ modules/<域>/<名字>/     自动发现，按 enable 开关生效
+       ├─ home-modules/<名字>/     自动发现，统一 home.pharra.* 命名空间
+       └─ secrets/                 sops-nix + agenix
+  → 展开成 24 个 <host>_<build> 配置
+```
+
+每个配置由四层叠出来，找"某个设置是谁设的"就按这个顺序：
+
+1. **宿主自己**：`hosts/<name>/default.nix`（网卡 MAC、磁盘、显卡、这台机器特有的开关）
+2. **全机共用**：`modules/core/common`（`services.pharra.common.enable`，22 个配置里开着）
+3. **桌面共用**：`modules/core/desktop`（`services.pharra.desktop.enable`）
+4. **build 变体**：`lib/variants.nix`（kde / gnome / cosmic / wm / denial / base）
+
+反过来：**要让所有机器都变，改第 2 层；要让所有桌面机都变，改第 3 层；只影响一台，改第 1 层。**
+分层里底层用 `lib.mkDefault`、上层直接赋值，所以上层不需要 `mkForce` 就能覆盖（见「设计取舍」）。
+
+
 ## 模块的命名与组织规则
 
 1. **只允许 4 个选项域**：
@@ -87,6 +111,8 @@ nix build .#packages.x86_64-linux.azure-x64
 `nix run .#<配置名>` 的可用名字 = 24 个配置名，外加对应的 `<配置名>-dry-run`。
 
 ## 加东西怎么加
+
+> 逐步清单（必改 3 个文件 + 按需改动，以及为什么可以这么少）见 [docs/EXTENDING.md](docs/EXTENDING.md)。
 
 - **新机器**：建 `hosts/<name>/hardware-configuration.nix` 与 `hosts/<name>/default.nix`，
   然后在 `hosts/registry.nix` 加一条（`name` / `builds` / `system` / `nixos-modules` / 可选 `hostname`、`specialArgs`）。
