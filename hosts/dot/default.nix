@@ -29,10 +29,10 @@ in {
   ];
 
   services.pharra = {
-    core-desktop.enable = true;
+    desktop.enable = true;
   };
 
-  net-name = {
+  services.pharra.net-name = {
     enable = true;
     inherit interfaces;
   };

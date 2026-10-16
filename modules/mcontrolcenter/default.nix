@@ -5,10 +5,10 @@
   ...
 }:
 with lib; let
-  cfg = config.programs.mcontrolcenter;
+  cfg = config.hardware.mcontrolcenter;
 in {
   options = {
-    programs.mcontrolcenter = {
+    hardware.mcontrolcenter = {
       enable = mkEnableOption "msi control center";
     };
   };

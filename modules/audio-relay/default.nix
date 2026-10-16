@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.services.audio-relay;
+  cfg = config.services.pharra.audio-relay;
 in {
-  options.services.audio-relay = {
+  options.services.pharra.audio-relay = {
     enable = mkOption {
       type = types.bool;
       default = false;

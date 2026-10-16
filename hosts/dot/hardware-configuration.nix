@@ -16,7 +16,7 @@ in {
   services.iptsd.enable = lib.mkDefault true;
   environment.systemPackages = [pkgs.surface-control];
   hardware.microsoft-surface.kernelVersion = "stable";
-  services.surface-dtx-daemon.enable = true;
+  services.pharra.surface-dtx-daemon.enable = true;
 
   services.mihomo.enable = true;
 

@@ -16,9 +16,9 @@ with lib; let
 
   mac-generator = import ./mac-generator.nix {inherit lib;};
 
-  cfg = config.services.openwrt;
+  cfg = config.services.pharra.openwrt;
 in {
-  options.services.openwrt = {
+  options.services.pharra.openwrt = {
     enable = mkEnableOption "Enable Openwrt virtual machine";
   };
 

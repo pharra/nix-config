@@ -26,21 +26,21 @@ in {
 
   services.pharra = {
     impermanence.enable = true;
-    core-desktop.enable = true;
+    desktop.enable = true;
     virtualisation.enable = true;
     scripts.enable = true;
     waydroid.enable = true;
   };
 
-  services.sunshine = lib.mkIf config.services.pharra.core-desktop.enable {
+  services.sunshine = lib.mkIf config.services.pharra.desktop.enable {
     enable = true;
     autoStart = true;
     capSysAdmin = true;
     openFirewall = true;
   };
 
-  services.docker-netns =
-    if config.services.openwrt.enable
+  services.pharra.docker-netns =
+    if config.services.pharra.openwrt.enable
     then {
       enable = config.virtualisation.docker.enable;
       autoConfigureBridge = false;
@@ -77,7 +77,7 @@ in {
     networkmanager.unmanaged = ["*,except:interface-name:wl*"];
   };
 
-  services.network-bridge = {
+  services.pharra.network-bridge = {
     enable = true;
     bridges = {
       br0 = {

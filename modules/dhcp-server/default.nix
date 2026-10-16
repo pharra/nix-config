@@ -5,7 +5,7 @@
   ...
 }:
 with lib; let
-  cfg = config.services.dhcpServer;
+  cfg = config.services.pharra.dhcp-server;
 
   # True values are just put as `name` instead of `name=true`, and false values
   # are turned to comments (false values are expected to be overrides e.g.
@@ -131,7 +131,7 @@ with lib; let
     };
   };
 in {
-  options.services.dhcpServer = {
+  options.services.pharra.dhcp-server = {
     enable = mkEnableOption "Run a DHCP server";
     # IPXE = mkOption {
     #   default = true;

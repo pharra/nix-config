@@ -7,7 +7,7 @@
   ...
 }:
 with lib; let
-  cfg = config.services.ipxe-host;
+  cfg = config.services.pharra.ipxe-host;
 
   # Build each NFS guest's iPXE script and kernel params
   nfsGuestConfigs =
@@ -30,7 +30,7 @@ with lib; let
     cfg.nfs.guests;
 in {
   options = {
-    services.ipxe-host = {
+    services.pharra.ipxe-host = {
       enable = mkEnableOption "Unified iPXE host for NFS and iSCSI boot";
 
       nfs = {

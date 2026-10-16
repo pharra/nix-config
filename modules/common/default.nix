@@ -5,10 +5,10 @@
   ...
 }:
 with lib; let
-  cfg = config.services.pharra.core-server;
+  cfg = config.services.pharra.common;
 in {
   options = {
-    services.pharra.core-server = {
+    services.pharra.common = {
       enable = mkEnableOption "core server configuration";
     };
   };

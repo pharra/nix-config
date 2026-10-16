@@ -35,7 +35,7 @@
     softdep nvme pre: vfio-pci
   ''; # for amd cpu
 
-  services.lianli.enable = false;
+  hardware.lianli-linux.enable = false;
 
   virtualisation.vfio = {
     enable = true;
@@ -54,7 +54,7 @@
     blacklistNvidia = false;
   };
 
-  net-name = {
+  services.pharra.net-name = {
     enable = true;
     interfaces = [
       {
@@ -72,7 +72,7 @@
     ];
   };
 
-  services.udev-symlink = {
+  services.pharra.udev-symlink = {
     enable = true;
     rules = [
       {

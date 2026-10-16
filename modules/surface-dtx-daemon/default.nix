@@ -6,7 +6,7 @@
   ...
 }:
 with lib; let
-  cfg = config.services.surface-dtx-daemon;
+  cfg = config.services.pharra.surface-dtx-daemon;
   attach = pkgs.writeScript "attach.sh" "${cfg.attach}";
   detach = pkgs.writeScript "detach.sh" "${cfg.detach}";
   detach_abort = pkgs.writeScript "detach.sh" "${cfg.detach_abort}";
@@ -24,7 +24,7 @@ with lib; let
   '';
 in {
   options = {
-    services.surface-dtx-daemon = {
+    services.pharra.surface-dtx-daemon = {
       enable = mkEnableOption "Surface DTX Daemon";
       attach = mkOption {
         type = types.str;

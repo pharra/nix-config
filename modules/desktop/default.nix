@@ -5,10 +5,10 @@
   ...
 }:
 with lib; let
-  cfg = config.services.pharra.core-desktop;
+  cfg = config.services.pharra.desktop;
 in {
   options = {
-    services.pharra.core-desktop = {
+    services.pharra.desktop = {
       enable = mkEnableOption "core desktop configuration";
     };
   };
@@ -22,8 +22,8 @@ in {
 
     boot.kernelModules = ["ntsync"];
 
-    # Enable core-server configuration
-    services.pharra.core-server.enable = true;
+    # Enable the common (all-machines) configuration
+    services.pharra.common.enable = true;
     services.pharra.input-method.enable = true;
     services.pharra.flatpak.enable = true;
 
@@ -106,7 +106,7 @@ in {
       # no need to redefine it in your config for now)
       #media-session.enable = true;
     };
-    services.audio-relay.enable = false;
+    services.pharra.audio-relay.enable = false;
     # rtkit is optional but recommended
     security.rtkit.enable = true;
     # Disable pulseaudio, it conflicts with pipewire too.

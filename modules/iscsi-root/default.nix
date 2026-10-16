@@ -1,3 +1,6 @@
+# 从 nixpkgs 的 nixos/modules/services/networking/iscsi/root-initiator.nix 复制而来。
+# 选项路径故意不叫 boot.iscsi-initiator：nixpkgs 自己就声明了这个选项（root-initiator.nix 被
+# 无条件引入），同名会直接撞车。这里叫 boot.iscsi-root，由引导相关模块（见 modules/boot-over-nvmf）按需配置。
 {
   config,
   lib,
@@ -5,7 +8,7 @@
   ...
 }:
 with lib; let
-  cfg = config.boot.iscsi-initiatord;
+  cfg = config.boot.iscsi-root;
 in {
   # If you're booting entirely off another machine you may want to add
   # this snippet to always boot the latest "system" version. It is not
@@ -21,7 +24,7 @@ in {
   # don't have the need or expertise to reasonably implement it. Also,
   # consider carefully before making your boot chain depend on multiple
   # machines to be up.
-  options.boot.iscsi-initiatord = with types; {
+  options.boot.iscsi-root = with types; {
     name = mkOption {
       description = lib.mdDoc ''
         Name of the iSCSI initiator to boot from. Note, booting from iscsi
@@ -103,7 +106,7 @@ in {
             printf "\n# The following is from ${cfg.extraConfigFile}:\n"
             cat "${cfg.extraConfigFile}"
           else
-            echo "Warning: boot.iscsi-initiator.extraConfigFile ${cfg.extraConfigFile} does not exist!" >&2
+            echo "Warning: boot.iscsi-root.extraConfigFile ${cfg.extraConfigFile} does not exist!" >&2
           fi
         ''}
         ) > /etc/iscsi/iscsid.conf

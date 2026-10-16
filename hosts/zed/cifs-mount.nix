@@ -41,7 +41,7 @@
   #   }
   # ];
 
-  services.nvme-auto = [
+  services.pharra.nvme-auto = [
     {
       name = "game";
       address = "192.168.29.1";

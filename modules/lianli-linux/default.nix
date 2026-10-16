@@ -5,10 +5,10 @@
   ...
 }: {
   options = {
-    services.lianli.enable = lib.mkEnableOption "Lian Li Linux control (daemon + GUI)";
+    hardware.lianli-linux.enable = lib.mkEnableOption "Lian Li Linux control (daemon + GUI)";
   };
 
-  config = lib.mkIf config.services.lianli.enable {
+  config = lib.mkIf config.hardware.lianli-linux.enable {
     # === 主程序 ===
     environment.systemPackages = [pkgs.lian-li-linux];
 

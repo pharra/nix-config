@@ -6,25 +6,25 @@
   ...
 }:
 with lib; let
-  cfg = config.home.pharra.desktopShell;
+  cfg = config.home.pharra.desktop-shell;
   defaultNiriConfig = ./niri;
   defaultUmbrielConfig = ./umbriel;
   defaultDmsConfig = ./dank-material-shell;
   defaultNoctaliaConfig = ./noctalia-shell;
 in {
   options = {
-    home.pharra.desktopShell = {
+    home.pharra.desktop-shell = {
       enable = mkEnableOption "Desktop shell home configuration";
 
       variant = mkOption {
         type = types.enum ["dms" "noctalia"];
-        default = attrByPath ["services" "pharra" "desktopShell" "variant"] "dms" osConfig;
+        default = attrByPath ["services" "pharra" "desktop-shell" "variant"] "dms" osConfig;
         description = "Desktop shell variant to configure (dms or noctalia).";
       };
 
       compositor = mkOption {
         type = types.enum ["niri" "umbriel"];
-        default = attrByPath ["services" "pharra" "desktopShell" "compositor"] "niri" osConfig;
+        default = attrByPath ["services" "pharra" "desktop-shell" "compositor"] "niri" osConfig;
         description = "The Wayland compositor to use with this desktop shell (niri or umbriel)";
       };
     };

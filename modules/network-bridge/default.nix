@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.services.network-bridge;
+  cfg = config.services.pharra.network-bridge;
 in {
-  options.services.network-bridge = {
+  options.services.pharra.network-bridge = {
     enable = mkEnableOption "network bridge configuration";
 
     bridges = mkOption {

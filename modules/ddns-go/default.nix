@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  cfg = config.services.ddns-go;
+  cfg = config.services.pharra.ddns-go;
   inherit
     (lib)
     mkOption
@@ -13,7 +13,7 @@
     mkIf
     ;
 in {
-  options.services.ddns-go = {
+  options.services.pharra.ddns-go = {
     enable = mkOption {
       type = types.bool;
       default = false;

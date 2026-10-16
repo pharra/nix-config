@@ -5,10 +5,10 @@
   ...
 }:
 with lib; let
-  cfg = config.services.pharra.base;
+  cfg = config.services.pharra.no-desktop;
 in {
   options = {
-    services.pharra.base = {
+    services.pharra.no-desktop = {
       enable = mkEnableOption "base environment";
     };
   };

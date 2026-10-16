@@ -123,7 +123,7 @@ in {
     };
 
     # Configure iSCSI module
-    boot.iscsi-initiatord = lib.mkIf cfg.iscsi.enable {
+    boot.iscsi-root = lib.mkIf cfg.iscsi.enable {
       name = cfg.iscsi.initiatorName;
       discoverPortal = cfg.iscsi.discoveryAddress;
       target = cfg.iscsi.targetName;

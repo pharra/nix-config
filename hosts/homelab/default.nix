@@ -48,10 +48,10 @@ in {
   ];
 
   services.pharra = {
-    core-desktop.enable = false;
-    core-server.enable = true;
+    desktop.enable = false;
+    common.enable = true;
     impermanence.enable = true;
-    spdk.enable = true;
+    spdk-container.enable = true;
     sftp-server.enable = true;
     easytier.enable = true;
     scripts.enable = true;
@@ -67,7 +67,7 @@ in {
   };
 
   # Enable iPXE host to serve zed guest system via NFS
-  services.ipxe-host = {
+  services.pharra.ipxe-host = {
     enable = true;
     nfs = {
       enable = false;
@@ -185,12 +185,12 @@ in {
     };
   };
 
-  net-name = {
+  services.pharra.net-name = {
     enable = true;
     inherit interfaces;
   };
 
-  services.openwrt.enable = false;
+  services.pharra.openwrt.enable = false;
 
   services.nfs = {
     server = {
@@ -205,8 +205,8 @@ in {
     };
   };
 
-  services.docker-netns =
-    if config.services.openwrt.enable
+  services.pharra.docker-netns =
+    if config.services.pharra.openwrt.enable
     then {
       enable = config.virtualisation.docker.enable;
       autoConfigureBridge = false;
@@ -221,7 +221,7 @@ in {
       dockerHostIP = "192.168.31.2";
     };
 
-  services.dhcpServer = {
+  services.pharra.dhcp-server = {
     enable = true;
     networks = {
       eth = {
@@ -278,7 +278,7 @@ in {
     };
   };
 
-  services.network-bridge = {
+  services.pharra.network-bridge = {
     enable = true;
     bridges = {
       br0 = {

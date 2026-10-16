@@ -5,10 +5,10 @@
   ...
 }:
 with lib; let
-  cfg = config.services.spdk;
+  cfg = config.services.pharra.spdk-tgt;
 in {
   options = {
-    services.spdk = {
+    services.pharra.spdk-tgt = {
       enable = mkEnableOption "spdk service";
     };
   };

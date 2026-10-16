@@ -5,7 +5,7 @@
   ...
 }:
 with lib; let
-  cfg = config.services.udev-symlink;
+  cfg = config.services.pharra.udev-symlink;
   mkRule = rule: let
     pciPath = rule.pciPath;
     symlinkName = rule.symlinkName;
@@ -16,7 +16,7 @@ with lib; let
     ];
   mkAllRules = rules: concatMapStringsSep "\n\n" mkRule rules;
 in {
-  options.services.udev-symlink = {
+  options.services.pharra.udev-symlink = {
     enable = mkEnableOption "udev symlink";
 
     rules = mkOption {

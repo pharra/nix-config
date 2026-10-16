@@ -4,13 +4,13 @@
 {lib}: let
   # NixOS 侧：变体 -> services.pharra.* 配置
   nixos = {
-    base = {services.pharra.base.enable = true;};
+    base = {services.pharra.no-desktop.enable = true;};
     kde = {services.pharra.kde.enable = true;};
     gnome = {services.pharra.gnome.enable = true;};
     cosmic = {services.pharra.cosmic.enable = true;};
     denial = {services.pharra.denial.enable = true;};
     wm = {
-      services.pharra.desktopShell = {
+      services.pharra.desktop-shell = {
         enable = true;
         variant = "noctalia";
       };
@@ -24,7 +24,7 @@
     gnome = {gnome.enable = true;};
     cosmic = {cosmic.enable = true;};
     denial = {denial.enable = true;};
-    wm = {desktopShell.enable = true;};
+    wm = {desktop-shell.enable = true;};
   };
 
   # 所有变体共有的 home 基础开关（对应原来的 home/base.nix）

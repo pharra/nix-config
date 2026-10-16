@@ -61,7 +61,7 @@
     ];
   };
 
-  services.sunshine = lib.mkIf config.services.pharra.core-desktop.enable {
+  services.sunshine = lib.mkIf config.services.pharra.desktop.enable {
     enable = true;
     autoStart = true;
     capSysAdmin = true;

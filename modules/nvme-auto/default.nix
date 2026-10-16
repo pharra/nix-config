@@ -5,7 +5,7 @@
   ...
 }:
 with lib; let
-  cfgs = config.services.nvme-auto;
+  cfgs = config.services.pharra.nvme-auto;
 
   mkNvmeSet = cfg: let
     serviceName = "nvme-auto-${cfg.name}";
@@ -39,7 +39,7 @@ with lib; let
     }
   ];
 in {
-  options.services.nvme-auto = with types;
+  options.services.pharra.nvme-auto = with types;
     mkOption {
       description = "List of NVMe devices to connect.";
       type = listOf (submodule {

@@ -18,7 +18,7 @@
   ];
 
   services.pharra = {
-    core-desktop.enable = true;
+    desktop.enable = true;
   };
 
   networking = {
@@ -41,7 +41,7 @@
     cpupower
   ];
 
-  programs.mcontrolcenter = {
+  hardware.mcontrolcenter = {
     enable = true;
   };
 

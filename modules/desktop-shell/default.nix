@@ -6,10 +6,10 @@
   ...
 }:
 with lib; let
-  cfg = config.services.pharra.desktopShell;
+  cfg = config.services.pharra.desktop-shell;
 in {
   options = {
-    services.pharra.desktopShell = {
+    services.pharra.desktop-shell = {
       enable = mkEnableOption "Desktop shell integration for Wayland sessions";
 
       variant = mkOption {
@@ -26,7 +26,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    services.pharra.desktopShell.compositor =
+    services.pharra.desktop-shell.compositor =
       if (cfg.variant == "dms")
       then "niri"
       else if (cfg.variant == "noctalia")

@@ -5,10 +5,10 @@
   ...
 }:
 with lib; let
-  cfg = config.services.pharra.spdk;
+  cfg = config.services.pharra.spdk-container;
 in {
   options = {
-    services.pharra.spdk = {
+    services.pharra.spdk-container = {
       enable = mkEnableOption "SPDK container";
     };
   };

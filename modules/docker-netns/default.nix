@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.services.docker-netns;
+  cfg = config.services.pharra.docker-netns;
 in {
-  options.services.docker-netns = {
+  options.services.pharra.docker-netns = {
     enable = mkOption {
       type = types.bool;
       default = false;
@@ -45,7 +45,7 @@ in {
     dockerHostIP = cfg.dockerHostIP;
     dockerGateway = cfg.dockerGateway;
   in {
-    services.netns = {
+    services.pharra.netns = {
       enable = true;
       names = [netns];
     };
@@ -74,7 +74,7 @@ in {
       };
     };
 
-    services.dhcpServer = mkIf cfg.autoConfigureBridge {
+    services.pharra.dhcp-server = mkIf cfg.autoConfigureBridge {
       enable = true;
       networks = {
         "${dockerBridge}" = {

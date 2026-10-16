@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.net-name;
+  cfg = config.services.pharra.net-name;
 in {
-  options.net-name = {
+  options.services.pharra.net-name = {
     enable = mkEnableOption "net name";
 
     interfaces = lib.mkOption {

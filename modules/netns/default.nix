@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.services.netns;
+  cfg = config.services.pharra.netns;
 in {
-  options.services.netns = {
+  options.services.pharra.netns = {
     enable = mkEnableOption "Create Network Namespace";
 
     names = lib.mkOption {
