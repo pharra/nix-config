@@ -7,10 +7,7 @@
 with lib; let
   cfg = config.hardware.mlx5;
 
-  opensm-launch = pkgs.writeShellScriptBin "opensm.launch" ''
-    (while true; do ${pkgs.opensm}/bin/opensm; sleep 30; done) &
-    exit 0
-  '';
+  opensmCommon = import ../opensm.nix {inherit lib pkgs;};
 in {
   options.hardware.mlx5 = {
     enable = mkEnableOption "MLX5 Configuration";
@@ -20,10 +17,7 @@ in {
       default = [];
     };
 
-    opensm = mkOption {
-      type = types.bool;
-      default = false;
-    };
+    opensm = opensmCommon.option;
   };
 
   config = lib.mkIf cfg.enable {
@@ -49,21 +43,6 @@ in {
       mstflint
     ];
 
-    systemd.services.opensm = mkIf cfg.opensm {
-      enable = true;
-      wantedBy = ["network.target"];
-      #after = ["rdma.service"];
-      #requires = ["rdma.service"];
-      description = "Starts the OpenSM InfiniBand fabric Subnet Manager";
-      documentation = ["man:opensm"];
-      before = ["network.target" "remote-fs-pre.target"];
-      unitConfig = {
-        DefaultDependencies = "no";
-      };
-      serviceConfig = {
-        Type = "forking";
-        ExecStart = ''${opensm-launch}/bin/opensm.launch'';
-      };
-    };
+    systemd.services.opensm = mkIf cfg.opensm (opensmCommon.service opensmCommon.launchScript);
   };
 }

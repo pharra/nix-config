@@ -8,10 +8,7 @@
 with lib; let
   cfg = config.hardware.mlx4;
 
-  opensm-launch = pkgs.writeShellScriptBin "opensm.launch" ''
-    (while true; do ${pkgs.opensm}/bin/opensm; sleep 30; done) &
-    exit 0
-  '';
+  opensmCommon = import ../opensm.nix {inherit lib pkgs;};
 in {
   options.hardware.mlx4 = {
     enable = mkEnableOption "MLX4 Configuration";
@@ -30,10 +27,7 @@ in {
       default = false;
     };
 
-    opensm = mkOption {
-      type = types.bool;
-      default = false;
-    };
+    opensm = opensmCommon.option;
 
     portTypeArray = mkOption {
       type = types.str;
@@ -104,21 +98,6 @@ in {
         TimeoutSec = "90s";
       };
     };
-    systemd.services.opensm = mkIf cfg.opensm {
-      enable = true;
-      wantedBy = ["network.target"];
-      #after = ["rdma.service"];
-      #requires = ["rdma.service"];
-      description = "Starts the OpenSM InfiniBand fabric Subnet Manager";
-      documentation = ["man:opensm"];
-      before = ["network.target" "remote-fs-pre.target"];
-      unitConfig = {
-        DefaultDependencies = "no";
-      };
-      serviceConfig = {
-        Type = "forking";
-        ExecStart = ''${opensm-launch}/bin/opensm.launch'';
-      };
-    };
+    systemd.services.opensm = mkIf cfg.opensm (opensmCommon.service opensmCommon.launchScript);
   };
 }
