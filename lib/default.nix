@@ -1,6 +1,6 @@
 # 仓库内部上下文：把 flake inputs 整理成生成 nixosConfigurations 所需的一切。
 # 约定：flake.nix 只放 inputs 与输出装配；构建逻辑在这里；host 数据在 hosts/registry.nix；
-#      build 变体（kde/gnome/cosmic/wm/denial/base）在 lib/variants.nix。
+#      build 变体在 lib/variants.nix；模块目录用 lib/importModules.nix 自动发现。
 {
   inputs,
   username,
@@ -9,11 +9,14 @@
   inherit (nixpkgs) lib;
 
   nixosSystem = import ./nixosSystem.nix;
+  importModules = import ./importModules.nix;
   netboot = import ./netboot.nix {inherit lib;};
   variants = import ./variants.nix {inherit lib;};
 
-  modules = import ../modules;
-  home-modules = builtins.attrValues (import ../home-modules);
+  # 模块目录自动发现：新增 modules/<name>/default.nix 即自动生效，不用改注册表
+  modules = importModules {dir = ../modules;};
+  home-modules = builtins.attrValues (importModules {dir = ../home-modules;});
+
   overlays = import ../overlay.nix;
   overlay = import ../overlays;
 
