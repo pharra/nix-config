@@ -8,16 +8,13 @@
 }:
 with lib; let
   cfg = config.services.nvmf-root;
+  netboot = import ../netboot-root-common.nix {inherit lib pkgs;};
 in {
   options = {
     services.nvmf-root = {
       enable = mkEnableOption "NVMf/iSCSI root boot (guest side)";
 
-      interface = mkOption {
-        type = types.listOf types.str;
-        default = ["mlx5_0"];
-        description = "Network interfaces to bring up in initrd (first entry is used as primary).";
-      };
+      interface = netboot.interfaceOption ["mlx5_0"];
 
       nvmf = {
         enable = mkOption {
@@ -77,27 +74,9 @@ in {
         };
       };
 
-      boot = {
-        kernelModules = mkOption {
-          type = types.listOf types.str;
-          default = [];
-          description = "Additional initrd kernel modules needed for block storage boot.";
-        };
+      boot = netboot.bootOptions {kernelModulesDefault = [];};
 
-        extraKernelParams = mkOption {
-          type = types.listOf types.str;
-          default = [];
-          description = "Additional kernel parameters.";
-        };
-      };
-
-      network = {
-        dhcp = mkOption {
-          type = types.str;
-          default = "ipv4";
-          description = "DHCP configuration (ipv4, ipv6, yes, no).";
-        };
-      };
+      network = netboot.networkOption;
     };
   };
 
@@ -131,50 +110,18 @@ in {
 
     boot.initrd = {
       kernelModules = cfg.boot.kernelModules;
-      systemd = {
-        enable = true;
-        emergencyAccess = true;
-        initrdBin = [pkgs.iproute2 pkgs.pciutils pkgs.dnsutils pkgs.util-linux pkgs.coreutils pkgs.iputils];
-
-        services = {
-          ensure-network-nvmf = {
-            enable = true;
-            before = ["network-online.target"];
-            wantedBy = ["network-online.target"];
-            after = ["nss-lookup.target"];
-            unitConfig.DefaultDependencies = "no";
-            serviceConfig = {
-              Type = "oneshot";
-              TimeoutStartSec = 60;
-              ExecStart = "${pkgs.bashInteractive}/bin/sh -c 'until ${pkgs.iputils}/bin/ping -c 1 ${cfg.nvmf.address}; do ${pkgs.coreutils}/bin/sleep 1; done'";
-            };
+      systemd =
+        (netboot.initrdSystemd {})
+        // {
+          services = {
+            ensure-network-nvmf = netboot.ensureNetwork {peerAddress = cfg.nvmf.address;};
           };
+          network = netboot.initrdNetwork cfg;
         };
-
-        network = {
-          enable = true;
-          wait-online = {
-            anyInterface = lib.mkForce false;
-            timeout = 30;
-          };
-          networks = lib.listToAttrs (map (iface:
-            lib.nameValuePair "40-${iface}-initrd" {
-              matchConfig.Name = iface;
-              networkConfig.DHCP = cfg.network.dhcp;
-              linkConfig.RequiredForOnline = "routable";
-            })
-          cfg.interface);
-        };
-      };
       services.resolved.enable = true;
     };
 
-    systemd.network.networks = lib.listToAttrs (map (iface:
-      lib.nameValuePair "40-${iface}" {
-        matchConfig.Name = iface;
-        networkConfig.KeepConfiguration = "yes";
-      })
-    cfg.interface);
+    systemd.network.networks = netboot.stage2Network cfg;
 
     environment.systemPackages = with pkgs;
       []

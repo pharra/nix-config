@@ -8,6 +8,7 @@
 }:
 with lib; let
   cfg = config.services.nfs-root;
+  netboot = import ../netboot-root-common.nix {inherit lib pkgs;};
   nfsPort =
     if cfg.nfs.transport == "rdma"
     then 20049
@@ -31,11 +32,7 @@ in {
     services.nfs-root = {
       enable = mkEnableOption "NFS root boot (guest side)";
 
-      interface = mkOption {
-        type = types.listOf types.str;
-        default = ["eth0"];
-        description = "Network interfaces to bring up in initrd (first entry is used as primary).";
-      };
+      interface = netboot.interfaceOption ["eth0"];
 
       nfs = {
         transport = mkOption {
@@ -69,27 +66,9 @@ in {
         };
       };
 
-      boot = {
-        kernelModules = mkOption {
-          type = types.listOf types.str;
-          default = ["nfs" "sunrpc" "nfsv4"];
-          description = "Extra initrd kernel modules needed for NFS boot.";
-        };
+      boot = netboot.bootOptions {kernelModulesDefault = ["nfs" "sunrpc" "nfsv4"];};
 
-        extraKernelParams = mkOption {
-          type = types.listOf types.str;
-          default = [];
-          description = "Additional kernel parameters.";
-        };
-      };
-
-      network = {
-        dhcp = mkOption {
-          type = types.str;
-          default = "ipv4";
-          description = "DHCP configuration (ipv4, ipv6, yes, no).";
-        };
-      };
+      network = netboot.networkOption;
     };
   };
 
@@ -114,54 +93,19 @@ in {
         kernelModules =
           lib.mkAfter (cfg.boot.kernelModules
             ++ lib.optional (cfg.nfs.transport == "rdma") "xprtrdma");
-        systemd = {
-          enable = true;
-          emergencyAccess = true;
-          initrdBin = [pkgs.iproute2 pkgs.pciutils pkgs.dnsutils pkgs.util-linux pkgs.coreutils pkgs.iputils pkgs.nfs-utils];
-
-          services = {
-            ensure-network-nfs = {
-              enable = true;
-              before = ["network-online.target"];
-              wantedBy = ["network-online.target"];
-              after = ["nss-lookup.target"];
-              unitConfig.DefaultDependencies = "no";
-              serviceConfig = {
-                Type = "oneshot";
-                TimeoutStartSec = 60;
-                ExecStart = "${pkgs.bashInteractive}/bin/sh -c 'until ${pkgs.iputils}/bin/ping -c 1 ${primaryPeer.serverIp}; do ${pkgs.coreutils}/bin/sleep 1; done'";
-              };
+        systemd =
+          (netboot.initrdSystemd {extraInitrdBin = [pkgs.nfs-utils];})
+          // {
+            services = {
+              ensure-network-nfs = netboot.ensureNetwork {peerAddress = primaryPeer.serverIp;};
             };
+            network = netboot.initrdNetwork cfg;
           };
-
-          network = {
-            enable = true;
-            wait-online = {
-              anyInterface = lib.mkForce false;
-              timeout = 30;
-            };
-            networks = lib.listToAttrs (map (iface:
-              lib.nameValuePair "40-${iface}-initrd" {
-                matchConfig.Name = iface;
-                networkConfig.DHCP = cfg.network.dhcp;
-                linkConfig.RequiredForOnline = "routable";
-              })
-            cfg.interface);
-          };
-        };
         services.resolved.enable = true;
       };
     };
 
-    systemd.network.networks = lib.listToAttrs (map (iface:
-      lib.nameValuePair "40-${iface}" {
-        matchConfig.Name = iface;
-        networkConfig.KeepConfiguration = "yes";
-        # linkConfig = {
-        #   Unmanaged = true;
-        # };
-      })
-    cfg.interface);
+    systemd.network.networks = netboot.stage2Network cfg;
 
     fileSystems = let
       multipathFileSystems = lib.listToAttrs (lib.imap0 (idx: peer:
