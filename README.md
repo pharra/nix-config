@@ -91,7 +91,7 @@ flake.nix                          只装配输出（nixosConfigurations / apps 
 ## zed 的网络启动（netboot）
 
 zed 除了本地启动还有"从网络盘启动"的两条路径，横跨 `hosts/` `lib/` `modules/boot/` 三层，
-是最难一眼看懂的部分 —— 专门的说明见 [docs/netboot.md](docs/netboot.md)。
+是最难一眼看懂的部分 —— 专门的说明见 [modules/boot/netboot/README.md](modules/boot/netboot/README.md)。
 
 ## 常用命令
 
@@ -174,7 +174,7 @@ nix build .#packages.x86_64-linux.azure-x64
 - `nixos/ipxe/`、`nixos/wireguard-server/`：没有被任何 host 启用
 - `secrets/agenix/atticd.env`、`secrets/agenix/wireguard_homelab_private_key.age`：已注册但无模块引用
 - `services/nfs-root`（`boot/boot-over-nfs`）在 24 个顶层配置里都是关的，但 homelab 上的 zed guest
-  在用它（`lib/mkZedGuest.nix`），不是死代码
+  在用它（`modules/boot/netboot/mkZedGuest.nix`），不是死代码
 
 ## CI
 

@@ -17,7 +17,7 @@ nixosSystem {
   system = "x86_64-linux";
   specialArgs = commonSpecialArgs;
   nixos-modules =
-    [../hosts/zed]
+    [../../../hosts/zed]
     ++ common-nixos-modules
     ++ [
       (variants.nixosModule "kde")

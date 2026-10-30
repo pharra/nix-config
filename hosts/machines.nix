@@ -51,7 +51,7 @@
     ];
   }
 
-  # 同一台 zed，但从 NVMF/iSCSI 网络盘启动（链路见 docs/netboot.md）
+  # 同一台 zed，但从 NVMF/iSCSI 网络盘启动（链路见 modules/boot/netboot/README.md）
   {
     name = "zed_net";
     system = "x86_64-linux";

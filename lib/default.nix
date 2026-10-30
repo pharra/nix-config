@@ -10,7 +10,7 @@
 
   nixosSystem = import ./nixosSystem.nix;
   # 模块清单：显式写在各目录的 default.nix 里（不再用目录自动发现）
-  netboot = import ./netboot.nix {inherit lib;};
+  netboot = import ../modules/boot/netboot/netboot.nix {inherit lib;};
   variants = import ./variants.nix {inherit lib;};
 
   # 模块与 home 模块都来自显式清单（modules/default.nix、home-modules/default.nix）
@@ -69,7 +69,7 @@
     inherit username mysecrets home-modules NixVirt agenix inputs;
   };
 
-  mkZedGuest = import ./mkZedGuest.nix {
+  mkZedGuest = import ../modules/boot/netboot/mkZedGuest.nix {
     inherit nixosSystem common-nixos-modules commonSpecialArgs netboot variants username;
   };
 

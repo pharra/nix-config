@@ -7,8 +7,8 @@
   archlinux = import ./vm/archlinux;
   audio-relay = import ./desktop/audio-relay;
   azure-tools = import ./core/azure-tools;
-  boot-over-nfs = import ./boot/boot-over-nfs;
-  boot-over-nvmf = import ./boot/boot-over-nvmf;
+  boot-over-nfs = import ./boot/netboot/boot-over-nfs;
+  boot-over-nvmf = import ./boot/netboot/boot-over-nvmf;
   common = import ./core/common;
   cosmic = import ./desktop/cosmic;
   ddns-go = import ./network/ddns-go;
@@ -22,8 +22,8 @@
   gnome = import ./desktop/gnome;
   impermanence = import ./core/impermanence;
   input-method = import ./desktop/input-method;
-  ipxe-host = import ./boot/ipxe-host;
-  iscsi-root = import ./boot/iscsi-root;
+  ipxe-host = import ./boot/netboot/ipxe-host;
+  iscsi-root = import ./boot/netboot/iscsi-root;
   kde = import ./desktop/kde;
   lianli-linux = import ./hardware/lianli-linux;
   libvirt = import ./vm/libvirt;
@@ -36,7 +36,7 @@
   network-bridge = import ./network/network-bridge;
   no-desktop = import ./core/no-desktop;
   nvme-auto = import ./hardware/nvme-auto;
-  nvmf = import ./boot/nvmf;
+  nvmf = import ./boot/netboot/nvmf;
   openwrt = import ./network/openwrt;
   samba = import ./network/samba;
   scripts = import ./core/scripts;

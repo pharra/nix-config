@@ -1,5 +1,5 @@
 # zed 从网络盘启动（NVMF/iSCSI + NFS）的公共覆盖片段。
-# 两处共用：hosts/machines.nix 的 zed_net 配置、lib/mkZedGuest.nix（homelab 上跑的 zed guest）。
+# 两处共用：hosts/machines.nix 的 zed_net 配置、同目录 mkZedGuest.nix（homelab 上跑的 zed guest）。
 {lib}: {
   # zed_net 用 iSCSI 引导 EFI
   iscsiBoot = {
