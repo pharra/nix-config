@@ -1,0 +1,6 @@
+# statix 配置。只关掉 repeated_keys（W20，"属性前缀重复"）：本仓库刻意用 services.x.y /
+# hardware.a.b 的平铺写法，同一个文件里靠空行与注释分节，比塞进一个大嵌套 attrset 更好读。
+# 其余 lint 照常生效（CI 的 lint job 也会跑）。
+# 注意：文件名必须是 statix.toml（不带点）；disabled 写 lint 名字，不是 W20 这种编号。
+disabled = ["repeated_keys"]
+ignore = [".direnv", ".git"]
