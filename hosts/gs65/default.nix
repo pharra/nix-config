@@ -1,5 +1,5 @@
 # MSI GF65（笔记本；注意 hostname 是 nix65，不是 gs65）。
-# 配置名：gs65_{kde,gnome,cosmic,wm}。
+# 配置名：gs65（desktop = kde，见 hosts/machines.nix）。
 # 启用的功能：见本文件与 ./hardware-configuration.nix 里的 services.pharra / hardware.* enable 项。
 {
   config,

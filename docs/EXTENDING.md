@@ -23,7 +23,7 @@ nix eval --raw .#nixosConfigurations.<name>.config.system.build.toplevel.drvPath
 **为什么只要这 3 个**：`hosts/machines.nix` 是纯数据，构建逻辑在 `lib/default.nix`；
 bootloader / NetworkManager / libvirt / 用户组这些以前每台机器都抄一遍的设置已经在
 `modules/core/common`（`services.pharra.common.enable`）里；桌面栈在 `services.pharra.desktop`；
-build 变体复用 `lib/variants.nix` 里已有的那 6 个。想知道某个设置是谁设的，按
+desktop 取值复用 `lib/variants.nix` 里已有的那 6 个。想知道某个设置是谁设的，按
 `hosts/<name>` → `core/common` → `core/desktop` → `lib/variants.nix` 这个顺序找。
 
 ### 按需改动（不写不会报错，只在用到时才发现）
@@ -48,7 +48,7 @@ nix eval .#nixosConfigurations --apply 'x: builtins.attrNames x'   # 确认新�
 1. `cp -r modules/_template modules/<域>/<名字>`，把骨架里的 `my-module` 换成你的选项名。
 2. 在 `modules/default.nix` 清单里加一行：`<名字> = import ./<域>/<名字>;`
 3. 在需要的 host 里加一行：`services.pharra.<名字>.enable = true;`
-   （Home Manager 模块则放在 `home-modules/<名字>/`，在 `lib/variants.nix` 的 `homeSwitch` 表里按 build 变体打开。）
+   （Home Manager 模块则放在 `home-modules/<名字>/`，在 `lib/variants.nix` 的 `homeSwitch` 表里按 desktop 打开。）
 
 **要登记**：在 `modules/default.nix` 清单里加一行 `名字 = import ./<域>/<名字>;`
 （显式清单，没有自动发现；`_template` 不在清单里，所以不会被加载）。

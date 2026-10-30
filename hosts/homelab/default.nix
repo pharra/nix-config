@@ -1,5 +1,5 @@
 # 服务器：ZFS 存储 + SPDK/NVMF 网络盘 + 一批容器服务；同时是 zed 网络启动（zed_net）的宿主侧。
-# 配置名：homelab_{base,kde,gnome,cosmic,wm}。
+# 配置名：homelab（desktop = base）。
 # 启用的功能：见本文件与 ./hardware-configuration.nix 里的 services.pharra / hardware.* enable 项；
 # libvirt 客机在 ./nixvirt；NFS/NVMF 导出给 guest 的部分在 modules/boot/netboot/netboot.nix 与 mkZedGuest.nix。
 {config, ...}: {

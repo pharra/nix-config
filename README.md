@@ -24,7 +24,7 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 | 路径 | 作用 |
 | --- | --- |
 | `flake.nix` | 只放 inputs 与输出装配（`nixosConfigurations` / `apps` / `packages` / `formatter`） |
-| `lib/` | 装配逻辑：`default.nix`（上下文与配置生成）、`variants.nix`（build 变体表）、`netboot.nix`、`mkZedGuest.nix`、`nixosSystem.nix` |
+| `lib/` | 装配逻辑：`default.nix`（上下文与配置生成）、`variants.nix`（desktop 变体表）、`nixosSystem.nix` |
 | `hosts/` | 每台机器一个目录（硬件、磁盘、网络、host 专属开关）；`hosts/machines.nix` 是机器清单（纯数据） |
 | `modules/` | 通用 NixOS 模块，分 7 个域，显式清单（见下） |
 | `home-modules/` | Home Manager 模块（统一 `home.pharra.*` 命名空间），显式清单 |
@@ -51,7 +51,8 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 flake.nix                          只装配输出（nixosConfigurations / apps / packages / formatter）
   └─ lib/default.nix               上下文：common-nixos-modules、commonSpecialArgs、variants、secrets 路径
        ├─ hosts/machines.nix       机器清单（纯数据）：name / system / desktop / nixos-modules
-       ├─ lib/variants.nix         build 变体表：NixOS 侧开关 + home 侧开关 + 生成的 home 模块
+       ├─ lib/variants.nix         desktop 变体表：NixOS 侧开关 + home 侧开关 + 生成的 home 模块
+       ├─ modules/boot/netboot/    网络启动能力：模块 + netboot.nix + mkZedGuest.nix + 说明
        ├─ modules/<域>/<名字>/     显式清单，按 enable 开关生效
        ├─ home-modules/<名字>/     显式清单，统一 home.pharra.* 命名空间
        └─ secrets/                 sops-nix + agenix
@@ -63,7 +64,7 @@ flake.nix                          只装配输出（nixosConfigurations / apps 
 1. **宿主自己**：`hosts/<name>/default.nix`（网卡 MAC、磁盘、显卡、这台机器特有的开关）
 2. **全机共用**：`modules/core/common`（`services.pharra.common.enable`，22 个配置里开着）
 3. **桌面共用**：`modules/core/desktop`（`services.pharra.desktop.enable`）
-4. **build 变体**：`lib/variants.nix`（kde / gnome / cosmic / wm / denial / base）
+4. **desktop 取值**：`lib/variants.nix`（kde / gnome / cosmic / wm / denial / base）
 
 反过来：**要让所有机器都变，改第 2 层；要让所有桌面机都变，改第 3 层；只影响一台，改第 1 层。**
 分层里底层用 `lib.mkDefault`、上层直接赋值，所以上层不需要 `mkForce` 就能覆盖（见「设计取舍」）。
@@ -124,7 +125,7 @@ nix build .#packages.x86_64-linux.azure-x64
 - **新机器**：建 `hosts/<name>/hardware-configuration.nix` 与 `hosts/<name>/default.nix`，
   然后在 `hosts/machines.nix` 加一条（`name` / `system` / `desktop` / `nixos-modules` / 可选 `hostname`、`specialArgs`）。
   **不需要改 `flake.nix`。**
-- **新 build 变体**：在 `lib/variants.nix` 的 `nixos` 与 `homeSwitch` 两张表里各加一项，
+- **新桌面（desktop）**：在 `lib/variants.nix` 的 `nixos` 与 `homeSwitch` 两张表里各加一项（只想给一台机器换桌面就改 `hosts/machines.nix` 那一行），
   键必须一致（文件里有一句断言），加漏了或写错名字会在 eval 期直接报错。
 - **新 NixOS 模块**：放到 `modules/<域>/<name>/default.nix`，并在 `modules/default.nix` 清单里加一行。
   要停用就把它从 `modules/default.nix` 里删掉或注释掉 —— 没在清单里的模块不会加载。
@@ -144,7 +145,8 @@ nix build .#packages.x86_64-linux.azure-x64
   否则在那个目录里改一行文档，7 个用到 age 秘密的配置 drvPath 全变。
 - 秘密有 sops-nix 与 agenix 两套：历史原因，未做迁移（迁移必须先解密，收益不大），新秘密优先用 sops。
 - `boot/iscsi-root` 是 nixpkgs `root-initiator.nix` 的本地副本，选项路径故意不叫
-  `boot.iscsi-initiator`（nixpkgs 自己声明了它，同名会撞车）。
+  `boot.iscsi-initiator`（历史上 nixpkgs 自己声明了它，同名会撞车）。上游后来把这个模块移除了，
+  所以这份副本要保留、由本仓库自己维护。
 - 大模块的拆分约定：脚本/模板正文放同目录的独立 `.nix` 文件（保持字符串字面量，Nix 插值才有效，
   所以不要用 `builtins.readFile` 抽成 `.sh`）；选项与实现分开（例如 `network/dhcp-server/` 的
   `options.nix` + `config.nix`，`core/common/` 的 `default.nix` 机器级 + `user.nix` 用户级）。
