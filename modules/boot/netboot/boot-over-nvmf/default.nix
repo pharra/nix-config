@@ -124,8 +124,7 @@ in {
     systemd.network.networks = netboot.stage2Network cfg;
 
     environment.systemPackages = with pkgs;
-      []
-      ++ lib.optionals cfg.nvmf.enable [nvme-cli]
+      lib.optionals cfg.nvmf.enable [nvme-cli]
       ++ lib.optionals cfg.iscsi.enable [openiscsi];
   };
 }

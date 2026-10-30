@@ -3,7 +3,6 @@
   pkgs,
   lib,
   config,
-  mysecrets,
   ...
 }: {
   imports = [../podman-runtime.nix];

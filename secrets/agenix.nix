@@ -2,9 +2,7 @@
   config,
   pkgs,
   agenix,
-  mysecrets,
   username,
-  lib,
   ...
 }: {
   # 注意：这里不再 imports agenix.nixosModules.default ——

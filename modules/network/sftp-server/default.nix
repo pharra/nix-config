@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 with lib; let
@@ -24,12 +23,7 @@ in {
           isReadOnly = false;
         };
       };
-      config = {
-        config,
-        pkgs,
-        lib,
-        ...
-      }: {
+      config = {lib, ...}: {
         # Enable the OpenSSH daemon.
         services.openssh = {
           enable = true;

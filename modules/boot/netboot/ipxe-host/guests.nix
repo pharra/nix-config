@@ -15,7 +15,7 @@ in
       ];
     in {
       inherit guestSystem kernelParams;
-      macs = guestCfg.macs;
+      inherit (guestCfg) macs;
       kernelUrl = "${name}/bzImage";
       initrdUrl = "${name}/initrd";
       kernelPath = guestSystem.config.system.build.kernel + "/bzImage";

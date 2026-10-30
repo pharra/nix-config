@@ -1,15 +1,11 @@
 {
   lib,
-  pkgs,
   config,
   NixVirt,
   ...
 } @ args: let
   base = import ../../nixos/nixvirt/base.nix args;
-  linux_template = base.linux_template;
-  pci_address = base.pci_address;
-  usb_address = base.usb_address;
-  drive_address = base.drive_address;
+  inherit (base) linux_template;
 
   mac-generator = import ./mac-generator.nix {inherit lib;};
 in {

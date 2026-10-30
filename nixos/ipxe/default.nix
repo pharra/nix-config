@@ -1,8 +1,6 @@
 {
   lib,
   pkgs,
-  config,
-  interface,
   netboot_args ? false,
   ...
 }: {

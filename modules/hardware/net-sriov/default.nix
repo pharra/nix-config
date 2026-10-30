@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   config,
   ...
 }:
@@ -33,8 +32,8 @@ in {
     systemd.services =
       foldl' (
         services: interface: let
-          name = interface.name;
-          number = interface.number;
+          inherit (interface) name;
+          inherit (interface) number;
         in
           services
           // {

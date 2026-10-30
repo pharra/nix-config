@@ -108,7 +108,7 @@ in {
     systemd.network.networks = netboot.stage2Network cfg;
 
     fileSystems = let
-      multipathFileSystems = lib.listToAttrs (lib.imap0 (idx: peer:
+      multipathFileSystems = lib.listToAttrs (lib.imap0 (_idx: peer:
         lib.nameValuePair "/nix" {
           device = "${peer.serverIp}:${cfg.nfs.rootPath}";
           fsType = "nfs";

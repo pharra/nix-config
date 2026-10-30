@@ -2,7 +2,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 with lib; let
@@ -30,7 +29,7 @@ in {
     home.file = builtins.listToAttrs (map
       (program: let
         pname = program.name;
-        pkg = program.pkg;
+        inherit (program) pkg;
       in {
         name = ".config/autostart/" + pname + ".desktop";
         value =

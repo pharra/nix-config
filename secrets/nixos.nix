@@ -1,12 +1,4 @@
-{
-  config,
-  pkgs,
-  agenix,
-  mysecrets,
-  username,
-  lib,
-  ...
-}: {
+{...}: {
   imports = [
     ./agenix.nix
     ./github.nix

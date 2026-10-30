@@ -62,7 +62,7 @@
   mysecrets = lib.cleanSourceWith {
     name = "agenix-secrets";
     src = ../secrets/agenix;
-    filter = path: type: lib.hasSuffix ".age" path || lib.hasSuffix ".env" path;
+    filter = path: _type: lib.hasSuffix ".age" path || lib.hasSuffix ".env" path;
   };
 
   commonSpecialArgs = {
@@ -73,7 +73,7 @@
     inherit nixosSystem common-nixos-modules commonSpecialArgs netboot variants username;
   };
 
-  machines = import ../hosts/machines.nix {inherit lib inputs netboot mkZedGuest;};
+  machines = import ../hosts/machines.nix {inherit inputs netboot mkZedGuest;};
 
   base_args = {inherit home-manager;};
   stable_args = base_args // {inherit nixpkgs;};
@@ -96,7 +96,7 @@
             }
           ];
         home-module = variants.mkHomeModule username machine.desktop;
-        system = machine.system;
+        inherit (machine) system;
       }
       // stable_args
       // {
@@ -104,7 +104,7 @@
       });
 
   nixosConfigurations = builtins.listToAttrs (map (machine: {
-      name = machine.name;
+      inherit (machine) name;
       value = mkMachine machine;
     })
     machines);

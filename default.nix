@@ -8,9 +8,9 @@
 {pkgs ? import <nixpkgs> {}}: let
   spdk_pkgs = pkgs.callPackage ./pkgs/spdk {};
 in rec {
-  spdk = spdk_pkgs.spdk;
+  inherit (spdk_pkgs) spdk;
   distrobox-session = pkgs.callPackage ./pkgs/distrobox {};
-  spdk-python = spdk_pkgs.spdk-python;
+  inherit (spdk_pkgs) spdk-python;
   xiraid = pkgs.callPackage ./pkgs/xiraid {};
   aosp = pkgs.callPackage ./pkgs/aosp {};
   surface-dtx-daemon = pkgs.callPackage ./pkgs/surface-dtx-daemon {};

@@ -25,7 +25,6 @@
   json_c,
   cmocka,
   rdma-core,
-  ensureNewerSourcesForZipFilesHook,
   fuse3,
   autoPatchelfHook,
   bubblewrap,

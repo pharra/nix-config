@@ -1,5 +1,4 @@
 {
-  pkgs,
   config,
   lib,
   ...
@@ -7,8 +6,8 @@
 with lib; let
   cfg = config.services.pharra.udev-symlink;
   mkRule = rule: let
-    pciPath = rule.pciPath;
-    symlinkName = rule.symlinkName;
+    inherit (rule) pciPath;
+    inherit (rule) symlinkName;
   in
     concatStringsSep "\n" [
       ''KERNEL=="card*", KERNELS=="${pciPath}", SUBSYSTEM=="drm", SUBSYSTEMS=="pci", SYMLINK+="dri/${symlinkName}-card"''

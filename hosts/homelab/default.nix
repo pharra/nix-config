@@ -2,17 +2,7 @@
 # 配置名：homelab_{base,kde,gnome,cosmic,wm}。
 # 启用的功能：见本文件与 ./hardware-configuration.nix 里的 services.pharra / hardware.* enable 项；
 # libvirt 客机在 ./nixvirt；NFS/NVMF 导出给 guest 的部分在 modules/boot/netboot/netboot.nix 与 mkZedGuest.nix。
-{
-  config,
-  lib,
-  pkgs,
-  mysecrets,
-  username,
-  mkZedGuest,
-  nixpkgs,
-  home-manager,
-  ...
-} @ args: {
+{config, ...}: {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix

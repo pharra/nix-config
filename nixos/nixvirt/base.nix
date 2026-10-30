@@ -1,15 +1,13 @@
 {
-  lib,
   pkgs,
-  config,
   NixVirt,
   ...
 }: {
   pci_address = bus: slot: function: {
     type = "pci";
     domain = 0;
-    bus = bus;
-    slot = slot;
+    inherit bus;
+    inherit slot;
     inherit function;
   };
   usb_address = port: {

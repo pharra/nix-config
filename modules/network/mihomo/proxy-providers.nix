@@ -30,6 +30,6 @@ in {
   sops = {
     secrets = lib.mkIf config.services.mihomo.enable (lib.genAttrs [
       "mihomo/providers/substore"
-    ] (name: {restartUnits = ["mihomo.service"];}));
+    ] (_name: {restartUnits = ["mihomo.service"];}));
   };
 }

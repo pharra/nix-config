@@ -1,9 +1,6 @@
 {
   lib,
   stdenv,
-  fetchpatch,
-  fetchgit,
-  fetchurl,
   ncurses,
   python3,
   cunit,

@@ -92,7 +92,7 @@
 
     kill_nvidia_processes() {
       local signal=$1
-      echo "[$(date)] Attempting to kill processes with signal: ${signal:-SIGTERM}"
+      echo "[$(date)] Attempting to kill processes with signal: ${"signal:-SIGTERM"}"
       local devices=(
         "/dev/nvidia0"
         "/dev/dri/by-path/pci-0000:$nvidia_bus_path-card"

@@ -1,7 +1,6 @@
 {
   lib,
   stdenv,
-  makeWrapper,
   podman,
 }:
 stdenv.mkDerivation rec {

@@ -1,11 +1,8 @@
 # 存储：ZFS 池、/boot/efi。（备份能力已搬到 modules/storage/backup，这里只留一行 enable）
 # 文件末尾保留了两段被注释掉的 rclone 同步（曾经用过，暂时没启用）。
 {
-  config,
   lib,
-  pkgs,
   mysecrets,
-  username,
   ...
 }:
 with lib; {

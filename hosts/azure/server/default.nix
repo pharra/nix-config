@@ -2,9 +2,8 @@
   config,
   pkgs,
   mysecrets,
-  lib,
   ...
-} @ args: {
+}: {
   system.activationScripts."replace_domain" = ''
     domain=`${pkgs.coreutils-full}/bin/cat /root/domain || echo "default.domain"`
     caddyConfigFile=${config.age.secrets.caddy_server_conf.path}

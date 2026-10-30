@@ -1,5 +1,4 @@
 {
-  stdenv,
   fetchurl,
   rustPlatform,
   pkg-config,

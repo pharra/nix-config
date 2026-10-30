@@ -1,15 +1,6 @@
-{
-  lib,
-  pkgs,
-  config,
-  NixVirt,
-  ...
-} @ args: let
+{NixVirt, ...} @ args: let
   base = import ../../../nixos/nixvirt/base.nix args;
-  linux_template = base.linux_template;
-  pci_address = base.pci_address;
-  usb_address = base.usb_address;
-  drive_address = base.drive_address;
+  inherit (base) linux_template;
 in {
   definition = let
     IncusOS = linux_template {

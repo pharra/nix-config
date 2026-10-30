@@ -1,7 +1,5 @@
 {
-  lib,
   pkgs,
-  config,
   NixVirt,
   ...
 }: let

@@ -125,7 +125,7 @@
     username = "wf";
     allSystems = ["x86_64-linux" "aarch64-linux"];
 
-    forAllSystems = f: nixpkgs.lib.genAttrs allSystems (system: f system);
+    forAllSystems = f: nixpkgs.lib.genAttrs allSystems f;
     legacyPackages = forAllSystems (system:
       import ./default.nix {
         pkgs = import nixpkgs {
@@ -136,7 +136,7 @@
 
     # 装配逻辑在 lib/，机器清单在 hosts/machines.nix（一台机器一个配置）
     ctx = import ./lib {inherit inputs username;};
-    nixosConfigurations = ctx.nixosConfigurations;
+    inherit (ctx) nixosConfigurations;
   in {
     inherit nixosConfigurations legacyPackages;
 

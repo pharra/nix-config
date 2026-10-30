@@ -1,11 +1,8 @@
 {
-  pkgs,
-  lib,
   config,
-  utils,
   mysecrets,
   ...
-} @ args: {
+}: {
   age.secrets."wireguard_homelab_private_key" = {
     file = "${mysecrets}/wireguard_homelab_private_key.age";
     mode = "644";

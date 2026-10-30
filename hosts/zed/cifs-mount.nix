@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  username,
-  ...
-}: {
+_: {
   # mount a smb/cifs share
   services.rpcbind.enable = true; # needed for NFS
 

@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 with lib; let
@@ -61,7 +60,7 @@ in {
 
       netdevs =
         lib.mapAttrs' (
-          bridgeName: bridgeCfg:
+          _bridgeName: bridgeCfg:
             lib.nameValuePair "20-${bridgeCfg.name}" {
               netdevConfig = {
                 Kind = "bridge";
@@ -79,7 +78,7 @@ in {
             in
               acc
               // lib.listToAttrs (lib.imap0 (
-                  idx: port:
+                  _idx: port:
                     lib.nameValuePair "30-${port}" {
                       matchConfig.Name = port;
                       networkConfig.Bridge = bridgeCfg.name;

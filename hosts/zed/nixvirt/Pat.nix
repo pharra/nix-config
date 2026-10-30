@@ -1,15 +1,12 @@
 {
   lib,
   pkgs,
-  config,
   NixVirt,
   ...
 } @ args: let
   base = import ../../../nixos/nixvirt/base.nix args;
-  windows_template = base.windows_template;
-  pci_address = base.pci_address;
-  usb_address = base.usb_address;
-  drive_address = base.drive_address;
+  inherit (base) windows_template;
+  inherit (base) pci_address;
 
   Pat = windows_template {
     name = "Pat";

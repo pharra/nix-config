@@ -2,26 +2,10 @@
   config,
   lib,
   pkgs,
-  utils,
   ...
 }:
 with lib; let
   cfg = config.services.pharra.surface-dtx-daemon;
-  attach = pkgs.writeScript "attach.sh" "${cfg.attach}";
-  detach = pkgs.writeScript "detach.sh" "${cfg.detach}";
-  detach_abort = pkgs.writeScript "detach.sh" "${cfg.detach_abort}";
-  configFile = pkgs.writeText "surface-dtx-daemon.conf" ''
-    [log]
-    level="info"
-
-    [handler]
-    attach="${attach}"
-    detach="${detach}"
-    detach_detach_abort="${detach_abort}"
-
-    [delay]
-    attach = 7
-  '';
 in {
   options = {
     services.pharra.surface-dtx-daemon = {

@@ -188,7 +188,6 @@ in {
       [8080]
       ++ lib.optionals cfg.nfs.enable [2049 111 4000 4001 4002 20049];
     networking.firewall.allowedUDPPorts =
-      []
-      ++ lib.optionals cfg.nfs.enable [2049 111 4000 4001 4002];
+      lib.optionals cfg.nfs.enable [2049 111 4000 4001 4002];
   };
 }

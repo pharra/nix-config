@@ -6,10 +6,6 @@
 }:
 with lib; let
   cfg = config.home.pharra.base;
-
-  d = config.xdg.dataHome;
-  c = config.xdg.configHome;
-  cache = config.xdg.cacheHome;
 in {
   options = {
     home.pharra.base = {

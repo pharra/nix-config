@@ -4,7 +4,6 @@
 # 这个文件只放数据：name / system / desktop / hostname（部署地址）/ nixos-modules / specialArgs。
 # 装配逻辑在 lib/default.nix；desktop 的可选值与含义见 lib/variants.nix。
 {
-  lib,
   inputs,
   netboot,
   mkZedGuest,

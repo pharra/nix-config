@@ -50,16 +50,6 @@
     include-all = true;
   };
 
-  Loadbalance = {
-    type = "load-balance";
-    url = "https://www.gstatic.com/generate_204";
-    interval = 300;
-    strategy = "round-robin";
-    disable-udp = false;
-    hidden = false;
-    include-all = true;
-  };
-
   SelectProxies = [
     "节点选择"
     "DIRECT"

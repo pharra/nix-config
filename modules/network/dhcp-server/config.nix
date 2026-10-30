@@ -48,10 +48,6 @@ in {
     systemd.services = listToAttrs (forEach (filter (n: n.enableDnsmasq != false) (attrValues cfg.networks)) (
       network: let
         iface = network.interface;
-        hostrecord =
-          if (network.ipv6.enable == true)
-          then "${network.name},${network.domain},${network.ipv4.address},${network.ipv6.address}"
-          else "${network.name},${network.domain},${network.ipv4.address}";
         stateDir = "/var/lib/dnsmasq-${iface}";
         # Format static host entries for dnsmasq dhcp-host option
         # Format: dhcp-host=MAC,IP[,hostname]
@@ -144,7 +140,7 @@ in {
             (lib.optional network.ipv6.enable "${network.ipv6.address}/${network.ipv6.netmask}")
           ];
           DNS =
-            if (network.enableDnsmasq)
+            if network.enableDnsmasq
             then
               lib.concatLists [
                 ["${network.ipv4.address}"]

@@ -1,15 +1,12 @@
 {
   lib,
   pkgs,
-  config,
   NixVirt,
   ...
 } @ args: let
   base = import ../../../nixos/nixvirt/base.nix args;
-  linux_template = base.linux_template;
-  pci_address = base.pci_address;
-  usb_address = base.usb_address;
-  drive_address = base.drive_address;
+  inherit (base) linux_template;
+  inherit (base) pci_address;
   Bazzite = linux_template {
     name = "Bazzite";
     uuid = "ee43005c-2e7b-4af2-bfae-8c52eeb22672";

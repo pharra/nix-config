@@ -3,11 +3,9 @@
   pkgs,
   lib,
   config,
-  utils,
   ...
 } @ args:
 with lib; let
-  netns = "openwrt";
   openwrtImage = pkgs.fetchurl {
     url = "https://github.com/pharra/OpenWrt-K/releases/download/v2025.10.23-0(x86-64)-(v24.10.3)-x86_64/openwrt-x86-64-generic-squashfs-combined.img.gz";
     hash = "sha256-SNoWBlHvgCqbNaA6SR85puUj6TsrS2OFnV0tezr5p4s=";

@@ -1,9 +1,7 @@
 # 网络启动宿主侧：生成给 zed 用的 guest 系统，并用 iPXE + NFS 把它引导起来。
 # 完整链路见 modules/boot/netboot/README.md（注意当前 services.pharra.ipxe-host.nfs.enable = false）。
 {
-  config,
   lib,
-  pkgs,
   nixpkgs,
   home-manager,
   mkZedGuest,

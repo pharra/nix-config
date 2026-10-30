@@ -1,7 +1,6 @@
 {
   pkgs,
   buildFHSEnv,
-  stdenv,
 }: let
   fhs = buildFHSEnv {
     name = "android-env";

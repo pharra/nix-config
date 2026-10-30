@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 with lib; let
@@ -61,9 +60,9 @@ in {
           config.sops.templates."${cfg.networkName}.env".path
         ];
         settings = {
-          ipv4 = cfg.ipv4;
+          inherit (cfg) ipv4;
           network_name = cfg.networkName;
-          peers = cfg.peers;
+          inherit (cfg) peers;
         };
       };
     };
@@ -75,7 +74,7 @@ in {
     sops = {
       secrets = lib.mkIf config.services.easytier.enable (lib.genAttrs [
         "easytier/${cfg.networkName}/secret"
-      ] (name: {restartUnits = ["easytier-${cfg.instanceName}.service"];}));
+      ] (_name: {restartUnits = ["easytier-${cfg.instanceName}.service"];}));
     };
   };
 }

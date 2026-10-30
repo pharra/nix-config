@@ -45,12 +45,12 @@ in {
   };
 
   config = mkIf cfg.enable (let
-    netns = cfg.netns;
+    inherit (cfg) netns;
     hostVeth = "veth-${netns}-ns";
     dockerNsVeth = "veth-${netns}-br";
-    dockerBridge = cfg.dockerBridge;
-    dockerHostIP = cfg.dockerHostIP;
-    dockerGateway = cfg.dockerGateway;
+    inherit (cfg) dockerBridge;
+    inherit (cfg) dockerHostIP;
+    inherit (cfg) dockerGateway;
   in {
     services.pharra.netns = {
       enable = true;
