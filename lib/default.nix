@@ -1,6 +1,6 @@
 # 仓库内部上下文：把 flake inputs 整理成生成 nixosConfigurations 所需的一切。
-# 约定：flake.nix 只放 inputs 与输出装配；构建逻辑在这里；host 数据在 hosts/registry.nix；
-#      build 变体在 lib/variants.nix；模块目录用 lib/importModules.nix 自动发现。
+# 约定：flake.nix 只放 inputs 与输出装配；构建逻辑在这里；host 数据在 hosts/machines.nix；
+#      build 变体在 lib/variants.nix；模块目录用 显式清单。
 {
   inputs,
   username,
@@ -9,13 +9,13 @@
   inherit (nixpkgs) lib;
 
   nixosSystem = import ./nixosSystem.nix;
-  importModules = import ./importModules.nix;
+  # 模块清单：显式写在各目录的 default.nix 里（不再用目录自动发现）
   netboot = import ./netboot.nix {inherit lib;};
   variants = import ./variants.nix {inherit lib;};
 
-  # 模块目录自动发现：新增 modules/<name>/default.nix 即自动生效，不用改注册表
-  modules = importModules {dir = ../modules;};
-  home-modules = builtins.attrValues (importModules {dir = ../home-modules;});
+  # 模块与 home 模块都来自显式清单（modules/default.nix、home-modules/default.nix）
+  modules = import ../modules;
+  home-modules = builtins.attrValues (import ../home-modules);
 
   overlays = import ../overlay.nix;
   overlay = import ../overlays;
@@ -73,7 +73,7 @@
     inherit nixosSystem common-nixos-modules commonSpecialArgs netboot variants username;
   };
 
-  hosts = import ../hosts/registry.nix {inherit lib inputs netboot mkZedGuest;};
+  machines = import ../hosts/machines.nix {inherit lib inputs netboot mkZedGuest;};
 
   base_args = {inherit home-manager;};
   stable_args = base_args // {inherit nixpkgs;};
@@ -114,7 +114,7 @@
         });
     })
     machine.builds)
-  hosts));
+  machines));
 in {
   inherit nixosConfigurations;
 }

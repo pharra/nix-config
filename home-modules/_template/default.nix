@@ -1,5 +1,5 @@
 # 新 Home Manager 模块骨架：复制到 home-modules/<你的名字>/，把 my-module 换成你的名字。
-# 这个目录以 _ 开头，lib/importModules.nix 会跳过它。
+# 这个目录以 _ 开头，且不在 home-modules/default.nix 的清单里，所以不会被加载；复制改名后记得去清单加一行。
 #
 # 约定：
 #   1. 开关统一放 home.pharra.* 下（本仓库唯一的 home 命名空间，不要再定义 services.* 之类的越界选项）

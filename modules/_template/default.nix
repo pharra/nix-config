@@ -1,5 +1,5 @@
 # 新模块骨架：把这个目录复制到 modules/<域>/<你的名字>/，并把下面的 my-module 换成你的名字。
-# 这个目录以 _ 开头，lib/importModules.nix 会跳过它，所以放在 modules/ 下不会被当成模块加载。
+# 这个目录以 _ 开头，且不在 modules/default.nix 的清单里，所以不会被加载；复制改名后记得去清单加一行。
 #
 # 约定（详见 README 的「模块的命名与组织规则」）：
 #   1. 域只有 4 个：services.pharra.*（自有服务，默认放这里）/ hardware.* / boot.* / virtualisation.*

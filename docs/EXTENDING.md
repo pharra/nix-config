@@ -12,7 +12,7 @@
 | --- | --- |
 | `hosts/<name>/hardware-configuration.nix` | `nixos-generate-config` 生成的，不要手改 |
 | `hosts/<name>/default.nix` | 这台机器的「自我介绍」：`networking.hostName`、`system.stateVersion`、`services.pharra.*` 开关、磁盘/网卡/显卡等宿主特有设置 |
-| `hosts/registry.nix` | 加一条记录：`name` / `builds` / `system` / `nixos-modules`，可选 `hostname`（部署地址）与 `specialArgs` |
+| `hosts/machines.nix` | 加一条记录：`name` / `builds` / `system` / `nixos-modules`，可选 `hostname`（部署地址）与 `specialArgs` |
 
 验证（只求值不构建，几十秒）：
 
@@ -20,7 +20,7 @@
 nix eval --raw .#nixosConfigurations.<name>_<build>.config.system.build.toplevel.drvPath
 ```
 
-**为什么只要这 3 个**：`hosts/registry.nix` 是纯数据，构建逻辑在 `lib/default.nix`；
+**为什么只要这 3 个**：`hosts/machines.nix` 是纯数据，构建逻辑在 `lib/default.nix`；
 bootloader / NetworkManager / libvirt / 用户组这些以前每台机器都抄一遍的设置已经在
 `modules/core/common`（`services.pharra.common.enable`）里；桌面栈在 `services.pharra.desktop`；
 build 变体复用 `lib/variants.nix` 里已有的那 6 个。想知道某个设置是谁设的，按
@@ -46,11 +46,12 @@ nix eval .#nixosConfigurations --apply 'x: builtins.attrNames x'   # 确认新�
 ## 二、加一个自建模块
 
 1. `cp -r modules/_template modules/<域>/<名字>`，把骨架里的 `my-module` 换成你的选项名。
-2. 在需要的 host 里加一行：`services.pharra.<名字>.enable = true;`
+2. 在 `modules/default.nix` 清单里加一行：`<名字> = import ./<域>/<名字>;`
+3. 在需要的 host 里加一行：`services.pharra.<名字>.enable = true;`
    （Home Manager 模块则放在 `home-modules/<名字>/`，在 `lib/variants.nix` 的 `homeSwitch` 表里按 build 变体打开。）
 
-**没有注册表要登记**：`lib/importModules.nix` 自动发现 `modules/<域>/<名字>/default.nix`
-（以 `_` 开头的目录会被跳过，所以 `_template` 本身不会被加载）。
+**要登记**：在 `modules/default.nix` 清单里加一行 `名字 = import ./<域>/<名字>;`
+（显式清单，没有自动发现；`_template` 不在清单里，所以不会被加载）。
 
 四条容易踩的约定（骨架注释里也有）：
 

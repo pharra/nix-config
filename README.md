@@ -22,10 +22,10 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 | 路径 | 作用 |
 | --- | --- |
 | `flake.nix` | 只放 inputs 与输出装配（`nixosConfigurations` / `apps` / `packages` / `formatter`） |
-| `lib/` | 构建逻辑：`default.nix`（上下文装配）、`variants.nix`（build 变体表）、`importModules.nix`（模块自动发现）、`netboot.nix`、`mkZedGuest.nix`、`nixosSystem.nix` |
-| `hosts/` | 每台机器一个目录（硬件、磁盘、网络、host 专属开关）；`hosts/registry.nix` 是 host 清单（纯数据） |
-| `modules/` | 通用 NixOS 模块，分 7 个域，自动发现（见下） |
-| `home-modules/` | Home Manager 模块（统一 `home.pharra.*` 命名空间），自动发现 |
+| `lib/` | 装配逻辑：`default.nix`（上下文与配置生成）、`variants.nix`（build 变体表）、`netboot.nix`、`mkZedGuest.nix`、`nixosSystem.nix` |
+| `hosts/` | 每台机器一个目录（硬件、磁盘、网络、host 专属开关）；`hosts/machines.nix` 是机器清单（纯数据） |
+| `modules/` | 通用 NixOS 模块，分 7 个域，显式清单（见下） |
+| `home-modules/` | Home Manager 模块（统一 `home.pharra.*` 命名空间），显式清单 |
 | `services/` | 容器化服务（compose2nix 生成），由 `hosts/homelab` 导入；公共 podman 运行时在 `services/podman-runtime.nix` |
 | `pkgs/` + `overlays/` + `overlay.nix` | 自定义包与 overlay |
 | `secrets/` | 秘密（sops-nix + agenix），见 [`secrets/README.md`](secrets/README.md) |
@@ -48,10 +48,10 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 ```
 flake.nix                          只装配输出（nixosConfigurations / apps / packages / formatter）
   └─ lib/default.nix               上下文：common-nixos-modules、commonSpecialArgs、variants、secrets 路径
-       ├─ hosts/registry.nix       host 清单（纯数据）：name / builds / system / nixos-modules
+       ├─ hosts/machines.nix       host 清单（纯数据）：name / builds / system / nixos-modules
        ├─ lib/variants.nix         build 变体表：NixOS 侧开关 + home 侧开关 + 生成的 home 模块
-       ├─ modules/<域>/<名字>/     自动发现，按 enable 开关生效
-       ├─ home-modules/<名字>/     自动发现，统一 home.pharra.* 命名空间
+       ├─ modules/<域>/<名字>/     显式清单，按 enable 开关生效
+       ├─ home-modules/<名字>/     显式清单，统一 home.pharra.* 命名空间
        └─ secrets/                 sops-nix + agenix
   → 展开成 24 个 <host>_<build> 配置
 ```
@@ -77,7 +77,7 @@ flake.nix                          只装配输出（nixosConfigurations / apps 
    Home Manager 侧统一用 `home.pharra.*`。
 2. **目录名 = 选项路径的最后一段**，统一 kebab-case。看目录就知道选项名：
    `modules/network/dhcp-server/` → `services.pharra.dhcp-server`。
-3. **模块顺序只按模块名排序，与所在分组无关**（`lib/importModules.nix`）。
+3. **模块顺序 = `modules/default.nix` 清单里属性名的排序**（NixOS 的 list 型选项按模块顺序合并，所以清单就是顺序）。
    这条不是洁癖：NixOS 的 list 型选项（`environment.systemPackages` 等）按模块顺序合并，
    顺序规则不稳定的话，"把模块换个分组"就会让一批配置的 drvPath 变化。现在换分组零影响。
 4. **每个模块都要有 `enable` 开关**（`mkEnableOption`），且默认关闭；模块之间不要互相
@@ -120,14 +120,14 @@ nix build .#packages.x86_64-linux.azure-x64
 > 逐步清单（必改 3 个文件 + 按需改动，以及为什么可以这么少）见 [docs/EXTENDING.md](docs/EXTENDING.md)。
 
 - **新机器**：建 `hosts/<name>/hardware-configuration.nix` 与 `hosts/<name>/default.nix`，
-  然后在 `hosts/registry.nix` 加一条（`name` / `builds` / `system` / `nixos-modules` / 可选 `hostname`、`specialArgs`）。
+  然后在 `hosts/machines.nix` 加一条（`name` / `builds` / `system` / `nixos-modules` / 可选 `hostname`、`specialArgs`）。
   **不需要改 `flake.nix`。**
 - **新 build 变体**：在 `lib/variants.nix` 的 `nixos` 与 `homeSwitch` 两张表里各加一项，
   键必须一致（文件里有一句断言），加漏了或写错名字会在 eval 期直接报错。
-- **新 NixOS 模块**：放到 `modules/<域>/<name>/default.nix` 即自动生效，不用登记注册表。
-  要临时停用就写进 `lib/default.nix` 里 `importModules` 的 `disabled` 白名单（不要再注释掉注册行）。
+- **新 NixOS 模块**：放到 `modules/<域>/<name>/default.nix`，并在 `modules/default.nix` 清单里加一行。
+  要停用就把它从 `modules/default.nix` 里删掉或注释掉 —— 没在清单里的模块不会加载。
 - **新 Home Manager 模块**：放 `home-modules/<name>/default.nix`，在 `home.pharra` 下暴露 `enable` 开关。
-- **新服务**：`services/<name>/default.nix`（自动导入），公共运行时写 `imports = [../podman-runtime.nix];`。
+- **新服务**：`services/<name>/default.nix`，并在 `services/default.nix` 清单里加一行；公共运行时写 `imports = [../podman-runtime.nix];`。
 - **新秘密**：见 [`secrets/README.md`](secrets/README.md)。
 
 ## 设计取舍
@@ -146,7 +146,7 @@ nix build .#packages.x86_64-linux.azure-x64
 - 大模块的拆分约定：脚本/模板正文放同目录的独立 `.nix` 文件（保持字符串字面量，Nix 插值才有效，
   所以不要用 `builtins.readFile` 抽成 `.sh`）；选项与实现分开（例如 `network/dhcp-server/` 的
   `options.nix` + `config.nix`，`core/common/` 的 `default.nix` 机器级 + `user.nix` 用户级）。
-  这些子文件是普通 `.nix` 文件，不会被 `importModules` 当成模块自动导入。
+  这些子文件不在 `modules/default.nix` 的清单里，所以不会被当成模块加载。
 
 ## 休眠与未接线的模块
 

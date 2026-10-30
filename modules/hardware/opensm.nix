@@ -2,7 +2,7 @@
 # 它原来在 mlx4 / mlx5 两个模块里各写了一份（逐字相同），后来 mlx4 模块被删除，
 # 这里保留下来给 mlx5 用，避免以后 mlx5 自己被复制一份。
 #
-# 注意：这是普通 .nix 文件（不是含 default.nix 的目录），所以不会被 importModules 当成模块自动导入。
+# 注意：这是普通 .nix 文件，不在 modules/default.nix 的清单里，所以不会被当成模块加载。
 {
   lib,
   pkgs,

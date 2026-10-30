@@ -3,7 +3,7 @@
 # 阶段 2 的 networkd 接管、以及"等对端可达"的 oneshot 服务原本逐字相同（约 50 行），
 # 抽到这里，避免以后只改一处。
 #
-# 注意：这是普通 .nix 文件（不是含 default.nix 的目录），所以不会被 importModules 当成模块自动导入。
+# 注意：这是普通 .nix 文件，不在 modules/default.nix 的清单里，所以不会被当成模块加载。
 {
   lib,
   pkgs,

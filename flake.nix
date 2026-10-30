@@ -134,7 +134,7 @@
         };
       });
 
-    # 构建逻辑在 lib/，host 数据在 hosts/registry.nix
+    # 构建逻辑在 lib/，host 数据在 hosts/machines.nix
     ctx = import ./lib {inherit inputs username;};
     nixosConfigurations = ctx.nixosConfigurations;
   in {

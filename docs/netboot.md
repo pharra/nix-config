@@ -8,7 +8,7 @@ zed 这台机器除了本地启动，还有"从网络盘启动"的两条路径�
 | | 路径 A：zed 自己走网络启动 | 路径 B：在 homelab 上跑一个 zed guest |
 | --- | --- | --- |
 | 配置名 | `zed_net_{kde,gnome,cosmic,wm}`（和 `zed_*` 并列，是 24 个配置里的 4 个） | 不是独立配置：它是 homelab 配置求值过程中生成的一个 NixOS system |
-| 怎么组装 | `hosts/registry.nix` 的 `zed_net` 条目：`[./zed, netboot.nvmfRoot {iscsi = netboot.iscsiBoot;}, netboot.efiFromIscsi]` | `hosts/homelab/default.nix` 里 `zedGuestSystem = mkZedGuest {inherit nixpkgs home-manager;}` |
+| 怎么组装 | `hosts/machines.nix` 的 `zed_net` 条目：`[./zed, netboot.nvmfRoot {iscsi = netboot.iscsiBoot;}, netboot.efiFromIscsi]` | `hosts/homelab/default.nix` 里 `zedGuestSystem = mkZedGuest {inherit nixpkgs home-manager;}` |
 | 生成器 | `lib/netboot.nix` 的覆盖片段（NVMF root / iSCSI EFI） | `lib/mkZedGuest.nix`（NFS root + NVMF root 的 zed guest 系统） |
 | 现状 | **活的**：CI 里会编译 `zed_net_wm.config.system.build.toplevel` | **目前没在服务**：homelab 上 `services.pharra.ipxe-host.nfs.enable = false`，见下 |
 
@@ -40,7 +40,7 @@ zfs pool 名、`/boot/efi` 的来源），所以改地址只需要改那一个�
 | --- | --- |
 | guest 的 MAC、iSCSI target 名 | `hosts/homelab/default.nix` 的 `services.pharra.ipxe-host.iscsi.items` |
 | NVMF 的地址 / 端口 / target、zfs pool 名、`/boot/efi` 来源 | `lib/netboot.nix`（两条路径共用） |
-| guest 系统的模块组成（哪个 build 变体、带哪些覆盖） | `lib/mkZedGuest.nix`（路径 B）／`hosts/registry.nix` 的 `zed_net` 条目（路径 A） |
+| guest 系统的模块组成（哪个 build 变体、带哪些覆盖） | `lib/mkZedGuest.nix`（路径 B）／`hosts/machines.nix` 的 `zed_net` 条目（路径 A） |
 | iPXE 菜单长什么样、引导段怎么写 | `modules/boot/ipxe-host/ipxe-server.nix` |
 | 给 guest 发地址的网段 | `hosts/homelab/default.nix` 的 `services.pharra.dhcp-server.networks` |
 
