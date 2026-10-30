@@ -1,4 +1,4 @@
-# 存储与备份：ZFS 池、/boot/efi、restic 备份与它的 age 秘密。
+# 存储：ZFS 池、/boot/efi。（备份能力已搬到 modules/storage/backup，这里只留一行 enable）
 # 文件末尾保留了两段被注释掉的 rclone 同步（曾经用过，暂时没启用）。
 {
   config,
@@ -25,30 +25,13 @@ with lib; {
   services.zfs.autoScrub.enable = true;
   services.zfs.trim.enable = true;
 
-  age.secrets."restic_password" = {
-    file = "${mysecrets}/restic_password.age";
-    mode = "777";
-    path = "/etc/restic_password";
-  };
+  # 备份能力：秘密/服务/定时器都在 modules/storage/backup 里
+  services.pharra.backup.enable = true;
+
   age.secrets."rclone_config" = {
     file = "${mysecrets}/rclone_config.age";
     mode = "777";
     path = "/etc/rclone_config.conf";
-  };
-
-  services.restic.backups = {
-    local_android = {
-      user = "wf";
-      repository = "/share/restic";
-      initialize = true; # initializes the repo, don't set if you want manual control
-      passwordFile = config.age.secrets.restic_password.path;
-      paths = ["/share/sftp/Android"];
-      timerConfig = {
-        OnCalendar = "04:00";
-        Persistent = true;
-        RandomizedDelaySec = "1h";
-      };
-    };
   };
 
   # systemd.timers."sync-115" = {

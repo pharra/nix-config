@@ -7,6 +7,7 @@
   archlinux = import ./vm/archlinux;
   audio-relay = import ./desktop/audio-relay;
   azure-tools = import ./core/azure-tools;
+  backup = import ./storage/backup;
   boot-over-nfs = import ./boot/netboot/boot-over-nfs;
   boot-over-nvmf = import ./boot/netboot/boot-over-nvmf;
   common = import ./core/common;
