@@ -172,6 +172,8 @@ in {
 
     networking.timeServers = ["ntp.aliyun.com"];
 
+    # 注意：这是**系统内**的 substituter 列表；flake.nix 的 nixConfig 是另一份（给 flake/CI 首次
+    # fetch 用，故意不同：那边含官方 cache.nixos.org，这边多一个 ustc 镜像）。别把两份合并成一份。
     nix.settings = {
       substituters = [
         # replace official cache with a mirror located in China

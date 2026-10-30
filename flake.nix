@@ -9,6 +9,7 @@
   ##################################################################################################################
 
   # the nixConfig here only affects the flake itself, not the system configuration!
+  # 系统内的 substituter 列表在 modules/core/common 里，两份故意不完全相同，别合并。
   nixConfig = {
     experimental-features = ["nix-command" "flakes"];
 

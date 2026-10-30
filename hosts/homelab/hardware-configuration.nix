@@ -18,7 +18,8 @@
   boot.blacklistedKernelModules = ["ast"];
   boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=4" "amd_pstate=active" "amd_pstate.shared_mem=1" "pci=realloc" "pcie_acs_override=downstream,multifunction"];
   boot.kernelModules = ["kvm-amd"];
-  #boot.kernelPackages = lib.mkForce pkgs.linuxPackages_5_4;
+  # 要钉内核就在这台机器的这份文件里直接赋值（参考 hosts/zed/hardware-configuration.nix 的写法）；
+  # modules/core/common 里的内核是最弱优先级，任何普通赋值都能覆盖。这里曾经钉在 5.4，现在跟随主线。
   boot.extraModulePackages = with config.boot.kernelPackages; [
     cpupower
   ];

@@ -72,6 +72,7 @@
     powerManagement.enable = true;
   };
 
+  # 下面两段是可选配置（当前未启用）：PRIME 独显直连/offload、以及强制 EGL 用 mesa。
   # hardware.nvidia.prime = {
   #   offload = {
   #     enable = true;
