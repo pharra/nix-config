@@ -2,20 +2,22 @@
 
 pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 
-配置名统一是 `<host>_<build>`，例如 `zed_wm`、`homelab_base`、`zed_net_kde`。共 24 个组合。
+**一台机器一个配置**（共 7 个），桌面是 `hosts/machines.nix` 里的一个值（`desktop`）。
 
 ## 配置矩阵
 
-| host | 机器 | builds |
+| 配置名 | 机器 | desktop |
 | --- | --- | --- |
-| `azure` / `azure_arm` | Azure 虚拟机（x86_64 / aarch64） | `base` |
-| `dot` | Surface Book 2 | `kde` `gnome` `cosmic` `wm` |
-| `gs65` | MSI GF65（hostname 是 `nix65`） | `kde` `gnome` `cosmic` `wm` |
-| `zed` | 主力机：i5-13600KF + RTX 4090 | `kde` `gnome` `cosmic` `wm` `denial` |
-| `zed_net` | 同 zed，但从 NVMF/iSCSI 网络盘启动 | `kde` `gnome` `cosmic` `wm` |
-| `homelab` | 服务器：ZFS + SPDK/NVMF + 一堆容器服务 | `base` `kde` `gnome` `cosmic` `wm` |
+| `azure` | Azure 虚拟机（x86_64） | `base` |
+| `azure_arm` | Azure 虚拟机（aarch64） | `base` |
+| `dot` | Surface Book 2 | `wm` |
+| `gs65` | MSI GF65（hostname 是 `nix65`） | `kde` |
+| `zed` | 主力机：i5-13600KF + RTX 4090 | `kde` |
+| `zed_net` | 同 zed，但从 NVMF/iSCSI 网络盘启动 | `kde` |
+| `homelab` | 服务器：ZFS + SPDK/NVMF + 一堆容器服务 | `base` |
 
-`build` 就是桌面环境组合，定义在 `lib/variants.nix`（`base`/`kde`/`gnome`/`cosmic`/`wm`/`denial`）。
+`desktop` 的可选值定义在 `lib/variants.nix`（`base`/`kde`/`gnome`/`cosmic`/`wm`/`denial`）。
+换桌面 = 改 `hosts/machines.nix` 里那一行，然后 `nixos-rebuild switch --flake .#<机器名>`。
 
 ## 目录结构
 
@@ -48,12 +50,12 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 ```
 flake.nix                          只装配输出（nixosConfigurations / apps / packages / formatter）
   └─ lib/default.nix               上下文：common-nixos-modules、commonSpecialArgs、variants、secrets 路径
-       ├─ hosts/machines.nix       host 清单（纯数据）：name / builds / system / nixos-modules
+       ├─ hosts/machines.nix       机器清单（纯数据）：name / system / desktop / nixos-modules
        ├─ lib/variants.nix         build 变体表：NixOS 侧开关 + home 侧开关 + 生成的 home 模块
        ├─ modules/<域>/<名字>/     显式清单，按 enable 开关生效
        ├─ home-modules/<名字>/     显式清单，统一 home.pharra.* 命名空间
        └─ secrets/                 sops-nix + agenix
-  → 展开成 24 个 <host>_<build> 配置
+  → 展开成 7 个配置（一台机器一个）
 ```
 
 每个配置由四层叠出来，找"某个设置是谁设的"就按这个顺序：
@@ -99,28 +101,28 @@ zed 除了本地启动还有"从网络盘启动"的两条路径，横跨 `hosts/
 nix fmt                                        # alejandra 格式化（CI 会检查）
 
 # 只求值不构建：确认某个配置没被改坏（几分钟内出结果）
-nix eval --raw .#nixosConfigurations.zed_wm.config.system.build.toplevel.drvPath
+nix eval --raw .#nixosConfigurations.zed.config.system.build.toplevel.drvPath
 
 # 本地构建 / 本机切换
-nix build .#nixosConfigurations.zed_wm.config.system.build.toplevel
-sudo nixos-rebuild switch --flake .#zed_wm
+nix build .#nixosConfigurations.zed.config.system.build.toplevel
+sudo nixos-rebuild switch --flake .#zed
 
 # 远程部署（nixinate），先 dry-run
-nix run .#dot_wm-dry-run
-nix run .#dot_wm
+nix run .#dot-dry-run
+nix run .#dot
 
 # 生成 Azure 镜像
 nix build .#packages.x86_64-linux.azure-x64
 ```
 
-`nix run .#<配置名>` 的可用名字 = 24 个配置名，外加对应的 `<配置名>-dry-run`。
+`nix run .#<机器名>` 的可用名字 = 7 个机器名，外加对应的 `<机器名>-dry-run`。
 
 ## 加东西怎么加
 
 > 逐步清单（必改 3 个文件 + 按需改动，以及为什么可以这么少）见 [docs/EXTENDING.md](docs/EXTENDING.md)。
 
 - **新机器**：建 `hosts/<name>/hardware-configuration.nix` 与 `hosts/<name>/default.nix`，
-  然后在 `hosts/machines.nix` 加一条（`name` / `builds` / `system` / `nixos-modules` / 可选 `hostname`、`specialArgs`）。
+  然后在 `hosts/machines.nix` 加一条（`name` / `system` / `desktop` / `nixos-modules` / 可选 `hostname`、`specialArgs`）。
   **不需要改 `flake.nix`。**
 - **新 build 变体**：在 `lib/variants.nix` 的 `nixos` 与 `homeSwitch` 两张表里各加一项，
   键必须一致（文件里有一句断言），加漏了或写错名字会在 eval 期直接报错。
@@ -173,7 +175,7 @@ nix build .#packages.x86_64-linux.azure-x64
 
 - `nixos/ipxe/`、`nixos/wireguard-server/`：没有被任何 host 启用
 - `secrets/agenix/atticd.env`、`secrets/agenix/wireguard_homelab_private_key.age`：已注册但无模块引用
-- `services/nfs-root`（`boot/boot-over-nfs`）在 24 个顶层配置里都是关的，但 homelab 上的 zed guest
+- `services/nfs-root`（`boot/boot-over-nfs`）在 7 个配置里都是关的，但 homelab 上的 zed guest
   在用它（`modules/boot/netboot/mkZedGuest.nix`），不是死代码
 
 ## CI

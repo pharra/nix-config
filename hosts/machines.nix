@@ -1,8 +1,8 @@
-# 机器清单（显式表）：一行一台机器。加机器 = 建 hosts/<name>/ + 这里加一条。
-# 每台机器会展开成 <name>_<build> 配置（build 见各自的 builds 列表，变体的含义见 lib/variants.nix）。
+# 机器清单（显式表）：一行一台机器，桌面是一个值（desktop）。
+# 加机器 = 建 hosts/<name>/ + 这里加一条；换桌面 = 改这里的 desktop 一行。
 #
-# 这个文件只放数据：name / system / hostname（部署地址）/ builds / nixos-modules / specialArgs。
-# 装配逻辑在 lib/default.nix。
+# 这个文件只放数据：name / system / desktop / hostname（部署地址）/ nixos-modules / specialArgs。
+# 装配逻辑在 lib/default.nix；desktop 的可选值与含义见 lib/variants.nix。
 {
   lib,
   inputs,
@@ -13,14 +13,14 @@
   {
     name = "azure";
     system = "x86_64-linux";
-    builds = ["base"];
+    desktop = "base";
     nixos-modules = [./azure];
   }
 
   {
     name = "azure_arm";
     system = "aarch64-linux";
-    builds = ["base"];
+    desktop = "base";
     nixos-modules = [./azure];
   }
 
@@ -28,8 +28,8 @@
   {
     name = "dot";
     system = "x86_64-linux";
+    desktop = "wm";
     hostname = "192.168.254.240";
-    builds = ["kde" "gnome" "cosmic" "wm"];
     nixos-modules = [./dot inputs.nixos-hardware.nixosModules.microsoft-surface-common];
   }
 
@@ -37,7 +37,7 @@
   {
     name = "gs65";
     system = "x86_64-linux";
-    builds = ["kde" "gnome" "cosmic" "wm"];
+    desktop = "kde";
     nixos-modules = [./gs65];
   }
 
@@ -45,7 +45,7 @@
   {
     name = "zed";
     system = "x86_64-linux";
-    builds = ["kde" "gnome" "cosmic" "wm" "denial"];
+    desktop = "kde";
     nixos-modules = [
       ./zed
     ];
@@ -55,8 +55,8 @@
   {
     name = "zed_net";
     system = "x86_64-linux";
+    desktop = "kde";
     hostname = "zed";
-    builds = ["kde" "gnome" "cosmic" "wm"];
     nixos-modules = [
       ./zed
       (netboot.nvmfRoot {iscsi = netboot.iscsiBoot;})
@@ -68,7 +68,7 @@
   {
     name = "homelab";
     system = "x86_64-linux";
-    builds = ["kde" "gnome" "cosmic" "wm" "base"];
+    desktop = "base";
     nixos-modules = [
       ./homelab
     ];

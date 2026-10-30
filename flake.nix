@@ -134,7 +134,7 @@
         };
       });
 
-    # 构建逻辑在 lib/，host 数据在 hosts/machines.nix
+    # 装配逻辑在 lib/，机器清单在 hosts/machines.nix（一台机器一个配置）
     ctx = import ./lib {inherit inputs username;};
     nixosConfigurations = ctx.nixosConfigurations;
   in {
@@ -144,10 +144,10 @@
 
     packages = {
       "aarch64-linux" = {
-        azure-arm = nixosConfigurations.azure_arm_base.config.system.build.azureImage;
+        azure-arm = nixosConfigurations.azure_arm.config.system.build.azureImage;
       };
       "x86_64-linux" = {
-        azure-x64 = nixosConfigurations.azure_base.config.system.build.azureImage;
+        azure-x64 = nixosConfigurations.azure.config.system.build.azureImage;
       };
     };
 

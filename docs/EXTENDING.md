@@ -12,12 +12,12 @@
 | --- | --- |
 | `hosts/<name>/hardware-configuration.nix` | `nixos-generate-config` 生成的，不要手改 |
 | `hosts/<name>/default.nix` | 这台机器的「自我介绍」：`networking.hostName`、`system.stateVersion`、`services.pharra.*` 开关、磁盘/网卡/显卡等宿主特有设置 |
-| `hosts/machines.nix` | 加一条记录：`name` / `builds` / `system` / `nixos-modules`，可选 `hostname`（部署地址）与 `specialArgs` |
+| `hosts/machines.nix` | 加一条记录：`name` / `system` / `desktop` / `nixos-modules`，可选 `hostname`（部署地址）与 `specialArgs` |
 
 验证（只求值不构建，几十秒）：
 
 ```bash
-nix eval --raw .#nixosConfigurations.<name>_<build>.config.system.build.toplevel.drvPath
+nix eval --raw .#nixosConfigurations.<name>.config.system.build.toplevel.drvPath
 ```
 
 **为什么只要这 3 个**：`hosts/machines.nix` 是纯数据，构建逻辑在 `lib/default.nix`；
@@ -90,7 +90,7 @@ nix eval .#nixosConfigurations --apply 'x: builtins.attrNames x'   # 确认新�
 
 ### 为什么不能什么都往全局塞
 
-`common-nixos-modules` 是全有或全无的：塞进去的模块会在 24 个配置里全部求值。
+`common-nixos-modules` 是全有或全无的：塞进去的模块会在全部 7 个配置里求值。
 踩过的坑：`boot.iscsi-initiator` 这个选项名与 nixpkgs 自带的 `root-initiator.nix` 撞车，
 eval 直接报 "already declared"（本地副本只好改叫 `boot.iscsi-root`，注释在
 `modules/boot/netboot/iscsi-root/default.nix` 里）。

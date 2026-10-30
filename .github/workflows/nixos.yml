@@ -15,10 +15,10 @@ jobs:
       fail-fast: true
       matrix:
         config_name:
-          - dot_wm.config.system.build.kernel
-          - azure_base.config.system.build.toplevel
-          - homelab_base.config.system.build.toplevel
-          - zed_net_wm.config.system.build.toplevel
+          - dot.config.system.build.kernel
+          - azure.config.system.build.toplevel
+          - homelab.config.system.build.toplevel
+          - zed_net.config.system.build.toplevel
 
     steps:
       - uses: actions/checkout@v7

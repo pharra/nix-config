@@ -78,43 +78,36 @@
   base_args = {inherit home-manager;};
   stable_args = base_args // {inherit nixpkgs;};
 
-  nixosConfigurations = builtins.listToAttrs (builtins.concatLists (builtins.map (machine:
-    builtins.map (build: {
-      name = "${machine.name}_${build}";
-      value = nixosSystem ({
-          nixos-modules =
-            machine.nixos-modules
-            ++ common-nixos-modules
-            ++ [
-              (variants.nixosModule build)
-              {
-                _module.args.nixinate = {
-                  host =
-                    if builtins.hasAttr "hostname" machine
-                    then machine.hostname
-                    else machine.name;
-                  sshUser = username;
-                  buildOn = "local"; # valid args are "local" or "remote"
-                  substituteOnTarget = true; # if buildOn is "local" then it will substitute on the target, "-s"
-                };
-              }
-            ];
-          home-module = variants.mkHomeModule username build;
-          system = machine.system;
-        }
-        // stable_args
-        // {
-          specialArgs = let
-            machineSpecialArgs =
-              if builtins.hasAttr "specialArgs" machine
-              then machine.specialArgs
-              else {};
-          in
-            commonSpecialArgs // machineSpecialArgs;
-        });
+  # 一台机器一个配置：桌面是 hosts/machines.nix 里的一个值（desktop），不再是配置名后缀
+  mkMachine = machine:
+    nixosSystem ({
+        nixos-modules =
+          machine.nixos-modules
+          ++ common-nixos-modules
+          ++ [
+            (variants.nixosModule machine.desktop)
+            {
+              _module.args.nixinate = {
+                host = machine.hostname or machine.name;
+                sshUser = username;
+                buildOn = "local"; # valid args are "local" or "remote"
+                substituteOnTarget = true; # if buildOn is "local" then it will substitute on the target, "-s"
+              };
+            }
+          ];
+        home-module = variants.mkHomeModule username machine.desktop;
+        system = machine.system;
+      }
+      // stable_args
+      // {
+        specialArgs = commonSpecialArgs // (machine.specialArgs or {});
+      });
+
+  nixosConfigurations = builtins.listToAttrs (map (machine: {
+      name = machine.name;
+      value = mkMachine machine;
     })
-    machine.builds)
-  machines));
+    machines);
 in {
   inherit nixosConfigurations;
 }
