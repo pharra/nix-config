@@ -32,6 +32,8 @@ in {
     };
   };
 
+  # 注意：NFS 的导出（exports）不在这里 —— 它由 ZFS 数据集上的 sharenfs 属性提供（手工设置，不在 Nix 里），
+  # 所以这里只需要把服务打开。改导出请用 zfs set sharenfs=... 。
   services.nfs = {
     server = {
       enable = true;

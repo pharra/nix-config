@@ -166,7 +166,8 @@ in {
     };
   };
 
-  services.xserver.videoDrivers = ["nvidia" "amdgpu"]; # will install nvidia-vaapi-driver by default
+  # "nvidia" 是 nvidia 模块的开关（不是 Xorg 专用）；"amdgpu" 留给 APU，两套驱动并存。
+  services.xserver.videoDrivers = ["nvidia" "amdgpu"];
 
   hardware = {
     graphics = {

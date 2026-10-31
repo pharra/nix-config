@@ -86,7 +86,7 @@ in {
     programs.dconf.enable = true;
 
     # Or disable the firewall altogether.
-    networking.firewall.enable = false;
+    networking.firewall.enable = lib.mkDefault false;
     systemd.services.NetworkManager-wait-online.enable = false;
 
     # PipeWire is a new low-level multimedia framework.

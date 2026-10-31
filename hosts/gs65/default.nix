@@ -63,7 +63,7 @@
   };
 
   # for Nvidia GPU
-  # services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default
+  # 需要 nvidia 驱动时把 "nvidia" 加进下面的列表（它是 nvidia 模块的开关）。
   services.xserver.videoDrivers = ["displaylink" "modesetting"];
 
   hardware.nvidia = {

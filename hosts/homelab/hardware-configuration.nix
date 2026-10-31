@@ -16,6 +16,7 @@
     "zfs"
   ];
   boot.blacklistedKernelModules = ["ast"];
+  # acs_override 是为了把 IOMMU 组拆开做设备直通（VFIO）；没有直通需求时可以去掉它以提高隔离。
   boot.kernelParams = ["default_hugepagesz=1G" "hugepagesz=1G" "hugepages=4" "amd_pstate=active" "amd_pstate.shared_mem=1" "pci=realloc" "pcie_acs_override=downstream,multifunction"];
   boot.kernelModules = ["kvm-amd"];
   # 要钉内核就在这台机器的这份文件里直接赋值（参考 hosts/zed/hardware-configuration.nix 的写法）；

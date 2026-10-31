@@ -7,19 +7,10 @@
 }:
 with lib; let
   interface = {
-    eth-to-bridge = "eno2";
     eth = "mlx5_0";
     intern = "br1";
   };
   interfaces = [
-    {
-      mac = "50:65:f3:8a:c7:71";
-      name = "mlx4_0";
-    }
-    {
-      mac = "50:65:f3:8a:c7:72";
-      name = "mlx4_1";
-    }
     {
       mac = "f4:6b:8c:13:cf:e6";
       name = "mlx5_0";

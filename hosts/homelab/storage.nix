@@ -1,5 +1,6 @@
 # 存储：ZFS 池、/boot/efi。（备份能力已搬到 modules/storage/backup，这里只留一行 enable）
 # 文件末尾保留了两段被注释掉的 rclone 同步（曾经用过，暂时没启用）。
+# 注意：它们依赖的 age.secrets.rclone_config 已被删掉（没人读）；要恢复同步时先把那个秘密加回来。
 {
   lib,
   mysecrets,
@@ -24,12 +25,6 @@ with lib; {
 
   # 备份能力：秘密/服务/定时器都在 modules/storage/backup 里
   services.pharra.backup.enable = true;
-
-  age.secrets."rclone_config" = {
-    file = "${mysecrets}/rclone_config.age";
-    mode = "777";
-    path = "/etc/rclone_config.conf";
-  };
 
   # systemd.timers."sync-115" = {
   #   wantedBy = ["timers.target"];

@@ -31,21 +31,10 @@
     archlinux.enable = true;
   };
 
-  systemd.services = {
-    tune-usb-autosuspend = {
-      enable = false;
-      description = "Disable USB autosuspend";
-      wantedBy = ["multi-user.target"];
-      serviceConfig = {Type = "oneshot";};
-      unitConfig.RequiresMountsFor = "/sys";
-      script = ''
-        echo -1 > /sys/module/usbcore/parameters/autosuspend
-      '';
-    };
-  };
-
   # for Nvidia GPU
-  services.xserver.videoDrivers = ["nvidia"]; # will install nvidia-vaapi-driver by default
+  # 这一行是 nixpkgs nvidia 模块的总开关（nvidiaEnabled = elem "nvidia" videoDrivers）。homelab 没有 X，
+  # 但容器（nvidia-container-toolkit）要用驱动，所以必须留着；删掉它 GPU 容器就失效。
+  services.xserver.videoDrivers = ["nvidia"];
   hardware.nvidia = {
     package = config.boot.kernelPackages.nvidiaPackages.production;
     # modesetting.enable = true;
