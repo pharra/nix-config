@@ -48,7 +48,7 @@ in {
   config = mkIf cfg.enable {
     age.secrets."tailscale_authkey" = {
       file = "${mysecrets}/tailscale_authkey.age";
-      mode = "777";
+      mode = "0400";
     };
 
     environment.systemPackages = [
