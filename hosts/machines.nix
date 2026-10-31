@@ -15,8 +15,8 @@
     desktop = "base";
     nixos-modules = [./azure];
 
-    # 这台机器的域名（每个 azure 主机一个）。填上之后就不需要手工文件 /root/domain 了，
-    # 机制见 hosts/azure/server/default.nix（留空则回退到 /root/domain）。
+    # 域名：azure/azure_arm 是"一份配置、多个实例"，实例之间只有域名不同，所以这里留空，
+    # 实际值由每个实例自己提供（/root/domain）。确实要把某个实例钉死在这一份配置里时，才填这里。
     specialArgs = {
       domain = "";
     };
@@ -28,8 +28,8 @@
     desktop = "base";
     nixos-modules = [./azure];
 
-    # 这台机器的域名（每个 azure 主机一个）。填上之后就不需要手工文件 /root/domain 了，
-    # 机制见 hosts/azure/server/default.nix（留空则回退到 /root/domain）。
+    # 域名：azure/azure_arm 是"一份配置、多个实例"，实例之间只有域名不同，所以这里留空，
+    # 实际值由每个实例自己提供（/root/domain）。确实要把某个实例钉死在这一份配置里时，才填这里。
     specialArgs = {
       domain = "";
     };
