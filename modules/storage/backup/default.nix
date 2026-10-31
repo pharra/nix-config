@@ -43,7 +43,8 @@ in {
     # 密码文件由能力自己声明，host 里不用再写
     age.secrets.restic_password = {
       file = "${mysecrets}/restic_password.age";
-      mode = "777";
+      owner = cfg.user;
+      mode = "0400";
       path = "/etc/restic_password";
     };
 
