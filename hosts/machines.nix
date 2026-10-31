@@ -14,6 +14,12 @@
     system = "x86_64-linux";
     desktop = "base";
     nixos-modules = [./azure];
+
+    # 这台机器的域名（每个 azure 主机一个）。填上之后就不需要手工文件 /root/domain 了，
+    # 机制见 hosts/azure/server/default.nix（留空则回退到 /root/domain）。
+    specialArgs = {
+      domain = "";
+    };
   }
 
   {
@@ -21,6 +27,12 @@
     system = "aarch64-linux";
     desktop = "base";
     nixos-modules = [./azure];
+
+    # 这台机器的域名（每个 azure 主机一个）。填上之后就不需要手工文件 /root/domain 了，
+    # 机制见 hosts/azure/server/default.nix（留空则回退到 /root/domain）。
+    specialArgs = {
+      domain = "";
+    };
   }
 
   # Surface Book 2
