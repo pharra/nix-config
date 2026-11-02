@@ -26,6 +26,7 @@
   ipxe-host = import ./boot/netboot/ipxe-host;
   iscsi-root = import ./boot/netboot/iscsi-root;
   kde = import ./desktop/kde;
+  kmscon = import ./desktop/kmscon;
   lianli-linux = import ./hardware/lianli-linux;
   libvirt = import ./vm/libvirt;
   mcontrolcenter = import ./hardware/mcontrolcenter;

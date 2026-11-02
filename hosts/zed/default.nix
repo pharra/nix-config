@@ -35,6 +35,7 @@ in {
     virtualisation.enable = true;
     scripts.enable = true;
     waydroid.enable = true;
+    kmscon.enable = true;
   };
 
   services.sunshine = lib.mkIf config.services.pharra.desktop.enable {
