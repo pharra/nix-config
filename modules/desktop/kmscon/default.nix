@@ -7,9 +7,14 @@
 # 注意：关掉的是 GL，不是 DRM —— kmscon 仍然要拿 DRM master 做 modeset，所以与 Wayland
 # compositor 的 VT 切换仍可能出问题。救急办法：**SSH 进去改回**（kmscon 把 logind 的
 # autovt@ 别名成了自己，Ctrl+Alt+F3 切出来还是 kmscon，不是内核 fbcon）。
+#
+# 字体：默认 Sarasa Mono SC（更纱黑体 等宽，1:2 严格等宽，中英文混排对齐）。
+# nixpkgs 的 sarasa-gothic 只装比例版（拉丁与 CJK 宽度不对齐，终端里会错位），
+# Mono 版是本仓库自己打的包：pkgs/sarasa-mono-sc。
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 with lib; let
@@ -30,13 +35,33 @@ in {
       default = "xterm-256color";
       description = "TERM 类型，写进 kmscon 的 --term";
     };
+
+    fontName = mkOption {
+      type = types.str;
+      default = "Sarasa Mono SC";
+      description = "kmscon 用的字体名（交给 fontconfig 匹配）；默认是带简体中文的等宽字体";
+    };
+
+    fontSize = mkOption {
+      type = types.ints.positive;
+      default = 16;
+      description = "字号";
+    };
   };
 
   config = mkIf cfg.enable {
+    # 字体跟着能力走：启用 kmscon 就把这个字体装进 fonts.packages，
+    # 否则 fontconfig 按名字匹配不到，kmscon 会静默回退到默认字体
+    fonts.packages = [pkgs.sarasa-mono-sc];
+
     services.kmscon = {
       enable = true;
       useXkbConfig = true; # 沿用 Wayland/X 的键盘布局（services.xserver.xkb）
-      config.hwaccel = false; # 关键：不启用 GL 渲染
+      config = {
+        hwaccel = false; # 关键：不启用 GL 渲染
+        font-name = cfg.fontName;
+        font-size = cfg.fontSize;
+      };
 
       extraOptions = concatStringsSep " " (
         ["--term ${cfg.term}"]

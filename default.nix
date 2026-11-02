@@ -16,4 +16,5 @@ in rec {
   surface-dtx-daemon = pkgs.callPackage ./pkgs/surface-dtx-daemon {};
   audio-relay = pkgs.callPackage ./pkgs/audiorelay {};
   lian-li-linux = pkgs.callPackage ./pkgs/lianli-linux {};
+  sarasa-mono-sc = pkgs.callPackage ./pkgs/sarasa-mono-sc {};
 }
