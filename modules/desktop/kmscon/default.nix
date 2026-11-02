@@ -8,9 +8,9 @@
 # compositor 的 VT 切换仍可能出问题。救急办法：**SSH 进去改回**（kmscon 把 logind 的
 # autovt@ 别名成了自己，Ctrl+Alt+F3 切出来还是 kmscon，不是内核 fbcon）。
 #
-# 字体：默认 Sarasa Mono SC（更纱黑体 等宽，1:2 严格等宽，中英文混排对齐）。它来自 nixpkgs 的
+# 字体：默认 Sarasa Term SC（更纱黑体 的终端专用变体：严格 1:2 网格、无连字，中英文混排对齐）。
 # sarasa-gothic 包（1.0.42 起的 TTC 是集合，Mono/Term/Fixed 家族都在里面），不需要自己再打
-# 字体包；模块只负责把它装进 fonts.packages 并指定家族名。想要终端专用度更高可换 "Sarasa Term SC"。
+# 字体包；模块只负责把它装进 fonts.packages 并指定家族名（同包里还有 "Sarasa Mono SC" 可选）。
 {
   config,
   lib,
@@ -38,8 +38,8 @@ in {
 
     fontName = mkOption {
       type = types.str;
-      default = "Sarasa Mono SC";
-      description = "kmscon 用的字体名（交给 fontconfig 匹配）；默认是带简体中文的等宽字体";
+      default = "Sarasa Term SC";
+      description = "kmscon 用的字体名（交给 fontconfig 匹配）；默认 Sarasa Term SC（终端专用变体，带简体中文）";
     };
 
     fontSize = mkOption {
