@@ -128,11 +128,19 @@ in {
       wl-clipboard # Command-line copy/paste utilities for Wayland
     ];
 
-    # 尝试排除（效果有限，因为部分是必需依赖）
-    # environment.plasma6.excludePackages = with pkgs.kdePackages; [
-    #   kwallet # provides helper service
-    #   kwallet-pam # provides helper service
-    #   kwalletmanager # provides KCMs and stuff
-    # ];
+    # 不用 kwallet：Secret Service 统一走 gnome-keyring（见 modules/core/desktop）。
+    # 排除它是为了避免 Chromium 在 KDE 下优先选 kwallet，导致切换桌面变体时 cookie 解密密钥换了地方。
+    environment.plasma6.excludePackages = with pkgs.kdePackages; [
+      kwallet # provides helper service
+      kwallet-pam # provides helper service
+      kwalletmanager # provides KCMs and stuff
+    ];
+
+    # kwallet 的 PAM 自动解锁也关掉（否则登录时会把 kwalletd 拉起来）
+    security.pam.services.login.kwallet.enable = lib.mkForce false;
+    security.pam.services.kde.kwallet.enable = lib.mkForce false;
+
+    # plasmalogin 的 PAM 服务不走 login，单独挂上 gnome-keyring 自动解锁
+    security.pam.services.plasmalogin.enableGnomeKeyring = true;
   };
 }

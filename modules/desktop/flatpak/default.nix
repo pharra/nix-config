@@ -47,6 +47,14 @@ in {
           "xdg-config/fontconfig:ro" # fix fontconfig not working in flatpak apps
         ];
       };
+      # Edge 是 Chromium 系：cookie/密码的加密密钥存在 Secret Service 里。KDE 下 Chromium 会优先
+      # 选 kwallet，一切换桌面变体密钥就"换了地方" → 所有登录失效。这里把它的桌面检测固定成
+      # GNOME（→ 用 gnome-libsecret），并放行 session bus 上的 org.freedesktop.secrets。
+      "com.microsoft.Edge" = {
+        Environment.XDG_CURRENT_DESKTOP = "GNOME";
+        "Session Bus Policy"."org.freedesktop.secrets" = "talk";
+      };
+
       "com.qq.QQ".Context.sockets = [
         "!x11"
         "wayland"
