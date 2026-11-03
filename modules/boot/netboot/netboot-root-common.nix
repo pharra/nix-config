@@ -81,7 +81,6 @@
 
   # 配置：initrd 里 systemd 的基本项（两个模块只有 initrdBin 多寡不同）
   initrdSystemd = {extraInitrdBin ? []}: {
-    enable = true;
     emergencyAccess = true;
     initrdBin =
       [pkgs.iproute2 pkgs.pciutils pkgs.dnsutils pkgs.util-linux pkgs.coreutils pkgs.iputils]

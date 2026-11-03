@@ -20,7 +20,8 @@ in {
   config = mkIf cfg.enable {
     environment = {
       systemPackages = with pkgs; [
-        azure-cli
+        # disable azure-cli as temporary workaround for https://github.com/NixOS/nixpkgs/pull/582594
+        # azure-cli
         cacert
         azure-storage-azcopy
         jq

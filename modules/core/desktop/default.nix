@@ -164,6 +164,9 @@ in {
 
       # bilibili
       bilibili
+
+      # dsh
+      deepseek-harness
     ];
 
     programs.clash-verge = {
