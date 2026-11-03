@@ -68,9 +68,6 @@ in {
 
         # zed
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAlUm683W8j3fmwb3akIqDSyfHbbKiqK8OdSb5RTxYYS wf@zed"
-
-        # dot
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEJPEM85nVwDf6Gvxj6/VsEy8rZDSCjYMlpck4Ndd43t wf@dot"
       ];
     };
 
