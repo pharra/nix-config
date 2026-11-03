@@ -35,7 +35,11 @@ in {
     virtualisation.enable = true;
     scripts.enable = true;
     waydroid.enable = true;
-    kmscon.enable = true;
+    kmscon = {
+      enable = true;
+      # 4K 屏：kmscon 是"按字号在原生分辨率上渲染"，没有全局缩放，所以直接给大字号
+      fontSize = 28;
+    };
   };
 
   services.sunshine = lib.mkIf config.services.pharra.desktop.enable {
