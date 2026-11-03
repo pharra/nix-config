@@ -45,7 +45,6 @@
   sftp-server = import ./network/sftp-server;
   spdk-container = import ./storage/spdk-container;
   spdk-tgt = import ./storage/spdk-tgt;
-  surface-dtx-daemon = import ./hardware/surface-dtx-daemon;
   tailscale = import ./network/tailscale;
   udev-symlink = import ./hardware/udev-symlink;
   user-group = import ./core/user-group;

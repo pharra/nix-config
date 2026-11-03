@@ -2,7 +2,7 @@
 
 pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 
-**一台机器一个配置**（共 7 个），桌面是 `hosts/machines.nix` 里的一个值（`desktop`）。
+**一台机器一个配置**（共 6 个），桌面是 `hosts/machines.nix` 里的一个值（`desktop`）。
 
 ## 配置矩阵
 
@@ -10,7 +10,6 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 | --- | --- | --- |
 | `azure` | Azure 虚拟机（x86_64） | `base` |
 | `azure_arm` | Azure 虚拟机（aarch64） | `base` |
-| `dot` | Surface Book 2 | `wm` |
 | `gs65` | MSI GF65（hostname 是 `nix65`） | `kde` |
 | `zed` | 主力机：i5-13600KF + RTX 4090 | `kde` |
 | `zed_net` | 同 zed，但从 NVMF/iSCSI 网络盘启动 | `kde` |
@@ -39,7 +38,7 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 | --- | --- |
 | `core/` | 全机与桌面基础：`common`、`desktop`、`no-desktop`、`user-group`、`impermanence`、`scripts`、`azure-tools` |
 | `desktop/` | 桌面与外壳：`kde`、`gnome`、`cosmic`、`denial`、`desktop-shell`、`input-method`、`flatpak`、`audio-relay` |
-| `hardware/` | 硬件驱动与固件：`mlx5`、`net-sriov`、`amd-gpu-edid-fix`、`mcontrolcenter`、`lianli-linux`、`surface-dtx-daemon`、`nvme-auto`、`udev-symlink` |
+| `hardware/` | 硬件驱动与固件：`mlx5`、`net-sriov`、`amd-gpu-edid-fix`、`mcontrolcenter`、`lianli-linux`、`nvme-auto`、`udev-symlink` |
 | `network/` | 网络与网络服务：`net-name`、`netns`、`docker-netns`、`network-bridge`、`dhcp-server`、`openwrt`、`tailscale`、`easytier`、`mihomo`、`samba`、`sftp-server`、`ddns-go` |
 | `boot/` | 引导链：`nvmf`、`boot-over-nfs`、`boot-over-nvmf`、`iscsi-root`、`ipxe-host` |
 | `vm/` | 虚拟化与客机：`libvirt`、`virtualisation`、`vfio`、`waydroid`、`archlinux` |
@@ -56,7 +55,7 @@ flake.nix                          只装配输出（nixosConfigurations / apps 
        ├─ modules/<域>/<名字>/     显式清单，按 enable 开关生效
        ├─ home-modules/<名字>/     显式清单，统一 home.pharra.* 命名空间
        └─ secrets/                 sops-nix + agenix
-  → 展开成 7 个配置（一台机器一个）
+  → 展开成 6 个配置（一台机器一个）
 ```
 
 每个配置由四层叠出来，找"某个设置是谁设的"就按这个顺序：
@@ -109,14 +108,14 @@ nix build .#nixosConfigurations.zed.config.system.build.toplevel
 sudo nixos-rebuild switch --flake .#zed
 
 # 远程部署（nixinate），先 dry-run
-nix run .#dot-dry-run
-nix run .#dot
+nix run .#gs65-dry-run
+nix run .#gs65
 
 # 生成 Azure 镜像
 nix build .#packages.x86_64-linux.azure-x64
 ```
 
-`nix run .#<机器名>` 的可用名字 = 7 个机器名，外加对应的 `<机器名>-dry-run`。
+`nix run .#<机器名>` 的可用名字 = 6 个机器名，外加对应的 `<机器名>-dry-run`。
 
 ## 加东西怎么加
 
@@ -177,7 +176,7 @@ nix build .#packages.x86_64-linux.azure-x64
 
 - `nixos/ipxe/`、`nixos/wireguard-server/`：没有被任何 host 启用
 - `secrets/agenix/atticd.env`、`secrets/agenix/wireguard_homelab_private_key.age`：已注册但无模块引用
-- `services/nfs-root`（`boot/boot-over-nfs`）在 7 个配置里都是关的，但 homelab 上的 zed guest
+- `services/nfs-root`（`boot/boot-over-nfs`）在 6 个配置里都是关的，但 homelab 上的 zed guest
   在用它（`modules/boot/netboot/mkZedGuest.nix`），不是死代码
 
 ## CI

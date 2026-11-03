@@ -15,7 +15,7 @@ jobs:
       fail-fast: true
       matrix:
         config_name:
-          - dot.config.system.build.kernel
+          - gs65.config.system.build.kernel
           - azure.config.system.build.toplevel
           - homelab.config.system.build.toplevel
           - zed_net.config.system.build.toplevel

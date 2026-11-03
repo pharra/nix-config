@@ -17,7 +17,7 @@ agenix 是先用的方案。后来服务变多，`services/` 下 compose2nix 生
 
 ## sops-nix（推荐）
 
-- 加密对象与 recipient 定义在根目录 `.sops.yaml`（homelab / zed / dot 三个 age key）
+- 加密对象与 recipient 定义在根目录 `.sops.yaml`（homelab / zed 两个 age key）
 - 编辑：`sops secrets/default.yaml`（私钥可用 `SOPS_AGE_KEY_FILE` 指定）
 - NixOS 侧用法：`sops.secrets."<name>" = { sopsFile = ./xxx.yaml; format = "dotenv"; };`，
   再引用 `config.sops.secrets."<name>".path`；需要模板替换时用 `config.sops.placeholder."<name>"`

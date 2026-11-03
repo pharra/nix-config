@@ -35,15 +35,6 @@
     };
   }
 
-  # Surface Book 2
-  {
-    name = "dot";
-    system = "x86_64-linux";
-    desktop = "wm";
-    hostname = "192.168.254.240";
-    nixos-modules = [./dot inputs.nixos-hardware.nixosModules.microsoft-surface-common];
-  }
-
   # MSI GF65（hostname 是 nix65）
   {
     name = "gs65";

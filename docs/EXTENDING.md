@@ -90,7 +90,7 @@ nix eval .#nixosConfigurations --apply 'x: builtins.attrNames x'   # 确认新�
 
 ### 为什么不能什么都往全局塞
 
-`common-nixos-modules` 是全有或全无的：塞进去的模块会在全部 7 个配置里求值。
+`common-nixos-modules` 是全有或全无的：塞进去的模块会在全部 6 个配置里求值。
 踩过的坑：`boot.iscsi-initiator` 这个选项名与 nixpkgs 自带的 `root-initiator.nix` 撞车，
 eval 直接报 "already declared"（本地副本只好改叫 `boot.iscsi-root`，注释在
 `modules/boot/netboot/iscsi-root/default.nix` 里）。
