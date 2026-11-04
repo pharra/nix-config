@@ -79,6 +79,9 @@ in {
           ".cursor-cli"
           ".cursor-server"
           ".wine"
+
+          # deepseek harness
+          ".dsh"
         ];
         files = [
           ".zsh_history"

@@ -34,7 +34,7 @@ in {
     desktop.enable = true;
     virtualisation.enable = true;
     scripts.enable = true;
-    waydroid.enable = true;
+    waydroid.enable = false;
     kmscon = {
       enable = true;
       # 4K 屏：kmscon 是"按字号在原生分辨率上渲染"，没有全局缩放，所以直接给大字号
