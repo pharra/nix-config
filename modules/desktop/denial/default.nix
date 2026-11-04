@@ -14,15 +14,10 @@ in {
   };
 
   config = mkIf cfg.enable {
-    services.denial = {
-      enable = true;
-      user = "${username}";
-    };
+    programs.denial.enable = true;
+    programs.denial.plugins.enable = true; # Optional Plugin Manager.
 
     services.displayManager.gdm.enable = true;
     services.displayManager.defaultSession = "denial";
-    services.displayManager.sessionPackages = [
-      config.services.denial.selectedPackage
-    ];
   };
 }

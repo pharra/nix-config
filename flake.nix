@@ -18,20 +18,16 @@
       "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
       "https://cache.nixos.org"
       "https://nixpkgs-cache.cachix.org"
+      "https://nix-community.cachix.org"
+      "https://denial.cachix.org"
     ];
 
     trusted-public-keys = [
       "nix:TIuZSOR7smXF/Jz1UKnvY5TW+NvklDypmDEg57QYU08="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4="
-    ];
-
-    # nix community's cache server
-    extra-substituters = [
-      "https://nix-community.cachix.org"
-    ];
-    extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "denial.cachix.org-1:wd8YTnvPmugFrtdMJWtR1XdVknR3/g2nmBJkT+vAruo="
     ];
   };
 
@@ -99,7 +95,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    denial-nixos.url = "github:BeyondtheApex/nixos-denial-compositor-flake-config";
+    denial.url = "github:denialwm/denial";
 
     waydroid-nvidia-nix = {
       url = "github:yigexuanmu/waydroid-nvidia-nix";

@@ -38,7 +38,7 @@
       sops-nix.nixosModules.sops
       agenix.nixosModules.default
       dms-plugin-registry.nixosModules.default
-      inputs.denial-nixos.nixosModules.default
+      inputs.denial.nixosModules.default
       inputs.waydroid-nvidia-nix.nixosModules.waydroid-nvidia
       {
         services.waydroid-nvidia.package = inputs.waydroid-nvidia-nix.packages.x86_64-linux.waydroid-nvidia-full;
