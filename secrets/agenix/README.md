@@ -1,6 +1,6 @@
 # agenix secrets
 
-存放 agenix 形式的整文件加密秘密（`*.age`；`atticd.env` 也是 age 密文，只是扩展名不同）。
+存放 agenix 形式的整文件加密秘密（`*.age`）。
 
 - `secrets.nix` 只给 agenix CLI 用（声明每份密文可由哪些 ssh host 公钥解密），不参与 NixOS 求值。
 - 新增/修改：`nix shell nixpkgs#agenix`，然后 `agenix -e secrets/agenix/xxx.age`。

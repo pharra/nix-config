@@ -39,7 +39,7 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 | `core/` | 全机与桌面基础：`common`、`desktop`、`no-desktop`、`user-group`、`impermanence`、`scripts`、`azure-tools` |
 | `desktop/` | 桌面与外壳：`kde`、`cosmic`、`denial`、`desktop-shell`、`input-method`、`flatpak`、`audio-relay` |
 | `hardware/` | 硬件驱动与固件：`mlx5`、`net-sriov`、`amd-gpu-edid-fix`、`mcontrolcenter`、`lianli-linux`、`nvme-auto`、`udev-symlink` |
-| `network/` | 网络与网络服务：`net-name`、`netns`、`docker-netns`、`network-bridge`、`dhcp-server`、`openwrt`、`tailscale`、`easytier`、`mihomo`、`samba`、`sftp-server`、`ddns-go` |
+| `network/` | 网络与网络服务：`net-name`、`netns`、`docker-netns`、`network-bridge`、`dhcp-server`、`openwrt`、`easytier`、`mihomo`、`samba`、`sftp-server`、`ddns-go` |
 | `boot/` | 引导链：`nvmf`、`boot-over-nfs`、`boot-over-nvmf`、`iscsi-root`、`ipxe-host` |
 | `vm/` | 虚拟化与客机：`libvirt`、`virtualisation`、`vfio`、`waydroid`、`archlinux` |
 | `storage/` | 存储：`zfs-config`、`spdk-tgt`、`spdk-container` |
@@ -88,7 +88,7 @@ flake.nix                          只装配输出（nixosConfigurations / apps 
    `core/common` 给 en_US 的 `mkDefault`，`core/desktop` 直接写 zh_CN —— 结果与原来的 mkForce 相同，
    但不会有优先级打架。
 6. 模块里不要硬编码宿主信息（用户名、家目录、网段、CPU 掩码）：用户名走 `specialArgs` 的 `username`，
-   其余做成模块选项（例如 `network/tailscale.advertiseRoutes`、`storage/spdk-*.coreMask`）。
+   其余做成模块选项（例如 `network/docker-netns.dockerGateway`、`storage/spdk-*.coreMask`）。
 
 ## zed 的网络启动（netboot）
 
@@ -162,7 +162,6 @@ nix build .#packages.x86_64-linux.azure-x64
 | `storage/spdk-tgt` | 零引用；homelab 用的是容器版 `storage/spdk-container` |
 | `network/ddns-go` | 零引用 |
 | `network/samba` | 零引用 |
-| `network/tailscale` | 零引用（因此里面的 age 秘密也不会被解密） |
 | `network/openwrt` | `hosts/homelab` 里显式 `enable = false` |
 | `network/docker-netns` | 取值跟随 `openwrt.enable`，跟着一起关着 |
 | `hardware/lianli-linux` | `hosts/zed/hardware-configuration.nix` 里显式 `enable = false` |
@@ -174,8 +173,7 @@ nix build .#packages.x86_64-linux.azure-x64
 
 另外：
 
-- `nixos/ipxe/`、`nixos/wireguard-server/`：没有被任何 host 启用
-- `secrets/agenix/atticd.env`、`secrets/agenix/wireguard_homelab_private_key.age`：已注册但无模块引用
+- `nixos/ipxe/`：没有被任何 host 启用
 - `services/nfs-root`（`boot/boot-over-nfs`）在 6 个配置里都是关的，但 homelab 上的 zed guest
   在用它（`modules/boot/netboot/mkZedGuest.nix`），不是死代码
 

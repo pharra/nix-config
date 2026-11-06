@@ -5,7 +5,7 @@
 | 系统 | 用途 | 密文位置 | CLI |
 | --- | --- | --- | --- |
 | **sops-nix** | 主力方案，新增秘密优先用它 | `secrets/*.yaml`、`services/<name>/<name>.env\|json` | `sops` |
-| **agenix** | 历史遗留（tailscale / restic / rclone / caddy / xray 等） | `secrets/agenix/*.age` | `agenix` |
+| **agenix** | 历史遗留（restic / rclone / caddy / xray 等） | `secrets/agenix/*.age` | `agenix` |
 
 两者都是同一原则：传输过程与 `/nix/store` 里都是密文，只在最终落地时解密。
 
@@ -37,10 +37,7 @@ agenix 是先用的方案。后来服务变多，`services/` 下 compose2nix 生
 
 ## 当前没有被任何模块引用的秘密
 
-- `secrets/agenix/atticd.env`
-- `secrets/agenix/wireguard_homelab_private_key.age`（对应的 `nixos/wireguard-server` 模块也没有被任何 host 启用）
-
-先保留不删：它们已在 `secrets.nix` 注册，删除容易和密钥轮换流程混淆；要清理就单独一个提交处理。
+- `secrets/agenix/rclone_config.age`（`hosts/homelab/storage.nix` 里的相关配置已注释，恢复同步时再启用）
 
 ## 注意事项
 
