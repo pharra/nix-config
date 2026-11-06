@@ -13,6 +13,7 @@
   common = import ./core/common;
   cosmic = import ./desktop/cosmic;
   ddns-go = import ./network/ddns-go;
+  deepseek-harness = import ./desktop/deepseek-harness;
   denial = import ./desktop/denial;
   desktop = import ./core/desktop;
   desktop-shell = import ./desktop/desktop-shell;

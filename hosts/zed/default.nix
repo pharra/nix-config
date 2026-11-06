@@ -34,6 +34,8 @@ in {
     desktop.enable = true;
     virtualisation.enable = true;
     scripts.enable = true;
+    # dsh web 常驻用户服务（http://127.0.0.1:3080）；wf 已开 linger，所以开机即启动
+    deepseek-harness.enable = true;
     waydroid.enable = false;
     kmscon = {
       enable = true;
