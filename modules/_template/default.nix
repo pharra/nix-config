@@ -15,7 +15,7 @@
 #      这里用 (import ./script.nix {inherit pkgs;}) 引用；注意不要抽成 .sh 再用 readFile，
 #      那样 ${...} 插值会变成字面量。
 #
-# 模块函数可以按需从参数里取：config / lib / pkgs / username / mysecrets / inputs / NixVirt / agenix
+# 模块函数可以按需从参数里取：config / lib / pkgs / username / inputs / NixVirt
 {
   config,
   lib,

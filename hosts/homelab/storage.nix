@@ -1,11 +1,8 @@
 # 存储：ZFS 池、/boot/efi。（备份能力已搬到 modules/storage/backup，这里只留一行 enable）
 # 文件末尾保留了两段被注释掉的 rclone 同步（曾经用过，暂时没启用）。
-# 注意：它们依赖的 age.secrets.rclone_config 已被删掉（没人读）；要恢复同步时先把那个秘密加回来。
-{
-  lib,
-  mysecrets,
-  ...
-}:
+# 注意：它们依赖的 sops.secrets.rclone_config 目前没有声明；要恢复同步时先加：
+#   sops.secrets.rclone_config = { sopsFile = ./rclone_config.ini; format = "ini"; key = ""; };
+{lib, ...}:
 with lib; {
   # 使用 ZFS 模块配置基础支持
   services.zfs-config = {
@@ -38,8 +35,8 @@ with lib; {
   # systemd.services."sync-115" = {
   #   script = ''
   #     set -eu
-  #     ${pkgs.rclone}/bin/rclone --max-size 1G delete 115:/115open/云下载/share/media --config ${config.age.secrets.rclone_config.path}
-  #     ${pkgs.rclone}/bin/rclone copy -Pv --min-size 1G 115:/115open/云下载/share/media /share/media --config ${config.age.secrets.rclone_config.path}
+  #     ${pkgs.rclone}/bin/rclone --max-size 1G delete 115:/115open/云下载/share/media --config ${config.sops.secrets.rclone_config.path}
+  #     ${pkgs.rclone}/bin/rclone copy -Pv --min-size 1G 115:/115open/云下载/share/media /share/media --config ${config.sops.secrets.rclone_config.path}
   #   '';
   #   serviceConfig = {
   #     Type = "oneshot";
@@ -59,8 +56,8 @@ with lib; {
   # systemd.services."sync-short" = {
   #   script = ''
   #     set -eu
-  #     ${pkgs.rclone}/bin/rclone --max-size 100M delete 115:/115open/云下载/share/telegram --config ${config.age.secrets.rclone_config.path}
-  #     ${pkgs.rclone}/bin/rclone copy -Pv --min-size 100M 115:/115open/云下载/share/telegram /share/telegram --config ${config.age.secrets.rclone_config.path}
+  #     ${pkgs.rclone}/bin/rclone --max-size 100M delete 115:/115open/云下载/share/telegram --config ${config.sops.secrets.rclone_config.path}
+  #     ${pkgs.rclone}/bin/rclone copy -Pv --min-size 100M 115:/115open/云下载/share/telegram /share/telegram --config ${config.sops.secrets.rclone_config.path}
   #   '';
   #   serviceConfig = {
   #     Type = "oneshot";

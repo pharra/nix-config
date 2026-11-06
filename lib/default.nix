@@ -5,7 +5,7 @@
   inputs,
   username,
 }: let
-  inherit (inputs) nixpkgs home-manager NixVirt agenix impermanence nix-flatpak sops-nix dms-plugin-registry;
+  inherit (inputs) nixpkgs home-manager NixVirt impermanence nix-flatpak sops-nix dms-plugin-registry;
   inherit (nixpkgs) lib;
 
   nixosSystem = import ./nixosSystem.nix;
@@ -36,7 +36,6 @@
       nix-flatpak.nixosModules.nix-flatpak
       NixVirt.nixosModules.default
       sops-nix.nixosModules.sops
-      agenix.nixosModules.default
       dms-plugin-registry.nixosModules.default
       inputs.denial.nixosModules.default
       inputs.waydroid-nvidia-nix.nixosModules.waydroid-nvidia
@@ -57,16 +56,8 @@
       }
     ];
 
-  # 只把密文本身纳入 store：这个路径会被 ${mysecrets}/xxx.age 插值成 store 路径，
-  # 不过滤的话，secrets/agenix/ 里的文档改动也会改变 drvPath（azure/homelab 共 7 个配置）。
-  mysecrets = lib.cleanSourceWith {
-    name = "agenix-secrets";
-    src = ../secrets/agenix;
-    filter = path: _type: lib.hasSuffix ".age" path || lib.hasSuffix ".env" path;
-  };
-
   commonSpecialArgs = {
-    inherit username mysecrets home-modules NixVirt agenix inputs;
+    inherit username home-modules NixVirt inputs;
   };
 
   mkZedGuest = import ../modules/boot/netboot/mkZedGuest.nix {

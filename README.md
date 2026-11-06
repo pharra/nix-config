@@ -29,7 +29,7 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 | `home-modules/` | Home Manager 模块（统一 `home.pharra.*` 命名空间），显式清单 |
 | `services/` | 容器化服务（compose2nix 生成），由 `hosts/homelab` 导入；公共 podman 运行时在 `services/podman-runtime.nix` |
 | `pkgs/` + `overlays/` + `overlay.nix` | 自定义包与 overlay |
-| `secrets/` | 秘密（sops-nix + agenix），见 [`secrets/README.md`](secrets/README.md) |
+| `secrets/` | 秘密（sops-nix），见 [`secrets/README.md`](secrets/README.md) |
 | `nixos/` | 给 libvirt guest 复用的片段（`nixos/nixvirt/base.nix` 被 `hosts/*/nixvirt` 使用） |
 
 `modules/` 的 7 个域：
@@ -54,7 +54,7 @@ flake.nix                          只装配输出（nixosConfigurations / apps 
        ├─ modules/boot/netboot/    网络启动能力：模块 + netboot.nix + mkZedGuest.nix + 说明
        ├─ modules/<域>/<名字>/     显式清单，按 enable 开关生效
        ├─ home-modules/<名字>/     显式清单，统一 home.pharra.* 命名空间
-       └─ secrets/                 sops-nix + agenix
+       └─ secrets/                 sops-nix
   → 展开成 6 个配置（一台机器一个）
 ```
 
@@ -140,9 +140,8 @@ nix build .#packages.x86_64-linux.azure-x64
   上提到公共模块会让新机器静默继承一个自己没声明过的值。
 - `services/*/default.nix` 是 compose2nix 生成物：只把公共的 podman 运行时抽到
   `services/podman-runtime.nix`，其余保持原样，避免下次重新生成时冲突。
-- `secrets/agenix` 用 `lib.cleanSourceWith` 只把 `*.age`/`*.env` 纳入 store：
-  否则在那个目录里改一行文档，7 个用到 age 秘密的配置 drvPath 全变。
-- 秘密有 sops-nix 与 agenix 两套：历史原因，未做迁移（迁移必须先解密，收益不大），新秘密优先用 sops。
+- 秘密统一走 sops-nix；整文件秘密按内容选 `binary` / `json` / `ini`，细则见
+  [`secrets/README.md`](secrets/README.md)。
 - `boot/iscsi-root` 是 nixpkgs `root-initiator.nix` 的本地副本，选项路径故意不叫
   `boot.iscsi-initiator`（历史上 nixpkgs 自己声明了它，同名会撞车）。上游后来把这个模块移除了，
   所以这份副本要保留、由本仓库自己维护。

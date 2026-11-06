@@ -1,7 +1,28 @@
 keys:
   - &homelab age14ckewpst7ua5acm0hndfps0mjfl3yd0gwhxn7pn379hgyvhs8urse7xt5h
   - &zed age1j66ujjkvpy7cffu5q83cucnweqk78k5z5sch3cyz8hgqhzsu4d8sj4086c
+  # azure 的 wf 用户 ssh key（ssh-to-age 转换），caddy/xray 要在 azure 上解密
+  - &azure age1at8lwljgw37r2perr8ck4q0shzpr30p22a2reexglvy3959d3ejqkvvtf6
 creation_rules:
+  # caddy/xray 只部署在 azure，额外给 azure 一把
+  - path_regex: hosts/azure/server/(caddy_server_conf|xray_server_conf\.json)$
+    key_groups:
+    - age:
+      - *homelab
+      - *zed
+      - *azure
+  # restic 只在 homelab 用；不带扩展名，单独列一条
+  - path_regex: modules/storage/backup/restic_password$
+    key_groups:
+    - age:
+      - *homelab
+      - *zed
+  # rclone（暂未启用）
+  - path_regex: hosts/homelab/rclone_config\.ini$
+    key_groups:
+    - age:
+      - *homelab
+      - *zed
   - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
     key_groups:
     - age:

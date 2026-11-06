@@ -31,7 +31,6 @@ desktop 取值复用 `lib/variants.nix` 里已有的那 6 个。想知道某个�
 | 需求 | 要改哪里 |
 | --- | --- |
 | 解密 sops 秘密 | `.sops.yaml` 的 `creation_rules` 里加这台机器的 age key（`ssh-to-age < /etc/ssh/ssh_host_ed25519_key.pub`） |
-| 解密 agenix 秘密 | `secrets/agenix/secrets.nix` 里加它的 ssh host key，并把要用的秘密 `publicKeys` 带上它 |
 | 用 nix 的 GitHub token | 只在自己的 host 文件里加一行 `services.pharra.nix-access-token.enable = true;` |
 | 让 CI 真正编译它 | 改 `.github/workflows/nixos.yml` 里 `build` 任务的矩阵（目前是硬写的 4 项） |
 | 网络启动（像 zed_net） | 见 [`netboot.md`](netboot.md)（宿主侧 homelab、guest 侧 zed 的完整链路） |
@@ -66,7 +65,7 @@ nix eval .#nixosConfigurations --apply 'x: builtins.attrNames x'   # 确认新�
 
 先判断一件事：**这个模块是不是所有机器都要有它的选项？** 是走 A，否走 B。
 
-### A. 全局基础设施（sops-nix / agenix / impermanence / NixVirt 这类）
+### A. 全局基础设施（sops-nix / impermanence / NixVirt 这类）
 
 1. `flake.nix` 的 `inputs` 加一条（记得 `inputs.nixpkgs.follows = "nixpkgs";`）
 2. `lib/default.nix` 的 `common-nixos-modules` 列表里加 `inputs.<名字>.nixosModules.default`，
@@ -99,8 +98,8 @@ eval 直接报 "already declared"（本地副本只好改叫 `boot.iscsi-root`�
 
 ## 四、加一个秘密
 
-见 [`../secrets/README.md`](../secrets/README.md)：sops-nix 与 agenix 两套并存的原因、
-各自的加解密流程、以及"哪些秘密现在没人用"都写在那里。
+见 [`../secrets/README.md`](../secrets/README.md)：sops 的加解密流程、整文件秘密的格式选择、
+以及"哪些秘密现在没人用"都写在那里。
 
 ## 五、加一个容器服务
 

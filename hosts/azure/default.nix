@@ -1,5 +1,5 @@
 # Azure 云主机：同一份配置出 x86_64（azure）与 aarch64（azure_arm）两个架构。
-# 配置名：azure（x86_64）与 azure_arm（aarch64），desktop = base；用户与 SSH 公钥直接写在这里，秘密走 agenix（不走 sops）。
+# 配置名：azure（x86_64）与 azure_arm（aarch64），desktop = base；用户与 SSH 公钥直接写在这里，秘密走 sops。
 # 具体服务在 ./server 与 ./system.nix；启用的功能见本文件里的 enable 项。
 {
   pkgs,
@@ -14,7 +14,10 @@ in {
 
     ./server
 
-    ../../secrets/agenix.nix
+    # caddy/xray 的 sops 密文用 azure 的 wf 用户 ssh key 解密
+    ({...}: {
+      sops.age.sshKeyPaths = ["/home/${username}/.ssh/id_ed25519"];
+    })
   ];
 
   # enable flakes globally

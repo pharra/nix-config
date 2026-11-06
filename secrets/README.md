@@ -1,23 +1,16 @@
 # Secrets 管理
 
-本仓库有两套秘密管理并存，**密文都在仓库内**（不再依赖外部私有仓库）：
+本仓库统一使用 **sops-nix**，密文都在仓库内：
 
-| 系统 | 用途 | 密文位置 | CLI |
-| --- | --- | --- | --- |
-| **sops-nix** | 主力方案，新增秘密优先用它 | `secrets/*.yaml`、`services/<name>/<name>.env\|json` | `sops` |
-| **agenix** | 历史遗留（restic / rclone / caddy / xray 等） | `secrets/agenix/*.age` | `agenix` |
+| 用途     | 密文位置                                                              | CLI    |
+| -------- | --------------------------------------------------------------------- | ------ |
+| 主力方案 | `secrets/*`、`services/<name>/<name>.env\|json`、各配置目录里的整文件秘密 | `sops` |
 
-两者都是同一原则：传输过程与 `/nix/store` 里都是密文，只在最终落地时解密。
+原则不变：传输过程与 `/nix/store` 里都是密文，只在最终落地时解密。
 
-## 为什么有两套
+## sops-nix
 
-agenix 是先用的方案。后来服务变多，`services/` 下 compose2nix 生成的 `*.env` / `*.json`
-更适合用 sops（可以只改其中一个字段，而 agenix 是整文件加密）。
-旧秘密没有迁移：迁移必须先解密（需要各机器的 age / ssh 私钥），收益不大，风险却更高。
-
-## sops-nix（推荐）
-
-- 加密对象与 recipient 定义在根目录 `.sops.yaml`（homelab / zed 两个 age key）
+- 加密对象与 recipient 定义在根目录 `.sops.yaml`
 - 编辑：`sops secrets/default.yaml`（私钥可用 `SOPS_AGE_KEY_FILE` 指定）
 - NixOS 侧用法：`sops.secrets."<name>" = { sopsFile = ./xxx.yaml; format = "dotenv"; };`，
   再引用 `config.sops.secrets."<name>".path`；需要模板替换时用 `config.sops.placeholder."<name>"`
@@ -25,22 +18,27 @@ agenix 是先用的方案。后来服务变多，`services/` 下 compose2nix 生
   - 例子：`services/caddy/default.nix`（用 placeholder 渲染出 Caddyfile）
 - 解密身份：`secrets/nixos.nix` 里 `sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"]`
 
-## agenix
+## 整文件秘密
 
-- `secrets/agenix/*.age`：整个文件加密
-- `secrets/agenix/secrets.nix` **只给 agenix CLI 用**，不参与 NixOS 求值，里面是各机器的 ssh host 公钥
-- 新增/修改：`nix shell nixpkgs#agenix`，然后 `agenix -e secrets/agenix/xxx.age`
-- NixOS 侧用法：模块里写 `age.secrets."xxx".file = "${mysecrets}/xxx.age";`，
-  其中 `mysecrets = ./secrets/agenix`，由 `lib/default.nix` 通过 `specialArgs` 传给所有模块
-- 解密身份：`secrets/agenix.nix` 的 `age.identityPaths`
-  （有 impermanence 时用 `/nix/persistent/home/<user>/.ssh/id_ed25519`，否则用 `/home/<user>/.ssh/id_ed25519`）
+整文件秘密直接放在使用它的配置目录旁，不集中在 `secrets/` 下：
+
+| 秘密 | 文件 | 格式 |
+| --- | --- | --- |
+| `caddy_server_conf` | `hosts/azure/server/caddy_server_conf` | `binary` |
+| `xray_server_conf` | `hosts/azure/server/xray_server_conf.json` | `json` + `key = ""`（整个 JSON） |
+| `restic_password` | `modules/storage/backup/restic_password` | `binary` |
+| `rclone_config` | `hosts/homelab/rclone_config.ini` | `ini` + `key = ""`（暂未声明） |
+
+caddy/xray 部署在 azure，`.sops.yaml` 给这两个文件额外加了 azure 的 age key；
+azure 侧通过 `sops.age.sshKeyPaths` 使用 `/home/wf/.ssh/id_ed25519` 解密。
 
 ## 当前没有被任何模块引用的秘密
 
-- `secrets/agenix/rclone_config.age`（`hosts/homelab/storage.nix` 里的相关配置已注释，恢复同步时再启用）
+- `hosts/homelab/rclone_config.ini`（`hosts/homelab/storage.nix` 里的 rclone 同步代码是注释状态；
+  要恢复时先在那里声明 `sops.secrets.rclone_config`）
 
 ## 注意事项
 
 - 不要提交明文；也不要把秘密放到外部私有仓库再当 flake input 引用（上游模板的旧做法，本仓库已改为全部 in-tree）
 - 改过 `.sops.yaml` 的 recipient 后要对已有文件跑 `sops updatekeys`，否则新机器解不开
-- 每个秘密的 recipient 决定"哪些机器能解密"，改密钥前先确认目标机器的 host key 已在列
+- 每个秘密的 recipient 决定"哪些机器能解密"，改密钥前先确认目标机器的 age key 已在列

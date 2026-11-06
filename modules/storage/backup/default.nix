@@ -4,7 +4,6 @@
 {
   config,
   lib,
-  mysecrets,
   username,
   ...
 }:
@@ -41,8 +40,9 @@ in {
 
   config = mkIf cfg.enable {
     # 密码文件由能力自己声明，host 里不用再写
-    age.secrets.restic_password = {
-      file = "${mysecrets}/restic_password.age";
+    sops.secrets.restic_password = {
+      sopsFile = ./restic_password;
+      format = "binary";
       owner = cfg.user;
       mode = "0400";
       path = "/etc/restic_password";
@@ -51,7 +51,7 @@ in {
     services.restic.backups.local_android = {
       inherit (cfg) user repository paths;
       initialize = true; # 仓库不存在时自动 init
-      passwordFile = config.age.secrets.restic_password.path;
+      passwordFile = config.sops.secrets.restic_password.path;
       timerConfig = {
         OnCalendar = cfg.onCalendar;
         Persistent = true;

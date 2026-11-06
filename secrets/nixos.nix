@@ -1,6 +1,5 @@
 {...}: {
   imports = [
-    ./agenix.nix
     ./github.nix
   ];
 

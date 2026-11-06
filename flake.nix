@@ -54,13 +54,6 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    # secrets management
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
-    };
-
     nix-flatpak = {
       url = "github:gmodena/nix-flatpak";
     };
