@@ -15,7 +15,7 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 | `zed_net` | 同 zed，但从 NVMF/iSCSI 网络盘启动 | `kde` |
 | `homelab` | 服务器：ZFS + SPDK/NVMF + 一堆容器服务 | `base` |
 
-`desktop` 的可选值定义在 `lib/variants.nix`（`base`/`kde`/`gnome`/`cosmic`/`wm`/`denial`）。
+`desktop` 的可选值定义在 `lib/variants.nix`（`base`/`kde`/`cosmic`/`wm`/`denial`）。
 换桌面 = 改 `hosts/machines.nix` 里那一行，然后 `nixos-rebuild switch --flake .#<机器名>`。
 
 ## 目录结构
@@ -37,7 +37,7 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 | 域 | 内容 |
 | --- | --- |
 | `core/` | 全机与桌面基础：`common`、`desktop`、`no-desktop`、`user-group`、`impermanence`、`scripts`、`azure-tools` |
-| `desktop/` | 桌面与外壳：`kde`、`gnome`、`cosmic`、`denial`、`desktop-shell`、`input-method`、`flatpak`、`audio-relay` |
+| `desktop/` | 桌面与外壳：`kde`、`cosmic`、`denial`、`desktop-shell`、`input-method`、`flatpak`、`audio-relay` |
 | `hardware/` | 硬件驱动与固件：`mlx5`、`net-sriov`、`amd-gpu-edid-fix`、`mcontrolcenter`、`lianli-linux`、`nvme-auto`、`udev-symlink` |
 | `network/` | 网络与网络服务：`net-name`、`netns`、`docker-netns`、`network-bridge`、`dhcp-server`、`openwrt`、`tailscale`、`easytier`、`mihomo`、`samba`、`sftp-server`、`ddns-go` |
 | `boot/` | 引导链：`nvmf`、`boot-over-nfs`、`boot-over-nvmf`、`iscsi-root`、`ipxe-host` |
@@ -63,7 +63,7 @@ flake.nix                          只装配输出（nixosConfigurations / apps 
 1. **宿主自己**：`hosts/<name>/default.nix`（网卡 MAC、磁盘、显卡、这台机器特有的开关）
 2. **全机共用**：`modules/core/common`（`services.pharra.common.enable`，22 个配置里开着）
 3. **桌面共用**：`modules/core/desktop`（`services.pharra.desktop.enable`）
-4. **desktop 取值**：`lib/variants.nix`（kde / gnome / cosmic / wm / denial / base）
+4. **desktop 取值**：`lib/variants.nix`（kde / cosmic / wm / denial / base）
 
 反过来：**要让所有机器都变，改第 2 层；要让所有桌面机都变，改第 3 层；只影响一台，改第 1 层。**
 分层里底层用 `lib.mkDefault`、上层直接赋值，所以上层不需要 `mkForce` 就能覆盖（见「设计取舍」）。

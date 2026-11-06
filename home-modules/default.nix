@@ -6,7 +6,6 @@
   denial = import ./denial;
   desktop = import ./desktop;
   desktop-shell = import ./desktop-shell;
-  gnome = import ./gnome;
   input-method = import ./input-method;
   kde = import ./kde;
   _template = import ./_template;

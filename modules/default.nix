@@ -21,7 +21,6 @@
   docker-netns = import ./network/docker-netns;
   easytier = import ./network/easytier;
   flatpak = import ./desktop/flatpak;
-  gnome = import ./desktop/gnome;
   impermanence = import ./core/impermanence;
   input-method = import ./desktop/input-method;
   ipxe-host = import ./boot/netboot/ipxe-host;

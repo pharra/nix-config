@@ -6,7 +6,6 @@
   nixos = {
     base = {services.pharra.no-desktop.enable = true;};
     kde = {services.pharra.kde.enable = true;};
-    gnome = {services.pharra.gnome.enable = true;};
     cosmic = {services.pharra.cosmic.enable = true;};
     denial = {services.pharra.denial.enable = true;};
     wm = {
@@ -21,7 +20,6 @@
   homeSwitch = {
     base = {};
     kde = {kde.enable = true;};
-    gnome = {gnome.enable = true;};
     cosmic = {cosmic.enable = true;};
     denial = {denial.enable = true;};
     wm = {desktop-shell.enable = true;};
