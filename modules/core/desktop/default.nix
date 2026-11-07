@@ -87,7 +87,6 @@ in {
     # dconf is a low-level configuration system.
     programs.dconf.enable = true;
     programs.firefox.enable = true;
-    programs.vscode.enable = true;
 
     # Or disable the firewall altogether.
     networking.firewall.enable = lib.mkDefault false;
@@ -173,6 +172,9 @@ in {
 
       # dsh
       deepseek-harness
+
+      # 可写扩展目录的 VS Code（不用 programs.vscode 的 Nix store 包装）
+      vscode
     ];
 
     programs.clash-verge = {
