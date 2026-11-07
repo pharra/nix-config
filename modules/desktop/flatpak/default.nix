@@ -60,11 +60,26 @@ in {
         "wayland"
         "!fallback-x11"
       ];
-      "com.tencent.WeChat".Context.sockets = [
-        "!x11"
-        "wayland"
-        "!fallback-x11"
-      ];
+      # 微信是 Qt6 原生 Wayland 程序；Flatpak 沙箱里没有宿主 fcitx5-qt 模块，
+      # 用 Qt 私有的 text-input-v3 后端直接走 Wayland 输入法协议，
+      # 这样仍然保持原生 Wayland，不需要退回 XWayland。
+      "com.tencent.WeChat" = {
+        Context.sockets = [
+          "wayland"
+        ];
+        Context.filesystems = [
+          "xdg-download"
+          "/fluent"
+        ];
+        Environment = {
+          QT_QPA_PLATFORM = "wayland";
+          QT_IM_MODULE = "text-input-unstable-v3";
+        };
+        "Session Bus Policy" = {
+          "org.fcitx.Fcitx5" = "talk";
+          "org.fcitx.Fcitx-0" = "talk";
+        };
+      };
     };
 
     services.flatpak.packages = [
