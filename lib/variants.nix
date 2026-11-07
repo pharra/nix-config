@@ -10,7 +10,7 @@
     wm = {
       services.pharra.desktop-shell = {
         enable = true;
-        variant = "noctalia";
+        variant = "dms";
       };
     };
   };

@@ -159,7 +159,12 @@ overview {
 // See the binds section below for more spawn examples.
 // This line starts waybar, a commonly used bar for Wayland compositors.
 environment {
-  XDG_CURRENT_DESKTOP "niri"
+  // 和 KDE 变体保持同一后端：Chromium/Electron 看到 KDE 后会选
+  // KWallet6，再经 kwalletd6 兼容层落到 gnome-keyring。
+  XDG_CURRENT_DESKTOP "niri:KDE"
+  KDE_SESSION_VERSION "6"
+  KDE_FULL_SESSION "true"
+  QT_QPA_PLATFORM "wayland"
 }
 hotkey-overlay {
     skip-at-startup

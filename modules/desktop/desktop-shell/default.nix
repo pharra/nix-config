@@ -30,6 +30,14 @@ in {
   };
 
   config = mkIf cfg.enable {
+    services.pharra.kwallet-shim.enable = true;
+    services.pharra.kwallet-shim.xdgCurrentDesktop =
+      if (cfg.variant == "dms")
+      then "niri:KDE"
+      else if (cfg.variant == "noctalia")
+      then "umbriel:KDE"
+      else throw "Invalid desktop shell variant: ${cfg.variant}";
+
     services.pharra.desktop-shell.compositor =
       if (cfg.variant == "dms")
       then "niri"
@@ -45,22 +53,30 @@ in {
         enable = true;
       };
 
-      dms-shell = mkIf (cfg.variant == "dms") {
+      dux-shell = mkIf (cfg.variant == "dms") {
         enable = true;
         systemd = {
           enable = true;
           target = "graphical-session.target";
           restartIfChanged = true;
         };
+      };
 
-        plugins = {
-          # Simply enable plugins by their ID (from the registry)
-          linuxWallpaperEngine.enable = true; # Wallpaper engine for Linux (linux-wallpaper-engine)
-        };
-        enableVPN = true; # VPN management widget
-        enableDynamicTheming = true; # Wallpaper-based theming (matugen)
-        enableAudioWavelength = true; # Audio visualizer (cava)
-        enableCalendarEvents = true; # Calendar integration (khal)
+      dux-files = mkIf (cfg.variant == "dms") {
+        enable = true;
+        systemd.enable = true;
+        systemd.target = "graphical-session.target";
+        portal.enable = true;
+      };
+      dux-search = mkIf (cfg.variant == "dms") {
+        enable = true;
+        systemd.enable = true;
+        systemd.target = "graphical-session.target";
+      };
+      dux-calendar = mkIf (cfg.variant == "dms") {
+        enable = true;
+        systemd.enable = true;
+        systemd.target = "graphical-session.target";
       };
 
       noctalia = mkIf (cfg.variant == "noctalia") {
@@ -73,10 +89,61 @@ in {
       };
     };
 
-    services.displayManager.dms-greeter = mkIf (cfg.variant == "dms") {
+    services.displayManager.dux-greeter = mkIf (cfg.variant == "dms") {
       enable = true;
       compositor.name = cfg.compositor;
       configHome = "/home/${username}";
+    };
+
+    services.displayManager.noctalia-greeter = mkIf (cfg.variant == "noctalia") {
+      enable = true;
+
+      settings = {
+        cursor = {
+          theme = "Bibata-Modern-Ice";
+          size = 24;
+          path = "${pkgs.bibata-cursors}/share/icons";
+        };
+        keyboard = {
+          layout = "us";
+        };
+      };
+    };
+
+    # enable trash support for nautilus
+    services.gvfs.enable = true;
+
+    services.xserver.displayManager.sessionCommands = ''
+      ${pkgs.xorg.xrdb}/bin/xrdb -merge <<EOF
+      Xft.dpi: 192
+      EOF
+    '';
+
+    # Work around niri#2435 logout breaking user services
+    systemd.user.services.niri = mkIf (cfg.compositor == "niri") {
+      serviceConfig.ExecStop = "${pkgs.systemd}/bin/systemctl --user stop graphical-session.target";
+    };
+
+    environment.systemPackages = with pkgs; [
+      alacritty
+      linux-wallpaperengine
+      nautilus
+      papirus-icon-theme
+      kdePackages.gwenview
+      kdePackages.qt6ct
+
+      # Wayland utilities
+      wayland-utils
+      wl-clipboard
+      xwayland-satellite
+      i2c-tools
+    ];
+
+    environment.sessionVariables = {
+      "NIXOS_OZONE_WL" = "1";
+      "MOZ_ENABLE_WAYLAND" = "1";
+      "MOZ_WEBRENDER" = "1";
+      "QT_QPA_PLATFORM" = "wayland";
     };
 
     environment.etc."nvidia/nvidia-application-profiles-rc.d/50-limit-free-buffer-pool-in-wayland-compositors.json" = mkIf (cfg.compositor == "niri") {
@@ -104,59 +171,6 @@ in {
           ]
         }
       '';
-    };
-
-    services.displayManager.noctalia-greeter = mkIf (cfg.variant == "noctalia") {
-      enable = true;
-
-      settings = {
-        cursor = {
-          theme = "Bibata-Modern-Ice";
-          size = 24;
-          path = "${pkgs.bibata-cursors}/share/icons";
-        };
-        keyboard = {
-          layout = "us";
-        };
-      };
-    };
-
-    # enable trash support for nautilus
-    services.gvfs.enable = true;
-
-    services.xserver.displayManager.sessionCommands = ''
-      ${pkgs.xorg.xrdb}/bin/xrdb -merge <<EOF
-      Xft.dpi: 192
-      EOF
-    '';
-
-    services.greetd = {
-      settings = {
-        terminal = {
-          vt = lib.mkForce 7;
-        };
-      };
-    };
-
-    environment.systemPackages = with pkgs; [
-      alacritty
-      linux-wallpaperengine
-      nautilus
-      papirus-icon-theme
-      kdePackages.gwenview
-      kdePackages.qt6ct
-
-      # Wayland utilities
-      wayland-utils
-      wl-clipboard
-      xwayland-satellite
-      i2c-tools
-    ];
-
-    environment.sessionVariables = {
-      "NIXOS_OZONE_WL" = "1";
-      "MOZ_ENABLE_WAYLAND" = "1";
-      "MOZ_WEBRENDER" = "1";
     };
 
     hjem.extraModules = [

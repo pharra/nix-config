@@ -48,6 +48,9 @@ _: {
   fileSystems."/fluent" = {
     device = "192.168.29.1:/share";
     fsType = "nfs";
-    options = ["x-systemd.automount" "x-systemd.idle-timeout=1min" "nofail" "nfsvers=4.2" "proto=rdma" "port=20049" "async"];
+    # 关机/kexec 时先停用户会话，再卸载 /fluent；
+    # 否则 VS Code、shell 等进程的 cwd 在 /fluent 下会导致
+    # umount.nfs4: device is busy，卡在 Local File Systems。
+    options = ["x-systemd.automount" "x-systemd.idle-timeout=1min" "x-systemd.before=user@1000.service" "nofail" "nfsvers=4.2" "proto=rdma" "port=20049" "async"];
   };
 }

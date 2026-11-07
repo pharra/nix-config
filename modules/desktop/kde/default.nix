@@ -15,6 +15,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    services.pharra.kwallet-shim = {
+      enable = true;
+      xdgCurrentDesktop = "KDE";
+    };
+
     programs = {
       dconf.enable = true;
       kdeconnect.enable = true;
@@ -44,7 +49,6 @@ in {
       kdePackages.qtwebchannel
       kdePackages.qtmultimedia
       kdePackages.qtdeclarative
-      kdePackages.kwallet # KWallet API -> Secret Service 兼容层（kwalletd6）
 
       kdePackages.discover # Optional: Install if you use Flatpak or fwupd firmware update sevice
       kdePackages.kcalc # Calculator
@@ -90,42 +94,6 @@ in {
       "MOZ_ENABLE_WAYLAND" = "1";
       "MOZ_WEBRENDER" = "1";
       "QT_QPA_PLATFORM" = "wayland";
-      # Chromium/Electron 用 KDE_SESSION_VERSION 选择 kwallet5/6；
-      # 没有它时会退回已不存在的 KWallet4 org.kde.kwalletd。
-      "KDE_SESSION_VERSION" = "6";
-      "KDE_FULL_SESSION" = "true";
-      "XDG_CURRENT_DESKTOP" = "KDE";
     };
-
-    # 让 systemd user manager 启动的服务（以及从它们启动的 GUI 程序）
-    # 也能拿到 KDE 版本，避免 VS Code 等 Electron 程序误选 KWallet4。
-    environment.etc."environment.d/10-kde-session.conf".text = ''
-      KDE_SESSION_VERSION=6
-      KDE_FULL_SESSION=true
-      XDG_CURRENT_DESKTOP=KDE
-    '';
-
-    hjem.extraModules = [
-      ({config, ...}:
-        mkIf (config.user == username) {
-          # kwalletrc 必须允许 KWallet 写回状态，所以不能用 hjem 的 symlink/copy
-          # （copy 每次 activation 也会覆盖）。用 user oneshot 只在缺失时创建。
-          systemd.services.ensure-kwalletrc = {
-            wantedBy = ["default.target"];
-            serviceConfig.Type = "oneshot";
-            script = ''
-              if [ ! -e "$HOME/.config/kwalletrc" ]; then
-                ${pkgs.coreutils}/bin/install -Dm644 ${pkgs.writeText "kwalletrc" ''
-                [KSecretD]
-                Enabled=false
-
-                [Migration]
-                MigrateTo3rdParty=false
-              ''} "$HOME/.config/kwalletrc"
-              fi
-            '';
-          };
-        })
-    ];
   };
 }

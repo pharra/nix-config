@@ -45,7 +45,7 @@ in {
   };
 
   services.sunshine = lib.mkIf config.services.pharra.desktop.enable {
-    enable = true;
+    enable = false;
     autoStart = true;
     capSysAdmin = true;
     openFirewall = true;
