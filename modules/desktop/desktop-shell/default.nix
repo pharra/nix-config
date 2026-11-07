@@ -11,6 +11,14 @@ with lib; let
   defaultUmbrielConfig = ./umbriel;
   defaultDmsConfig = ./dank-material-shell;
   defaultNoctaliaConfig = ./noctalia-shell;
+
+  # wm 的 shell 由 systemd 启动，不继承 niri/umbriel 的 environment 块；
+  # DMS 和 noctalia 都注入同一组 fcitx5 变量，以后新增 wm variant 也复用。
+  waylandImEnvironment = {
+    XMODIFIERS = "@im=fcitx";
+    GTK_IM_MODULE = "fcitx";
+    QT_IM_MODULE = "fcitx";
+  };
 in {
   options = {
     services.pharra.desktop-shell = {
@@ -88,6 +96,10 @@ in {
         recommendedServices.enable = true;
       };
     };
+
+    # 让 DMS / noctalia 启动的应用也拿到 fcitx5 环境变量。
+    systemd.user.services.dms.environment = mkIf (cfg.variant == "dms") waylandImEnvironment;
+    systemd.user.services.noctalia.environment = mkIf (cfg.variant == "noctalia") waylandImEnvironment;
 
     services.displayManager.dux-greeter = mkIf (cfg.variant == "dms") {
       enable = true;

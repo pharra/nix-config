@@ -165,6 +165,9 @@ environment {
   KDE_SESSION_VERSION "6"
   KDE_FULL_SESSION "true"
   QT_QPA_PLATFORM "wayland"
+  XMODIFIERS "@im=fcitx"
+  GTK_IM_MODULE "fcitx"
+  QT_IM_MODULE "fcitx"
 }
 hotkey-overlay {
     skip-at-startup

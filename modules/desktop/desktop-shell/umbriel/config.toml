@@ -59,6 +59,15 @@ honor_restored_maximize = false                 # Honor restored maximized state
 [environment]
 # ELECTRON_OZONE_PLATFORM_HINT = "auto"
 # SDL_VIDEODRIVER = "wayland"
+# 和 KDE 变体保持同一后端：Chromium/Electron 看到 KDE 后会选
+# KWallet6，再经 kwalletd6 兼容层落到 gnome-keyring。
+XDG_CURRENT_DESKTOP = "umbriel:KDE"
+KDE_SESSION_VERSION = "6"
+KDE_FULL_SESSION = "true"
+QT_QPA_PLATFORM = "wayland"
+XMODIFIERS = "@im=fcitx"
+GTK_IM_MODULE = "fcitx"
+QT_IM_MODULE = "fcitx"
 
 # Hardware events
 # These commands run when a laptop lid opens or closes. Uncomment either hook
