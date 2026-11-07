@@ -17,8 +17,12 @@ in {
     programs.denial.enable = true;
     programs.denial.plugins.enable = true; # Optional Plugin Manager.
 
-    services.displayManager.gdm.enable = true;
+    services.displayManager.regreet.enable = true;
     services.displayManager.defaultSession = "denial";
+
+    environment.systemPackages = with pkgs; [
+      alacritty
+    ];
 
     environment.sessionVariables = {
       "NIXOS_OZONE_WL" = "1";
