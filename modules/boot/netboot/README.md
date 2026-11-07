@@ -8,7 +8,7 @@ zed 这台机器除了本地启动，还有"从网络盘启动"的两条路径�
 | | 路径 A：zed 自己走网络启动 | 路径 B：在 homelab 上跑一个 zed guest |
 | --- | --- | --- |
 | 配置名 | `zed_net`（就是 zed 这台机器，只是引导方式不同） | 不是独立配置：它是 homelab 配置求值过程中生成的一个 NixOS system |
-| 怎么组装 | `hosts/machines.nix` 的 `zed_net` 条目：`[./zed, netboot.nvmfRoot {iscsi = netboot.iscsiBoot;}, netboot.efiFromIscsi]` | `hosts/homelab/default.nix` 里 `zedGuestSystem = mkZedGuest {inherit nixpkgs home-manager;}` |
+| 怎么组装 | `hosts/machines.nix` 的 `zed_net` 条目：`[./zed, netboot.nvmfRoot {iscsi = netboot.iscsiBoot;}, netboot.efiFromIscsi]` | `hosts/homelab/guest.nix` 里 `zedGuestSystem = mkZedGuest {inherit nixpkgs;}` |
 | 生成器 | `modules/boot/netboot/netboot.nix` 的覆盖片段（NVMF root / iSCSI EFI） | `modules/boot/netboot/mkZedGuest.nix`（NFS root + NVMF root 的 zed guest 系统） |
 | 现状 | **活的**：CI 里会编译 `zed_net.config.system.build.toplevel` | **目前没在服务**：homelab 上 `services.pharra.ipxe-host.nfs.enable = false`，见下 |
 

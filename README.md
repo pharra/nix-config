@@ -25,8 +25,7 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 | `flake.nix` | 只放 inputs 与输出装配（`nixosConfigurations` / `apps` / `packages` / `formatter`） |
 | `lib/` | 装配逻辑：`default.nix`（上下文与配置生成）、`variants.nix`（desktop 变体表）、`nixosSystem.nix` |
 | `hosts/` | 每台机器一个目录（硬件、磁盘、网络、host 专属开关）；`hosts/machines.nix` 是机器清单（纯数据） |
-| `modules/` | 通用 NixOS 模块，分 7 个域，显式清单（见下） |
-| `home-modules/` | Home Manager 模块（统一 `home.pharra.*` 命名空间），显式清单 |
+| `modules/` | 通用 NixOS 模块，分 7 个域，显式清单（见下）；桌面变体的系统配置与 hjem 用户配置写在同一模块里 |
 | `services/` | 容器化服务（compose2nix 生成），由 `hosts/homelab` 导入；公共 podman 运行时在 `services/podman-runtime.nix` |
 | `pkgs/` + `overlays/` + `overlay.nix` | 自定义包与 overlay |
 | `secrets/` | 秘密（sops-nix），见 [`secrets/README.md`](secrets/README.md) |
@@ -50,10 +49,9 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 flake.nix                          只装配输出（nixosConfigurations / apps / packages / formatter）
   └─ lib/default.nix               上下文：common-nixos-modules、commonSpecialArgs、variants、secrets 路径
        ├─ hosts/machines.nix       机器清单（纯数据）：name / system / desktop / nixos-modules
-       ├─ lib/variants.nix         desktop 变体表：NixOS 侧开关 + home 侧开关 + 生成的 home 模块
+       ├─ lib/variants.nix         desktop 变体表（每个 variant 一个 NixOS 模块，内含 hjem 用户配置）
        ├─ modules/boot/netboot/    网络启动能力：模块 + netboot.nix + mkZedGuest.nix + 说明
        ├─ modules/<域>/<名字>/     显式清单，按 enable 开关生效
-       ├─ home-modules/<名字>/     显式清单，统一 home.pharra.* 命名空间
        └─ secrets/                 sops-nix
   → 展开成 6 个配置（一台机器一个）
 ```
@@ -76,7 +74,7 @@ flake.nix                          只装配输出（nixosConfigurations / apps 
    - `hardware.*` —— 硬件驱动/固件的启用
    - `boot.*` —— 引导链
    - `virtualisation.*` —— 虚拟化
-   Home Manager 侧统一用 `home.pharra.*`。
+   用户级配置不另立命名空间：写在 `hjem.extraModules`（按 `config.user == username` 过滤）或 `hjem.users.<username>.*` 下。
 2. **目录名 = 选项路径的最后一段**，统一 kebab-case。看目录就知道选项名：
    `modules/network/dhcp-server/` → `services.pharra.dhcp-server`。
 3. **模块顺序 = `modules/default.nix` 清单里属性名的排序**（NixOS 的 list 型选项按模块顺序合并，所以清单就是顺序）。
@@ -124,18 +122,19 @@ nix build .#packages.x86_64-linux.azure-x64
 - **新机器**：建 `hosts/<name>/hardware-configuration.nix` 与 `hosts/<name>/default.nix`，
   然后在 `hosts/machines.nix` 加一条（`name` / `system` / `desktop` / `nixos-modules` / 可选 `hostname`、`specialArgs`）。
   **不需要改 `flake.nix`。**
-- **新桌面（desktop）**：在 `lib/variants.nix` 的 `nixos` 与 `homeSwitch` 两张表里各加一项（只想给一台机器换桌面就改 `hosts/machines.nix` 那一行），
-  键必须一致（文件里有一句断言），加漏了或写错名字会在 eval 期直接报错。
+- **新桌面（desktop）**：在 `lib/variants.nix` 的 `nixos` 表里加一项，指向 `modules/desktop/<name>`；
+  该模块同时写系统配置和 hjem 用户配置。
 - **新 NixOS 模块**：放到 `modules/<域>/<name>/default.nix`，并在 `modules/default.nix` 清单里加一行。
   要停用就把它从 `modules/default.nix` 里删掉或注释掉 —— 没在清单里的模块不会加载。
-- **新 Home Manager 模块**：放 `home-modules/<name>/default.nix`，在 `home.pharra` 下暴露 `enable` 开关。
+- **variant 的用户配置**：写在对应的 `modules/desktop/<name>/default.nix` 里，用 `hjem.extraModules`，
+  这样系统配置与用户配置在同一个模块、同一个 `nixos-rebuild` 里。
 - **新服务**：`services/<name>/default.nix`，并在 `services/default.nix` 清单里加一行；公共运行时写 `imports = [../podman-runtime.nix];`。
 - **新秘密**：见 [`secrets/README.md`](secrets/README.md)。
 
 ## 设计取舍
 
-- `home/` 原本有 6 个近乎逐字复制的 `<build>.nix`，现在统一由 `lib/variants.nix` 生成，
-  `services.pharra.*`（NixOS 侧）与 `home.pharra.*`（home 侧）的开关写在同一条记录里。
+- `home/` 原本有 6 个近乎逐字复制的 `<build>.nix`，后来由 `lib/variants.nix` 收敛成变体表；
+  现在每个 variant 是一个 NixOS 模块，系统配置和 hjem 用户配置写在同一处。
 - **`system.stateVersion` 刻意留在每个 host**：它代表该机器首次安装的版本，
   上提到公共模块会让新机器静默继承一个自己没声明过的值。
 - `services/*/default.nix` 是 compose2nix 生成物：只把公共的 podman 运行时抽到
@@ -165,7 +164,6 @@ nix build .#packages.x86_64-linux.azure-x64
 | `network/docker-netns` | 取值跟随 `openwrt.enable`，跟着一起关着 |
 | `hardware/lianli-linux` | `hosts/zed/hardware-configuration.nix` 里显式 `enable = false` |
 | `desktop/audio-relay` | `core/desktop` 里显式 `enable = false` |
-| `home-modules/autostart` | 没有任何 home 配置启用 |
 
 - `hardware/mlx4` 已删除（连同 `hosts/homelab/hardware-configuration.nix` 里那份从未生效的参数块）：
   它从来没被启用过。注意 `mlx4_0`/`mlx4_1` 是 homelab 上的**实际网卡名**，仍保留在 `hosts/homelab/default.nix`，与内核模块无关。

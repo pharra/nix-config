@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  username,
   ...
 }:
 with lib; let
@@ -192,5 +193,33 @@ in {
         "denial.cachix.org-1:wd8YTnvPmugFrtdMJWtR1XdVknR3/g2nmBJkT+vAruo="
       ];
     };
+
+    environment.sessionVariables = {
+      TERM = "xterm-256color";
+      DELTA_PAGER = "less -R";
+      MANPAGER = "sh -c 'col -bx | bat -l man -p'";
+    };
+
+    # 所有机器共用的用户包
+    hjem.extraModules = [
+      ({config, ...}:
+        mkIf (config.user == username) {
+          packages = with pkgs; [
+            btop
+            libnotify
+            wireguard-tools
+            strace
+            ltrace
+            lsof
+            sysstat
+            lm_sensors
+            ethtool
+            dmidecode
+            fio
+            dnsutils
+            screen
+          ];
+        })
+    ];
   };
 }

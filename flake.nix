@@ -41,17 +41,16 @@
     # nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # home-manager, used for managing user configuration
-    home-manager = {
-      url = "github:nix-community/home-manager/master";
-      # url = "github:nix-community/home-manager/release-26.05";
+    # hjem, used for managing user $HOME configuration
+    hjem = {
+      # 固定 rev，避免 GitHub API rate limit；升级时改这里再 nix flake lock
+      url = "git+https://github.com/feel-co/hjem?rev=8408642aa3035135fa6d70269dc93e0814e2a4f6";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     impermanence = {
       url = "github:nix-community/impermanence";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
     };
 
     nix-flatpak = {

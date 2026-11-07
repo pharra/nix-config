@@ -7,6 +7,10 @@
 }:
 with lib; let
   cfg = config.services.pharra.desktop-shell;
+  defaultNiriConfig = ./niri;
+  defaultUmbrielConfig = ./umbriel;
+  defaultDmsConfig = ./dank-material-shell;
+  defaultNoctaliaConfig = ./noctalia-shell;
 in {
   options = {
     services.pharra.desktop-shell = {
@@ -147,6 +151,60 @@ in {
       wl-clipboard
       xwayland-satellite
       i2c-tools
+    ];
+
+    environment.sessionVariables = {
+      "NIXOS_OZONE_WL" = "1";
+      "MOZ_ENABLE_WAYLAND" = "1";
+      "MOZ_WEBRENDER" = "1";
+    };
+
+    hjem.extraModules = [
+      ({config, ...}:
+        mkIf (config.user == username) {
+          systemd.services.xembed-sni-proxy = {
+            wantedBy = ["graphical-session.target"];
+            partOf = ["graphical-session.target"];
+            after = ["graphical-session.target"];
+            serviceConfig = {
+              ExecStart = "${pkgs.kdePackages.plasma-workspace}/bin/xembedsniproxy";
+              Restart = "on-abort";
+            };
+          };
+
+          systemd.services.install-desktop-defaults = {
+            wantedBy = ["default.target"];
+            serviceConfig.Type = "oneshot";
+            script = ''
+              copy_if_missing_dir() {
+                src="$1"
+                dst="$2"
+                if [ -d "$src" ] && [ ! -e "$dst" ]; then
+                  ${pkgs.coreutils}/bin/cp -r "$src" "$dst"
+                fi
+                if [ -d "$dst" ]; then
+                  ${pkgs.coreutils}/bin/chmod -R u+w "$dst"
+                fi
+              }
+
+              ${optionalString (cfg.compositor == "niri") ''
+                copy_if_missing_dir "${defaultNiriConfig}" "$HOME/.config/niri"
+              ''}
+
+              ${optionalString (cfg.compositor == "umbriel") ''
+                copy_if_missing_dir "${defaultUmbrielConfig}" "$HOME/.config/umbriel"
+              ''}
+
+              ${optionalString (cfg.variant == "dms") ''
+                copy_if_missing_dir "${defaultDmsConfig}" "$HOME/.config/DankMaterialShell"
+              ''}
+
+              ${optionalString (cfg.variant == "noctalia") ''
+                copy_if_missing_dir "${defaultNoctaliaConfig}" "$HOME/.config/noctalia"
+              ''}
+            '';
+          };
+        })
     ];
   };
 }

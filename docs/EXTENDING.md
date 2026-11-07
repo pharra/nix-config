@@ -47,7 +47,7 @@ nix eval .#nixosConfigurations --apply 'x: builtins.attrNames x'   # 确认新�
 1. `cp -r modules/_template modules/<域>/<名字>`，把骨架里的 `my-module` 换成你的选项名。
 2. 在 `modules/default.nix` 清单里加一行：`<名字> = import ./<域>/<名字>;`
 3. 在需要的 host 里加一行：`services.pharra.<名字>.enable = true;`
-   （Home Manager 模块则放在 `home-modules/<名字>/`，在 `lib/variants.nix` 的 `homeSwitch` 表里按 desktop 打开。）
+   （桌面变体的用户配置直接写在同一个 `modules/desktop/<名字>/default.nix` 里，用 `hjem.extraModules`。）
 
 **要登记**：在 `modules/default.nix` 清单里加一行 `名字 = import ./<域>/<名字>;`
 （显式清单，没有自动发现；`_template` 不在清单里，所以不会被加载）。

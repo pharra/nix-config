@@ -5,7 +5,7 @@
   inputs,
   username,
 }: let
-  inherit (inputs) nixpkgs home-manager NixVirt impermanence nix-flatpak sops-nix dms-plugin-registry;
+  inherit (inputs) nixpkgs hjem NixVirt impermanence nix-flatpak sops-nix dms-plugin-registry;
   inherit (nixpkgs) lib;
 
   nixosSystem = import ./nixosSystem.nix;
@@ -13,9 +13,8 @@
   netboot = import ../modules/boot/netboot/netboot.nix {inherit lib;};
   variants = import ./variants.nix {inherit lib;};
 
-  # 模块与 home 模块都来自显式清单（modules/default.nix、home-modules/default.nix）
+  # 模块清单（显式）：modules/default.nix；variant 的用户配置现在也在 modules/ 里
   modules = import ../modules;
-  home-modules = builtins.attrValues (import ../home-modules);
 
   overlays = import ../overlay.nix;
   overlay = import ../overlays;
@@ -36,6 +35,7 @@
       nix-flatpak.nixosModules.nix-flatpak
       NixVirt.nixosModules.default
       sops-nix.nixosModules.sops
+      hjem.nixosModules.default
       dms-plugin-registry.nixosModules.default
       inputs.denial.nixosModules.default
       inputs.waydroid-nvidia-nix.nixosModules.waydroid-nvidia
@@ -57,17 +57,16 @@
     ];
 
   commonSpecialArgs = {
-    inherit username home-modules NixVirt inputs;
+    inherit username NixVirt inputs;
   };
 
   mkZedGuest = import ../modules/boot/netboot/mkZedGuest.nix {
-    inherit nixosSystem common-nixos-modules commonSpecialArgs netboot variants username;
+    inherit nixosSystem common-nixos-modules commonSpecialArgs netboot variants;
   };
 
   machines = import ../hosts/machines.nix {inherit inputs netboot mkZedGuest;};
 
-  base_args = {inherit home-manager;};
-  stable_args = base_args // {inherit nixpkgs;};
+  stable_args = {inherit nixpkgs;};
 
   # 一台机器一个配置：桌面是 hosts/machines.nix 里的一个值（desktop），不再是配置名后缀
   mkMachine = machine:
@@ -86,7 +85,6 @@
               };
             }
           ];
-        home-module = variants.mkHomeModule username machine.desktop;
         inherit (machine) system;
       }
       // stable_args

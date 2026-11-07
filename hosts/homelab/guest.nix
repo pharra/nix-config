@@ -3,12 +3,11 @@
 {
   lib,
   nixpkgs,
-  home-manager,
   mkZedGuest,
   ...
 }:
 with lib; let
-  zedGuestSystem = mkZedGuest {inherit nixpkgs home-manager;};
+  zedGuestSystem = mkZedGuest {inherit nixpkgs;};
 in {
   # Enable iPXE host to serve zed guest system via NFS
   services.pharra.ipxe-host = {

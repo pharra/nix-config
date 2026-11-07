@@ -75,7 +75,7 @@
       ./homelab
     ];
     specialArgs = {
-      inherit (inputs) nixpkgs home-manager;
+      inherit (inputs) nixpkgs;
       # 生成在 homelab 上运行的 zed guest 系统（NFS 启动）
       inherit mkZedGuest;
     };

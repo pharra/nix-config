@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  username,
   ...
 }:
 with lib; let
@@ -52,6 +53,7 @@ in {
       # use fonts specified by user rather than default ones
       enableDefaultPackages = false;
       fontDir.enable = true;
+      fontconfig.enable = true;
 
       packages = with pkgs; [
         # icon fonts
@@ -84,6 +86,8 @@ in {
 
     # dconf is a low-level configuration system.
     programs.dconf.enable = true;
+    programs.firefox.enable = true;
+    programs.vscode.enable = true;
 
     # Or disable the firewall altogether.
     networking.firewall.enable = lib.mkDefault false;
@@ -195,5 +199,52 @@ in {
       enableSSHSupport = true;
       pinentryPackage = pkgs.pinentry-curses;
     };
+
+    # 桌面用户配置
+    hjem.extraModules = [
+      ({config, ...}:
+        mkIf (config.user == username) {
+          packages = with pkgs; [
+            flameshot
+            xdg-utils
+            xdg-user-dirs
+            appimage-run
+            kdePackages.breeze
+            kdePackages.breeze-gtk
+          ];
+
+          files.".Xresources".text = "Xft.dpi: 192\n";
+
+          xdg.config.files."looking-glass/client.ini".text = lib.generators.toINI {} {
+            app.shmFile = "/dev/kvmfr0";
+            input.escapeKey = 100; # right alt
+            win.fullScreen = "yes";
+            win.jitRender = "yes";
+            win.fpsMin = 120;
+            audio.micDefault = "allow";
+          };
+
+          xdg.config.files."user-dirs.dirs".text = ''
+            XDG_DESKTOP_DIR="$HOME/Desktop"
+            XDG_DOWNLOAD_DIR="$HOME/Downloads"
+            XDG_TEMPLATES_DIR="$HOME/Templates"
+            XDG_PUBLICSHARE_DIR="$HOME/Public"
+            XDG_DOCUMENTS_DIR="$HOME/Documents"
+            XDG_MUSIC_DIR="$HOME/Music"
+            XDG_PICTURES_DIR="$HOME/Pictures"
+            XDG_VIDEOS_DIR="$HOME/Videos"
+            XDG_SCREENSHOTS_DIR="$HOME/Pictures/Screenshots"
+          '';
+
+          systemd.services.create-user-dirs = {
+            wantedBy = ["default.target"];
+            serviceConfig.Type = "oneshot";
+            script = ''
+              ${pkgs.coreutils}/bin/mkdir -p "$HOME/Desktop" "$HOME/Downloads" "$HOME/Templates" "$HOME/Public" \
+                "$HOME/Documents" "$HOME/Music" "$HOME/Pictures" "$HOME/Videos" "$HOME/Pictures/Screenshots"
+            '';
+          };
+        })
+    ];
   };
 }

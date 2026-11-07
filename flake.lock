@@ -111,32 +111,51 @@
         "type": "github"
       }
     },
-    "home-manager": {
+    "hjem": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1793193205,
-        "narHash": "sha256-X6xa6sGA7RnJQuZGbFMC+K+KToWAlBDCCjJXfTwEPsw=",
+        "lastModified": 1793333241,
+        "narHash": "sha256-hmlUXxCk6On7Hrop/TyS3//dgI2BLvaN4TEsOq1ma+Y=",
+        "ref": "refs/heads/main",
+        "rev": "8408642aa3035135fa6d70269dc93e0814e2a4f6",
+        "revCount": 454,
+        "type": "git",
+        "url": "https://github.com/feel-co/hjem"
+      },
+      "original": {
+        "rev": "8408642aa3035135fa6d70269dc93e0814e2a4f6",
+        "type": "git",
+        "url": "https://github.com/feel-co/hjem"
+      }
+    },
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "impermanence",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793979366,
+        "narHash": "sha256-7OoWDsYO9teiPxl0QdlS5lYE20Pue8/5mpscSL32FUA=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "095fef2f265c3c0da4fe315efba8f8a04495ab34",
+        "rev": "2c0c1f01521469cf0271180c453c79782d53c2f6",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
-        "ref": "master",
         "repo": "home-manager",
         "type": "github"
       }
     },
     "impermanence": {
       "inputs": {
-        "home-manager": [
-          "home-manager"
-        ],
+        "home-manager": "home-manager",
         "nixpkgs": [
           "nixpkgs"
         ]
@@ -336,7 +355,7 @@
         "NixVirt": "NixVirt",
         "denial": "denial",
         "dms-plugin-registry": "dms-plugin-registry",
-        "home-manager": "home-manager",
+        "hjem": "hjem",
         "impermanence": "impermanence",
         "niri-glass": "niri-glass",
         "nix-cachyos-kernel": "nix-cachyos-kernel",

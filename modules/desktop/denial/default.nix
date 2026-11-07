@@ -19,5 +19,12 @@ in {
 
     services.displayManager.gdm.enable = true;
     services.displayManager.defaultSession = "denial";
+
+    environment.sessionVariables = {
+      "NIXOS_OZONE_WL" = "1";
+      "MOZ_ENABLE_WAYLAND" = "1";
+      "MOZ_WEBRENDER" = "1";
+      "QT_QPA_PLATFORM" = "wayland";
+    };
   };
 }
