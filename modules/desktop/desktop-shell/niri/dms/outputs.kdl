@@ -2,7 +2,7 @@
 
 output "LG Electronics LG TV SSCR2 0x01010101" {
     mode "3840x2160@119.880"
-    scale 1.5
+    scale 2
     position x=0 y=0
 }
 

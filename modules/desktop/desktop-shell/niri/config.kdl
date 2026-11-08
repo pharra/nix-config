@@ -54,8 +54,8 @@ input {
     mouse {
         // off
         // natural-scroll
-        // accel-speed 0.2
-        // accel-profile "flat"
+        accel-speed 0
+        accel-profile "flat"
         // scroll-method "no-scroll"
     }
 
@@ -159,8 +159,6 @@ overview {
 // See the binds section below for more spawn examples.
 // This line starts waybar, a commonly used bar for Wayland compositors.
 environment {
-  // 和 KDE 变体保持同一后端：Chromium/Electron 看到 KDE 后会选
-  // KWallet6，再经 kwalletd6 兼容层落到 gnome-keyring。
   XDG_CURRENT_DESKTOP "niri:KDE"
   KDE_SESSION_VERSION "6"
   KDE_FULL_SESSION "true"
@@ -260,6 +258,9 @@ window-rule {
 }
 debug {
     honor-xdg-activation-with-invalid-serial
+    // wait-for-frame-completion-before-queueing
+    // ignore-drm-device "/dev/dri/by-path/pci-0000:01:00.0-render"
+    // disable-cursor-plane
 }
 
 // Override to disable super+tab
@@ -282,3 +283,5 @@ include optional=true "dms/cursor.kdl"
 include optional=true "dms/wpblur.kdl"
 include optional=true "dms/windowrules.kdl"
 include optional=true "dms/custom.kdl"
+include optional=true "dms/input.kdl"
+

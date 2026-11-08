@@ -4,5 +4,6 @@
 // ! PLACE YOUR CUSTOM CONFIGURATION ELSEWHERE !
 
 cursor {
-    xcursor-size 48
+    xcursor-theme "breeze_cursors"
+    xcursor-size 24
 }

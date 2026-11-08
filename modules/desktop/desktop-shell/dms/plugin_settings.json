@@ -4,7 +4,7 @@
     "monitorPlaylists": {},
     "monitorScenes": {
       "HDMI-A-2": "3430267734",
-      "HDMI-A-1": "3547318969",
+      "HDMI-A-1": "3835872361",
       "DP-2": "3049613890",
       "DP-5": "3049856806",
       "winit": "2398915163"
@@ -47,7 +47,8 @@
         "disableMouse": false,
         "fullscreenPauseOnlyActive": false,
         "noAudioProcessing": false,
-        "scaling": "default"
+        "scaling": "default",
+        "silent": true
       },
       "DP-2": {
         "fps": 30,
