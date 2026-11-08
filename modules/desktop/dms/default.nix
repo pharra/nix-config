@@ -6,14 +6,12 @@
   ...
 }:
 with lib; let
-  cfg = config.services.pharra.desktop-shell;
+  cfg = config.services.pharra.dms;
   defaultNiriConfig = ./niri;
-  defaultUmbrielConfig = ./umbriel;
   defaultDmsConfig = ./dms;
-  defaultNoctaliaConfig = ./noctalia-shell;
 
-  # wm 的 shell 由 systemd 启动，不继承 niri/umbriel 的 environment 块；
-  # DMS 和 noctalia 都注入同一组 fcitx5 变量，以后新增 wm variant 也复用。
+  # wm 的 shell 由 systemd 启动，不继承 niri 的 environment 块；
+  # DMS 的 service 注入同一组 fcitx5 变量。
   waylandImEnvironment = {
     XMODIFIERS = "@im=fcitx";
     GTK_IM_MODULE = "fcitx";
@@ -21,47 +19,22 @@ with lib; let
   };
 in {
   options = {
-    services.pharra.desktop-shell = {
-      enable = mkEnableOption "Desktop shell integration for Wayland sessions";
-
-      variant = mkOption {
-        type = types.enum ["dms" "noctalia"];
-        default = "dms";
-        description = "Desktop shell variant to launch (dms or noctalia).";
-      };
-
-      compositor = mkOption {
-        type = types.enum ["niri" "umbriel"];
-        description = "The Wayland compositor to use with this shell profile (niri or umbriel).";
-      };
+    services.pharra.dms = {
+      enable = mkEnableOption "DMS Wayland desktop shell";
     };
   };
 
   config = mkIf cfg.enable {
     services.pharra.kwallet-shim.enable = true;
-    services.pharra.kwallet-shim.xdgCurrentDesktop =
-      if (cfg.variant == "dms")
-      then "niri:KDE"
-      else if (cfg.variant == "noctalia")
-      then "umbriel:KDE"
-      else throw "Invalid desktop shell variant: ${cfg.variant}";
+    services.pharra.kwallet-shim.xdgCurrentDesktop = "niri:KDE";
 
-    services.pharra.desktop-shell.compositor =
-      if (cfg.variant == "dms")
-      then "niri"
-      else if (cfg.variant == "noctalia")
-      then "umbriel"
-      else throw "Invalid desktop shell variant: ${cfg.variant}";
     programs = {
-      niri = mkIf (cfg.compositor == "niri") {
+      niri = {
         enable = true;
         package = pkgs.niri-glass;
       };
-      umbriel = mkIf (cfg.compositor == "umbriel") {
-        enable = true;
-      };
 
-      dux-shell = mkIf (cfg.variant == "dms") {
+      dux-shell = {
         enable = true;
         systemd = {
           enable = true;
@@ -73,56 +46,31 @@ in {
         };
       };
 
-      dux-files = mkIf (cfg.variant == "dms") {
+      dux-files = {
         enable = true;
         systemd.enable = true;
         systemd.target = "graphical-session.target";
         portal.enable = true;
       };
-      dux-search = mkIf (cfg.variant == "dms") {
+      dux-search = {
         enable = true;
         systemd.enable = true;
         systemd.target = "graphical-session.target";
       };
-      dux-calendar = mkIf (cfg.variant == "dms") {
+      dux-calendar = {
         enable = true;
         systemd.enable = true;
         systemd.target = "graphical-session.target";
-      };
-
-      noctalia = mkIf (cfg.variant == "noctalia") {
-        enable = true;
-
-        systemd.enable = true;
-
-        # Enables NetworkManager, Bluetooth, UPower, and a power profile service.
-        recommendedServices.enable = true;
       };
     };
 
-    # 让 DMS / noctalia 启动的应用也拿到 fcitx5 环境变量。
-    systemd.user.services.dms.environment = mkIf (cfg.variant == "dms") waylandImEnvironment;
-    systemd.user.services.noctalia.environment = mkIf (cfg.variant == "noctalia") waylandImEnvironment;
+    # 让 DMS 启动的应用也拿到 fcitx5 环境变量。
+    systemd.user.services.dms.environment = waylandImEnvironment;
 
-    services.displayManager.dux-greeter = mkIf (cfg.variant == "dms") {
+    services.displayManager.dux-greeter = {
       enable = true;
-      compositor.name = cfg.compositor;
+      compositor.name = "niri";
       configHome = "/home/${username}";
-    };
-
-    services.displayManager.noctalia-greeter = mkIf (cfg.variant == "noctalia") {
-      enable = true;
-
-      settings = {
-        cursor = {
-          theme = "Bibata-Modern-Ice";
-          size = 24;
-          path = "${pkgs.bibata-cursors}/share/icons";
-        };
-        keyboard = {
-          layout = "us";
-        };
-      };
     };
 
     services.xserver.displayManager.sessionCommands = ''
@@ -132,7 +80,7 @@ in {
     '';
 
     # Work around niri#2435 logout breaking user services
-    systemd.user.services.niri = mkIf (cfg.compositor == "niri") {
+    systemd.user.services.niri = {
       serviceConfig.ExecStop = "${pkgs.systemd}/bin/systemctl --user stop graphical-session.target";
     };
 
@@ -157,7 +105,7 @@ in {
       "QT_QPA_PLATFORM" = "wayland";
     };
 
-    environment.etc."nvidia/nvidia-application-profiles-rc.d/50-limit-free-buffer-pool-in-wayland-compositors.json" = mkIf (cfg.compositor == "niri") {
+    environment.etc."nvidia/nvidia-application-profiles-rc.d/50-limit-free-buffer-pool-in-wayland-compositors.json" = {
       text = ''
         {
           "rules": [
@@ -212,21 +160,8 @@ in {
                 fi
               }
 
-              ${optionalString (cfg.compositor == "niri") ''
-                copy_if_missing_dir "${defaultNiriConfig}" "$HOME/.config/niri"
-              ''}
-
-              ${optionalString (cfg.compositor == "umbriel") ''
-                copy_if_missing_dir "${defaultUmbrielConfig}" "$HOME/.config/umbriel"
-              ''}
-
-              ${optionalString (cfg.variant == "dms") ''
-                copy_if_missing_dir "${defaultDmsConfig}" "$HOME/.config/dms"
-              ''}
-
-              ${optionalString (cfg.variant == "noctalia") ''
-                copy_if_missing_dir "${defaultNoctaliaConfig}" "$HOME/.config/noctalia"
-              ''}
+              copy_if_missing_dir "${defaultNiriConfig}" "$HOME/.config/niri"
+              copy_if_missing_dir "${defaultDmsConfig}" "$HOME/.config/dms"
             '';
           };
         })

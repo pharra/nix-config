@@ -36,12 +36,12 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 | 域 | 内容 |
 | --- | --- |
 | `core/` | 全机与桌面基础：`common`、`desktop`、`no-desktop`、`user-group`、`impermanence`、`scripts`、`azure-tools` |
-| `desktop/` | 桌面与外壳：`kde`、`cosmic`、`denial`、`desktop-shell`、`input-method`、`flatpak`、`audio-relay` |
+| `desktop/` | 桌面与外壳：`kde`、`cosmic`、`denial`、`dms`、`input-method`、`flatpak`、`audio-relay` |
 | `hardware/` | 硬件驱动与固件：`mlx5`、`net-sriov`、`amd-gpu-edid-fix`、`mcontrolcenter`、`lianli-linux`、`nvme-auto`、`udev-symlink` |
-| `network/` | 网络与网络服务：`net-name`、`netns`、`docker-netns`、`network-bridge`、`dhcp-server`、`openwrt`、`easytier`、`mihomo`、`samba`、`sftp-server`、`ddns-go` |
+| `network/` | 网络与网络服务：`net-name`、`netns`、`docker-netns`、`network-bridge`、`dhcp-server`、`openwrt`、`easytier`、`mihomo`、`sftp-server` |
 | `boot/` | 引导链：`nvmf`、`boot-over-nfs`、`boot-over-nvmf`、`iscsi-root`、`ipxe-host` |
 | `vm/` | 虚拟化与客机：`libvirt`、`virtualisation`、`vfio`、`waydroid`、`archlinux` |
-| `storage/` | 存储：`zfs-config`、`spdk-tgt`、`spdk-container` |
+| `storage/` | 存储：`zfs-config`、`spdk-container` |
 
 ## 配置是怎么装配出来的
 
@@ -157,9 +157,6 @@ nix build .#packages.x86_64-linux.azure-x64
 | 模块 | 现状 |
 | --- | --- |
 | `hardware/amd-gpu-edid-fix` | 全仓库零引用（317 行） |
-| `storage/spdk-tgt` | 零引用；homelab 用的是容器版 `storage/spdk-container` |
-| `network/ddns-go` | 零引用 |
-| `network/samba` | 零引用 |
 | `network/openwrt` | `hosts/homelab` 里显式 `enable = false` |
 | `network/docker-netns` | 取值跟随 `openwrt.enable`，跟着一起关着 |
 | `hardware/lianli-linux` | `hosts/zed/hardware-configuration.nix` 里显式 `enable = false` |
@@ -170,7 +167,6 @@ nix build .#packages.x86_64-linux.azure-x64
 
 另外：
 
-- `nixos/ipxe/`：没有被任何 host 启用
 - `services/nfs-root`（`boot/boot-over-nfs`）在 6 个配置里都是关的，但 homelab 上的 zed guest
   在用它（`modules/boot/netboot/mkZedGuest.nix`），不是死代码
 

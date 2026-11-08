@@ -7,12 +7,7 @@
     kde = {services.pharra.kde.enable = true;};
     cosmic = {services.pharra.cosmic.enable = true;};
     denial = {services.pharra.denial.enable = true;};
-    wm = {
-      services.pharra.desktop-shell = {
-        enable = true;
-        variant = "dms";
-      };
-    };
+    dms = {services.pharra.dms.enable = true;};
   };
 
   names = builtins.attrNames nixos;

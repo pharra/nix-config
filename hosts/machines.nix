@@ -47,7 +47,7 @@
   {
     name = "zed";
     system = "x86_64-linux";
-    desktop = "wm";
+    desktop = "dms";
     nixos-modules = [
       ./zed
     ];

@@ -41,19 +41,8 @@ in {
     # DMS 由 systemd 启动，不继承 niri 的 environment 块；统一在模块里给它设置。
     systemd.user.services.dms.environment =
       mkIf (
-        (config.services.pharra ? desktop-shell)
-        && config.services.pharra.desktop-shell.variant == "dms"
-      ) {
-        XDG_CURRENT_DESKTOP = cfg.xdgCurrentDesktop;
-        KDE_SESSION_VERSION = "6";
-        KDE_FULL_SESSION = "true";
-        QT_QPA_PLATFORM = "wayland";
-      };
-
-    systemd.user.services.noctalia.environment =
-      mkIf (
-        (config.services.pharra ? desktop-shell)
-        && config.services.pharra.desktop-shell.variant == "noctalia"
+        (config.services.pharra ? dms)
+        && config.services.pharra.dms.enable
       ) {
         XDG_CURRENT_DESKTOP = cfg.xdgCurrentDesktop;
         KDE_SESSION_VERSION = "6";

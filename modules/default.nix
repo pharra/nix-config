@@ -12,11 +12,10 @@
   boot-over-nvmf = import ./boot/netboot/boot-over-nvmf;
   common = import ./core/common;
   cosmic = import ./desktop/cosmic;
-  ddns-go = import ./network/ddns-go;
   deepseek-harness = import ./desktop/deepseek-harness;
   denial = import ./desktop/denial;
   desktop = import ./core/desktop;
-  desktop-shell = import ./desktop/desktop-shell;
+  dms = import ./desktop/dms;
   dhcp-server = import ./network/dhcp-server;
   docker-netns = import ./network/docker-netns;
   easytier = import ./network/easytier;
@@ -41,11 +40,9 @@
   nvme-auto = import ./hardware/nvme-auto;
   nvmf = import ./boot/netboot/nvmf;
   openwrt = import ./network/openwrt;
-  samba = import ./network/samba;
   scripts = import ./core/scripts;
   sftp-server = import ./network/sftp-server;
   spdk-container = import ./storage/spdk-container;
-  spdk-tgt = import ./storage/spdk-tgt;
   udev-symlink = import ./hardware/udev-symlink;
   user-group = import ./core/user-group;
   vfio = import ./vm/vfio;
