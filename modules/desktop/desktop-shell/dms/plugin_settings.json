@@ -3,9 +3,9 @@
     "enabled": true,
     "monitorPlaylists": {},
     "monitorScenes": {
-      "HDMI-A-2": "2816220722",
-      "HDMI-A-1": "3503947833",
-      "DP-2": "3049856806",
+      "HDMI-A-2": "3430267734",
+      "HDMI-A-1": "3547318969",
+      "DP-2": "3049613890",
       "DP-5": "3049856806",
       "winit": "2398915163"
     },
@@ -39,16 +39,41 @@
     "generateStaticWallpaper": true,
     "outputSettings": {
       "HDMI-A-1": {
-        "fps": 62,
+        "fps": 120,
         "screenshotDelay": 5,
         "disableParticles": false,
         "disableParallax": false,
-        "noFullscreenPause": true
+        "noFullscreenPause": true,
+        "disableMouse": false,
+        "fullscreenPauseOnlyActive": false,
+        "noAudioProcessing": false,
+        "scaling": "default"
+      },
+      "DP-2": {
+        "fps": 30,
+        "scaling": "fill",
+        "disableParticles": false,
+        "disableParallax": false,
+        "fullscreenPauseOnlyActive": false,
+        "silent": true,
+        "screenshotDelay": 5
       }
     },
-    "activeType": "scene"
+    "activeType": "scene",
+    "namedPlaylists": {
+      "Default": []
+    }
   },
   "displayManager": {
     "enabled": false
+  },
+  "ddcBrightness": {
+    "enabled": true
+  },
+  "whisperer": {
+    "enabled": true
+  },
+  "librepods": {
+    "enabled": true
   }
 }

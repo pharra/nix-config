@@ -9,7 +9,7 @@ with lib; let
   cfg = config.services.pharra.desktop-shell;
   defaultNiriConfig = ./niri;
   defaultUmbrielConfig = ./umbriel;
-  defaultDmsConfig = ./dank-material-shell;
+  defaultDmsConfig = ./dms;
   defaultNoctaliaConfig = ./noctalia-shell;
 
   # wm 的 shell 由 systemd 启动，不继承 niri/umbriel 的 environment 块；
@@ -67,6 +67,9 @@ in {
           enable = true;
           target = "graphical-session.target";
           restartIfChanged = true;
+        };
+        plugins = {
+          linuxWallpaperEngine.enable = true;
         };
       };
 
@@ -218,7 +221,7 @@ in {
               ''}
 
               ${optionalString (cfg.variant == "dms") ''
-                copy_if_missing_dir "${defaultDmsConfig}" "$HOME/.config/DankMaterialShell"
+                copy_if_missing_dir "${defaultDmsConfig}" "$HOME/.config/dms"
               ''}
 
               ${optionalString (cfg.variant == "noctalia") ''

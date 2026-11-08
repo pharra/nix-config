@@ -1,0 +1,9 @@
+{
+  "lockfileVersion": 1,
+  "plugins": {
+    "linuxWallpaperEngine": {
+      "repo": "https://github.com/sgtaziz/dms-wallpaperengine",
+      "commit": "e96718f5038f54546311a239ef0f6622f15c515a"
+    }
+  }
+}
