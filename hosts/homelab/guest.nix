@@ -11,7 +11,7 @@ with lib; let
 in {
   # Enable iPXE host to serve zed guest system via NFS
   services.pharra.ipxe-host = {
-    enable = true;
+    enable = false; # 目前不启用 iPXE host，static-web-server build fails on nixpkgs-unstable (2026-11-09)
     nfs = {
       enable = false;
       guests.zed = {
