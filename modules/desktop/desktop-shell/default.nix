@@ -122,9 +122,6 @@ in {
       };
     };
 
-    # enable trash support for nautilus
-    services.gvfs.enable = true;
-
     services.xserver.displayManager.sessionCommands = ''
       ${pkgs.xorg.xrdb}/bin/xrdb -merge <<EOF
       Xft.dpi: 192
@@ -139,7 +136,6 @@ in {
     environment.systemPackages = with pkgs; [
       alacritty
       linux-wallpaperengine
-      nautilus
       papirus-icon-theme
       kdePackages.gwenview
       kdePackages.qt6ct
