@@ -94,6 +94,11 @@
       url = "github:yigexuanmu/waydroid-nvidia-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    babry = {
+      url = "github:pharra/babry";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.

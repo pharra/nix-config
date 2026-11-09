@@ -191,6 +191,9 @@ in {
       tunMode.enable = true; # enable tun mode
     };
 
+    # screenshot tool
+    programs.babry.enable = true;
+
     hardware.gpgSmartcards.enable = true;
 
     services = {
@@ -210,7 +213,6 @@ in {
       ({config, ...}:
         mkIf (config.user == username) {
           packages = with pkgs; [
-            flameshot
             xdg-utils
             xdg-user-dirs
             appimage-run

@@ -42,6 +42,7 @@
       {
         services.waydroid-nvidia.package = inputs.waydroid-nvidia-nix.packages.x86_64-linux.waydroid-nvidia-full;
       }
+      inputs.babry.nixosModules.default
     ]
     ++ (builtins.attrValues modules)
     ++ [

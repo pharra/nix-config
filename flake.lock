@@ -20,6 +20,26 @@
         "type": "github"
       }
     },
+    "babry": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794231865,
+        "narHash": "sha256-y9p+XtjTfsEkEXTu4QFDGUyXfaIsx2zaYd3FlEGxik0=",
+        "owner": "pharra",
+        "repo": "babry",
+        "rev": "3b417f19cae85a44f96225b38563f52f75154409",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pharra",
+        "repo": "babry",
+        "type": "github"
+      }
+    },
     "denial": {
       "inputs": {
         "denialPlugins": "denialPlugins",
@@ -367,6 +387,7 @@
     "root": {
       "inputs": {
         "NixVirt": "NixVirt",
+        "babry": "babry",
         "denial": "denial",
         "dms-plugin-registry": "dms-plugin-registry",
         "hjem": "hjem",

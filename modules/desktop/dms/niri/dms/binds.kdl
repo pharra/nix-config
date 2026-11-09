@@ -129,4 +129,6 @@ binds {
     Mod+O repeat=false { toggle-overview; }
     Mod+Shift+Slash { show-hotkey-overlay; }
     Mod+Tab repeat=false { toggle-overview; }
+
+    Mod+Shift+S { spawn "babry"; }
 }
