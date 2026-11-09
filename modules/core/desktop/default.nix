@@ -154,6 +154,9 @@ in {
 
     xdg.portal = {
       enable = true;
+      # KWallet shim 会伪造 KDE 会话变量；不开这个时 xdg-open 会走
+      # 不存在的 kde-open，导致 VS Code 等应用无法打开浏览器。
+      xdgOpenUsePortal = true;
     };
 
     environment.systemPackages = with pkgs; [
