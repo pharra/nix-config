@@ -183,6 +183,7 @@ in {
         "https://nixpkgs-cache.cachix.org"
         "https://nix-community.cachix.org"
         "https://denial.cachix.org"
+        "https://cache.lantian.pub/lantian"
       ];
 
       trusted-public-keys = [
@@ -191,6 +192,7 @@ in {
         "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "denial.cachix.org-1:wd8YTnvPmugFrtdMJWtR1XdVknR3/g2nmBJkT+vAruo="
+        "lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ="
       ];
     };
 
