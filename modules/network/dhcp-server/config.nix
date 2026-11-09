@@ -59,47 +59,53 @@ in {
               else "${host.mac},${host.ip}"
           )
           network.staticHosts;
-        dnsmasqConf = settingsFormat.generate "dnsmasq-${iface}.conf" {
-          interface = [iface];
-          enable-tftp = true;
-          dhcp-range = lib.concatLists [
-            ["interface:${iface},${network.ipv4.pool},${network.leaseTime}"]
-            (lib.optional network.ipv6.enable "${network.ipv6.pool},constructor:${iface},ra-stateless,${network.leaseTime}")
-          ];
-          # Add static host assignments
-          dhcp-host = staticHostEntries;
-          listen-address = lib.concatLists [
-            ["${network.ipv4.address}"]
-            (lib.optional network.ipv6.enable "${network.ipv6.address}")
-          ];
-          dhcp-option =
-            if network.emitRoute == false
-            then
-              lib.concatLists [
-                ["interface:${iface},3"]
-                ["interface:${iface},6"]
-                ["interface:${iface},option6:3"]
-                ["interface:${iface},option6:dns-server"]
-              ]
-            else
-              lib.concatLists [
-                ["interface:${iface},6,${network.ipv4.address}"]
-                (lib.optional network.ipv6.enable "interface:${iface},option6:dns-server,[${network.ipv6.address}]")
-              ];
-          except-interface = ["lo"];
-          bind-interfaces = true;
-          log-dhcp = true;
-          tftp-root = "/etc/ipxe";
-          dhcp-match = "set:ipxe,175";
-          dhcp-boot = ["tag:!ipxe,snponly.efi" "tag:ipxe,boot.ipxe"];
-          dhcp-leasefile = "${stateDir}/dnsmasq-${iface}.leases";
-          # local = "/${network.domain}/";
-          # domain = network.domain;
-          expand-hosts = true;
-          no-hosts = true;
-          server = "114.114.114.114";
-          # host-record = [hostrecord];
-        };
+        dnsmasqConf = settingsFormat.generate "dnsmasq-${iface}.conf" ({
+            interface = [iface];
+            dhcp-range = lib.concatLists [
+              ["interface:${iface},${network.ipv4.pool},${network.leaseTime}"]
+              (lib.optional network.ipv6.enable "${network.ipv6.pool},constructor:${iface},ra-stateless,${network.leaseTime}")
+            ];
+            # Add static host assignments
+            dhcp-host = staticHostEntries;
+            listen-address = lib.concatLists [
+              ["${network.ipv4.address}"]
+              (lib.optional network.ipv6.enable "${network.ipv6.address}")
+            ];
+            dhcp-option =
+              if network.emitRoute == false
+              then
+                lib.concatLists [
+                  ["interface:${iface},3"]
+                  ["interface:${iface},6"]
+                  ["interface:${iface},option6:3"]
+                  ["interface:${iface},option6:dns-server"]
+                ]
+              else
+                lib.concatLists [
+                  ["interface:${iface},6,${network.ipv4.address}"]
+                  (lib.optional network.ipv6.enable "interface:${iface},option6:dns-server,[${network.ipv6.address}]")
+                ];
+            except-interface = ["lo"];
+            bind-interfaces = true;
+            log-dhcp = true;
+            dhcp-leasefile = "${stateDir}/dnsmasq-${iface}.leases";
+            # local = "/${network.domain}/";
+            # domain = network.domain;
+            expand-hosts = true;
+            no-hosts = true;
+            server = "114.114.114.114";
+            # host-record = [hostrecord];
+          }
+          // lib.optionalAttrs network.boot.tftp.enable {
+            enable-tftp = true;
+            tftp-root = network.boot.tftp.root;
+          }
+          // lib.optionalAttrs (network.boot.dhcpMatch != []) {
+            dhcp-match = network.boot.dhcpMatch;
+          }
+          // lib.optionalAttrs (network.boot.dhcpBoot != []) {
+            dhcp-boot = network.boot.dhcpBoot;
+          });
       in {
         name = "dnsmasq-${iface}";
         value = {

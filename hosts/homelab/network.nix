@@ -64,6 +64,20 @@ in {
             hostname = "zed";
           }
         ];
+
+        # 只有 ipxe-host 启用时才向这个网络声明 iPXE/TFTP 引导；
+        # 否则 DHCP server 不应发送任何 iPXE 相关选项。
+        boot = lib.mkIf ((config.services.pharra ? ipxe-host) && config.services.pharra.ipxe-host.enable) {
+          tftp = {
+            enable = true;
+            root = "/etc/ipxe";
+          };
+          dhcpMatch = ["set:ipxe,175"];
+          dhcpBoot = [
+            "tag:!ipxe,snponly.efi"
+            "tag:ipxe,boot.ipxe"
+          ];
+        };
         masquerade = "no";
         emitRoute = false;
         ipv4 = {

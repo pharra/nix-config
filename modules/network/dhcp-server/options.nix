@@ -99,6 +99,40 @@ with lib; let
         ];
       };
 
+      boot = mkOption {
+        description = "Optional PXE/iPXE boot configuration for this network";
+        default = {};
+        type = types.submodule {
+          options = {
+            tftp = {
+              enable = mkEnableOption "TFTP server for PXE/iPXE";
+              root = mkOption {
+                type = types.str;
+                default = "/etc/ipxe";
+                description = "TFTP root directory";
+              };
+            };
+
+            dhcpMatch = mkOption {
+              type = types.listOf types.str;
+              default = [];
+              description = "dnsmasq dhcp-match entries";
+              example = ["set:ipxe,175"];
+            };
+
+            dhcpBoot = mkOption {
+              type = types.listOf types.str;
+              default = [];
+              description = "dnsmasq dhcp-boot entries";
+              example = [
+                "tag:!ipxe,snponly.efi"
+                "tag:ipxe,boot.ipxe"
+              ];
+            };
+          };
+        };
+      };
+
       ipv4 = mkOption {
         default = {};
         type = types.submodule ipOptions;
