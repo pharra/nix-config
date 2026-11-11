@@ -397,7 +397,8 @@
         "nixinate": "nixinate",
         "nixpkgs": "nixpkgs_4",
         "sops-nix": "sops-nix",
-        "waydroid-nvidia-nix": "waydroid-nvidia-nix"
+        "waydroid-nvidia-nix": "waydroid-nvidia-nix",
+        "weflow": "weflow"
       }
     },
     "sops-nix": {
@@ -438,6 +439,26 @@
       "original": {
         "owner": "yigexuanmu",
         "repo": "waydroid-nvidia-nix",
+        "type": "github"
+      }
+    },
+    "weflow": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794402408,
+        "narHash": "sha256-YMUTSHdXG9oWRz1IeteyB9AlY478dBhIFlR+W+G0NMc=",
+        "owner": "pharra",
+        "repo": "WeFlow",
+        "rev": "af39a3265b9af03dcb328767d134271335d8b33e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pharra",
+        "repo": "WeFlow",
         "type": "github"
       }
     },
