@@ -24,7 +24,7 @@ in {
 
       wallpaperBackend = mkOption {
         type = types.enum ["linux-wallpaperengine" "waywallen-layer-shell"];
-        default = "waywallen-layer-shell";
+        default = "linux-wallpaperengine";
         description = "Wallpaper rendering backend used by DMS.";
       };
     };
