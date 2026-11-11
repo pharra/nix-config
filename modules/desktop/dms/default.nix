@@ -24,7 +24,7 @@ in {
 
       wallpaperBackend = mkOption {
         type = types.enum ["linux-wallpaperengine" "waywallen-layer-shell"];
-        default = "linux-wallpaperengine";
+        default = "waywallen-layer-shell";
         description = "Wallpaper rendering backend used by DMS.";
       };
     };
@@ -33,6 +33,7 @@ in {
   config = mkIf cfg.enable {
     services.pharra.kwallet-shim.enable = true;
     services.pharra.kwallet-shim.xdgCurrentDesktop = "niri:KDE";
+    services.pharra.waywallen-layer-shell.enable = cfg.wallpaperBackend == "waywallen-layer-shell";
 
     programs = {
       niri = {
@@ -71,23 +72,9 @@ in {
     };
 
     # 让 DMS 启动的应用也拿到 fcitx5 环境变量。
-    systemd.user.services =
-      {
-        dms.environment = waylandImEnvironment;
-      }
-      // optionalAttrs (cfg.wallpaperBackend == "waywallen-layer-shell") {
-        waywallen-layer-shell = {
-          description = "Waywallen Niri layer-shell client";
-          wantedBy = ["graphical-session.target"];
-          partOf = ["graphical-session.target"];
-          after = ["graphical-session.target"];
-          serviceConfig = {
-            ExecStart = "${pkgs.waywallen-display-layer-shell}/bin/waywallen-layer-shell";
-            Restart = "on-failure";
-            RestartSec = 3;
-          };
-        };
-      };
+    systemd.user.services = {
+      dms.environment = waylandImEnvironment;
+    };
 
     services.displayManager.dux-greeter = {
       enable = true;
@@ -114,8 +101,7 @@ in {
         xwayland-satellite
         i2c-tools
       ]
-      ++ optionals (cfg.wallpaperBackend == "linux-wallpaperengine") [linux-wallpaperengine]
-      ++ optionals (cfg.wallpaperBackend == "waywallen-layer-shell") [waywallen-display-layer-shell];
+      ++ optionals (cfg.wallpaperBackend == "linux-wallpaperengine") [linux-wallpaperengine];
 
     environment.sessionVariables = {
       "NIXOS_OZONE_WL" = "1";

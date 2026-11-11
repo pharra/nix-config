@@ -48,6 +48,7 @@
   vfio = import ./vm/vfio;
   virtualisation = import ./vm/virtualisation;
   waydroid = import ./vm/waydroid;
+  waywallen-layer-shell = import ./desktop/waywallen-layer-shell;
   weflow = import ./desktop/weflow;
   zfs-config = import ./storage/zfs-config;
 }
