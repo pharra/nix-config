@@ -14,10 +14,19 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        config_name:
-          - azure.config.system.build.toplevel
-          - homelab.config.system.build.toplevel
-          - zed_net.config.system.build.toplevel
+        target:
+          - type: input
+            name: denial
+            flake_ref: denial#default
+          - type: nixos
+            name: azure
+            flake_ref: .#nixosConfigurations.azure.config.system.build.toplevel
+          - type: nixos
+            name: homelab
+            flake_ref: .#nixosConfigurations.homelab.config.system.build.toplevel
+          - type: nixos
+            name: zed_net
+            flake_ref: .#nixosConfigurations.zed_net.config.system.build.toplevel
 
     steps:
       - uses: actions/checkout@v7
@@ -39,5 +48,10 @@ jobs:
       - name: "Mount tmp"
         run: sudo mkdir /nix/tmp && sudo mount --bind /nix/tmp /tmp
 
-      - name: "Build ${{ matrix.config_name }} NixOS config ❄️"
-        run: nix build .#nixosConfigurations.${{ matrix.config_name }} --accept-flake-config --option substituters "https://nixpkgs-cache.cachix.org" --option trusted-public-keys "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4="
+      - name: "Build ${{ matrix.target.name }} input package ❄️"
+        if: matrix.target.type == 'input'
+        run: nix build --inputs-from . "${{ matrix.target.flake_ref }}" --accept-flake-config --option substituters "https://nixpkgs-cache.cachix.org" --option trusted-public-keys "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4="
+
+      - name: "Build ${{ matrix.target.name }} NixOS config ❄️"
+        if: matrix.target.type == 'nixos'
+        run: nix build "${{ matrix.target.flake_ref }}" --accept-flake-config --option substituters "https://nixpkgs-cache.cachix.org" --option trusted-public-keys "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4="
