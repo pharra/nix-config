@@ -25,6 +25,11 @@ layer-rule {
     place-within-backdrop true
 }
 
+layer-rule {
+    match namespace="waywallen-layer-shell"
+    place-within-backdrop true
+}
+
 layout {
     background-color "transparent"
 }

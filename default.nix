@@ -15,4 +15,6 @@ in rec {
   aosp = pkgs.callPackage ./pkgs/aosp {};
   audio-relay = pkgs.callPackage ./pkgs/audiorelay {};
   lian-li-linux = pkgs.callPackage ./pkgs/lianli-linux {};
+  waywallen-display-kde = pkgs.callPackage ./pkgs/waywallen-display/kde.nix {};
+  waywallen-display-layer-shell = pkgs.callPackage ./pkgs/waywallen-display/layer-shell.nix {};
 }
