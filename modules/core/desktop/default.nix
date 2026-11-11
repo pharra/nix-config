@@ -146,12 +146,6 @@ in {
       };
     };
 
-    # Secret Service：统一用 gnome-keyring。
-    # KDE 变体禁用 kwallet 后用它；wm 变体没有桌面栈，靠这里补上。
-    # Chromium 系（Edge）的 cookie 加密密钥存在这里 —— 各桌面变体用同一个 keyring 才不会切桌面掉登录。
-    services.gnome.gnome-keyring.enable = true;
-    security.pam.services.login.enableGnomeKeyring = true;
-
     xdg.portal = {
       enable = true;
       # KWallet shim 会伪造 KDE 会话变量；不开这个时 xdg-open 会走

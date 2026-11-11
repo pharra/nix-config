@@ -26,6 +26,12 @@ in {
     # gnome-keyring（org.freedesktop.secrets）。
     environment.systemPackages = [pkgs.kdePackages.kwallet];
 
+    # Secret Service：统一用 gnome-keyring。
+    # KDE 变体禁用 kwallet 后用它；wm 变体没有桌面栈，靠这里补上。
+    # Chromium 系（Edge）的 cookie 加密密钥存在这里 —— 各桌面变体用同一个 keyring 才不会切桌面掉登录。
+    services.gnome.gnome-keyring.enable = true;
+    security.pam.services.login.enableGnomeKeyring = true;
+
     environment.sessionVariables = {
       "XDG_CURRENT_DESKTOP" = cfg.xdgCurrentDesktop;
       "KDE_SESSION_VERSION" = "6";

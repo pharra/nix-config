@@ -18,12 +18,19 @@ in {
     programs.denial.enable = true;
     programs.denial.plugins.enable = true; # Optional Plugin Manager.
 
-    services.displayManager.regreet.enable = true;
-    services.displayManager.defaultSession = "denial";
+    services.displayManager.gdm.enable = true;
 
     services.pharra.kwallet-shim.enable = true;
     services.pharra.kwallet-shim.xdgCurrentDesktop = "denial:KDE";
-    services.pharra.waywallen-layer-shell.enable = true;
+
+    xdg.portal.config = {
+      # 值必须是 portal 实现名（.portal 文件名），不是桌面名。
+      # 只有 gnome-keyring.portal 和 kwallet.portal 实现 Secret；写 "gnome"
+      # 会选中不实现 Secret 的 gnome.portal，然后静默回退到 kwallet。
+      "gtk" = {
+        "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+      };
+    };
 
     environment.systemPackages = with pkgs; [
       alacritty
