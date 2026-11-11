@@ -50,8 +50,8 @@ jobs:
 
       - name: "Build ${{ matrix.target.name }} input package ❄️"
         if: matrix.target.type == 'input'
-        run: nix build --inputs-from . "${{ matrix.target.flake_ref }}" --accept-flake-config --option substituters "https://nixpkgs-cache.cachix.org" --option trusted-public-keys "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4="
+        run: nix build --inputs-from . "${{ matrix.target.flake_ref }}" --accept-flake-config
 
       - name: "Build ${{ matrix.target.name }} NixOS config ❄️"
         if: matrix.target.type == 'nixos'
-        run: nix build "${{ matrix.target.flake_ref }}" --accept-flake-config --option substituters "https://nixpkgs-cache.cachix.org" --option trusted-public-keys "nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4="
+        run: nix build "${{ matrix.target.flake_ref }}" --accept-flake-config
