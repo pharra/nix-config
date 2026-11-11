@@ -27,11 +27,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794231865,
-        "narHash": "sha256-y9p+XtjTfsEkEXTu4QFDGUyXfaIsx2zaYd3FlEGxik0=",
+        "lastModified": 1794394345,
+        "narHash": "sha256-wD+914MjLbXdJjnYHViJhs3qqE+MFMAcOxZCI6EHKIg=",
         "owner": "pharra",
         "repo": "babry",
-        "rev": "3b417f19cae85a44f96225b38563f52f75154409",
+        "rev": "a2dacab56f7766aab2729079a434b9b3aa2dc2fb",
         "type": "github"
       },
       "original": {
