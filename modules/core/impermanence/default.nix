@@ -27,6 +27,13 @@ in {
         "/etc/v2raya"
         "/etc/cdi"
         #"/smb"
+
+        {
+          directory = "/home/${username}";
+          user = "${username}";
+          group = "${username}";
+          mode = "u=rwx,g=r,o=";
+        }
       ];
       files = [
         "/etc/machine-id"
@@ -36,54 +43,6 @@ in {
         "/etc/ssh/ssh_host_rsa_key"
         "/root/.zsh_history"
       ];
-
-      users.${username} = {
-        directories = [
-          # Personal folders
-          "Desktop"
-          "Documents"
-          "Downloads"
-          "Music"
-          "Pictures"
-          "Projects"
-          "Videos"
-          "Data"
-          "spdk"
-
-          # Preserved cache
-          ".cache"
-
-          # XDG config folders
-          ".config"
-          ".local"
-
-          # Important config
-          ".gnupg"
-          ".ssh"
-
-          # flatpak
-          ".var/app"
-
-          # Other configs
-          ".android"
-          ".steam"
-          ".vscode"
-          ".vscode-cli"
-          ".vscode-server"
-          ".cursor"
-          ".cursor-cli"
-          ".cursor-server"
-          ".wine"
-
-          # deepseek harness
-          ".dsh"
-        ];
-        files = [
-          ".zsh_history"
-          ".gitconfig"
-          ".zshrc"
-        ];
-      };
     };
 
     # age.identityPaths = ["/nix/persistent/etc/ssh/ssh_host_ed25519_key"];
@@ -93,11 +52,5 @@ in {
       fsType = "tmpfs";
       options = ["relatime" "mode=755" "nosuid" "nodev"];
     };
-
-    # Impermanence will copy permissions from source dir
-    # Chown to wf:wf
-    systemd.tmpfiles.rules = [
-      "d /nix/persistent/home/${username} 700 ${username} ${username}"
-    ];
   };
 }
