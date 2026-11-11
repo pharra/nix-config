@@ -449,11 +449,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794402408,
-        "narHash": "sha256-YMUTSHdXG9oWRz1IeteyB9AlY478dBhIFlR+W+G0NMc=",
+        "lastModified": 1794405106,
+        "narHash": "sha256-Fz1nTHRIw5LCBwk4oEvmlt7GeZIZeaGhi2dv06qKet4=",
         "owner": "pharra",
         "repo": "WeFlow",
-        "rev": "af39a3265b9af03dcb328767d134271335d8b33e",
+        "rev": "c517fc4610023fb3cfc0e2f6c3fb8733ece2fe8f",
         "type": "github"
       },
       "original": {

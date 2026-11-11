@@ -73,16 +73,11 @@ in {
       configHome = "/home/${username}";
     };
 
-    services.xserver.displayManager.sessionCommands = ''
-      ${pkgs.xorg.xrdb}/bin/xrdb -merge <<EOF
-      Xft.dpi: 192
-      EOF
-    '';
-
-    # Work around niri#2435 logout breaking user services
-    systemd.user.services.niri = {
-      serviceConfig.ExecStop = "${pkgs.systemd}/bin/systemctl --user stop graphical-session.target";
-    };
+    # services.xserver.displayManager.sessionCommands = ''
+    #   ${pkgs.xorg.xrdb}/bin/xrdb -merge <<EOF
+    #   Xft.dpi: 192
+    #   EOF
+    # '';
 
     environment.systemPackages = with pkgs; [
       alacritty
