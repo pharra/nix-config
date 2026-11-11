@@ -89,7 +89,6 @@
 
     denial = {
       url = "github:denialwm/denial";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     waydroid-nvidia-nix = {
