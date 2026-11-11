@@ -87,7 +87,10 @@
       url = "github:xddxdd/nix-cachyos-kernel";
     };
 
-    denial.url = "github:denialwm/denial";
+    denial = {
+      url = "github:denialwm/denial";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     waydroid-nvidia-nix = {
       url = "github:yigexuanmu/waydroid-nvidia-nix";
