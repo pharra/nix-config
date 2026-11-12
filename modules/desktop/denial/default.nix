@@ -15,6 +15,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    services.pharra.alacritty = {
+      enable = true;
+      opacity = 0.6;
+    };
+
     programs.denial.enable = true;
     programs.denial.plugins.enable = true; # Optional Plugin Manager.
 
@@ -24,9 +29,7 @@ in {
     services.pharra.kwallet-shim.enable = true;
     services.pharra.kwallet-shim.xdgCurrentDesktop = "Denial:KDE";
 
-    environment.systemPackages = with pkgs; [
-      alacritty
-    ];
+    services.pharra.waywallen-layer-shell.enable = true;
 
     environment.sessionVariables = {
       "NIXOS_OZONE_WL" = "1";

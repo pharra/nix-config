@@ -31,6 +31,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    services.pharra.alacritty = {
+      enable = true;
+      opacity = 0.0;
+    };
+
     services.pharra.kwallet-shim.enable = true;
     services.pharra.kwallet-shim.xdgCurrentDesktop = "niri:KDE";
     services.pharra.waywallen-layer-shell.enable = cfg.wallpaperBackend == "waywallen-layer-shell";
@@ -90,7 +95,6 @@ in {
 
     environment.systemPackages = with pkgs;
       [
-        alacritty
         papirus-icon-theme
         kdePackages.gwenview
         kdePackages.qt6ct

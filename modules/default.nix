@@ -3,6 +3,7 @@
 # 求值顺序 = 属性名排序（NixOS 的 list 型选项按模块顺序合并，所以清单顺序就是合并顺序）。
 # 以 _ 开头的目录（如 _template）不在这里，所以不会被加载。
 {
+  alacritty = import ./desktop/alacritty;
   amd-gpu-edid-fix = import ./hardware/amd-gpu-edid-fix;
   archlinux = import ./vm/archlinux;
   audio-relay = import ./desktop/audio-relay;
