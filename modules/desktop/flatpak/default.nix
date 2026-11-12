@@ -55,10 +55,14 @@ in {
         "Session Bus Policy"."org.freedesktop.secrets" = "talk";
       };
 
+      # 必须放行 x11 socket：QQ 的启动脚本在沙箱里看不到 /tmp/.X11-unix 时会退回
+      # `xvfb-run -a`，而 xvfb-run 靠 SIGUSR1 等 Xvfb 就绪；denial 启动子进程时只解
+      # 锁了 SIGINT/SIGTERM，SIGUSR1 仍是 blocked，于是从 app launcher 启动会永久卡
+      # 在 xvfb-run（shell 里掩码是空的，所以手动跑没问题）。放行 x11 后脚本走直接
+      # exec 的分支；WAYLAND_DISPLAY 有值时 flags 依然是 --ozone-platform=wayland。
       "com.qq.QQ".Context.sockets = [
-        "!x11"
         "wayland"
-        "!fallback-x11"
+        "x11"
       ];
       "com.tencent.WeChat" = {
         Context.sockets = [
