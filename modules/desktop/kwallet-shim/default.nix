@@ -56,6 +56,46 @@ in {
         QT_QPA_PLATFORM = "wayland";
       };
 
+    # Denial 在启动 app launcher 的应用时会硬编码
+    # XDG_CURRENT_DESKTOP=Denial；它支持通过 applicationEnvironment
+    # 覆盖应用环境。这里把默认环境和 code.desktop 都改成 Denial:KDE，
+    # 让 Chromium/Electron 选择 KWallet 后端。
+    systemd.user.services.denial-app-environment =
+      mkIf (
+        (config.services.pharra ? denial)
+        && config.services.pharra.denial.enable
+      ) {
+        wantedBy = ["denial-session.target"];
+        after = ["denial-session.target"];
+        serviceConfig.Type = "oneshot";
+        script = ''
+          settings="$HOME/.config/denial/settings.json"
+          i=0
+          while [ ! -f "$settings" ] && [ "$i" -lt 50 ]; do
+            ${pkgs.coreutils}/bin/sleep 0.1
+            i=$((i + 1))
+          done
+          [ -f "$settings" ] || exit 0
+
+          tmp="$(${pkgs.coreutils}/bin/mktemp "$settings".XXXXXX)"
+          if ${pkgs.jq}/bin/jq '
+            .applicationEnvironment.default["XDG_CURRENT_DESKTOP"] = "Denial:KDE"
+            | .applicationEnvironment.default["KDE_SESSION_VERSION"] = "6"
+            | .applicationEnvironment.default["KDE_FULL_SESSION"] = "true"
+            | .applicationEnvironment.applications["code.desktop"]["XDG_CURRENT_DESKTOP"] = "Denial:KDE"
+            | .applicationEnvironment.applications["code.desktop"]["KDE_SESSION_VERSION"] = "6"
+            | .applicationEnvironment.applications["code.desktop"]["KDE_FULL_SESSION"] = "true"
+          ' "$settings" > "$tmp"; then
+            ${pkgs.coreutils}/bin/chmod 600 "$tmp"
+            ${pkgs.coreutils}/bin/mv -f "$tmp" "$settings"
+          else
+            ${pkgs.coreutils}/bin/rm -f "$tmp"
+          fi
+        '';
+        startLimitBurst = 0;
+        startLimitIntervalSec = 0;
+      };
+
     hjem.extraModules = [
       ({config, ...}:
         mkIf (config.user == username) {
