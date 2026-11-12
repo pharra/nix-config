@@ -31,11 +31,23 @@ in {
 
     services.pharra.waywallen-layer-shell.enable = true;
 
+    # services.droidloom = {
+    #   enable = true;
+    #   user = username;
+    #   renderNode = "/dev/dri/renderD128";
+    #   gpu = "0000:01:00.0";
+    #   graphicsBackend = "forwarding";
+    # };
+
     environment.sessionVariables = {
       "NIXOS_OZONE_WL" = "1";
       "MOZ_ENABLE_WAYLAND" = "1";
       "MOZ_WEBRENDER" = "1";
       "QT_QPA_PLATFORM" = "wayland";
+
+      XMODIFIERS = "@im=fcitx";
+      GTK_IM_MODULE = "fcitx";
+      QT_IM_MODULE = "fcitx";
     };
   };
 }

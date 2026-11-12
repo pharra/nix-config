@@ -11,7 +11,7 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 | `azure` | Azure 虚拟机（x86_64） | `base` |
 | `azure_arm` | Azure 虚拟机（aarch64） | `base` |
 | `gs65` | MSI GF65（hostname 是 `nix65`） | `kde` |
-| `zed` | 主力机：i5-13600KF + RTX 4090 | `kde` |
+| `zed` | 主力机：i5-13600KF + RTX 4090 | `denial` |
 | `zed_net` | 同 zed，但从 NVMF/iSCSI 网络盘启动 | `kde` |
 | `homelab` | 服务器：ZFS + SPDK/NVMF + 一堆容器服务 | `base` |
 
@@ -175,4 +175,3 @@ nix build .#packages.x86_64-linux.azure-x64
 `.github/workflows/nixos.yml` 只有一个 `build` 任务：编译 4 个代表性配置（内核 / 服务器 / 桌面 / 网络启动各一）。
 
 配置名硬写在 workflow 的矩阵里 —— **加一台机器想让 CI 编译它，要改那个文件**。
-

@@ -105,6 +105,11 @@
       url = "github:pharra/WeFlow";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    droidloom = {
+      url = "github:pharra/droidloom-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.

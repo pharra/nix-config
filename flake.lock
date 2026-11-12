@@ -97,6 +97,26 @@
         "type": "github"
       }
     },
+    "droidloom": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794498371,
+        "narHash": "sha256-hRZJL5gABF4uoCLRalK8FY6+rrM+5AzCRnjcBpQ3Ki0=",
+        "owner": "pharra",
+        "repo": "droidloom-flake",
+        "rev": "b9d2629692b637f4ab031cfe9d27c563dc6dca4b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pharra",
+        "repo": "droidloom-flake",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -389,6 +409,7 @@
         "babry": "babry",
         "denial": "denial",
         "dms-plugin-registry": "dms-plugin-registry",
+        "droidloom": "droidloom",
         "hjem": "hjem",
         "impermanence": "impermanence",
         "niri-glass": "niri-glass",
