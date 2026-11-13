@@ -35,7 +35,7 @@ pharra 的 NixOS 配置：一个 flake 管多台机器 × 多个桌面变体。
 
 | 域 | 内容 |
 | --- | --- |
-| `core/` | 全机与桌面基础：`common`、`desktop`、`no-desktop`、`user-group`、`impermanence`、`scripts`、`azure-tools` |
+| `core/` | 全机与桌面基础：`common`、`desktop`、`no-desktop`、`user-group`、`preservation`、`scripts`、`azure-tools` |
 | `desktop/` | 桌面与外壳：`kde`、`cosmic`、`denial`、`dms`、`input-method`、`flatpak`、`audio-relay` |
 | `hardware/` | 硬件驱动与固件：`mlx5`、`net-sriov`、`amd-gpu-edid-fix`、`mcontrolcenter`、`lianli-linux`、`nvme-auto`、`udev-symlink` |
 | `network/` | 网络与网络服务：`net-name`、`netns`、`docker-netns`、`network-bridge`、`dhcp-server`、`openwrt`、`easytier`、`mihomo`、`sftp-server` |

@@ -21,7 +21,6 @@
   docker-netns = import ./network/docker-netns;
   easytier = import ./network/easytier;
   flatpak = import ./desktop/flatpak;
-  impermanence = import ./core/impermanence;
   input-method = import ./desktop/input-method;
   ipxe-host = import ./boot/netboot/ipxe-host;
   iscsi-root = import ./boot/netboot/iscsi-root;
@@ -41,6 +40,7 @@
   nvme-auto = import ./hardware/nvme-auto;
   nvmf = import ./boot/netboot/nvmf;
   openwrt = import ./network/openwrt;
+  preservation = import ./core/preservation;
   scripts = import ./core/scripts;
   sftp-server = import ./network/sftp-server;
   spdk-container = import ./storage/spdk-container;

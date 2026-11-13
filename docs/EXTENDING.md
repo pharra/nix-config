@@ -65,7 +65,7 @@ nix eval .#nixosConfigurations --apply 'x: builtins.attrNames x'   # 确认新�
 
 先判断一件事：**这个模块是不是所有机器都要有它的选项？** 是走 A，否走 B。
 
-### A. 全局基础设施（sops-nix / impermanence / NixVirt 这类）
+### A. 全局基础设施（sops-nix / preservation / NixVirt 这类）
 
 1. `flake.nix` 的 `inputs` 加一条（记得 `inputs.nixpkgs.follows = "nixpkgs";`）
 2. `lib/default.nix` 的 `common-nixos-modules` 列表里加 `inputs.<名字>.nixosModules.default`，

@@ -30,7 +30,7 @@ in {
 
   services.pharra = {
     nix-access-token.enable = true;
-    impermanence.enable = true;
+    preservation.enable = true;
     desktop.enable = true;
     virtualisation.enable = true;
     scripts.enable = true;

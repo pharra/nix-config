@@ -5,7 +5,7 @@
   inputs,
   username,
 }: let
-  inherit (inputs) nixpkgs hjem NixVirt impermanence nix-flatpak sops-nix dms-plugin-registry;
+  inherit (inputs) nixpkgs hjem NixVirt preservation nix-flatpak sops-nix dms-plugin-registry;
   inherit (nixpkgs) lib;
 
   nixosSystem = import ./nixosSystem.nix;
@@ -31,7 +31,7 @@
   # 完整流程见 docs/EXTENDING.md 的「加一个上游（GitHub）flake 模块」。
   common-nixos-modules =
     [
-      impermanence.nixosModules.impermanence
+      preservation.nixosModules.preservation
       nix-flatpak.nixosModules.nix-flatpak
       NixVirt.nixosModules.default
       sops-nix.nixosModules.sops

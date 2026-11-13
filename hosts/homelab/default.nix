@@ -21,7 +21,7 @@
     nix-access-token.enable = true;
     desktop.enable = false;
     common.enable = true;
-    impermanence.enable = true;
+    preservation.enable = true;
     spdk-container.enable = true;
     sftp-server.enable = true;
     easytier.enable = true;

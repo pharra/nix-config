@@ -49,9 +49,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    impermanence = {
-      url = "github:nix-community/impermanence";
-      inputs.nixpkgs.follows = "nixpkgs";
+    # 替代 impermanence：声明式管理 tmpfs 根上的非易失状态
+    preservation = {
+      url = "github:nix-community/preservation";
     };
 
     nix-flatpak = {
