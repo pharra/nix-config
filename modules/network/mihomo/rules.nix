@@ -20,7 +20,7 @@
     #"GEOSITE,category-finance@longbridge,长桥网站"
     #"DOMAIN-SUFFIX,longbridgewhale.com,长桥网站"
     "GEOSITE,category-scholar-!cn,人工智能"
-    "GEOSITE,microsoft@cn,DIRECT"
+    "GEOSITE,microsoft@cn,微软服务"
     "GEOSITE,blizzard,暴雪网站"
     "GEOSITE,apple,苹果服务"
     "GEOSITE,apple-cn,苹果服务"
