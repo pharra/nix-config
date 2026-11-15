@@ -142,6 +142,11 @@ in {
       rclone
       bc
       nh
+      jq
+      unzip
+
+      # dev tools
+      python314
     ];
 
     security.pam.loginLimits = [
@@ -199,7 +204,6 @@ in {
     environment.sessionVariables = {
       TERM = "xterm-256color";
       DELTA_PAGER = "less -R";
-      MANPAGER = "sh -c 'col -bx | bat -l man -p'";
     };
 
     # 所有机器共用的用户包
