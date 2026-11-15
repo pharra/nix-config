@@ -47,15 +47,15 @@
         "nixpkgsUnstable": "nixpkgsUnstable"
       },
       "locked": {
-        "lastModified": 1794563846,
-        "narHash": "sha256-+KRRcVJY63RT/uoWjfd9j9EHsta99Z8uf1fgjwA+SqU=",
-        "owner": "denialwm",
+        "lastModified": 1794742237,
+        "narHash": "sha256-iV6c5RsMKgwH/AK/c0w9O8JlUyPbjTg71CNbfNpsRvs=",
+        "owner": "pharra",
         "repo": "denial",
-        "rev": "3a550ac1fd8e99a4c948e0ca643cf359a4373873",
+        "rev": "71d9b57f67edf1c7c3dae84e3e749af92f0f2092",
         "type": "github"
       },
       "original": {
-        "owner": "denialwm",
+        "owner": "pharra",
         "repo": "denial",
         "type": "github"
       }
@@ -392,7 +392,8 @@
         "preservation": "preservation",
         "sops-nix": "sops-nix",
         "waydroid-nvidia-nix": "waydroid-nvidia-nix",
-        "weflow": "weflow"
+        "weflow": "weflow",
+        "zed-launcher": "zed-launcher"
       }
     },
     "sops-nix": {
@@ -470,6 +471,26 @@
         "owner": "Shiro836",
         "ref": "v0.2.0",
         "repo": "waydroid-nvidia",
+        "type": "github"
+      }
+    },
+    "zed-launcher": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794772820,
+        "narHash": "sha256-7T8kCQJLDcoexIv14aH861fM4X7ZvIAJrEUDfxvO7fs=",
+        "owner": "pharra",
+        "repo": "zed-launcher",
+        "rev": "0f874bfdbca725c2f0e880341c4cde8101046e39",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pharra",
+        "repo": "zed-launcher",
         "type": "github"
       }
     }

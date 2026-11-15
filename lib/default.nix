@@ -44,6 +44,7 @@
       }
       inputs.babry.nixosModules.default
       inputs.droidloom.nixosModules.default
+      inputs.zed-launcher.nixosModules.default
     ]
     ++ (builtins.attrValues modules)
     ++ [

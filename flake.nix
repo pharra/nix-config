@@ -88,7 +88,7 @@
     };
 
     denial = {
-      url = "github:denialwm/denial";
+      url = "github:pharra/denial";
     };
 
     waydroid-nvidia-nix = {
@@ -108,6 +108,11 @@
 
     droidloom = {
       url = "github:pharra/droidloom-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    zed-launcher = {
+      url = "github:pharra/zed-launcher";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

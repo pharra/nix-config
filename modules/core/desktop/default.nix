@@ -188,6 +188,9 @@ in {
     # screenshot tool
     programs.babry.enable = true;
 
+    # zed-launcher is a umu-launcher gui for Linux
+    services.zed-launcher.enable = true;
+
     hardware.gpgSmartcards.enable = true;
 
     services = {
