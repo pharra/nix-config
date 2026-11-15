@@ -47,7 +47,7 @@
   {
     name = "zed";
     system = "x86_64-linux";
-    desktop = "kde";
+    desktop = "denial";
     nixos-modules = [
       ./zed
     ];
@@ -57,7 +57,7 @@
   {
     name = "zed_net";
     system = "x86_64-linux";
-    desktop = "kde";
+    desktop = "denial";
     hostname = "zed";
     nixos-modules = [
       ./zed

@@ -15,23 +15,23 @@ jobs:
       fail-fast: true
       matrix:
         target:
-          - type: input
-            name: denial
-            flake_refs: >-
-              denial#default
-              denial#denial
-              denial#denial-cachix-cli
-              denial#denial-flutter
-              denial#denial-flutter-dart
-              denial#denial-flutter-depot-tools-source
-              denial#denial-flutter-engine
-              denial#denial-flutter-engine-raw
-              denial#denial-flutter-engine-source
-              denial#denial-flutter-engine-source-build
-              denial#denial-flutter-framework-source
-              denial#denial-nix-maintenance-tools
-              denial#denial-plugin-manager
-              denial#denial-unstable
+          # - type: input
+          #   name: denial
+          #   flake_refs: >-
+          #     denial#default
+          #     denial#denial
+          #     denial#denial-cachix-cli
+          #     denial#denial-flutter
+          #     denial#denial-flutter-dart
+          #     denial#denial-flutter-depot-tools-source
+          #     denial#denial-flutter-engine
+          #     denial#denial-flutter-engine-raw
+          #     denial#denial-flutter-engine-source
+          #     denial#denial-flutter-engine-source-build
+          #     denial#denial-flutter-framework-source
+          #     denial#denial-nix-maintenance-tools
+          #     denial#denial-plugin-manager
+          #     denial#denial-unstable
           - type: output
             name: azure
             flake_refs: .#nixosConfigurations.azure.config.system.build.toplevel
