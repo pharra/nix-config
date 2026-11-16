@@ -26,7 +26,6 @@
   iscsi-root = import ./boot/netboot/iscsi-root;
   kde = import ./desktop/kde;
   kmscon = import ./desktop/kmscon;
-  kwallet-shim = import ./desktop/kwallet-shim;
   lianli-linux = import ./hardware/lianli-linux;
   libvirt = import ./vm/libvirt;
   mcontrolcenter = import ./hardware/mcontrolcenter;

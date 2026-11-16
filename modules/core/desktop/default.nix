@@ -7,6 +7,17 @@
 }:
 with lib; let
   cfg = config.services.pharra.desktop;
+
+  # VS Code 的 Electron safeStorage 在 KDE 下会优先选择 KWallet；
+  # 显式指定 gnome-libsecret，切换桌面时仍然使用同一个 gnome-keyring。
+  vscodeGnomeKeyring = pkgs.symlinkJoin {
+    name = "vscode-gnome-keyring";
+    paths = [pkgs.vscode];
+    nativeBuildInputs = [pkgs.makeWrapper];
+    postBuild = ''
+      wrapProgram $out/bin/code --add-flags "--password-store=gnome-libsecret"
+    '';
+  };
 in {
   options = {
     services.pharra.desktop = {
@@ -170,8 +181,8 @@ in {
       # dsh
       deepseek-harness
 
-      # 可写扩展目录的 VS Code（不用 programs.vscode 的 Nix store 包装）
-      vscode
+      # 可写扩展目录的 VS Code；wrapper 强制使用 gnome-keyring。
+      vscodeGnomeKeyring
     ];
 
     programs.clash-verge = {

@@ -26,9 +26,6 @@ in {
     services.displayManager.gdm.enable = true;
     services.displayManager.defaultSession = "denial";
 
-    services.pharra.kwallet-shim.enable = true;
-    services.pharra.kwallet-shim.xdgCurrentDesktop = "Denial:KDE";
-
     services.pharra.waywallen-layer-shell.enable = true;
 
     # services.droidloom = {

@@ -36,8 +36,6 @@ in {
       opacity = 0.0;
     };
 
-    services.pharra.kwallet-shim.enable = true;
-    services.pharra.kwallet-shim.xdgCurrentDesktop = "niri:KDE";
     services.pharra.waywallen-layer-shell.enable = cfg.wallpaperBackend == "waywallen-layer-shell";
     services.pharra.weflow.enable = true;
 

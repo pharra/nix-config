@@ -15,10 +15,11 @@ in {
   };
 
   config = mkIf cfg.enable {
-    services.pharra.kwallet-shim = {
-      enable = true;
-      xdgCurrentDesktop = "KDE";
-    };
+    # KWallet 6 的 KWallet API 服务只是 Secret Service 的代理；
+    # 关闭 ksecretd 并启用迁移后，KWallet API 会落到 gnome-keyring。
+    # 这样不需要伪造 XDG_CURRENT_DESKTOP 或 patch startplasma。
+    services.gnome.gnome-keyring.enable = true;
+    security.pam.services.login.enableGnomeKeyring = true;
 
     programs = {
       dconf.enable = true;
@@ -66,9 +67,7 @@ in {
       wl-clipboard # Command-line copy/paste utilities for Wayland
     ];
 
-    # KWallet daemon 保留，但只作为 KWallet API -> Secret Service 的兼容层：
-    # ksecretd 关闭，kwalletd6 把 Chromium/Electron/KDE 的 KWallet 调用转发到
-    # gnome-keyring（org.freedesktop.secrets）；PAM/portal 仍直接用 gnome-keyring。
+    # 不再把 KWallet 当作 Secret Service 的兼容层；只保留 gnome-keyring。
     environment.plasma6.excludePackages = with pkgs.kdePackages; [
       kwallet-pam # 不需要 kwallet 的 PAM 解锁，gnome-keyring 已由 PAM 解锁
       kwalletmanager # 不需要 KWallet GUI
@@ -76,9 +75,10 @@ in {
 
     xdg.portal.config = {
       # 值必须是 portal 实现名（.portal 文件名），不是桌面名。
-      # 只有 gnome-keyring.portal 和 kwallet.portal 实现 Secret；写 "gnome"
-      # 会选中不实现 Secret 的 gnome.portal，然后静默回退到 kwallet。
       "kde" = {
+        "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+      };
+      "gnome" = {
         "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
       };
     };
@@ -89,6 +89,24 @@ in {
 
     # plasmalogin 的 PAM 服务不走 login，单独挂上 gnome-keyring 自动解锁
     security.pam.services.plasmalogin.enableGnomeKeyring = true;
+
+    # KWallet API 保持可用（KWallet API -> Secret Service 代理），
+    # 但不再启动 ksecretd；把后端迁移到已有的 Secret Service（gnome-keyring）。
+    systemd.user.services.ensure-kwalletrc = {
+      wantedBy = ["default.target"];
+      serviceConfig.Type = "oneshot";
+      script = ''
+        ${pkgs.coreutils}/bin/install -Dm600 ${pkgs.writeText "kwalletrc" ''
+          [KSecretD]
+          Enabled=false
+
+          [Migration]
+          MigrateTo3rdParty=true
+        ''} "$HOME/.config/kwalletrc"
+      '';
+      startLimitBurst = 0;
+      startLimitIntervalSec = 0;
+    };
 
     environment.sessionVariables = {
       "NIXOS_OZONE_WL" = "1";
