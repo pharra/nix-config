@@ -96,13 +96,16 @@ in {
       wantedBy = ["default.target"];
       serviceConfig.Type = "oneshot";
       script = ''
-        ${pkgs.coreutils}/bin/install -Dm600 ${pkgs.writeText "kwalletrc" ''
-          [KSecretD]
-          Enabled=false
+        rc="$HOME/.config/kwalletrc"
+        if [ ! -e "$rc" ]; then
+          ${pkgs.coreutils}/bin/install -Dm600 ${pkgs.writeText "kwalletrc" ''
+            [KSecretD]
+            Enabled=false
 
-          [Migration]
-          MigrateTo3rdParty=true
-        ''} "$HOME/.config/kwalletrc"
+            [Migration]
+            MigrateTo3rdParty=true
+          ''} "$rc"
+        fi
       '';
       startLimitBurst = 0;
       startLimitIntervalSec = 0;
