@@ -36,7 +36,7 @@ in {
     scripts.enable = true;
     # dsh web 常驻用户服务（http://127.0.0.1:3080）；wf 已开 linger，所以开机即启动
     deepseek-harness.enable = true;
-    waydroid.enable = true;
+    android.enable = true;
     kmscon = {
       enable = true;
       # 4K 屏：kmscon 是"按字号在原生分辨率上渲染"，没有全局缩放，所以直接给大字号

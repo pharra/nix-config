@@ -47,7 +47,7 @@
   user-group = import ./core/user-group;
   vfio = import ./vm/vfio;
   virtualisation = import ./vm/virtualisation;
-  waydroid = import ./vm/waydroid;
+  android = import ./vm/android;
   waywallen-layer-shell = import ./desktop/waywallen-layer-shell;
   weflow = import ./desktop/weflow;
   zfs-config = import ./storage/zfs-config;

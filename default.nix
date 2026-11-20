@@ -15,6 +15,9 @@ in rec {
   aosp = pkgs.callPackage ./pkgs/aosp {};
   audio-relay = pkgs.callPackage ./pkgs/audiorelay {};
   lian-li-linux = pkgs.callPackage ./pkgs/lianli-linux {};
+  # 覆盖 nixpkgs 的 genymotion：自带 Qt5 只带 xcb 插件、且需要先用自带库（见该文件注释）。
+  # 名字和 nixpkgs 里的属性同名，overlay.nix 会把它盖上去。
+  genymotion = pkgs.callPackage ./pkgs/genymotion {};
   waywallen-display-kde = pkgs.callPackage ./pkgs/waywallen-display/kde.nix {};
   waywallen-display-layer-shell = pkgs.callPackage ./pkgs/waywallen-display/layer-shell.nix {};
 }

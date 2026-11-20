@@ -104,11 +104,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794499025,
-        "narHash": "sha256-w/rmx5P7wRMBl5YFhMWccSvi30KgtDE52CjuUm0+bLY=",
+        "lastModified": 1794897290,
+        "narHash": "sha256-x35kc32ZtrbWc1kswEZNjAMTn3/F1orCM0Q989/Igss=",
         "owner": "pharra",
         "repo": "droidloom-flake",
-        "rev": "d4521ba871280e3223ebc38d64bdc81b4eda4fbe",
+        "rev": "2d354f2acdd480e671d43080e5ff32e6470e9d51",
         "type": "github"
       },
       "original": {
