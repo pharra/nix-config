@@ -15,12 +15,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # KWallet 6 的 KWallet API 服务只是 Secret Service 的代理；
-    # 关闭 ksecretd 并启用迁移后，KWallet API 会落到 gnome-keyring。
-    # 这样不需要伪造 XDG_CURRENT_DESKTOP 或 patch startplasma。
-    services.gnome.gnome-keyring.enable = true;
-    security.pam.services.login.enableGnomeKeyring = true;
-
     programs = {
       dconf.enable = true;
       kdeconnect.enable = true;

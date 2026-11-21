@@ -12,7 +12,18 @@ with lib; let
   # 显式指定 gnome-libsecret，切换桌面时仍然使用同一个 gnome-keyring。
   vscodeGnomeKeyring = pkgs.symlinkJoin {
     name = "vscode-gnome-keyring";
-    paths = [pkgs.vscode];
+    paths = [
+      (pkgs.vscode.overrideAttrs
+        (finalAttrs: previousAttrs: {
+          postFixup =
+            previousAttrs.postFixup
+            + ''
+              patchelf \
+                --add-needed ${lib.getLib pkgs.openssl}/lib/libssl.so.3 \
+                $out/lib/vscode/resources/app/node_modules.asar.unpacked/@github/copilot-sdk-linux-x64/prebuilds/linux-x64/runtime.node
+            '';
+        }))
+    ];
     nativeBuildInputs = [pkgs.makeWrapper];
     postBuild = ''
       wrapProgram $out/bin/code --add-flags "--password-store=gnome-libsecret"
@@ -163,6 +174,9 @@ in {
       # 不存在的 kde-open，导致 VS Code 等应用无法打开浏览器。
       xdgOpenUsePortal = true;
     };
+
+    services.gnome.gnome-keyring.enable = true;
+    security.pam.services.login.enableGnomeKeyring = true;
 
     environment.systemPackages = with pkgs; [
       # YubiKey

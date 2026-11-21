@@ -28,6 +28,16 @@ in {
 
     services.pharra.waywallen-layer-shell.enable = true;
 
+    xdg.portal.config = {
+      # 值必须是 portal 实现名（.portal 文件名），不是桌面名。
+      "denial" = {
+        "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+      };
+      "denial" = {
+        "org.freedesktop.portal.Secret" = ["gnome-keyring"];
+      };
+    };
+
     environment.sessionVariables = {
       "NIXOS_OZONE_WL" = "1";
       "MOZ_ENABLE_WAYLAND" = "1";
