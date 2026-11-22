@@ -49,11 +49,11 @@
         "nixpkgsUnstable": "nixpkgsUnstable"
       },
       "locked": {
-        "lastModified": 1795305763,
-        "narHash": "sha256-lOF3JQLBhqIHeWKM+AM476QTVuLEc9927gq6cZH8+VI=",
+        "lastModified": 1795330337,
+        "narHash": "sha256-HwJ3nfMXvpa83TKYVlEVzgUbwfU0Xc8dkUmAhDrOt9U=",
         "owner": "pharra",
         "repo": "denial",
-        "rev": "d7bac77cff1115f7af8f7c3a195359625487ebdf",
+        "rev": "23ac3ca650d04c9c942a0a0951a2ca26c3a4cb70",
         "type": "github"
       },
       "original": {
