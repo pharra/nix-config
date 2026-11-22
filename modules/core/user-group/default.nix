@@ -29,6 +29,7 @@ in {
     # Define a user account. Don't forget to set a password with 'passwd'.
     users.users."${username}" = {
       home = "/home/${username}";
+      group = "${username}";
       isNormalUser = true;
       initialHashedPassword = lib.mkForce "$6$569jdPP15dvw4JDf$enDHnDIKO3UUo3bFdOow5ugnzsksJmAeUpcrKIUKjFh5gB5fZWvknDdVsuYG/n/fPdReo5d3Iw2vKMMXtTq1u.";
       description = username;

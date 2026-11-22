@@ -80,4 +80,21 @@
       inherit mkZedGuest;
     };
   }
+
+  # denial example
+  {
+    name = "denial_example";
+    system = "x86_64-linux";
+    desktop = "base";
+    nixos-modules = [
+      {
+        services.pharra.common.enable = true;
+        services.pharra.denial.enable = true;
+        fileSystems."/" = {
+          device = "/dev/disk/by-label/nixos";
+          fsType = "ext4";
+        };
+      }
+    ];
+  }
 ]

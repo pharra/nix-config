@@ -27,6 +27,14 @@ in {
     # 从 fork / 私有 checkout 构建时必须指定，否则 ui setup 会去官方仓库找这个 commit：
     programs.denial.uiDevelopment.sourceRemote = "https://github.com/pharra/denial.git";
 
+    programs = {
+      dux-files = {
+        enable = true;
+        systemd.enable = false;
+        portal.enable = true;
+      };
+    };
+
     services.displayManager.gdm.enable = true;
     services.displayManager.defaultSession = "denial";
 

@@ -39,8 +39,8 @@ jobs:
             name: homelab
             flake_refs: .#nixosConfigurations.homelab.config.system.build.toplevel
           - type: output
-            name: zed_net
-            flake_refs: .#nixosConfigurations.zed_net.config.system.build.toplevel
+            name: denial_example
+            flake_refs: .#nixosConfigurations.denial_example.config.system.build.toplevel
 
     steps:
       - uses: actions/checkout@v7
