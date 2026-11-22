@@ -7,6 +7,23 @@ on:
     branches:
       - main
 
+env:
+  # 构建时使用的 Nix 二进制缓存与公钥，只改这两个变量即可。
+  # 它们会写进 /etc/nix/nix.conf，因此下面的 build 步骤不带 --accept-flake-config：
+  # flake.nix 中的 nixConfig.substituters 会整体覆盖这里的列表。
+  NIX_SUBSTITUTERS: >-
+    https://cache.nixos.org
+    https://nixpkgs-cache.cachix.org
+    https://nix-community.cachix.org
+    https://denial.cachix.org
+    https://cache.lantian.pub/lantian
+  NIX_TRUSTED_PUBLIC_KEYS: >-
+    cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+    nixpkgs-cache.cachix.org-1:7wZaApmfSKiDpxKAxwd+dExeWFMbilDnOgIqAdDh3T4=
+    nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+    denial.cachix.org-1:wd8YTnvPmugFrtdMJWtR1XdVknR3/g2nmBJkT+vAruo=
+    lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ=
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -52,6 +69,10 @@ jobs:
 
       - name: "Install Nix ❄️"
         uses: cachix/install-nix-action@v31.11.0
+        with:
+          extra_nix_config: |
+            substituters = ${{ env.NIX_SUBSTITUTERS }}
+            trusted-public-keys = ${{ env.NIX_TRUSTED_PUBLIC_KEYS }}
 
       - name: "Install Cachix ❄️"
         uses: cachix/cachix-action@v17
@@ -64,8 +85,8 @@ jobs:
 
       - name: "Build ${{ matrix.target.name }} input packages ❄️"
         if: matrix.target.type == 'input'
-        run: nix build --inputs-from . ${{ matrix.target.flake_refs }} --accept-flake-config
+        run: nix build --inputs-from . ${{ matrix.target.flake_refs }}
 
       - name: "Build ${{ matrix.target.name }} NixOS config ❄️"
         if: matrix.target.type == 'output'
-        run: nix build "${{ matrix.target.flake_refs }}" --accept-flake-config
+        run: nix build "${{ matrix.target.flake_refs }}"
