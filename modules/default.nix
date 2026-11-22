@@ -49,6 +49,5 @@
   virtualisation = import ./vm/virtualisation;
   android = import ./vm/android;
   waywallen-layer-shell = import ./desktop/waywallen-layer-shell;
-  weflow = import ./desktop/weflow;
   zfs-config = import ./storage/zfs-config;
 }

@@ -49,11 +49,11 @@
         "nixpkgsUnstable": "nixpkgsUnstable"
       },
       "locked": {
-        "lastModified": 1795213448,
-        "narHash": "sha256-4CqIt/ljRJnss+zRAv14YjtzAzEWbU2e7LXBQcTMDsw=",
+        "lastModified": 1795305763,
+        "narHash": "sha256-lOF3JQLBhqIHeWKM+AM476QTVuLEc9927gq6cZH8+VI=",
         "owner": "pharra",
         "repo": "denial",
-        "rev": "98f3e58a33b2324961b656c91c659aeb5b6fa6ec",
+        "rev": "d7bac77cff1115f7af8f7c3a195359625487ebdf",
         "type": "github"
       },
       "original": {
@@ -123,11 +123,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794897290,
-        "narHash": "sha256-x35kc32ZtrbWc1kswEZNjAMTn3/F1orCM0Q989/Igss=",
+        "lastModified": 1795248302,
+        "narHash": "sha256-NMIwvd7TIuzszAlGXeMBOQBiYc4B3vS59eOKXtn+Rmg=",
         "owner": "pharra",
         "repo": "droidloom-flake",
-        "rev": "2d354f2acdd480e671d43080e5ff32e6470e9d51",
+        "rev": "f309dd9d600d6fdb4327c1c6a5c6ad1e8e503f42",
         "type": "github"
       },
       "original": {
@@ -428,7 +428,6 @@
         "preservation": "preservation",
         "sops-nix": "sops-nix",
         "waydroid-nvidia-nix": "waydroid-nvidia-nix",
-        "weflow": "weflow",
         "zed-launcher": "zed-launcher"
       }
     },
@@ -470,26 +469,6 @@
       "original": {
         "owner": "yigexuanmu",
         "repo": "waydroid-nvidia-nix",
-        "type": "github"
-      }
-    },
-    "weflow": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1794405106,
-        "narHash": "sha256-Fz1nTHRIw5LCBwk4oEvmlt7GeZIZeaGhi2dv06qKet4=",
-        "owner": "pharra",
-        "repo": "WeFlow",
-        "rev": "c517fc4610023fb3cfc0e2f6c3fb8733ece2fe8f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "pharra",
-        "repo": "WeFlow",
         "type": "github"
       }
     },

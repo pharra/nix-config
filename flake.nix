@@ -101,11 +101,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    weflow = {
-      url = "github:pharra/WeFlow";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     droidloom = {
       url = "github:pharra/droidloom-flake";
       inputs.nixpkgs.follows = "nixpkgs";

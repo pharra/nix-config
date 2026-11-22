@@ -37,7 +37,6 @@ in {
     };
 
     services.pharra.waywallen-layer-shell.enable = cfg.wallpaperBackend == "waywallen-layer-shell";
-    services.pharra.weflow.enable = true;
 
     programs = {
       niri = {
